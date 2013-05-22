@@ -16,7 +16,16 @@
 		<friendly-url-mapper-class>com.liferay.portal.kernel.portlet.DefaultFriendlyURLMapper</friendly-url-mapper-class>
 		<friendly-url-mapping>idea</friendly-url-mapping>
 		<friendly-url-routes>idea-portlet-friendly-url-routes.xml</friendly-url-routes>
-				
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>ideaportlet-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>createidea</portlet-name>
+		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<footer-portlet-javascript>
