@@ -1,14 +1,16 @@
 package se.vgregion.portal.innovationsslussen.createidea.controller;
 
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import com.liferay.portal.kernel.util.WebKeys;
@@ -37,6 +39,27 @@ public class CreateIdeaViewController {
     */
 
     /**
+     * The render method for the confirmation view
+     *
+     * @param request  the request
+     * @param response the response
+     * @param model    the model
+     * @return the view
+     */
+    @RenderMapping(params = "view=confirmation")
+    public String showConfirmation(RenderRequest request, RenderResponse response, final ModelMap model) {
+
+        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+        long scopeGroupId = themeDisplay.getScopeGroupId();
+        long companyId = themeDisplay.getCompanyId();
+        boolean isSignedIn = themeDisplay.isSignedIn();
+
+        model.addAttribute("foo", "bar");
+
+        return "confirmation";
+    }
+    
+    /**
      * The default render method.
      *
      * @param request  the request
@@ -56,6 +79,31 @@ public class CreateIdeaViewController {
 
         return "view";
     }
+    
+    
+    /**
+     * Method handling Action request.
+     *
+     * @param request  the request
+     * @param response the response
+     * @param model    the model
+     */
+    @ActionMapping("submitIdea")
+    public final void submitIdea(ActionRequest request, ActionResponse response, final ModelMap model) {
+    	
+    	System.out.println("submitIdea");
+
+        LOGGER.info("submitIdea");
+
+        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+        long companyId = themeDisplay.getCompanyId();
+        long userId = themeDisplay.getUserId();
+
+        response.setRenderParameter("view", "confirmation");
+
+
+    }
+    
 
 }
 
