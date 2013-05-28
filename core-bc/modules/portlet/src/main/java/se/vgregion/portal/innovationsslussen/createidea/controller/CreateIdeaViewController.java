@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 
@@ -98,6 +99,18 @@ public class CreateIdeaViewController {
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
         long companyId = themeDisplay.getCompanyId();
         long userId = themeDisplay.getUserId();
+        
+        String title = ParamUtil.getString(request, "title", "");
+        String description = ParamUtil.getString(request, "description", "");
+        String solvesProblem = ParamUtil.getString(request, "solvesProblem", "");
+        String wantsHelpWith = ParamUtil.getString(request, "wantsHelpWith", "");
+        String name = ParamUtil.getString(request, "name", "");
+        String phone = ParamUtil.getString(request, "phone", "");
+        String administrativeUnit = ParamUtil.getString(request, "administrativeUnit", "");
+        String jobPosition = ParamUtil.getString(request, "jobPosition", "");
+        
+        System.out.println("submitIdea - title is: " + title);
+        
 
         response.setRenderParameter("view", "confirmation");
 
