@@ -4,13 +4,11 @@
 <liferay-portlet-app>
 	<portlet>
 		<portlet-name>idealist</portlet-name>
-		<icon>/icon.png</icon>
 		<instanceable>true</instanceable>
 		<css-class-wrapper>idealist-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
 		<portlet-name>idea</portlet-name>
-		<icon>/icon.png</icon>
 		<friendly-url-mapper-class>com.liferay.portal.kernel.portlet.DefaultFriendlyURLMapper</friendly-url-mapper-class>
 		<friendly-url-mapping>idea</friendly-url-mapping>
 		<friendly-url-routes>idea-portlet-friendly-url-routes.xml</friendly-url-routes>
@@ -19,7 +17,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>createidea</portlet-name>
-		<icon>/icon.png</icon>
+		<action-url-redirect>true</action-url-redirect>
 		<instanceable>false</instanceable>
 		<css-class-wrapper>ideaportlet-portlet</css-class-wrapper>
 	</portlet>

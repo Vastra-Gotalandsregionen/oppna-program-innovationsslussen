@@ -26,6 +26,9 @@
 				<p>
 					Har du en l&ouml;sning p&aring; ett praktiskt problem p&aring; din arbetsplats? &Auml;r du anst&auml;lld inom V&auml;stra G&ouml;talandsregionen? D&aring; &auml;r du v&auml;lkommen att skicka in din id&eacute; till oss. Fyll i formul&auml;ret och skicka in, s&aring; blir kontaktad av oss inom kort.
 				</p>
+				<p class="element-mandatory-desc">
+					F&auml;lt markerade med <span class="element-mandatory">*</span> &auml;r obligatoriska.
+				</p>
 			</div>
 			
 			<aui:form action="${submitIdeaURL}" name="createIdeaForm" cssClass="create-idea-form" method="post">
@@ -51,7 +54,10 @@
 				    			<span>Beskrivning</span>
 				    			<span class="element-mandatory">*<span> Obligatorisk</span></span>
 				    		</label>
-				    		<aui:input cssClass="element-field" type="textarea" name="description" value="" label ="" />			    		
+				    		<c:set var="testDescription_1" scope="page" value="" />
+				    		<c:set var="testDescription_2" scope="page" value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget nisl erat, sed convallis urna. Integer id nibh quis quam semper rhoncus in vel erat. In risus enim, pretium ut pretium ut, viverra ac nunc. Nunc sed risus quam, at gravida est. Quisque eget ipsum urna. Maecenas ac dui libero, et sagittis nibh. Proin eu venenatis sapien." />
+				    		<c:set var="testDescription_3" scope="page" value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget nisl erat, sed convallis urna. Integer id nibh quis quam semper rhoncus in vel erat. In risus enim, pretium ut pretium ut, viverra ac nunc. Nunc sed risus quam, at gravida est. Quisque eget ipsum urna. Maecenas ac dui libero, et sagittis nibh. Proin eu venenatis sapien. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget nisl erat, sed convallis urna. Integer id nibh quis quam semper rhoncus in vel erat. In risus enim, pretium ut pretium ut, viverra ac nunc. Nunc sed risus quam, at gravida est. Quisque eget ipsum urna. Maecenas ac dui libero, et sagittis nibh. Proin eu venenatis sapien. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget nisl erat, sed convallis urna. Integer id nibh quis quam semper rhoncus in vel erat. In risus enim, pretium ut pretium ut, viverra ac nunc. Nunc sed risus quam, at gravida est. Quisque eget ipsum urna. Maecenas ac dui libero, et sagittis nibh. Proin eu venenatis sapien." />
+				    		<aui:input cssClass="element-field" type="textarea" name="description" value="${testDescription_1}" label ="" />			    		
 				    	</aui:field-wrapper>
 						<span class="element-field-help">
 							Beskriv din id&eacute; kortfattat
@@ -142,7 +148,7 @@
 				    		<label for="<portlet:namespace />jobPosition">
 				    			<span>F&ouml;rvaltning</span>
 				    		</label>
-				    		<aui:input cssClass="element-field" type="text" name="jobPosition" value="Sjuksk&ouml;terska" label ="" />			    		
+				    		<aui:input cssClass="element-field" type="text" name="jobPosition" value="Kirurg" label ="" />			    		
 				    	</aui:field-wrapper>
 						<span class="element-field-help">
 							Skriv in vilken yrkesroll du har

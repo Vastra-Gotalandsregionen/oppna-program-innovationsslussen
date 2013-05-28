@@ -23,6 +23,15 @@
 				</p>
 			</div>
 			
+			<div class="info-section">
+				<h2 class="info-section-hd">
+					Vad h&auml;nder nu?
+				</h2>
+				<div class="info-section-bd">
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget nisl erat, sed convallis urna. Integer id nibh quis quam semper rhoncus in vel erat. In risus enim, pretium ut pretium ut, viverra ac nunc. Nunc sed risus quam, at gravida est. Quisque eget ipsum urna. Maecenas ac dui libero, et sagittis nibh. Proin eu venenatis sapien.				
+				</div>
+			</div>
+			
 		</div>
 	</div>
 </div>
