@@ -23,7 +23,7 @@ public class BariumServiceTest {
     // This test also tests the se.vgregion.service.barium.BariumRestClient.getIdeaObjectFields() method.
     @Test
     public void testGetAllIdeas() throws Exception {
-        BariumRestClient bariumRestClient = mock(BariumRestClient.class);
+        BariumRestClientImpl bariumRestClient = mock(BariumRestClientImpl.class);
 
         when(bariumRestClient.getIdeaObjectFields(any(ApplicationInstance.class))).thenCallRealMethod();
 
