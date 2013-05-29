@@ -37,6 +37,12 @@ Generation time : 2013-05-08 10:10:47 CEST
 
   <dependencies>
     <dependency>
+      <groupId>se.vgregion.innovationsslussen</groupId>
+      <artifactId>innovationsslussen-core-bc-composite-svc</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>javax.portlet</groupId>
       <artifactId>portlet-api</artifactId>
     </dependency>

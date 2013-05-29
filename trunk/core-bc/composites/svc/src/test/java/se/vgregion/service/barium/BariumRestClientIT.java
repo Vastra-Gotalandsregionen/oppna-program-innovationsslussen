@@ -1,10 +1,15 @@
 package se.vgregion.service.barium;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import se.vgregion.portal.innovatinosslussen.domain.*;
+import se.vgregion.portal.innovatinosslussen.domain.json.*;
+
+import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
@@ -23,7 +28,7 @@ public class BariumRestClientIT {
     private String username;
     @Value("${password}")
     private String password;
-    @Value(("${applicationId}"))
+    @Value("${applicationId}")
     private String applicationId;
 
     @Test
@@ -35,15 +40,55 @@ public class BariumRestClientIT {
     }
 
     @Test
+    public void testGetApplicationInstances() throws BariumException {
+        BariumRestClient bariumRestClient = createBariumRestClient();
+
+        ApplicationInstances applicationInstances = bariumRestClient.getApplicationInstances();
+
+        for (ApplicationInstance instance : applicationInstances.getData()) {
+            System.out.println(instance.getId() + " " + instance.getName() + " " + instance.getReferenceId());
+            Objects instanceObjects = bariumRestClient.getInstanceObjects(instance);
+            for (ObjectEntry objectEntry : instanceObjects.getData()) {
+                System.out.println("ObjectEntry: " + objectEntry.getFileType() + " " + objectEntry.getName());
+            }
+
+            List<ObjectField> ideObjectFields = bariumRestClient.getIdeaObjectFields(instance);
+
+            if (ideObjectFields != null) {
+                for (ObjectField field : ideObjectFields) {
+                    System.out.println("Field: " + field.getId() + " - " + field.getValue());
+                }
+                System.out.println();
+            }
+        }
+    }
+
+    @Test
+    @Ignore
+    public void testCreateFormInstance() throws Exception {
+        BariumRestClient bariumRestClient = createBariumRestClient();
+
+        IdeaObjectFields ideaObjectFields = new IdeaObjectFields();
+        ideaObjectFields.setInstanceName("TestInstans");
+        ideaObjectFields.setBehov("Ett stort behov");
+        ideaObjectFields.setEpost("mail@mailinator.com");
+        ideaObjectFields.setIde("En lysande idé");
+        ideaObjectFields.setKommavidare("Jag behöver hjälp med att tänka.");
+        ideaObjectFields.setVgrId("kaljo3");
+        ideaObjectFields.setVgrIdFullname("Kalle Johansson");
+        ideaObjectFields.setVgrIdTitel("Högsta hönset");
+
+//        ideaObjectFields.setGodkprio1(true);
+//        ideaObjectFields.setGodkprio2(true);
+
+        bariumRestClient.createIdeaInstance(ideaObjectFields);
+    }
+
+    @Test
     public void testGetAllTaskInfo2() throws Exception {
-        BariumRestClient bariumRestClient = new BariumRestClient();
+        BariumRestClient bariumRestClient = createBariumRestClient();
 
-        bariumRestClient.setApiLocation(apiLocation);
-        bariumRestClient.setApiKey(apiKey);
-        bariumRestClient.setUsername(username);
-        bariumRestClient.setPassword(password);
-
-//        String s = bariumRestClient.doGet("/DataFormTemplates/565d4c81-4baa-451b-aacc-5f7ae295bfaf/Fields"); // Får formulär-modell
+        String s = bariumRestClient.doGet("/DataFormTemplates/565d4c81-4baa-451b-aacc-5f7ae295bfaf/Fields"); // Får formulär-modell
 //        String s = bariumRestClient.doGet("Tasks");
 //        String s = bariumRestClient.doGet("/Apps/a29b55e4-68d6-41dd-872e-877badb566cb/Instances");
 //        String s = bariumRestClient.doPost("/Apps/a29b55e4-68d6-41dd-872e-877badb566cb?message=START&template=565d4c81-4baa-451b-aacc-5f7ae295bfaf", "name=patriktest");
@@ -55,6 +100,8 @@ public class BariumRestClientIT {
 //        String s = bariumRestClient.doPost("/Objects/f5b8cf5f-f214-4e35-9e13-fb04223568db/Fields/fileuploadfield", new byte[]{1,2,3,4,5,6});
 //        String s = bariumRestClient.doGet("/startevents");
 //        String s = bariumRestClient.doGet("/Instances/ef7ea30b-5089-428f-87e8-f10acd285cb6");
+//        String s = bariumRestClient.doGet("/Instances/2c75baaf-6a60-476e-ad2d-724f965f7817/Objects/IDE/Fields");
+//        String s = bariumRestClient.doGet("/Instances");
 //        String s = bariumRestClient.doGet("/Objects");
 //        String s = bariumRestClient.doGet("/Instances/ef7ea30b-5089-428f-87e8-f10acd285cb6/Objects/IDE");
 //        String s = bariumRestClient.doGet("/Instances/ef7ea30b-5089-428f-87e8-f10acd285cb6/Objects/IDE/Fields");
@@ -66,11 +113,22 @@ public class BariumRestClientIT {
 //        String s = bariumRestClient.doGet("Types"); // 0 träffar
 //        String s = bariumRestClient.doGet("/Objects/5e2b60b2-a582-4521-ac6a-49e218734096"); // Mappen
 //        String s = bariumRestClient.doGet("/Objects/f5b8cf5f-f214-4e35-9e13-fb04223568db"); // Formuläret
-        String s = bariumRestClient.doGet("/Objects/0290a271-e592-4617-8fbb-10c08303b7e2"); // asdf-filen
+//        String s = bariumRestClient.doGet("/Objects/0290a271-e592-4617-8fbb-10c08303b7e2"); // asdf-filen
         System.out.println("s: " + s);
 //        System.out.println("s: " + s2);
 
 //        System.out.println(s.contains("INNOVATION"));
+    }
+
+    private BariumRestClient createBariumRestClient() {
+        BariumRestClient bariumRestClient = new BariumRestClient();
+
+        bariumRestClient.setApiLocation(apiLocation);
+        bariumRestClient.setApiKey(apiKey);
+        bariumRestClient.setUsername(username);
+        bariumRestClient.setPassword(password);
+        bariumRestClient.setApplicationId(applicationId);
+        return bariumRestClient;
     }
 
 }
