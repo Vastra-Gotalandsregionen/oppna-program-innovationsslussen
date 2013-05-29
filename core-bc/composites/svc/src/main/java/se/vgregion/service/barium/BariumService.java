@@ -2,10 +2,10 @@ package se.vgregion.service.barium;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import se.vgregion.portal.innovatinosslussen.domain.json.ApplicationInstance;
-import se.vgregion.portal.innovatinosslussen.domain.json.ApplicationInstances;
-import se.vgregion.portal.innovatinosslussen.domain.IdeaObjectFields;
-import se.vgregion.portal.innovatinosslussen.domain.json.ObjectField;
+import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
+import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstance;
+import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstances;
+import se.vgregion.portal.innovationsslussen.domain.json.ObjectField;
 
 import java.util.ArrayList;
 import java.util.List;

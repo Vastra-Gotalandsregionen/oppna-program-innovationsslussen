@@ -6,8 +6,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import se.vgregion.portal.innovatinosslussen.domain.*;
-import se.vgregion.portal.innovatinosslussen.domain.json.*;
+import se.vgregion.portal.innovationsslussen.domain.*;
+import se.vgregion.portal.innovationsslussen.domain.json.*;
 
 import java.util.List;
 

@@ -3,9 +3,9 @@ package se.vgregion.service.barium;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.vgregion.portal.innovatinosslussen.domain.json.ApplicationInstance;
-import se.vgregion.portal.innovatinosslussen.domain.json.ApplicationInstances;
-import se.vgregion.portal.innovatinosslussen.domain.IdeaObjectFields;
+import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
+import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstance;
+import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstances;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -23,7 +23,13 @@
 			<artifactId>innovationsslussen-core-bc-composite-types</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
+		
+		<dependency>
+			<groupId>se.vgregion.daoframework</groupId>
+			<artifactId>dao-framework-jpa</artifactId>
+			<version>3.5</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
@@ -34,39 +40,39 @@
 			<artifactId>spring-context</artifactId>
 		</dependency>
 
-      <dependency>
-        <groupId>org.json</groupId>
-        <artifactId>json</artifactId>
-        <version>20090211</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.apache.httpcomponents</groupId>
-        <artifactId>httpclient</artifactId>
-        <version>4.1.2</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.apache.httpcomponents</groupId>
-        <artifactId>httpmime</artifactId>
-        <version>4.1.2</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.apache.xbean</groupId>
-        <artifactId>xbean-spring</artifactId>
-        <version>3.7</version>
-        <!--<scope>test</scope>--> <!-- todo Should be test scope when we remove the embedded active mq from runtime -->
-      </dependency>
-
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-test</artifactId>
-      </dependency>
-
-      <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-all</artifactId>
-      </dependency>
+	      <dependency>
+	        <groupId>org.json</groupId>
+	        <artifactId>json</artifactId>
+	        <version>20090211</version>
+	      </dependency>
+	
+	      <dependency>
+	        <groupId>org.apache.httpcomponents</groupId>
+	        <artifactId>httpclient</artifactId>
+	        <version>4.1.2</version>
+	      </dependency>
+	
+	      <dependency>
+	        <groupId>org.apache.httpcomponents</groupId>
+	        <artifactId>httpmime</artifactId>
+	        <version>4.1.2</version>
+	      </dependency>
+	
+	      <dependency>
+	        <groupId>org.apache.xbean</groupId>
+	        <artifactId>xbean-spring</artifactId>
+	        <version>3.7</version>
+	        <!--<scope>test</scope>--> <!-- todo Should be test scope when we remove the embedded active mq from runtime -->
+	      </dependency>
+	
+	      <dependency>
+	        <groupId>org.springframework</groupId>
+	        <artifactId>spring-test</artifactId>
+	      </dependency>
+	
+	      <dependency>
+	        <groupId>org.mockito</groupId>
+	        <artifactId>mockito-all</artifactId>
+	      </dependency>
     </dependencies>
 </project>
