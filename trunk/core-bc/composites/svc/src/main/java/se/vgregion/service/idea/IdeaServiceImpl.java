@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
+import se.vgregion.service.idea.exception.CreateIdeaException;
 import se.vgregion.service.idea.repository.IdeaRepository;
 
 /**
@@ -40,10 +41,15 @@ public class IdeaServiceImpl implements IdeaService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = CreateIdeaException.class)
     public void addIdea(String bariumId, long userId, long companyId, long groupId) {
         Idea idea = new Idea(bariumId, userId, companyId, groupId);
         ideaRepository.merge(idea);
+        
+        // Create Liferay Asset
+        // Create Liferay Resource
+        // If any of these fails, Listen to Liferay exception and throw CreateIdeaException
+        // https://bitbucket.org/martinlau/spring-liferay-integration
     }
 
     @Override

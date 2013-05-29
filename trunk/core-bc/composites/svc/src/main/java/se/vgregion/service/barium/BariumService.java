@@ -30,7 +30,7 @@ public class BariumService {
     private BariumRestClient bariumRestClient;
 
     public BariumService() {
-        bariumRestClient = new BariumRestClient();
+        bariumRestClient = new BariumRestClientImpl();
         try {
             bariumRestClient.connect(apiLocation, apiKey, username, password, applicationId);
         } catch (BariumException e) {
@@ -38,7 +38,7 @@ public class BariumService {
         }
     }
 
-    public BariumService(BariumRestClient bariumRestClient) {
+    public BariumService(BariumRestClientImpl bariumRestClient) {
         this.bariumRestClient = bariumRestClient;
         try {
             bariumRestClient.connect(apiLocation, apiKey, username, password, applicationId);
