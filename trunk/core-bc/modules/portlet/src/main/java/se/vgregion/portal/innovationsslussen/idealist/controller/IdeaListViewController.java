@@ -11,13 +11,14 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
+import se.vgregion.service.idea.wrapped.WrappedIdeaService;
+
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
-import se.vgregion.service.barium.BariumService;
 
 /**
  * Controller class for the view mode in idealist portlet.
@@ -31,16 +32,17 @@ public class IdeaListViewController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IdeaListViewController.class.getName());
 
-    private BariumService bariumService;
+    private WrappedIdeaService wrappedIdeaService;
 
     /**
      * Constructor.
      *
      */
     @Autowired
-    public IdeaListViewController(BariumService bariumService) {
-        this.bariumService = bariumService;
+    public IdeaListViewController(WrappedIdeaService wrappedIdeaService) {
+        this.wrappedIdeaService = wrappedIdeaService;
     }
+    
 
     /**
      * The default render method.
@@ -68,7 +70,7 @@ public class IdeaListViewController {
 			model.addAttribute("ideaPlid", ideaPlid);
 			model.addAttribute("ideaPortletName","idea_WAR_innovationsslussenportlet");
 
-            bariumService.getAllIdeas();
+            wrappedIdeaService.getAllBariumIdeas();
 			
 		} catch (PortalException e) {
 			e.printStackTrace();

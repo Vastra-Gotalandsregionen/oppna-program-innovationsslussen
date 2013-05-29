@@ -38,9 +38,15 @@ public class BariumService {
         }
     }
 
-    public BariumService(BariumRestClientImpl bariumRestClient) {
+    public BariumService(BariumRestClient bariumRestClient) {
         this.bariumRestClient = bariumRestClient;
         try {
+        	
+        	System.out.println("BariumService - init - apiLocation is: " + apiLocation);
+        	System.out.println("BariumService - init - apiKey is: " + apiKey);
+        	System.out.println("BariumService - init - username is: " + username);
+        	System.out.println("BariumService - init - applicationId is: " + applicationId);
+        	
             bariumRestClient.connect(apiLocation, apiKey, username, password, applicationId);
         } catch (BariumException e) {
             throw new RuntimeException(e);
