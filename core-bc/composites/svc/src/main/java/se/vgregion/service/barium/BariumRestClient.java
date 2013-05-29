@@ -8,11 +8,20 @@ import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.*;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.type.TypeFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.vgregion.portal.innovatinosslussen.domain.*;
+import se.vgregion.portal.innovatinosslussen.domain.json.ApplicationInstance;
+import se.vgregion.portal.innovatinosslussen.domain.json.ApplicationInstances;
+import se.vgregion.portal.innovatinosslussen.domain.json.ObjectField;
+import se.vgregion.portal.innovatinosslussen.domain.json.Objects;
 import se.vgregion.util.Util;
 
 import java.io.*;
@@ -67,6 +76,21 @@ public class BariumRestClient {
             return doRequest(null, "POST", endpoint, parameters.getBytes("UTF-8"));
         } catch (UnsupportedEncodingException e) {
             // won't happen
+            throw new RuntimeException(e);
+        }
+    }
+
+    public ApplicationInstances getApplicationInstances() throws BariumException {
+        String instancesJson = doGet("/Apps/" + applicationId + "/Instances");
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(instancesJson, ApplicationInstances.class);
+        } catch (JsonMappingException e) {
+            throw new RuntimeException(e);
+        } catch (JsonParseException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -145,8 +169,6 @@ public class BariumRestClient {
             conn.setRequestProperty("charset", "utf-8");
             conn.setDoOutput(true);
             conn.setDoInput(true);
-//            conn.setRequestProperty("Connection", "close");
-//            conn.setSSLSocketFactory(sslContext.getSocketFactory());
 
             if (method.equalsIgnoreCase("POST")) {
                 conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
@@ -161,19 +183,12 @@ public class BariumRestClient {
             bis = new BufferedInputStream(inputStream);
 
             response = toString(bis);
-
-            // Reset
-//            retryAttempts = 0;
         } catch (IOException e) {
-            if (retryAttempts++ < 5) {
-                LOGGER.warn("Unable to connect, retrying connect to get a new ticket. (Attempt " + retryAttempts + ")",
-                        e);
-                this.connect();
-                return doRequest(parameters, method, endpoint, data);
-            } else {
-                throw new BariumException("Error connecting to API, please check server is up and api is available ("
-                        + this.apiLocation + ")", e);
-            }
+            inputStream = conn.getErrorStream();
+            bis = new BufferedInputStream(inputStream);
+
+            response = toString(bis);
+            throw new BariumException(response, e);
         } finally {
             Util.closeClosables(bis, inputStream, bos, outputStream);
         }
@@ -218,8 +233,9 @@ public class BariumRestClient {
 
     /**
      * This method returns pretty much instantaneously. It just submits tasks which get processed in separate threads.
-     *
+     * <p/>
      * sa@param tasks tasks
+     *
      * @return mapping of taskIds with future objectIds
      */
     /*private Map<String, Future<String>> getObjectIdsFuture(HashMap<String, HashMap<String, String>> tasks) {
@@ -235,7 +251,6 @@ public class BariumRestClient {
         }
         return taskIdObjectId;
     }*/
-
     private HashMap<String, HashMap<String, String>> getTaskIds() throws BariumException {
 
         HashMap<String, HashMap<String, String>> tasks = new HashMap<String, HashMap<String, String>>();
@@ -333,6 +348,95 @@ public class BariumRestClient {
 
     public void setTicket(String ticket) {
         this.ticket = ticket;
+    }
+
+    public void setApplicationId(String applicationId) {
+        this.applicationId = applicationId;
+    }
+
+    public Objects getInstanceObjects(ApplicationInstance instance) throws BariumException {
+        String objectsJson = doGet("/Instances/" + instance.getId() + "/Objects");
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readValue(objectsJson, Objects.class);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<ObjectField> getIdeaObjectFields(ApplicationInstance instance) {
+        String objectJson = null;
+        try {
+            objectJson = doGet("/instances/" + instance.getId() + "/Objects/IDE/Fields");
+            LOGGER.info(objectJson);
+        } catch (BariumException e) {
+            LOGGER.error(e.getMessage(), e);
+            return null;
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readValue(objectJson, TypeFactory.defaultInstance().constructCollectionType(List.class,
+                    ObjectField.class));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void createIdeaInstance(IdeaObjectFields ideaObjectFields) {
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("message=START");
+        sb.append("&template=565d4c81-4baa-451b-aacc-5f7ae295bfaf");
+        if (ideaObjectFields.getBehov() != null) {
+            sb.append("&behov=").append(ideaObjectFields.getBehov());
+        }
+        if (ideaObjectFields.getEpost() != null) {
+            sb.append("&e-post=").append(ideaObjectFields.getEpost());
+        }
+        if (ideaObjectFields.getFodelsear() != null) {
+            sb.append("&fodelsear=").append(ideaObjectFields.getFodelsear());
+        }
+        if (ideaObjectFields.getHsaIdKivEnhet() != null) {
+            sb.append("&HSA-ID.KIVenhet=").append(ideaObjectFields.getHsaIdKivEnhet());
+        }
+        if (ideaObjectFields.getIde() != null) {
+            sb.append("&ide=").append(ideaObjectFields.getIde());
+        }
+        if (ideaObjectFields.getEpost() != null) {
+            sb.append("&e-post=").append(ideaObjectFields.getEpost());
+        }
+        if (ideaObjectFields.getInstanceName() != null) {
+            sb.append("&instance.name=").append(ideaObjectFields.getInstanceName());
+        }
+        if (ideaObjectFields.getPrio1kommentar() != null) {
+            sb.append("&prio1kommentar=").append(ideaObjectFields.getPrio1kommentar());
+        }
+        if (ideaObjectFields.getPrio2kommentar() != null) {
+            sb.append("&prio2kommentar=").append(ideaObjectFields.getPrio2kommentar());
+        }
+        if (ideaObjectFields.getTelefonnummer() != null) {
+            sb.append("&telefonnummer=").append(ideaObjectFields.getTelefonnummer());
+        }
+        if (ideaObjectFields.getVgrId() != null) {
+            sb.append("&VGR-ID=").append(ideaObjectFields.getVgrId());
+        }
+        if (ideaObjectFields.getVgrIdFullname() != null) {
+            sb.append("&VGR-ID.fullname=").append(ideaObjectFields.getVgrIdFullname());
+        }
+        if (ideaObjectFields.getVgrIdHsaPostalAdress() != null) {
+            sb.append("&VGR-ID.hsapostaladress=").append(ideaObjectFields.getVgrIdHsaPostalAdress());
+        }
+        if (ideaObjectFields.getVgrIdTitel() != null) {
+            sb.append("&VGR-ID.titel=").append(ideaObjectFields.getVgrIdTitel());
+        }
+
+        String replyJson = createInstance(sb.toString());
+
+        System.out.println(replyJson);
+
     }
 }
 

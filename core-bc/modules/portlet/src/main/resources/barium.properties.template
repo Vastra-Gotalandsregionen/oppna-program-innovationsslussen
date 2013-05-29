@@ -1,0 +1,6 @@
+## Place this file with property values in ${user.home}/.innovationsslussen/ with name barium.properties
+apiLocation=
+apiKey=
+username=
+password=
+applicationId=

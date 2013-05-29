@@ -17,6 +17,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
+import se.vgregion.service.barium.BariumService;
 
 /**
  * Controller class for the view mode in idealist portlet.
@@ -30,15 +31,16 @@ public class IdeaListViewController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IdeaListViewController.class.getName());
 
+    private BariumService bariumService;
+
     /**
      * Constructor.
      *
      */
-    /*
     @Autowired
-    public IdeaListViewController() {
+    public IdeaListViewController(BariumService bariumService) {
+        this.bariumService = bariumService;
     }
-	*/
 
     /**
      * The default render method.
@@ -58,12 +60,15 @@ public class IdeaListViewController {
         
 		// Get plid for idea page
 		try {
-			Layout ideaLayout = LayoutLocalServiceUtil.getFriendlyURLLayout(scopeGroupId, themeDisplay.getLayout().isPrivateLayout(), "/ide");
+			Layout ideaLayout = LayoutLocalServiceUtil.getFriendlyURLLayout(scopeGroupId, themeDisplay.getLayout()
+                    .isPrivateLayout(), "/ide");
 			
 			long ideaPlid = ideaLayout.getPlid();
 			
 			model.addAttribute("ideaPlid", ideaPlid);
 			model.addAttribute("ideaPortletName","idea_WAR_innovationsslussenportlet");
+
+            bariumService.getAllIdeas();
 			
 		} catch (PortalException e) {
 			e.printStackTrace();
