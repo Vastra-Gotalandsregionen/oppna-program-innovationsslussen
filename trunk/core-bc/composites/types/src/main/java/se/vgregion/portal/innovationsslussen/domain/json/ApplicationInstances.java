@@ -1,18 +1,18 @@
-package se.vgregion.portal.innovatinosslussen.domain.json;
+package se.vgregion.portal.innovationsslussen.domain.json;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.util.List;
 
-public class Objects {
-	@JsonProperty("Data") private List<ObjectEntry> Data;
+public class ApplicationInstances {
+	@JsonProperty("Data") private List<ApplicationInstance> Data;
 	@JsonProperty("TotalCount") private Integer TotalCount;
 
-    public List<ObjectEntry> getData() {
+    public List<ApplicationInstance> getData() {
         return Data;
     }
 
-    public void setData(List<ObjectEntry> data) {
+    public void setData(List<ApplicationInstance> data) {
         Data = data;
     }
 

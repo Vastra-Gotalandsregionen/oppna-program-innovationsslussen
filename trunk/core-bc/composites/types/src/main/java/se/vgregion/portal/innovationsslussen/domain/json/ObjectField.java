@@ -1,4 +1,4 @@
-package se.vgregion.portal.innovatinosslussen.domain.json;
+package se.vgregion.portal.innovationsslussen.domain.json;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 

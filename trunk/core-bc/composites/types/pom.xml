@@ -31,5 +31,15 @@ Generation time : 2013-05-08 10:10:47 CEST
       <artifactId>jackson-mapper-asl</artifactId>
       <version>1.9.12</version>
     </dependency>
+    <dependency>
+      <groupId>se.vgregion.daoframework</groupId>
+      <artifactId>dao-framework</artifactId>
+      <version>3.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-entitymanager</artifactId>
+      <version>3.6.0.Final</version>
+    </dependency>
   </dependencies>
 </project>

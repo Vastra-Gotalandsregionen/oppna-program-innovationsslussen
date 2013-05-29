@@ -17,11 +17,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.vgregion.portal.innovatinosslussen.domain.*;
-import se.vgregion.portal.innovatinosslussen.domain.json.ApplicationInstance;
-import se.vgregion.portal.innovatinosslussen.domain.json.ApplicationInstances;
-import se.vgregion.portal.innovatinosslussen.domain.json.ObjectField;
-import se.vgregion.portal.innovatinosslussen.domain.json.Objects;
+import se.vgregion.portal.innovationsslussen.domain.*;
+import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstance;
+import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstances;
+import se.vgregion.portal.innovationsslussen.domain.json.ObjectField;
+import se.vgregion.portal.innovationsslussen.domain.json.Objects;
 import se.vgregion.util.Util;
 
 import java.io.*;
