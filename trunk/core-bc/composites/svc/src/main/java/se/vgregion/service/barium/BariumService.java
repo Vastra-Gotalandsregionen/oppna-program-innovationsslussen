@@ -17,13 +17,6 @@ import java.util.List;
 @Service
 public class BariumService {
 
-    @Value("${apiLocation2}")
-    private String apiLocation2;
-    @Value("${apiLocation3}")
-    private String apiLocation3;
-	
-
-
     @Value("${apiLocation}")
     private String apiLocation;
     @Value("${apiKey}")
@@ -48,6 +41,9 @@ public class BariumService {
     @PostConstruct
     public void init() {
         try {
+        	
+        	System.out.println("BariumService - init - apiLocation has value: " + apiLocation);
+        	
             bariumRestClient.connect(apiLocation, apiKey, username, password, applicationId);
         } catch (BariumException e) {
             throw new RuntimeException(e);

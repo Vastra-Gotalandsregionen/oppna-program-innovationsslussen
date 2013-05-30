@@ -24,10 +24,6 @@
 	 
 	<bean id="bariumService" class="se.vgregion.service.barium.BariumService">
 	    <constructor-arg index="0" ref="bariumRestClient" />
-	    
-	    <!--  -->
-	    <property name="apiLocation2" value="apiLocation" />
-	    <property name="apiLocation3" value="${apiLocation}" />
     </bean>
     
 	<bean id="wrappedIdeaService" class="se.vgregion.service.idea.wrapped.WrappedIdeaService">
