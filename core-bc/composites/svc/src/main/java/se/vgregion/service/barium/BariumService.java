@@ -16,6 +16,13 @@ import java.util.List;
 @Service
 public class BariumService {
 
+    @Value("${apiLocation2}")
+    private String apiLocation2;
+    @Value("${apiLocation3}")
+    private String apiLocation3;
+	
+	
+	
     @Value("${apiLocation}")
     private String apiLocation;
     @Value("${apiKey}")
@@ -41,6 +48,9 @@ public class BariumService {
     public BariumService(BariumRestClient bariumRestClient) {
         this.bariumRestClient = bariumRestClient;
         try {
+        	
+        	System.out.println("BariumService - init - apiLocation2 is: " + apiLocation2);
+        	System.out.println("BariumService - init - apiLocation3 is: " + apiLocation3);
         	
         	System.out.println("BariumService - init - apiLocation is: " + apiLocation);
         	System.out.println("BariumService - init - apiKey is: " + apiKey);

@@ -18,3 +18,5 @@ core-bc/composites/types/.settings/*
 core-bc/modules/intsvc/.settings/*
 core-bc/modules/portlet/.settings/*
 
+core-bc/modules/portlet/src/main/resources/barium.properties
+
