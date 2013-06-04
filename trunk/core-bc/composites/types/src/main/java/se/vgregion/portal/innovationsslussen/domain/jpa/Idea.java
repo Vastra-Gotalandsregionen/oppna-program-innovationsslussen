@@ -31,6 +31,10 @@ public class Idea extends AbstractEntity<Long> {
 
     @Column(name = "user_id")
     private long userId;
+    
+    @Column(name = "resourceprimkey")
+    private long resourcePrimKey;
+    
 
     /**
      * Constructor.
@@ -38,17 +42,18 @@ public class Idea extends AbstractEntity<Long> {
     public Idea() {
     }
     
-    public Idea(Long id, String bariumId, long groupId, long companyId,
+    public Idea(Long id, long resourcePrimKey, String bariumId, long groupId, long companyId,
 			long userId) {
 		this.id = id;
+		this.resourcePrimKey = resourcePrimKey;
 		this.bariumId = bariumId;
 		this.groupId = groupId;
 		this.companyId = companyId;
 		this.userId = userId;
 	}
     
-    public Idea(String bariumId, long groupId, long companyId,
-			long userId) {
+    public Idea(long resourcePrimKey, String bariumId, long groupId, long companyId, long userId) {
+    	this.resourcePrimKey = resourcePrimKey;
 		this.bariumId = bariumId;
 		this.groupId = groupId;
 		this.companyId = companyId;
@@ -93,6 +98,14 @@ public class Idea extends AbstractEntity<Long> {
 
 	public void setUserId(long userId) {
 		this.userId = userId;
+	}
+
+	public long getResourcePrimKey() {
+		return resourcePrimKey;
+	}
+
+	public void setResourcePrimKey(long resourcePrimKey) {
+		this.resourcePrimKey = resourcePrimKey;
 	}
 
 }

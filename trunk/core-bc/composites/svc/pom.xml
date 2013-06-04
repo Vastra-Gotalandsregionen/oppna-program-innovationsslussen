@@ -24,6 +24,11 @@
 			<version>${project.version}</version>
 		</dependency>
 		
+	    <dependency>
+	      <groupId>com.liferay.portal</groupId>
+	      <artifactId>portal-service</artifactId>
+	    </dependency>
+				
 		<dependency>
 			<groupId>se.vgregion.daoframework</groupId>
 			<artifactId>dao-framework-jpa</artifactId>
@@ -38,6 +43,28 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 	      <dependency>

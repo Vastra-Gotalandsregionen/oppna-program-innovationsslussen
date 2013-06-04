@@ -27,11 +27,16 @@
 >
 
 	<bean id="propertyPlaceholderConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="location">
-			<value>file:${user.home}/.innovationsslussen/barium.properties</value>
+		<property name="locations">
+		    <list>
+		    	<value>classpath:datasource.properties</value>
+		    	<value>file:${user.home}/.innovationsslussen/barium.properties</value>
+		    </list>
 		</property>
 		<property name="ignoreResourceNotFound" value="false" />
 	</bean>
+	
+	<import resource="classpath*:jpa-connector.xml"/>
 	
 	<import resource="classpath*:/service-context.xml" />
 

@@ -59,11 +59,14 @@ public class BariumService {
 
             for (ApplicationInstance applicationInstance : data) {
                 List<ObjectField> ideaObjectFieldsList = bariumRestClient.getIdeaObjectFields(applicationInstance);
+                
+                if(ideaObjectFieldsList != null) {
+                    IdeaObjectFields ideaObjectFields = new IdeaObjectFields();
+                    ideaObjectFields.populate(ideaObjectFieldsList);
 
-                IdeaObjectFields ideaObjectFields = new IdeaObjectFields();
-                ideaObjectFields.populate(ideaObjectFieldsList);
+                    ideas.add(ideaObjectFields);
+                }
 
-                ideas.add(ideaObjectFields);
             }
         } catch (BariumException e) {
             throw new RuntimeException(e);
@@ -79,4 +82,11 @@ public class BariumService {
 
         return "";
     }
+    
+    public String createIdea(IdeaObjectFields ideaObjectFields) {
+        bariumRestClient.createIdeaInstance(ideaObjectFields);
+        return "";
+    }    
+    
+    
 }
