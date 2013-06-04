@@ -19,7 +19,7 @@
 
   <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
     <property name="dataSource" ref="dataSource" />
-    <property name="persistenceXmlLocation" value="classpath:META-INF/idea-persistence.xml"></property>
+    <property name="persistenceXmlLocation" value="classpath:idea-persistence.xml"></property>
     <property name="jpaVendorAdapter" ref="jpaVendor" />
     <property name="jpaPropertyMap">
       <map>

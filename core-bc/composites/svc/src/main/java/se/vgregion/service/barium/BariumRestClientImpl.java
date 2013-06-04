@@ -385,9 +385,12 @@ public class BariumRestClientImpl implements BariumRestClient {
         String objectJson = null;
         try {
             objectJson = doGet("/instances/" + instance.getId() + "/Objects/IDE/Fields");
-            LOGGER.info(objectJson);
+            //LOGGER.info(objectJson);
         } catch (BariumException e) {
-            LOGGER.error(e.getMessage(), e);
+        	
+        	// TODO - we might want to check what kind of error we receive from Barium. (parse json string)
+            //LOGGER.error(e.getMessage(), e);
+            
             return null;
         }
 

@@ -7,11 +7,15 @@ import javax.portlet.RenderResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
+
+import se.vgregion.portal.innovationsslussen.domain.vo.IdeaVO;
+import se.vgregion.service.idea.wrapped.WrappedIdeaService;
 
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -28,16 +32,18 @@ import com.liferay.portal.theme.ThemeDisplay;
 public class CreateIdeaViewController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CreateIdeaViewController.class.getName());
+    
+    private WrappedIdeaService wrappedIdeaService;
 
     /**
      * Constructor.
      *
      */
-    /*
     @Autowired
-    public IdeaViewController() {
+    public CreateIdeaViewController(WrappedIdeaService wrappedIdeaService) {
+        this.wrappedIdeaService = wrappedIdeaService;
     }
-    */
+
 
     /**
      * The render method for the confirmation view
@@ -76,7 +82,7 @@ public class CreateIdeaViewController {
         long companyId = themeDisplay.getCompanyId();
         boolean isSignedIn = themeDisplay.isSignedIn();
 
-        model.addAttribute("foo", "bar");
+        model.addAttribute("isSignedIn", isSignedIn);
 
         return "view";
     }
@@ -98,6 +104,7 @@ public class CreateIdeaViewController {
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
         long companyId = themeDisplay.getCompanyId();
+        long groupId = themeDisplay.getScopeGroupId();
         long userId = themeDisplay.getUserId();
         
         String title = ParamUtil.getString(request, "title", "");
@@ -109,7 +116,24 @@ public class CreateIdeaViewController {
         String administrativeUnit = ParamUtil.getString(request, "administrativeUnit", "");
         String jobPosition = ParamUtil.getString(request, "jobPosition", "");
         
-        System.out.println("submitIdea - title is: " + title);
+        IdeaVO ideaVO = new IdeaVO();
+        
+        ideaVO.setCompanyId(companyId);
+        ideaVO.setGroupId(groupId);
+        ideaVO.setUserId(userId);
+        
+        ideaVO.setTitle(title);
+        ideaVO.setDescription(description);
+        ideaVO.setSolvesProblem(solvesProblem);
+        ideaVO.setWantsHelpWith(wantsHelpWith);
+        ideaVO.setName(name);
+        ideaVO.setPhone(phone);
+        ideaVO.setAdministrativeUnit(administrativeUnit);
+        ideaVO.setJobPosition(jobPosition);
+        
+        ideaVO.setVgrId("none");
+        
+        wrappedIdeaService.createIdea(ideaVO);
         
 
         response.setRenderParameter("view", "confirmation");

@@ -1,5 +1,7 @@
 package se.vgregion.portal.innovationsslussen.idealist.controller;
 
+import java.util.List;
+
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -11,6 +13,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
+import se.vgregion.portal.innovationsslussen.domain.vo.IdeaVO;
 import se.vgregion.service.idea.wrapped.WrappedIdeaService;
 
 import com.liferay.portal.kernel.exception.PortalException;
@@ -70,7 +73,9 @@ public class IdeaListViewController {
 			model.addAttribute("ideaPlid", ideaPlid);
 			model.addAttribute("ideaPortletName","idea_WAR_innovationsslussenportlet");
 
-            wrappedIdeaService.getAllBariumIdeas();
+			List<IdeaVO> ideaVOList = wrappedIdeaService.getAllIdeas();
+			
+			model.addAttribute("ideaVOList", ideaVOList);
 			
 		} catch (PortalException e) {
 			e.printStackTrace();

@@ -20,8 +20,17 @@ public interface IdeaService {
      * @param companyId the companyId
      * @param groupId   the groupId
      */
-    void addIdea(String bariumId, long userId, long companyId, long groupId);
-
+    Idea addIdea(String bariumId, long userId, long companyId, long groupId);
+    
+    /**
+     * Find an {@link Idea}.
+     *
+     * @param ideaId - the primaryKey of the idea
+     *
+     * @return the {@link Idea}.
+     */
+    Idea find(long ideaId);
+    
     /**
      * Find all {@link Idea}s.
      *
@@ -46,6 +55,15 @@ public interface IdeaService {
      */
     List<Idea> findIdeaByGroupId(long companyId, long groupId);
 
+    
+    /**
+     * Remove a {@link Idea}.
+     *
+     * @param idea the primaryKey (id) of hte {@link Idea} to remove
+     */
+    void remove(long ideaId);
+    
+    
     /**
      * Remove a {@link Idea}.
      *
