@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.service.barium.BariumService;
 import se.vgregion.service.idea.exception.CreateIdeaException;
@@ -140,6 +141,10 @@ public class IdeaServiceImpl implements IdeaService {
         return ideaRepository.findIdeaByUrlTitle(urlTitle);
     }
     
+    @Override
+    public List<IdeaObjectFields> getAllBariumIdeas() {
+    	return bariumService.getAllIdeas();
+    }
 
     @Override
     @Transactional

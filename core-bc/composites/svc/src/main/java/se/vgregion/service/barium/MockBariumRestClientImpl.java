@@ -118,6 +118,9 @@ public class MockBariumRestClientImpl implements BariumRestClient {
         if (ideaObjectFields.getIde() != null) {
             sb.append("&ide=").append(ideaObjectFields.getIde());
         }
+        if (ideaObjectFields.getKommavidare() != null) {
+            sb.append("&kommavidare=").append(ideaObjectFields.getKommavidare());
+        }
         if (ideaObjectFields.getEpost() != null) {
             sb.append("&e-post=").append(ideaObjectFields.getEpost());
         }

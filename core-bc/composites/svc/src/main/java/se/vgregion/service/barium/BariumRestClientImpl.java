@@ -385,7 +385,7 @@ public class BariumRestClientImpl implements BariumRestClient {
         String objectJson = null;
         try {
             objectJson = doGet("/instances/" + instance.getId() + "/Objects/IDE/Fields");
-            //LOGGER.info(objectJson);
+            LOGGER.info(objectJson);
         } catch (BariumException e) {
         	
         	// TODO - we might want to check what kind of error we receive from Barium. (parse json string)
@@ -427,6 +427,9 @@ public class BariumRestClientImpl implements BariumRestClient {
         }
         if (ideaObjectFields.getIde() != null) {
             sb.append("&ide=").append(ideaObjectFields.getIde());
+        }
+        if (ideaObjectFields.getKommavidare() != null) {
+            sb.append("&kommavidare=").append(ideaObjectFields.getKommavidare());
         }
         if (ideaObjectFields.getEpost() != null) {
             sb.append("&e-post=").append(ideaObjectFields.getEpost());

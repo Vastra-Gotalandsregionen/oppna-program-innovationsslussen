@@ -3,6 +3,7 @@ package se.vgregion.service.idea;
 import java.util.Collection;
 import java.util.List;
 
+import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 
 /**
@@ -63,8 +64,13 @@ public interface IdeaService {
      * @return a {@link List} of {@link Idea}s
      */
     Idea findIdeaByUrlTitle(String urlTitle);
-    
 
+    /**
+     * Get all ideas (represented by {@link IdeaObjectFields}) from Barium
+     *
+     * @return a {@link List} of {@link IdeaObjectFields}s
+     */
+    List<IdeaObjectFields> getAllBariumIdeas();
     
     /**
      * Remove a {@link Idea}.
