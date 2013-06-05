@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/portlet" prefix="portlet" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <%@ taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet" %>
 <%@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %>
@@ -19,10 +20,14 @@
 
 <div class="idea-comments">
 
-	<portlet:actionURL var="addCommentUrl" name="addComment" />
-
+	<portlet:actionURL name="addComment" var="addCommentUrl">
+		<portlet:param name="action" value="addComment" />
+	</portlet:actionURL>
+	
 	<div class="add-comment">
-		<aui:form action="${addCommentUrl}" cssClass="add-comment-form clearfix">
+		<aui:form action="${addCommentUrl}" cssClass="add-comment-form clearfix" method="POST">
+			
+			<aui:input name="urlTitle" type="hidden" value="${idea.urlTitle}" />
 		
 			<div class="field-wrap">
 				<label for="<portlet:namespace />comment">
@@ -43,6 +48,43 @@
 		</aui:form>
 	</div>
 	
+	<c:choose>
+		<c:when test="${not empty idea.comments}">
+			<c:forEach items="${idea.comments}" var="comment" varStatus="status">
+				<c:set var="commentItemCssClass" scope="page" value="comment" />
+				<c:if test="${status.index % 2 != 0}">
+					<c:set var="commentItemCssClass" scope="page" value="comment comment-alt" />
+				</c:if>
+			
+				<div class="${commentItemCssClass} clearfix">
+					<div class="comment-author">
+						<div class="comment-author-name">
+							${comment.name}
+						</div>
+						<div class="comment-author-title">
+							<%-- Id&eacute;givare --%>
+						</div>
+					</div>
+					<div class="comment-entry">
+						<div class="comment-entry-date">
+							<fmt:formatDate pattern="yyyy-MM-dd" value="${comment.createDate}" /> kl. <fmt:formatDate type="time" timeStyle="short" value="${comment.createDate}" /> 
+							<%-- 
+							2013-04-23 kl. 12.15
+							--%>
+						</div>
+						<div class="comment-entry-text">
+							${comment.commentText} 
+						</div>
+					</div>
+				</div>
+			</c:forEach>
+		</c:when>
+		<c:otherwise>
+			<p>Det finns inga kommentarer p&aring; denna id&eacute; &auml;nnu. Posta din kommentar och bli f&ouml;rst!</p>
+		</c:otherwise>
+	</c:choose>
+	
+	<%-- 
 	<div class="comment clearfix">
 		<div class="comment-author">
 			<div class="comment-author-name">
@@ -119,8 +161,11 @@
 		</div>
 	</div>
 	
+	--%>
+	
 </div>
 
+<%-- 
 <div class="rp-paging clearfix">
 	<ul>
 		<li class="previous">
@@ -146,3 +191,4 @@
 		</li>
 	</ul>
 </div>			
+--%>

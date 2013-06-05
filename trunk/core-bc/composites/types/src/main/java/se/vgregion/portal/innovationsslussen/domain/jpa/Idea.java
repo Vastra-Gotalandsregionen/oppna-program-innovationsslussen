@@ -1,6 +1,9 @@
 package se.vgregion.portal.innovationsslussen.domain.jpa;
 
+import java.util.List;
+
 import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
+import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
 
 import javax.persistence.*;
 
@@ -75,7 +78,11 @@ public class Idea extends AbstractEntity<Long> {
     private String administrativeUnit;
     
     @Column(name = "job_position")
-	private String jobPosition;    
+	private String jobPosition;
+    
+    @Transient
+	private List<CommentItemVO> comments;    
+    
     
 
     /**
@@ -261,6 +268,14 @@ public class Idea extends AbstractEntity<Long> {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public List<CommentItemVO> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<CommentItemVO> comments) {
+		this.comments = comments;
 	}
 
 }
