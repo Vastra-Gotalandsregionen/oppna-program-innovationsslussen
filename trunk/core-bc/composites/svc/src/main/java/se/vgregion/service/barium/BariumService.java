@@ -106,6 +106,8 @@ public class BariumService {
         ideaObjectFields.setVgrIdFullname(idea.getName());
         ideaObjectFields.setVgrIdTitel(idea.getJobPosition());
         
+        System.out.println("BariumService - createIdea - idea.getWantsHelpWith() is: " + idea.getWantsHelpWith());
+        
         String replyJson = bariumRestClient.createIdeaInstance(ideaObjectFields);
         
         try {

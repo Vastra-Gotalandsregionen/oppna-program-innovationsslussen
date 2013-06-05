@@ -13,6 +13,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
+import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.service.idea.IdeaService;
 
@@ -72,6 +73,8 @@ public class IdeaListViewController {
 			
 			model.addAttribute("ideaPlid", ideaPlid);
 			model.addAttribute("ideaPortletName","idea_WAR_innovationsslussenportlet");
+			
+			//List<IdeaObjectFields> bariumIdeas = ideaService.getAllBariumIdeas();
 
 			List<Idea> ideaList = ideaService.findIdeasByGroupId(companyId, scopeGroupId);
 			
