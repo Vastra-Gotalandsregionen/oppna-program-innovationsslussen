@@ -13,8 +13,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
-import se.vgregion.portal.innovationsslussen.domain.vo.IdeaVO;
-import se.vgregion.service.idea.wrapped.WrappedIdeaService;
+import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
+import se.vgregion.service.idea.IdeaService;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -35,15 +35,15 @@ public class IdeaListViewController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IdeaListViewController.class.getName());
 
-    private WrappedIdeaService wrappedIdeaService;
+    private IdeaService ideaService;
 
     /**
      * Constructor.
      *
      */
     @Autowired
-    public IdeaListViewController(WrappedIdeaService wrappedIdeaService) {
-        this.wrappedIdeaService = wrappedIdeaService;
+    public IdeaListViewController(IdeaService ideaService) {
+        this.ideaService = ideaService;
     }
     
 
@@ -73,9 +73,9 @@ public class IdeaListViewController {
 			model.addAttribute("ideaPlid", ideaPlid);
 			model.addAttribute("ideaPortletName","idea_WAR_innovationsslussenportlet");
 
-			List<IdeaVO> ideaVOList = wrappedIdeaService.getAllBariumIdeas();
+			List<Idea> ideaList = ideaService.findIdeasByGroupId(companyId, scopeGroupId);
 			
-			model.addAttribute("ideaVOList", ideaVOList);
+			model.addAttribute("ideaList", ideaList);
 			
 		} catch (PortalException e) {
 			e.printStackTrace();

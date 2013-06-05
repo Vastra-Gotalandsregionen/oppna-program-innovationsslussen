@@ -17,8 +17,7 @@ import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
-import se.vgregion.portal.innovationsslussen.domain.vo.IdeaVO;
-import se.vgregion.service.idea.wrapped.WrappedIdeaService;
+import se.vgregion.service.idea.IdeaService;
 
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -36,15 +35,15 @@ public class IdeaAdminViewController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IdeaAdminViewController.class.getName());
     
-    private WrappedIdeaService wrappedIdeaService;
+    private IdeaService ideaService;
 
     /**
      * Constructor.
      *
      */
     @Autowired
-    public IdeaAdminViewController(WrappedIdeaService wrappedIdeaService) {
-        this.wrappedIdeaService = wrappedIdeaService;
+    public IdeaAdminViewController(IdeaService ideaService) {
+        this.ideaService = ideaService;
     }
 
 
@@ -65,7 +64,7 @@ public class IdeaAdminViewController {
         
         System.out.println("IdeaAdminViewController - showIdeaAdmin");
         
-        List<Idea> ideas = wrappedIdeaService.getIdeasByGroupId(companyId, scopeGroupId);
+        List<Idea> ideas = ideaService.findIdeasByGroupId(companyId, scopeGroupId);
 
         model.addAttribute("ideas", ideas);
 
@@ -114,7 +113,7 @@ public class IdeaAdminViewController {
         
         long entryId = ParamUtil.getLong(request, "entryId", -1);
         
-        wrappedIdeaService.deleteIdea(entryId);
+        ideaService.remove(entryId);
         
         response.setRenderParameter("view", "view");
     }

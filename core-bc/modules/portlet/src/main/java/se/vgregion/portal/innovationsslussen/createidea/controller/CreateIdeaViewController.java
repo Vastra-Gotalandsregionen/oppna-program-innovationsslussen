@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
-import se.vgregion.portal.innovationsslussen.domain.vo.IdeaVO;
-import se.vgregion.service.idea.wrapped.WrappedIdeaService;
+import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
+import se.vgregion.service.idea.IdeaService;
 
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -33,15 +33,15 @@ public class CreateIdeaViewController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CreateIdeaViewController.class.getName());
     
-    private WrappedIdeaService wrappedIdeaService;
+    private IdeaService ideaService;
 
     /**
      * Constructor.
      *
      */
     @Autowired
-    public CreateIdeaViewController(WrappedIdeaService wrappedIdeaService) {
-        this.wrappedIdeaService = wrappedIdeaService;
+    public CreateIdeaViewController(IdeaService ideaService) {
+        this.ideaService = ideaService;
     }
 
 
@@ -116,25 +116,11 @@ public class CreateIdeaViewController {
         String administrativeUnit = ParamUtil.getString(request, "administrativeUnit", "");
         String jobPosition = ParamUtil.getString(request, "jobPosition", "");
         
-        IdeaVO ideaVO = new IdeaVO();
+        String vgrId = "none";
         
-        ideaVO.setCompanyId(companyId);
-        ideaVO.setGroupId(groupId);
-        ideaVO.setUserId(userId);
+        Idea idea = new Idea(companyId, groupId, userId, description, solvesProblem, title, wantsHelpWith, vgrId, name, phone, administrativeUnit, jobPosition);
         
-        ideaVO.setTitle(title);
-        ideaVO.setDescription(description);
-        ideaVO.setSolvesProblem(solvesProblem);
-        ideaVO.setWantsHelpWith(wantsHelpWith);
-        ideaVO.setName(name);
-        ideaVO.setPhone(phone);
-        ideaVO.setAdministrativeUnit(administrativeUnit);
-        ideaVO.setJobPosition(jobPosition);
-        
-        ideaVO.setVgrId("none");
-        
-        wrappedIdeaService.createIdea(ideaVO);
-        
+        ideaService.addIdea(idea);
 
         response.setRenderParameter("view", "confirmation");
 

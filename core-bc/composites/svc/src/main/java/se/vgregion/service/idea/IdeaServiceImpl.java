@@ -19,6 +19,7 @@ import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
+import se.vgregion.service.barium.BariumService;
 import se.vgregion.service.idea.exception.CreateIdeaException;
 import se.vgregion.service.idea.repository.IdeaRepository;
 
@@ -32,6 +33,7 @@ public class IdeaServiceImpl implements IdeaService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(IdeaServiceImpl.class);
 	
+	private BariumService bariumService;
     private IdeaRepository ideaRepository;
 
     /**
@@ -40,26 +42,24 @@ public class IdeaServiceImpl implements IdeaService {
      * @param ideaRepository the {@link IdeaRepository}
      */
     @Autowired
-    public IdeaServiceImpl(IdeaRepository ideaRepository) {
+    public IdeaServiceImpl(BariumService bariumService, IdeaRepository ideaRepository) {
+    	this.bariumService = bariumService;
         this.ideaRepository = ideaRepository;
     }
     
     @Override
     @Transactional(rollbackFor = CreateIdeaException.class)
-    public Idea addIdea(long companyId, long groupId, long userId, String bariumId) {
+    public Idea addIdea(Idea idea) {
     	
         // Create Liferay Asset
         // Create Liferay Resource
         // If any of these fails, Listen to Liferay exception and throw CreateIdeaException
         // https://bitbucket.org/martinlau/spring-liferay-integration
     	
-    	Idea idea = null;
-    	
         try {
         	
         	long resourcePrimKey = CounterLocalServiceUtil.increment();
         	
-            idea = new Idea(companyId, groupId, userId, resourcePrimKey, bariumId);
             idea = ideaRepository.merge(idea);
 
             /* */
@@ -70,7 +70,7 @@ public class IdeaServiceImpl implements IdeaService {
             String[] communityPermissions = new String[0];
             String[] guestPermissions = new String[0];
         	
-            ResourceLocalServiceUtil.addModelResources(companyId, groupId, userId,
+            ResourceLocalServiceUtil.addModelResources(idea.getCompanyId(), idea.getGroupId(), idea.getUserId(),
             		Idea.class.getName(), idea.getId(), communityPermissions, guestPermissions);
             
             
@@ -78,7 +78,7 @@ public class IdeaServiceImpl implements IdeaService {
             long[] categoryIds = new long [0];
             String[] tagNames = new String [0];
             
-            AssetEntryLocalServiceUtil.updateEntry(userId, groupId, Idea.class.getName(),
+            AssetEntryLocalServiceUtil.updateEntry(idea.getUserId(), idea.getGroupId(), Idea.class.getName(),
             		idea.getId(), "", categoryIds, tagNames,
             		true, null, null, null, null,
             		ContentTypes.TEXT_HTML,
@@ -86,7 +86,7 @@ public class IdeaServiceImpl implements IdeaService {
             
     		// Message Boards
     		MBMessageLocalServiceUtil.addDiscussionMessage(
-    			userId, String.valueOf(userId), groupId, Idea.class.getName(),
+    			idea.getUserId(), String.valueOf(idea.getUserId()), idea.getGroupId(), Idea.class.getName(),
     			resourcePrimKey, WorkflowConstants.ACTION_PUBLISH);        
             
         } catch (SystemException e) {

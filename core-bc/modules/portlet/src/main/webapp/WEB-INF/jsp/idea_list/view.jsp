@@ -46,7 +46,7 @@
 	</c:forEach>
 	--%>
 	
-	<c:forEach items="${ideaVOList}" var="ideaVO" varStatus="index">
+	<c:forEach items="${ideaList}" var="idea" varStatus="index">
 	
 		<liferay-portlet:renderURL var="ideaUrl" plid="${ideaPlid}" portletName="${ideaPortletName}">
 			<liferay-portlet:param name="jspPage" value="/html/idea/view.jsp" />
@@ -57,11 +57,11 @@
 			<div class="idea">
 				<div class="idea-content">
 					<h2>
-						<a href="${ideaUrl}">${ideaVO.title}</a>
+						<a href="${ideaUrl}">${idea.title}</a>
 					</h2>
 					<div class="description">
 						<a href="${ideaUrl}">
-							<a href="${ideaUrl}">${ideaVO.descriptionShort}</a>
+							<a href="${ideaUrl}">${fn:substring(idea.description, 0, 150)}</a>
 						</a>
 					</div>
 					<ul class="idea-flow-list">
