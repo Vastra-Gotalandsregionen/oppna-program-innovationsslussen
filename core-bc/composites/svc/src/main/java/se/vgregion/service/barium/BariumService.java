@@ -1,8 +1,13 @@
 package se.vgregion.service.barium;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
+import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstance;
 import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstances;
 import se.vgregion.portal.innovationsslussen.domain.json.ObjectField;
@@ -16,6 +21,8 @@ import java.util.List;
  */
 @Service
 public class BariumService {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(BariumService.class.getName());
 
     @Value("${apiLocation}")
     private String apiLocation;
@@ -82,6 +89,39 @@ public class BariumService {
 
         return "";
     }
+    
+    public String createIdea(Idea idea) {
+    	String bariumId = "";
+    	
+        IdeaObjectFields ideaObjectFields = new IdeaObjectFields();
+        
+        ideaObjectFields.setBehov(idea.getSolvesProblem());     
+        ideaObjectFields.setEpost(idea.getEmail());
+        ideaObjectFields.setIde(idea.getDescription());
+        ideaObjectFields.setInstanceName(idea.getTitle());
+        ideaObjectFields.setKommavidare(idea.getWantsHelpWith());       
+        ideaObjectFields.setTelefonnummer(idea.getPhone());
+        
+        ideaObjectFields.setVgrId(idea.getVgrId());
+        ideaObjectFields.setVgrIdFullname(idea.getName());
+        ideaObjectFields.setVgrIdTitel(idea.getJobPosition());
+        
+        String replyJson = bariumRestClient.createIdeaInstance(ideaObjectFields);
+        
+        try {
+			JSONObject jsonObject = new JSONObject(replyJson);
+			
+			bariumId = jsonObject.getString("InstanceId");
+			
+			System.out.println("BariumService - createIdea - InstanceId: " + bariumId);
+			
+		} catch (JSONException e) {
+			LOGGER.error(e.getMessage(), e);
+		}
+
+        return bariumId;
+    }
+    
     
     public String createIdea(IdeaObjectFields ideaObjectFields) {
         bariumRestClient.createIdeaInstance(ideaObjectFields);

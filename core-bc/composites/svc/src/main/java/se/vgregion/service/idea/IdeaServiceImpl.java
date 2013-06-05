@@ -8,20 +8,22 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
+import se.vgregion.service.barium.BariumService;
+import se.vgregion.service.idea.exception.CreateIdeaException;
+import se.vgregion.service.idea.repository.IdeaRepository;
+import se.vgregion.service.idea.util.FriendlyURLNormalizer;
+
 import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.ContentTypes;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.service.ResourceLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
-
-import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
-import se.vgregion.service.barium.BariumService;
-import se.vgregion.service.idea.exception.CreateIdeaException;
-import se.vgregion.service.idea.repository.IdeaRepository;
 
 /**
  * Implementation of {@link IdeaService}.
@@ -31,11 +33,13 @@ import se.vgregion.service.idea.repository.IdeaRepository;
  */
 public class IdeaServiceImpl implements IdeaService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(IdeaServiceImpl.class);
-	
 	private BariumService bariumService;
     private IdeaRepository ideaRepository;
-
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(IdeaServiceImpl.class);
+	
+	private static final char[] URL_TITLE_REPLACE_CHARS = new char[] {'.', '/'};
+	
     /**
      * Constructor.
      *
@@ -58,7 +62,16 @@ public class IdeaServiceImpl implements IdeaService {
     	
         try {
         	
+        	String bariumId = bariumService.createIdea(idea);
+        	
+        	long ideaId = CounterLocalServiceUtil.increment(Idea.class.getName());
         	long resourcePrimKey = CounterLocalServiceUtil.increment();
+        	String urlTitle = generateUrlTitle(ideaId, idea.getTitle());
+        	
+        	idea.setBariumId(bariumId);
+        	idea.setId(ideaId);
+        	idea.setResourcePrimKey(resourcePrimKey);
+        	idea.setUrlTitle(urlTitle);
         	
             idea = ideaRepository.merge(idea);
 
@@ -120,6 +133,13 @@ public class IdeaServiceImpl implements IdeaService {
     	
         return ideaRepository.findIdeasByGroupId(companyId, groupId);
     }
+    
+    @Override
+    public Idea findIdeaByUrlTitle(String urlTitle) {
+    	
+        return ideaRepository.findIdeaByUrlTitle(urlTitle);
+    }
+    
 
     @Override
     @Transactional
@@ -163,5 +183,47 @@ public class IdeaServiceImpl implements IdeaService {
             ideaRepository.remove(idea);
         }
     }
+    
+	
+	protected String generateUrlTitle(long entryId, String title) throws PortalException, SystemException {
+		title = title.trim().toLowerCase();
+
+		if (Validator.isNull(title) || Validator.isNumber(title) || title.equals("")) {
+			return String.valueOf(entryId);
+		}
+		else {
+			String urlTitle = FriendlyURLNormalizer.normalize(
+				title, URL_TITLE_REPLACE_CHARS);
+
+			boolean isUnique = isUniqueUrlTitle(urlTitle);
+			
+			if(!isUnique) {
+				String newUrlTitle = "";
+				
+				int i = 2;
+				while(!isUnique) {
+					newUrlTitle = urlTitle + "-" + i;
+					isUnique = isUniqueUrlTitle(newUrlTitle);
+					i++;
+				}
+				urlTitle = newUrlTitle;
+			}
+			
+			return urlTitle;
+		}
+	}
+    
+	protected boolean isUniqueUrlTitle(String urlTitle) {
+		boolean isUnique = false;
+		
+		Idea idea = findIdeaByUrlTitle(urlTitle);
+		
+		if(idea == null) {
+			isUnique = true;
+		}
+		
+		return isUnique;
+	}
+	
 
 }

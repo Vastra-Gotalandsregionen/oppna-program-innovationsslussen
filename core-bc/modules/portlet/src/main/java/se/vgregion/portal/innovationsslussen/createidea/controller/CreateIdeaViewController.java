@@ -112,13 +112,14 @@ public class CreateIdeaViewController {
         String solvesProblem = ParamUtil.getString(request, "solvesProblem", "");
         String wantsHelpWith = ParamUtil.getString(request, "wantsHelpWith", "");
         String name = ParamUtil.getString(request, "name", "");
+        String email = ParamUtil.getString(request, "email", "");
         String phone = ParamUtil.getString(request, "phone", "");
         String administrativeUnit = ParamUtil.getString(request, "administrativeUnit", "");
         String jobPosition = ParamUtil.getString(request, "jobPosition", "");
         
         String vgrId = "none";
         
-        Idea idea = new Idea(companyId, groupId, userId, description, solvesProblem, title, wantsHelpWith, vgrId, name, phone, administrativeUnit, jobPosition);
+        Idea idea = new Idea(companyId, groupId, userId, description, solvesProblem, title, wantsHelpWith, vgrId, name, email, phone, administrativeUnit, jobPosition);
         
         ideaService.addIdea(idea);
 

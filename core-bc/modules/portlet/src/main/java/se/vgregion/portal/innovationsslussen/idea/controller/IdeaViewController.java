@@ -11,6 +11,10 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
+import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
+import se.vgregion.service.idea.IdeaService;
+
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 
@@ -24,17 +28,18 @@ import com.liferay.portal.theme.ThemeDisplay;
 @RequestMapping(value = "VIEW")
 public class IdeaViewController {
 
+	private IdeaService ideaService;
+	
     private static final Logger LOGGER = LoggerFactory.getLogger(IdeaViewController.class.getName());
 
     /**
      * Constructor.
      *
      */
-    /*
     @Autowired
-    public IdeaViewController() {
-    }
-    */
+    public IdeaViewController(IdeaService ideaService) {
+        this.ideaService = ideaService;
+    }    
 
     /**
      * The default render method.
@@ -51,8 +56,13 @@ public class IdeaViewController {
         long scopeGroupId = themeDisplay.getScopeGroupId();
         long companyId = themeDisplay.getCompanyId();
         boolean isSignedIn = themeDisplay.isSignedIn();
-
-        model.addAttribute("foo", "bar");
+        
+        String urlTitle = ParamUtil.getString(request, "urlTitle", "");
+        
+        System.out.println("IdeaViewController - showIdea - urlTitle is: " + urlTitle);
+        
+        Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
+        model.addAttribute("idea", idea);
 
         return "view";
     }

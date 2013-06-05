@@ -407,7 +407,7 @@ public class BariumRestClientImpl implements BariumRestClient {
 	 * @see se.vgregion.service.barium.BariumRestClient#createIdeaInstance(se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields)
 	 */
     @Override
-	public void createIdeaInstance(IdeaObjectFields ideaObjectFields) {
+	public String createIdeaInstance(IdeaObjectFields ideaObjectFields) {
 
         StringBuilder sb = new StringBuilder();
 
@@ -459,6 +459,8 @@ public class BariumRestClientImpl implements BariumRestClient {
         String replyJson = createInstance(sb.toString());
         
         LOGGER.info("createIdeaInstance - replyJson is: " + replyJson);
+        
+        return replyJson;
     }
 }
 

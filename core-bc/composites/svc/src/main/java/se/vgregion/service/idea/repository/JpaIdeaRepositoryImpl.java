@@ -13,6 +13,24 @@ import java.util.List;
  */
 public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, Long>
         implements JpaIdeaRepository {
+	
+    @Override
+    public Idea findIdeaByUrlTitle(String urlTitle) {
+    	Idea idea = null;
+    	
+        String queryString = "SELECT n FROM Idea n WHERE n.urlTitle = ?1 ORDER BY n.id ASC";
+        
+        Object[] queryObject = new Object[]{urlTitle};
+
+        List<Idea> ideas = findByQuery(queryString, queryObject);
+        
+        if(ideas.size() > 0) {
+        	idea = ideas.get(0);
+        }
+
+        return idea;
+    }
+	
 
     @Override
     public List<Idea> findIdeasByCompanyId(long companyId) {

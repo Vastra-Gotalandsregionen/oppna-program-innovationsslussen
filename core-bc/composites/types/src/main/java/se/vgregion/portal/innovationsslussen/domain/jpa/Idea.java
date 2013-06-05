@@ -11,8 +11,7 @@ import javax.persistence.*;
  * @company Monator Technologies AB
  */
 @Entity
-@Table(name = "vgr_innovationsslussen_idea"
-        //,uniqueConstraints = @UniqueConstraint(columnNames = {"foo", "bar"})
+@Table(name = "vgr_innovationsslussen_idea", uniqueConstraints = @UniqueConstraint(columnNames = {"url_title"})
 )
 public class Idea extends AbstractEntity<Long> {
 
@@ -53,6 +52,9 @@ public class Idea extends AbstractEntity<Long> {
     @Column(name = "title")
     private String title;
     
+    @Column(name = "url_title")
+    private String urlTitle;
+    
     @Column(name = "wants_help_with")
     @Lob
 	private String wantsHelpWith;
@@ -62,6 +64,9 @@ public class Idea extends AbstractEntity<Long> {
     
     @Column(name = "name")
 	private String name;
+
+    @Column(name = "email")
+	private String email;
     
     @Column(name = "phone")
 	private String phone;
@@ -89,17 +94,17 @@ public class Idea extends AbstractEntity<Long> {
     
 	public Idea(long companyId, long groupId, long userId, String description, String solvesProblem,
 			String title, String wantsHelpWith, String vgrId, String name,
-			String phone, String administrativeUnit, String jobPosition) {
+			String email, String phone, String administrativeUnit, String jobPosition) {
 		this.companyId = companyId;
 		this.groupId = groupId;
 		this.userId = userId;
 		this.description = description;
-		this.phase = phase;
 		this.solvesProblem = solvesProblem;
 		this.title = title;
 		this.wantsHelpWith = wantsHelpWith;
 		this.vgrId = vgrId;
 		this.name = name;
+		this.email = email;
 		this.phone = phone;
 		this.administrativeUnit = administrativeUnit;
 		this.jobPosition = jobPosition;
@@ -240,6 +245,22 @@ public class Idea extends AbstractEntity<Long> {
 
 	public void setJobPosition(String jobPosition) {
 		this.jobPosition = jobPosition;
+	}
+
+	public String getUrlTitle() {
+		return urlTitle;
+	}
+
+	public void setUrlTitle(String urlTitle) {
+		this.urlTitle = urlTitle;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 }
