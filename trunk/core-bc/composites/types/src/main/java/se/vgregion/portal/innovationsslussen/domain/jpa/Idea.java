@@ -42,23 +42,14 @@ public class Idea extends AbstractEntity<Long> {
     public Idea() {
     }
     
-    public Idea(Long id, long resourcePrimKey, String bariumId, long groupId, long companyId,
-			long userId) {
-		this.id = id;
-		this.resourcePrimKey = resourcePrimKey;
-		this.bariumId = bariumId;
-		this.groupId = groupId;
-		this.companyId = companyId;
-		this.userId = userId;
-	}
-    
-    public Idea(long resourcePrimKey, String bariumId, long groupId, long companyId, long userId) {
+    public Idea(long companyId, long groupId, long userId, long resourcePrimKey, String bariumId) {
     	this.resourcePrimKey = resourcePrimKey;
 		this.bariumId = bariumId;
 		this.groupId = groupId;
 		this.companyId = companyId;
 		this.userId = userId;
 	}
+    
     
     public Long getId() {
         return id;

@@ -128,5 +128,44 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>    
-	
+
+	<portlet>
+		<portlet-name>ideaadmin</portlet-name>
+		<display-name>Idea Admin</display-name>
+		<portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+		<init-param>
+			<name>check-auth-token</name>
+			<value>false</value>
+		</init-param>    
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Idea Admin</title>
+			<short-title>Idea Admin</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<portlet-preferences>
+		    <preference>
+		      <name>portlet-setup-show-borders</name>
+		      <value>true</value>
+		    </preference>
+		</portlet-preferences>		
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>    
+		
+		
 </portlet-app>

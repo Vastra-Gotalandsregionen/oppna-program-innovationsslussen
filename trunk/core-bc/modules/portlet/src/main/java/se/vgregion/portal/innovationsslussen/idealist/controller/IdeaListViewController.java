@@ -73,7 +73,7 @@ public class IdeaListViewController {
 			model.addAttribute("ideaPlid", ideaPlid);
 			model.addAttribute("ideaPortletName","idea_WAR_innovationsslussenportlet");
 
-			List<IdeaVO> ideaVOList = wrappedIdeaService.getAllIdeas();
+			List<IdeaVO> ideaVOList = wrappedIdeaService.getAllBariumIdeas();
 			
 			model.addAttribute("ideaVOList", ideaVOList);
 			

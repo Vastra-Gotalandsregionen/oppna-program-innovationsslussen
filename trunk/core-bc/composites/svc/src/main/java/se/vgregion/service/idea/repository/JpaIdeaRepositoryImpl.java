@@ -16,7 +16,8 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, Long>
 
     @Override
     public List<Idea> findIdeasByCompanyId(long companyId) {
-        String queryString = "SELECT n FROM Idea n WHERE n.companyId = ?1 ORDER BY n.orderIndex ASC";
+        String queryString = "SELECT n FROM Idea n WHERE n.companyId = ?1 ORDER BY n.id ASC";
+        
         Object[] queryObject = new Object[]{companyId};
 
         List<Idea> ideas = findByQuery(queryString, queryObject);
@@ -27,11 +28,15 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, Long>
     @Override
     public List<Idea> findIdeasByGroupId(long companyId, long groupId) {
         String queryString = "SELECT n FROM Idea n WHERE n.companyId = ?1 AND n.groupId = ?2 ORDER BY "
-                + "n.orderIndex ASC";
-
+                + "n.id ASC";
+        
+        System.out.println("JpaIdeaRepositoryImpl - findIdeasByGroupId");
+        
         Object[] queryObject = new Object[]{companyId, groupId};
 
         List<Idea> ideas = findByQuery(queryString, queryObject);
+        
+        System.out.println("JpaIdeaRepositoryImpl - findIdeasByGroupId ideas.size is: " + ideas.size() + " (companyId is: " + companyId + " and groupId is: " + groupId + ")");
 
         return ideas;
     }

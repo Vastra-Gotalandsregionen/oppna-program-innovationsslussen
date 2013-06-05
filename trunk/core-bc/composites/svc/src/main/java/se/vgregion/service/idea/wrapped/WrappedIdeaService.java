@@ -39,62 +39,38 @@ public class WrappedIdeaService {
 	
 	public void createIdea(IdeaVO ideaVO) {
 		
-		System.out.println("WrappedIdeaService - createIdea - should create new idea now!");
-		
+
 		String bariumId = ideaVO.getBariumId();
 		long userId = ideaVO.getUserId();
 		long companyId = ideaVO.getCompanyId();
 		long groupId = ideaVO.getGroupId();
 		
 		// Create idea in Liferay
-		ideaService.addIdea(bariumId, userId, companyId, groupId);
-		
-		//Collection<Idea> allIdeas = ideaService.findAll();
+		ideaService.addIdea(companyId, groupId, userId, bariumId);
 	}
 	
 	public void deleteIdea(long ideaId) {
 		
-		//ideaService.
-		
+		ideaService.remove(ideaId);
 	}
 	
 	public void deleteIdea(Idea idea) {
 		
-		/*
-		// Resources
-		resourceLocalService.deleteResource(
-			entry.getCompanyId(), LabsEntry.class.getName(),
-			ResourceConstants.SCOPE_INDIVIDUAL, entry.getResourcePrimKey());
-
-		// LabsEntries
-		labsEntryPersistence.removeByResourcePrimKey(
-			entry.getResourcePrimKey());
-		
-		// Message boards
-		mbMessageLocalService.deleteDiscussionMessages(
-			LabsEntry.class.getName(), entry.getResourcePrimKey());
-
-		// Social
-		socialActivityLocalService.deleteActivities(
-			LabsEntry.class.getName(), entry.getResourcePrimKey());
-
-		// Indexer
-		Indexer indexer = IndexerRegistryUtil.getIndexer(LabsEntry.class);
-		indexer.delete(entry);
-		
-		// Asset
-		assetEntryLocalService.deleteEntry(
-			LabsEntry.class.getName(), entry.getEntryId());
-		*/
-		
-		
+		ideaService.remove(idea);
 	}
-
-	public List<IdeaVO> getAllIdeas() {
+	
+	public List<IdeaVO> getAllBariumIdeas() {
 		
 		List<IdeaObjectFields> bariumIdeas = bariumService.getAllIdeas();
-		
 		List<IdeaVO> ideas = getIdeasFromBariumIdeas(bariumIdeas);
+		
+		return ideas;
+	}
+	
+
+	public List<Idea> getIdeasByGroupId(long companyId, long groupId) {
+		
+		List<Idea> ideas = ideaService.findIdeasByGroupId(companyId, groupId);
 		
 		return ideas;
 	}
