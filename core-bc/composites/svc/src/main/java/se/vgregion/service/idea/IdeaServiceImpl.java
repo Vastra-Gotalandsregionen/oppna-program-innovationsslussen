@@ -46,7 +46,7 @@ public class IdeaServiceImpl implements IdeaService {
     
     @Override
     @Transactional(rollbackFor = CreateIdeaException.class)
-    public Idea addIdea(String bariumId, long userId, long companyId, long groupId) {
+    public Idea addIdea(long companyId, long groupId, long userId, String bariumId) {
     	
         // Create Liferay Asset
         // Create Liferay Resource
@@ -54,15 +54,15 @@ public class IdeaServiceImpl implements IdeaService {
         // https://bitbucket.org/martinlau/spring-liferay-integration
     	
     	Idea idea = null;
-
+    	
         try {
         	
         	long resourcePrimKey = CounterLocalServiceUtil.increment();
         	
-            idea = new Idea(resourcePrimKey, bariumId, userId, companyId, groupId);
+            idea = new Idea(companyId, groupId, userId, resourcePrimKey, bariumId);
             idea = ideaRepository.merge(idea);
 
-            /*
+            /* */
             // Need to specify resource-actions in a file that typically resides in src in a folder called resource-actions. File should be called default.xml
             // The use of these resource actions should be specified in a file called portlet.properties like this:
             // resource.actions.configs=resource-actions/default.xml
@@ -72,7 +72,7 @@ public class IdeaServiceImpl implements IdeaService {
         	
             ResourceLocalServiceUtil.addModelResources(companyId, groupId, userId,
             		Idea.class.getName(), idea.getId(), communityPermissions, guestPermissions);
-            */
+            
             
             // Add asset
             long[] categoryIds = new long [0];
@@ -106,16 +106,18 @@ public class IdeaServiceImpl implements IdeaService {
     
     @Override
     public Collection<Idea> findAll() {
+    	
         return ideaRepository.findAll();
     }
 
     @Override
-    public List<Idea> findIdeaByCompanyId(long companyId) {
+    public List<Idea> findIdeasByCompanyId(long companyId) {
         return ideaRepository.findIdeasByCompanyId(companyId);
     }
 
     @Override
-    public List<Idea> findIdeaByGroupId(long companyId, long groupId) {
+    public List<Idea> findIdeasByGroupId(long companyId, long groupId) {
+    	
         return ideaRepository.findIdeasByGroupId(companyId, groupId);
     }
 
@@ -131,11 +133,10 @@ public class IdeaServiceImpl implements IdeaService {
     public void remove(Idea idea) {
     	   	
     	try {
-    		/*
+    		/* */
     		// Delete resources
 			ResourceLocalServiceUtil.deleteResource(idea.getCompanyId(), Idea.class.getName(),
 					ResourceConstants.SCOPE_INDIVIDUAL, idea.getResourcePrimKey());
-			*/
 			
 	    	// Delete message board entries
 	    	MBMessageLocalServiceUtil.deleteDiscussionMessages(Idea.class.getName(), idea.getResourcePrimKey());

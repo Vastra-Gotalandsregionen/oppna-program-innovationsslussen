@@ -7,4 +7,9 @@
 		<portlet id="idea"></portlet>
 		<portlet id="createidea"></portlet>
 	</category>
+	
+	<category name="category.hidden">
+		<portlet id="createidea"></portlet>
+	</category>	
+	
 </display>

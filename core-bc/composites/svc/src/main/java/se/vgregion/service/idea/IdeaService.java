@@ -20,7 +20,7 @@ public interface IdeaService {
      * @param companyId the companyId
      * @param groupId   the groupId
      */
-    Idea addIdea(String bariumId, long userId, long companyId, long groupId);
+    Idea addIdea(long companyId, long groupId, long userId, String bariumId);
     
     /**
      * Find an {@link Idea}.
@@ -44,7 +44,7 @@ public interface IdeaService {
      * @param companyId the companyId
      * @return all {@link Idea} for a given company
      */
-    List<Idea> findIdeaByCompanyId(long companyId);
+    List<Idea> findIdeasByCompanyId(long companyId);
 
     /**
      * Find {@link Idea}s by company and group.
@@ -53,7 +53,7 @@ public interface IdeaService {
      * @param groupId   the groupId
      * @return a {@link List} of {@link Idea}s
      */
-    List<Idea> findIdeaByGroupId(long companyId, long groupId);
+    List<Idea> findIdeasByGroupId(long companyId, long groupId);
 
     
     /**
