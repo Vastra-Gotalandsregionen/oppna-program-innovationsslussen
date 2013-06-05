@@ -1,6 +1,8 @@
 package se.vgregion.service.idea;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -10,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
+import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
 import se.vgregion.service.barium.BariumService;
 import se.vgregion.service.idea.exception.CreateIdeaException;
 import se.vgregion.service.idea.repository.IdeaRepository;
@@ -22,9 +25,15 @@ import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.ResourceConstants;
+import com.liferay.portal.model.User;
 import com.liferay.portal.service.ResourceLocalServiceUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
+import com.liferay.portlet.messageboards.model.MBMessage;
+import com.liferay.portlet.messageboards.model.MBMessageDisplay;
+import com.liferay.portlet.messageboards.model.MBThread;
 import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
+import com.liferay.portlet.messageboards.util.comparator.MessageCreateDateComparator;
 
 /**
  * Implementation of {@link IdeaService}.
@@ -138,7 +147,15 @@ public class IdeaServiceImpl implements IdeaService {
     @Override
     public Idea findIdeaByUrlTitle(String urlTitle) {
     	
-        return ideaRepository.findIdeaByUrlTitle(urlTitle);
+    	Idea idea = ideaRepository.findIdeaByUrlTitle(urlTitle);
+    	
+    	if(idea != null) {
+        	List<CommentItemVO> commentsList = getComments(idea);
+        	
+        	idea.setComments(commentsList);
+    	}
+    	
+        return idea;
     }
     
     @Override
@@ -216,6 +233,124 @@ public class IdeaServiceImpl implements IdeaService {
 			
 			return urlTitle;
 		}
+	}
+	
+	protected List<CommentItemVO> getComments(Idea idea) {
+		
+		ArrayList<CommentItemVO> commentsList = new ArrayList<CommentItemVO>();
+		
+		try {
+			
+			MBMessageDisplay messageDisplay = null;
+			
+			try {
+				messageDisplay = MBMessageLocalServiceUtil.getDiscussionMessageDisplay(
+						idea.getUserId(), idea.getGroupId(), Idea.class.getName(),
+						idea.getId(), WorkflowConstants.STATUS_ANY);
+			} catch(NullPointerException e) {
+				return commentsList;
+			}
+			
+			MBThread thread = messageDisplay.getThread();
+			
+			long threadId = thread.getThreadId();
+			long rootMessageId = thread.getRootMessageId();
+			
+			MessageCreateDateComparator messageComparator = new MessageCreateDateComparator(false);
+			
+			List<MBMessage> mbMessages = MBMessageLocalServiceUtil.getThreadMessages(
+					threadId, WorkflowConstants.STATUS_ANY, messageComparator);
+			
+			System.out.println("IdeaServiceImpl - getComments - mbMessages.size() is: " + mbMessages.size());
+			
+			for(MBMessage mbMessage : mbMessages) {
+				 
+				String curCommentText = mbMessage.getBody();
+				Date createDate = mbMessage.getCreateDate();
+				long commentId = mbMessage.getMessageId();
+				
+				if(commentId != rootMessageId) {
+					long curCommentUserId = mbMessage.getUserId();
+					User curCommentUser = UserLocalServiceUtil.getUser(curCommentUserId);
+					String curCommentUserFullName = curCommentUser.getFullName();
+					
+					CommentItemVO commentItem = new CommentItemVO();
+					commentItem.setCommentText(curCommentText);
+					commentItem.setCreateDate(createDate);
+					commentItem.setId(commentId);
+					commentItem.setName(curCommentUserFullName);
+
+					commentsList.add(commentItem);
+				}
+			}			
+			
+		} catch (PortalException e) {
+			LOGGER.error(e.getMessage(), e);
+		} catch (SystemException e) {
+			LOGGER.error(e.getMessage(), e);
+		}
+		
+		
+		/*
+		// Comments
+		MBMessageDisplay messageDisplay = MBMessageLocalServiceUtil.getDiscussionMessageDisplay(
+				curUserId, labsEntry.getGroupId(), LabsEntry.class.getName(),
+				labsEntry.getEntryId(), WorkflowConstants.STATUS_ANY);
+		
+		MBThread thread = messageDisplay.getThread();
+		
+		long threadId = thread.getThreadId();
+		long rootMessageId = thread.getRootMessageId();
+		
+		MessageCreateDateComparator messageComparator = new MessageCreateDateComparator(false);
+		
+		List<MBMessage> mbMessages = MBMessageLocalServiceUtil.getThreadMessages(
+				threadId, WorkflowConstants.STATUS_ANY, messageComparator);
+		
+		ArrayList<CommentItemVO> commentsList  = new ArrayList<CommentItemVO>();
+			
+		for(MBMessage mbMessage : mbMessages) {
+ 
+			String curCommentText = mbMessage.getBody();
+			Date createDate = mbMessage.getCreateDate();
+			long commentId = mbMessage.getMessageId();
+			
+			if(commentId != rootMessageId) {
+				long curCommentUserId = mbMessage.getUserId();
+				User curCommentUser = UserLocalServiceUtil.getUser(curCommentUserId);
+				String curCommentUserScreenName = curCommentUser.getScreenName();
+				boolean isAvanzaUser = LabsUtil.getIsAvanzaUser(curCommentUserId);
+				String userAlias = LabsUtil.getLabsUserAlias(curCommentUserId);
+				boolean isLabsAdmin = LabsUtil.isUserLabsAdmin(companyId, curCommentUserId);
+				boolean isLabsUser = LabsUtil.isUserLabsUser(companyId, curCommentUserId);
+				
+				//LabsUserVO labsUser = new LabsUserVO();
+				labsUser.setId(curUserId);
+				labsUser.setAlias(userAlias);
+				labsUser.setIsAvanzaUser(isAvanzaUser);
+				labsUser.setIsLabsAdmin(isLabsAdmin);
+				labsUser.setIsLabsUser(isLabsUser);
+				labsUser.setScreenName(curCommentUserScreenName);
+				
+				int likesCount = AssetUserRelationLocalServiceUtil.getAssetUserRelationsCountByAssetAndType(
+						MBMessage.class.getName(), mbMessage.getMessageId(), LabsRelationsConstants.LIKE);
+				
+				CommentItemVO commentItem = new CommentItemVO();
+				commentItem.setCommentText(curCommentText);
+				commentItem.setCreateDate(createDate);
+				commentItem.setId(commentId);
+				commentItem.setLabsUser(labsUser);
+				commentItem.setLikesCount(likesCount);
+			
+				commentsList.add(commentItem);
+			}
+		}
+
+
+*/		
+		
+		
+		return commentsList;
 	}
     
 	protected boolean isUniqueUrlTitle(String urlTitle) {

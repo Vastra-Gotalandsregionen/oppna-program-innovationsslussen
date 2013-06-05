@@ -12,6 +12,7 @@
 		<friendly-url-mapper-class>com.liferay.portal.kernel.portlet.DefaultFriendlyURLMapper</friendly-url-mapper-class>
 		<friendly-url-mapping>idea</friendly-url-mapping>
 		<friendly-url-routes>idea-portlet-friendly-url-routes.xml</friendly-url-routes>
+		<action-url-redirect>true</action-url-redirect>
 		<instanceable>false</instanceable>
 		<css-class-wrapper>idea-portlet</css-class-wrapper>
 	</portlet>
