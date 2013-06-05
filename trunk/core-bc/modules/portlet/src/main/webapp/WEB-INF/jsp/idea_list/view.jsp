@@ -50,7 +50,7 @@
 	
 		<liferay-portlet:renderURL var="ideaUrl" plid="${ideaPlid}" portletName="${ideaPortletName}">
 			<liferay-portlet:param name="jspPage" value="/html/idea/view.jsp" />
-			<liferay-portlet:param name="urlTitle" value="some-dummy-url-title-here" />
+			<liferay-portlet:param name="urlTitle" value="${idea.urlTitle}" />
 		</liferay-portlet:renderURL>
 	
 		<li>

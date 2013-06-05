@@ -54,6 +54,16 @@ public interface IdeaService {
      * @return a {@link List} of {@link Idea}s
      */
     List<Idea> findIdeasByGroupId(long companyId, long groupId);
+    
+    /**
+     * Find {@link Idea} by urlTitle
+     *
+     * @param urlTitle the urlTitle
+     * @param groupId   the groupId
+     * @return a {@link List} of {@link Idea}s
+     */
+    Idea findIdeaByUrlTitle(String urlTitle);
+    
 
     
     /**

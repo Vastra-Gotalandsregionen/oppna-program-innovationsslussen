@@ -12,6 +12,15 @@ import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
  * @company Monator Technologies AB
  */
 public interface IdeaRepository extends Repository<Idea, Long> {
+	
+    /**
+     * Find an {@link Idea} with urlTitle specified
+     *
+     * @param urlTitle the urlTitle
+     * @return an {@link Idea}
+     */
+    Idea findIdeaByUrlTitle(String urlTitle);
+	
 
     /**
      * Find all {@link Idea}s for a company.

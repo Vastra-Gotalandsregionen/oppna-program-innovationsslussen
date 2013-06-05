@@ -20,7 +20,7 @@ public interface BariumRestClient {
 	Objects getInstanceObjects(ApplicationInstance instance)
 			throws BariumException;
 
-	void createIdeaInstance(IdeaObjectFields ideaObjectFields);
+	String createIdeaInstance(IdeaObjectFields ideaObjectFields);
 
 	boolean connect(String apiLocation, String apiKey, String username,
 			String password, String applicationId) throws BariumException;
