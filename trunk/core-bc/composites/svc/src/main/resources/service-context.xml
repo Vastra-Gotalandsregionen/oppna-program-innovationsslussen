@@ -7,12 +7,6 @@
 
 	<context:annotation-config />
 	
-	<bean id="ideaRepository" class="se.vgregion.service.idea.repository.JpaIdeaRepositoryImpl"/>
-
-	<bean id="ideaService" class="se.vgregion.service.idea.IdeaServiceImpl">
-		<constructor-arg ref="ideaRepository"/>
-	</bean>
-  
 	<!--  Mock Client -->
 	<!--   
 	<bean id="bariumRestClient" class="se.vgregion.service.barium.MockBariumRestClientImpl" />
@@ -26,12 +20,13 @@
 	    <constructor-arg index="0" ref="bariumRestClient" />
     </bean>
     
-	<bean id="wrappedIdeaService" class="se.vgregion.service.idea.wrapped.WrappedIdeaService">
+	<bean id="ideaRepository" class="se.vgregion.service.idea.repository.JpaIdeaRepositoryImpl"/>
+
+	<bean id="ideaService" class="se.vgregion.service.idea.IdeaServiceImpl">
 	    <constructor-arg index="0" ref="bariumService" />
-	    <constructor-arg index="1" ref="ideaService" />
-    </bean>
-  
-  
+	    <constructor-arg index="1" ref="ideaRepository" />
+	</bean>
+    
 </beans>
 
 

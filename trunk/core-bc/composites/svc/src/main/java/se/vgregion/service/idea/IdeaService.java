@@ -20,7 +20,7 @@ public interface IdeaService {
      * @param companyId the companyId
      * @param groupId   the groupId
      */
-    Idea addIdea(long companyId, long groupId, long userId, String bariumId);
+    Idea addIdea(Idea idea);
     
     /**
      * Find an {@link Idea}.
