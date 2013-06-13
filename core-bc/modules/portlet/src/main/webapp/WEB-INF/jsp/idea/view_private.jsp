@@ -39,7 +39,7 @@
 </liferay-util:html-bottom>
 
 
-<div class="idea-outer">
+<div class="idea-outer idea-outer-private">
 	<div class="idea">
 		<div class="idea-inner">
 		
@@ -50,18 +50,15 @@
 					
 						<div class="idea-toolbar-wrap">
 							<ul class="rp-toolbar clearfix">
-							
-								<%-- Add logic that controls whether link is shown or not --%>
-								<li class="icon private">
+								<li class="icon public">
 								
-									<liferay-portlet:renderURL var="ideaPrivateUrl">
+									<liferay-portlet:renderURL var="ideaPublicUrl">
 										<liferay-portlet:param name="showView" value="showIdea" />
-										<liferay-portlet:param name="type" value="private" />
 										<liferay-portlet:param name="urlTitle" value="${idea.urlTitle}" />
 									</liferay-portlet:renderURL>
 								
-									<a href="${ideaPrivateUrl}">
-										<span>Visa st&auml;ngd beskrivning</span>
+									<a href="${ideaPublicUrl}">
+										<span>Visa &ouml;ppen beskrivning</span>
 									</a>
 								</li>
 							
@@ -122,7 +119,7 @@
 							--%>
 							<div class="description">
 								<p>
-									${idea.ideaContentPublic.description}
+									${idea.ideaContentPrivate.description}
 									<%-- 
 									Donec posuere enim ut lectus semper feugiat.Nunc libero velit, venenatis et gravida ac, feugiat a lacus. Integer eget mauris in purus aliquam volutpat. Mauris dictum tortor sit amet lacus tincidunt pretium eu sed nibh. Donec est ligula, ultrices eget porttitor vitae, bibendum ac orci. Nulla hendrerit, dui rhoncus vulputate feugiat, diam nisl scelerisque mi, in adipiscing odio quam vel magna...
 									--%>
@@ -148,7 +145,7 @@
 						</aui:column>
 					</aui:layout>
 		
-					<%@ include file="comments_public.jsp" %>
+					<%@ include file="comments_private.jsp" %>
 				
 				</c:when>
 				<c:otherwise>

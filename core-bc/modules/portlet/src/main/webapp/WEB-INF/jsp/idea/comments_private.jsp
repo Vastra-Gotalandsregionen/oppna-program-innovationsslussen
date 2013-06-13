@@ -14,7 +14,7 @@
 	<portlet:actionURL name="addComment" var="addCommentUrl">
 		<portlet:param name="action" value="addComment" />
 		<portlet:param name="urlTitle" value="${idea.urlTitle}" />
-		<portlet:param name="ideaContentType" value="0" />
+		<portlet:param name="ideaContentType" value="1" />
 	</portlet:actionURL>
 	
 	<div class="add-comment">
@@ -26,9 +26,6 @@
 				</label>
 				<div class="field-element-wrap">
 					<textarea name="<portlet:namespace />comment" id="<portlet:namespace />comment"></textarea>
-					<p class="notice">
-						Notera att denna kommentar kommer att synas &ouml;ppet f&ouml;r alla bes&ouml;kare p&aring; siten.
-					</p>	
 				</div>
 			</div>
 			
@@ -40,8 +37,8 @@
 	</div>
 	
 	<c:choose>
-		<c:when test="${not empty idea.ideaContentPublic.comments}">
-			<c:forEach items="${idea.ideaContentPublic.comments}" var="comment" varStatus="status">
+		<c:when test="${not empty idea.ideaContentPrivate.comments}">
+			<c:forEach items="${idea.ideaContentPrivate.comments}" var="comment" varStatus="status">
 				<c:set var="commentItemCssClass" scope="page" value="comment" />
 				<c:if test="${status.index % 2 != 0}">
 					<c:set var="commentItemCssClass" scope="page" value="comment comment-alt" />

@@ -87,6 +87,35 @@ public class IdeaViewController {
     }
     
     /**
+     * The default render method.
+     *
+     * @param request  the request
+     * @param response the response
+     * @param model    the model
+     * @return the view
+     */
+    @RenderMapping(params = "type=private")
+    public String showIdeaPrivate(RenderRequest request, RenderResponse response, final ModelMap model) {
+
+    	//ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+        //long scopeGroupId = themeDisplay.getScopeGroupId();
+        //long companyId = themeDisplay.getCompanyId();
+        //boolean isSignedIn = themeDisplay.isSignedIn();
+        
+        String urlTitle = ParamUtil.getString(request, "urlTitle", "");
+        
+        System.out.println("IdeaViewController - showIdea - urlTitle is: " + urlTitle);
+        
+        if(!urlTitle.equals("")) {
+            Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
+            model.addAttribute("idea", idea);
+        }
+
+        return "view_private";
+    }
+    
+    
+    /**
      * Method handling Action request.
      *
      * @param request  the request
