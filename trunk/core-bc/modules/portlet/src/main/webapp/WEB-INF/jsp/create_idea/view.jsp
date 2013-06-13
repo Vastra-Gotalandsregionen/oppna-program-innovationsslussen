@@ -148,7 +148,7 @@
 							<div class="element-wrap">
 						    	<aui:field-wrapper cssClass="element-field-wrap">
 						    		<label for="<portlet:namespace />jobPosition">
-						    			<span>F&ouml;rvaltning</span>
+						    			<span>Yrkesroll</span>
 						    		</label>
 						    		<aui:input cssClass="element-field" type="text" name="jobPosition" value="Konsult" label ="" />			    		
 						    	</aui:field-wrapper>

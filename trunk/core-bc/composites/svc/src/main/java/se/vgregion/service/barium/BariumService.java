@@ -1,20 +1,20 @@
 package se.vgregion.service.barium;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstance;
 import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstances;
 import se.vgregion.portal.innovationsslussen.domain.json.ObjectField;
-
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Patrik Bergström
@@ -95,31 +95,33 @@ public class BariumService {
     	
         IdeaObjectFields ideaObjectFields = new IdeaObjectFields();
         
-        ideaObjectFields.setBehov(idea.getSolvesProblem());     
-        ideaObjectFields.setEpost(idea.getEmail());
-        ideaObjectFields.setIde(idea.getDescription());
-        ideaObjectFields.setInstanceName(idea.getTitle());
-        ideaObjectFields.setKommavidare(idea.getWantsHelpWith());       
-        ideaObjectFields.setTelefonnummer(idea.getPhone());
         
-        ideaObjectFields.setVgrId(idea.getVgrId());
-        ideaObjectFields.setVgrIdFullname(idea.getName());
-        ideaObjectFields.setVgrIdTitel(idea.getJobPosition());
         
-        System.out.println("BariumService - createIdea - idea.getWantsHelpWith() is: " + idea.getWantsHelpWith());
-        
-        String replyJson = bariumRestClient.createIdeaInstance(ideaObjectFields);
-        
-        try {
-			JSONObject jsonObject = new JSONObject(replyJson);
-			
-			bariumId = jsonObject.getString("InstanceId");
-			
-			System.out.println("BariumService - createIdea - InstanceId: " + bariumId);
-			
-		} catch (JSONException e) {
-			LOGGER.error(e.getMessage(), e);
-		}
+//        ideaObjectFields.setBehov(idea.getSolvesProblem());     
+//        ideaObjectFields.setEpost(idea.getEmail());
+//        ideaObjectFields.setIde(idea.getDescription());
+//        ideaObjectFields.setInstanceName(idea.getTitle());
+//        ideaObjectFields.setKommavidare(idea.getWantsHelpWith());       
+//        ideaObjectFields.setTelefonnummer(idea.getPhone());
+//        
+//        ideaObjectFields.setVgrId(idea.getVgrId());
+//        ideaObjectFields.setVgrIdFullname(idea.getName());
+//        ideaObjectFields.setVgrIdTitel(idea.getJobPosition());
+//        
+//        System.out.println("BariumService - createIdea - idea.getWantsHelpWith() is: " + idea.getWantsHelpWith());
+//        
+//        String replyJson = bariumRestClient.createIdeaInstance(ideaObjectFields);
+//        
+//        try {
+//			JSONObject jsonObject = new JSONObject(replyJson);
+//			
+//			bariumId = jsonObject.getString("InstanceId");
+//			
+//			System.out.println("BariumService - createIdea - InstanceId: " + bariumId);
+//			
+//		} catch (JSONException e) {
+//			LOGGER.error(e.getMessage(), e);
+//		}
 
         return bariumId;
     }

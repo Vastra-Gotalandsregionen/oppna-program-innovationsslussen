@@ -1,4 +1,4 @@
-package se.vgregion.service.idea.util;
+package se.vgregion.service.innovationsslussen.util;
 
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CharPool;

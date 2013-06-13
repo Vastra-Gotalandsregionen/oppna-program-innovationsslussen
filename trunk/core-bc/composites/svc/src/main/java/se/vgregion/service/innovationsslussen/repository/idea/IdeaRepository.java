@@ -1,4 +1,4 @@
-package se.vgregion.service.idea.repository;
+package se.vgregion.service.innovationsslussen.repository.idea;
 
 import java.util.List;
 
@@ -14,14 +14,14 @@ import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 public interface IdeaRepository extends Repository<Idea, Long> {
 	
     /**
-     * Find an {@link Idea} with urlTitle specified
+     * Find an {@link IdeaRestricted} with urlTitle specified
      *
      * @param urlTitle the urlTitle
      * @return an {@link Idea}
      */
-    Idea findIdeaByUrlTitle(String urlTitle);
+	Idea findIdeaByUrlTitle(String urlTitle);
 	
-
+	
     /**
      * Find all {@link Idea}s for a company.
      *

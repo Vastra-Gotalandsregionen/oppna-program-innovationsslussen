@@ -27,7 +27,7 @@
 	<div class="add-comment">
 		<aui:form action="${addCommentUrl}" cssClass="add-comment-form clearfix" method="POST">
 			
-			<aui:input name="urlTitle" type="hidden" value="${idea.urlTitle}" />
+			<aui:input name="urlTitle" type="hidden" value="${idea.ideaOpen.urlTitle}" />
 		
 			<div class="field-wrap">
 				<label for="<portlet:namespace />comment">
@@ -48,6 +48,7 @@
 		</aui:form>
 	</div>
 	
+	<%-- 
 	<c:choose>
 		<c:when test="${not empty idea.comments}">
 			<c:forEach items="${idea.comments}" var="comment" varStatus="status">
@@ -62,15 +63,15 @@
 							${comment.name}
 						</div>
 						<div class="comment-author-title">
-							<%-- Id&eacute;givare --%>
+							<% // Id&eacute;givare %>
 						</div>
 					</div>
 					<div class="comment-entry">
 						<div class="comment-entry-date">
 							<fmt:formatDate pattern="yyyy-MM-dd" value="${comment.createDate}" /> kl. <fmt:formatDate type="time" timeStyle="short" value="${comment.createDate}" /> 
-							<%-- 
-							2013-04-23 kl. 12.15
-							--%>
+							<% 
+							//2013-04-23 kl. 12.15
+							%>
 						</div>
 						<div class="comment-entry-text">
 							${comment.commentText} 
@@ -83,8 +84,9 @@
 			<p>Det finns inga kommentarer p&aring; denna id&eacute; &auml;nnu. Posta din kommentar och bli f&ouml;rst!</p>
 		</c:otherwise>
 	</c:choose>
+	--%>
 	
-	<%-- 
+	<%-- --%>
 	<div class="comment clearfix">
 		<div class="comment-author">
 			<div class="comment-author-name">
@@ -161,7 +163,7 @@
 		</div>
 	</div>
 	
-	--%>
+	
 	
 </div>
 

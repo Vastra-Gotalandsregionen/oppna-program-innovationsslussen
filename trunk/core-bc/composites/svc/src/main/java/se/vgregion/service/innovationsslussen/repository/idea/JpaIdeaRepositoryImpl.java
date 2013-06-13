@@ -1,9 +1,9 @@
-package se.vgregion.service.idea.repository;
+package se.vgregion.service.innovationsslussen.repository.idea;
+
+import java.util.List;
 
 import se.vgregion.dao.domain.patterns.repository.db.jpa.DefaultJpaRepository;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
-
-import java.util.List;
 
 /**
  * Implementation of {@link JpaIdeaRepository}.
@@ -11,8 +11,7 @@ import java.util.List;
  * @author Erik Andersson
  * @company Monator Technologies AB
  */
-public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, Long>
-        implements JpaIdeaRepository {
+public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, Long> implements JpaIdeaRepository {
 	
     @Override
     public Idea findIdeaByUrlTitle(String urlTitle) {
@@ -31,7 +30,6 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, Long>
         return idea;
     }
 	
-
     @Override
     public List<Idea> findIdeasByCompanyId(long companyId) {
         String queryString = "SELECT n FROM Idea n WHERE n.companyId = ?1 ORDER BY n.id ASC";

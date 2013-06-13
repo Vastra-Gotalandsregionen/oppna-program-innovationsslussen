@@ -20,4 +20,4 @@
 /**
  * Repository classes.
  */
-package se.vgregion.service.idea.repository;
+package se.vgregion.service.innovationsslussen.repository.ideacontent;

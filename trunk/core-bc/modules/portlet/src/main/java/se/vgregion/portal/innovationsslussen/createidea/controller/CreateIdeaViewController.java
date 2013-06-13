@@ -15,7 +15,7 @@ import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
-import se.vgregion.service.idea.IdeaService;
+import se.vgregion.service.innovationsslussen.IdeaService;
 
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -56,10 +56,7 @@ public class CreateIdeaViewController {
     @RenderMapping(params = "view=confirmation")
     public String showConfirmation(RenderRequest request, RenderResponse response, final ModelMap model) {
 
-        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-        long scopeGroupId = themeDisplay.getScopeGroupId();
-        long companyId = themeDisplay.getCompanyId();
-        boolean isSignedIn = themeDisplay.isSignedIn();
+        //ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
 
         model.addAttribute("foo", "bar");
 
@@ -78,8 +75,6 @@ public class CreateIdeaViewController {
     public String showIdea(RenderRequest request, RenderResponse response, final ModelMap model) {
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-        long scopeGroupId = themeDisplay.getScopeGroupId();
-        long companyId = themeDisplay.getCompanyId();
         boolean isSignedIn = themeDisplay.isSignedIn();
 
         model.addAttribute("isSignedIn", isSignedIn);
@@ -119,9 +114,12 @@ public class CreateIdeaViewController {
         
         String vgrId = "none";
         
-        Idea idea = new Idea(companyId, groupId, userId, description, solvesProblem, title, wantsHelpWith, vgrId, name, email, phone, administrativeUnit, jobPosition);
-        
-        ideaService.addIdea(idea);
+//        IdeaRestricted ideaRestricted = new IdeaRestricted(companyId, groupId, userId, description, solvesProblem, title, wantsHelpWith, vgrId, name, email, phone, administrativeUnit, jobPosition);
+//        IdeaOpen ideaOpen = new IdeaOpen(companyId, groupId, userId);
+//        
+//        IdeaOld idea = new IdeaOld(ideaOpen, ideaRestricted);
+//        
+//        ideaService.addIdea(idea);
 
         response.setRenderParameter("view", "confirmation");
 

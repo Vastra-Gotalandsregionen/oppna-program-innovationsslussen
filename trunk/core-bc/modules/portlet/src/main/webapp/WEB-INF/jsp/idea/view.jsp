@@ -95,7 +95,7 @@
 					</div>
 				
 					<h1>
-						${idea.title}
+						${idea.ideaRestricted.title}
 					</h1>
 					
 					<aui:layout>
@@ -107,7 +107,7 @@
 							--%>
 							<div class="description">
 								<p>
-									${idea.description}
+									${idea.ideaRestricted.description}
 									<%-- 
 									Donec posuere enim ut lectus semper feugiat.Nunc libero velit, venenatis et gravida ac, feugiat a lacus. Integer eget mauris in purus aliquam volutpat. Mauris dictum tortor sit amet lacus tincidunt pretium eu sed nibh. Donec est ligula, ultrices eget porttitor vitae, bibendum ac orci. Nulla hendrerit, dui rhoncus vulputate feugiat, diam nisl scelerisque mi, in adipiscing odio quam vel magna...
 									--%>
