@@ -1,4 +1,4 @@
-package se.vgregion.service.idea.util;
+package se.vgregion.service.innovationsslussen.util;
 
 import com.ibm.icu.text.Transliterator;
 import com.liferay.portal.kernel.util.StringUtil;

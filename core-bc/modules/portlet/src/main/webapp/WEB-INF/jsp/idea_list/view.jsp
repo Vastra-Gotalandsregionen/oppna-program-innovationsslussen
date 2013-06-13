@@ -50,18 +50,18 @@
 	
 		<liferay-portlet:renderURL var="ideaUrl" plid="${ideaPlid}" portletName="${ideaPortletName}">
 			<liferay-portlet:param name="jspPage" value="/html/idea/view.jsp" />
-			<liferay-portlet:param name="urlTitle" value="${idea.urlTitle}" />
+			<liferay-portlet:param name="urlTitle" value="${idea.ideaOpen.urlTitle}" />
 		</liferay-portlet:renderURL>
 	
 		<li>
 			<div class="idea">
 				<div class="idea-content">
 					<h2>
-						<a href="${ideaUrl}">${idea.title}</a>
+						<a href="${ideaUrl}">${idea.ideaRestricted.title}</a>
 					</h2>
 					<div class="description">
 						<a href="${ideaUrl}">
-							<a href="${ideaUrl}">${fn:substring(idea.description, 0, 150)}</a>
+							<a href="${ideaUrl}">${fn:substring(idea.ideaRestricted.description, 0, 150)}</a>
 						</a>
 					</div>
 					<ul class="idea-flow-list">

@@ -1,14 +1,23 @@
 package se.vgregion.portal.innovationsslussen.domain.jpa;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
-import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
-
-import javax.persistence.*;
 
 /**
- * JPA entity class representing an Idea for Innovationsslussen
+ * JPA entity class representing a Idea for Innovationsslussen
  *
  * @author Erik Andersson
  * @company Monator Technologies AB
@@ -18,10 +27,14 @@ import javax.persistence.*;
 )
 public class Idea extends AbstractEntity<Long> {
 
+	// Primary Key
+	
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+	// Liferay Related
+	
     @Column(name = "company_id")
     private long companyId;
 	
@@ -34,112 +47,38 @@ public class Idea extends AbstractEntity<Long> {
     @Column(name = "resourceprimkey")
     private long resourcePrimKey;
     
-    @Column(name = "barium_id")
-    private String bariumId;
+    // Idea Related
     
-    @Column(name = "description")
-    @Lob
-	private String description;
-	
-    @Column(name = "description_short")
-    @Lob
-    private String descriptionShort;
-	
-    @Column(name = "phase")
-    private int phase;
-	
-    @Column(name = "solves_problem")
-    @Lob
-    private String solvesProblem;
+    @Column(name = "barium_id")
+	private String bariumId;
 	
     @Column(name = "title")
     private String title;
     
     @Column(name = "url_title")
     private String urlTitle;
-    
-    @Column(name = "wants_help_with")
-    @Lob
-	private String wantsHelpWith;
-	
-    @Column(name = "vgr_id")
-	private String vgrId;
-    
-    @Column(name = "name")
-	private String name;
 
-    @Column(name = "email")
-	private String email;
+    @Column(name = "phase")
+    private int phase;
     
-    @Column(name = "phone")
-	private String phone;
-	
-    @Column(name = "administrative_unit")
-    private String administrativeUnit;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idea")
+    private Set<IdeaContent> ideaContents = new HashSet<IdeaContent>();
     
-    @Column(name = "job_position")
-	private String jobPosition;
-    
-    @Transient
-	private List<CommentItemVO> comments;    
-    
-    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idea")
+    private Set<IdeaPerson> ideaPersons = new HashSet<IdeaPerson>();
 
     /**
      * Constructor.
      */
     public Idea() {
     }
-    
-    public Idea(long companyId, long groupId, long userId, long resourcePrimKey, String bariumId) {
-		this.companyId = companyId;
-		this.groupId = groupId;
-		this.userId = userId;
-		this.resourcePrimKey = resourcePrimKey;
-		this.bariumId = bariumId;
+
+	public Long getId() {
+		return id;
 	}
-    
-	public Idea(long companyId, long groupId, long userId, String description, String solvesProblem,
-			String title, String wantsHelpWith, String vgrId, String name,
-			String email, String phone, String administrativeUnit, String jobPosition) {
-		this.companyId = companyId;
-		this.groupId = groupId;
-		this.userId = userId;
-		this.description = description;
-		this.solvesProblem = solvesProblem;
-		this.title = title;
-		this.wantsHelpWith = wantsHelpWith;
-		this.vgrId = vgrId;
-		this.name = name;
-		this.email = email;
-		this.phone = phone;
-		this.administrativeUnit = administrativeUnit;
-		this.jobPosition = jobPosition;
-	}
-    
-    
-    public Long getId() {
-        return id;
-    }
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getBariumId() {
-		return bariumId;
-	}
-
-	public void setBariumId(String bariumId) {
-		this.bariumId = bariumId;
-	}
-
-	public long getGroupId() {
-		return groupId;
-	}
-
-	public void setGroupId(long groupId) {
-		this.groupId = groupId;
 	}
 
 	public long getCompanyId() {
@@ -148,6 +87,14 @@ public class Idea extends AbstractEntity<Long> {
 
 	public void setCompanyId(long companyId) {
 		this.companyId = companyId;
+	}
+
+	public long getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(long groupId) {
+		this.groupId = groupId;
 	}
 
 	public long getUserId() {
@@ -166,36 +113,12 @@ public class Idea extends AbstractEntity<Long> {
 		this.resourcePrimKey = resourcePrimKey;
 	}
 
-	public String getDescription() {
-		return description;
+	public String getBariumId() {
+		return bariumId;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getDescriptionShort() {
-		return descriptionShort;
-	}
-
-	public void setDescriptionShort(String descriptionShort) {
-		this.descriptionShort = descriptionShort;
-	}
-
-	public int getPhase() {
-		return phase;
-	}
-
-	public void setPhase(int phase) {
-		this.phase = phase;
-	}
-
-	public String getSolvesProblem() {
-		return solvesProblem;
-	}
-
-	public void setSolvesProblem(String solvesProblem) {
-		this.solvesProblem = solvesProblem;
+	public void setBariumId(String bariumId) {
+		this.bariumId = bariumId;
 	}
 
 	public String getTitle() {
@@ -206,54 +129,6 @@ public class Idea extends AbstractEntity<Long> {
 		this.title = title;
 	}
 
-	public String getWantsHelpWith() {
-		return wantsHelpWith;
-	}
-
-	public void setWantsHelpWith(String wantsHelpWith) {
-		this.wantsHelpWith = wantsHelpWith;
-	}
-
-	public String getVgrId() {
-		return vgrId;
-	}
-
-	public void setVgrId(String vgrId) {
-		this.vgrId = vgrId;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
-	public String getAdministrativeUnit() {
-		return administrativeUnit;
-	}
-
-	public void setAdministrativeUnit(String administrativeUnit) {
-		this.administrativeUnit = administrativeUnit;
-	}
-
-	public String getJobPosition() {
-		return jobPosition;
-	}
-
-	public void setJobPosition(String jobPosition) {
-		this.jobPosition = jobPosition;
-	}
-
 	public String getUrlTitle() {
 		return urlTitle;
 	}
@@ -262,20 +137,29 @@ public class Idea extends AbstractEntity<Long> {
 		this.urlTitle = urlTitle;
 	}
 
-	public String getEmail() {
-		return email;
+	public int getPhase() {
+		return phase;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setPhase(int phase) {
+		this.phase = phase;
 	}
+	
+    public Set<IdeaContent> getIdeaContents() {
+        return ideaContents;
+    }
 
-	public List<CommentItemVO> getComments() {
-		return comments;
-	}
+    public void setIdeaContents(Set<IdeaContent> ideaContents) {
+        this.ideaContents = ideaContents;
+    }
 
-	public void setComments(List<CommentItemVO> comments) {
-		this.comments = comments;
-	}
+    public Set<IdeaPerson> getIdeaPersons() {
+        return ideaPersons;
+    }
 
+    public void setIdeaPersons(Set<IdeaPerson> ideaPersons) {
+        this.ideaPersons = ideaPersons;
+    }
+	
+    
 }

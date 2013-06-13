@@ -1,25 +1,21 @@
-package se.vgregion.service.idea;
+package se.vgregion.service.innovationsslussen;
 
 import java.util.Collection;
 import java.util.List;
 
-import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 
 /**
  * Service interface for managing {@link Idea}s.
  *
  * @author Erik Andersson
- * @company Monator Technologies AB
+ * @company Monator Technologies ABŒ
  */
 public interface IdeaService {
 
     /**
      * Add a {@link Idea}.
      *
-     * @param userId    the userId of the user who creates the {@link Idea}
-     * @param companyId the companyId
-     * @param groupId   the groupId
      */
     Idea addIdea(Idea idea);
     
@@ -66,16 +62,9 @@ public interface IdeaService {
     Idea findIdeaByUrlTitle(String urlTitle);
 
     /**
-     * Get all ideas (represented by {@link IdeaObjectFields}) from Barium
-     *
-     * @return a {@link List} of {@link IdeaObjectFields}s
-     */
-    List<IdeaObjectFields> getAllBariumIdeas();
-    
-    /**
      * Remove a {@link Idea}.
      *
-     * @param idea the primaryKey (id) of hte {@link Idea} to remove
+     * @param idea the primaryKey (id) of the {@link Idea} to remove
      */
     void remove(long ideaId);
     
@@ -91,4 +80,12 @@ public interface IdeaService {
      * Remove all {@link Idea}s.
      */
     void removeAll();
+    
+    /**
+     * Updates an {@link Idea}.
+     *
+     */
+    Idea updateIdea(Idea idea);
+    
+    
 }

@@ -18,6 +18,6 @@
  */
 
 /**
- * Service classes.
+ * Repository classes.
  */
-package se.vgregion.service.idea;
+package se.vgregion.service.innovationsslussen.repository.idea;

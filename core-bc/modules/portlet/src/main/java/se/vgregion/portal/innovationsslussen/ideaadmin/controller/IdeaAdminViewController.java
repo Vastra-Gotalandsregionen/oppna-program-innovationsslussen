@@ -17,7 +17,7 @@ import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
-import se.vgregion.service.idea.IdeaService;
+import se.vgregion.service.innovationsslussen.IdeaService;
 
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -35,7 +35,7 @@ public class IdeaAdminViewController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IdeaAdminViewController.class.getName());
     
-    private IdeaService ideaService;
+    IdeaService ideaService;
 
     /**
      * Constructor.
@@ -111,9 +111,11 @@ public class IdeaAdminViewController {
         long groupId = themeDisplay.getScopeGroupId();
         long userId = themeDisplay.getUserId();
         
-        long entryId = ParamUtil.getLong(request, "entryId", -1);
+        long ideaId = ParamUtil.getLong(request, "entryId", -1);
         
-        ideaService.remove(entryId);
+        Idea idea = ideaService.find(ideaId);
+        
+        ideaService.remove(idea);
         
         response.setRenderParameter("view", "view");
     }

@@ -1,4 +1,4 @@
-package se.vgregion.service.idea.exception;
+package se.vgregion.service.innovationsslussen.exception;
 
 public class CreateIdeaException extends Exception {
 
