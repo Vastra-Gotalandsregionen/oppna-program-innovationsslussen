@@ -1,16 +1,21 @@
 package se.vgregion.portal.innovationsslussen.domain.jpa;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
+import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
 
 /**
  * JPA entity class representing a IdeaContent for Innovationsslussen
@@ -38,9 +43,6 @@ public class IdeaContent extends AbstractEntity<Long> {
     @Column(name = "user_id")
     private long userId;
     
-    @Column(name = "resourceprimkey")
-    private long resourcePrimKey;
-    
     // IdeaContent Related
     
     @Column(name = "intro")
@@ -63,11 +65,14 @@ public class IdeaContent extends AbstractEntity<Long> {
     private String ideaTested;
     
     @Column(name = "type")
-    private String type;
+    private int type;
     
     // Foreign
     @ManyToOne
     private Idea idea;
+    
+    @Transient
+	private List<CommentItemVO> comments;
     
     /**
      * Constructor.
@@ -75,6 +80,11 @@ public class IdeaContent extends AbstractEntity<Long> {
     public IdeaContent() {
     }
 
+    public IdeaContent(long companyId, long groupId, long userId) {
+    	this.companyId = companyId;
+    	this.groupId = groupId;
+    	this.userId = userId;
+    }
 
 	public Long getId() {
 		return id;
@@ -116,20 +126,9 @@ public class IdeaContent extends AbstractEntity<Long> {
 	}
 
 
-	public long getResourcePrimKey() {
-		return resourcePrimKey;
-	}
-
-
-	public void setResourcePrimKey(long resourcePrimKey) {
-		this.resourcePrimKey = resourcePrimKey;
-	}
-
-
 	public String getIntro() {
 		return intro;
 	}
-
 
 	public void setIntro(String intro) {
 		this.intro = intro;
@@ -175,18 +174,29 @@ public class IdeaContent extends AbstractEntity<Long> {
 		this.ideaTested = ideaTested;
 	}
 
-
-	public String getType() {
+	public int getType() {
 		return type;
 	}
 
 
-	public void setType(String type) {
+	public void setType(int type) {
 		this.type = type;
+	}
+
+	public void setIdea(Idea idea) {
+		this.idea = idea;
 	}
 	
 	public Idea getIdea() {
 		return idea;
+	}
+	
+	public List<CommentItemVO> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<CommentItemVO> comments) {
+		this.comments = comments;
 	}
     
 }

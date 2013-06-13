@@ -14,12 +14,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
+import se.vgregion.portal.innovationsslussen.domain.IdeaConstants;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
+import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.service.innovationsslussen.IdeaService;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.model.User;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextFactory;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portlet.messageboards.model.MBMessageDisplay;
+import com.liferay.portlet.messageboards.model.MBThread;
+import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 
 /**
  * Controller class for the view mode in idea portlet.
@@ -69,7 +83,7 @@ public class IdeaViewController {
             model.addAttribute("idea", idea);
         }
 
-        return "view";
+        return "view_public";
     }
     
     /**
@@ -113,49 +127,61 @@ public class IdeaViewController {
         long groupId = themeDisplay.getScopeGroupId();
         long userId = themeDisplay.getUserId();
         
+        int ideaContentType = ParamUtil.getInteger(request, "ideaContentType");
         String urlTitle = ParamUtil.getString(request, "urlTitle", "");
         String comment = ParamUtil.getString(request, "comment", "");
         
-//        if(!comment.equals("")) {
-//        	
-//        	try {
-//            	IdeaOpen idea = ideaOpenService.findIdeaByUrlTitle(urlTitle);
-//            	
-//            	ServiceContext serviceContext = ServiceContextFactory.getInstance(IdeaRestricted.class.getName(), request);
-//            	
-//    			User user = UserLocalServiceUtil.getUser(userId);
-//
-//    			String threadView = PropsKeys.DISCUSSION_THREAD_VIEW;
-//
-//    			MBMessageDisplay messageDisplay = MBMessageLocalServiceUtil.getDiscussionMessageDisplay(
-//    				userId, groupId, IdeaRestricted.class.getName(), idea.getId(),
-//    				WorkflowConstants.STATUS_ANY, threadView);
-//
-//    			MBThread thread = messageDisplay.getThread();
-//
-//    			long threadId = thread.getThreadId();
-//    			long rootThreadId = thread.getRootMessageId();
-//    			
-//    			String commentContentCleaned = comment;
-//    			
-//    			String commentSubject = comment;
-//    			commentSubject = StringUtil.shorten(commentSubject, 50);
-//    			commentSubject  += "...";
-//            	
-//    			// TODO - validate comment and preserve line breaks
-//    			MBMessageLocalServiceUtil.addDiscussionMessage(
-//    					userId, user.getScreenName(), groupId,
-//    					IdeaRestricted.class.getName(), idea.getId(), threadId,
-//    					rootThreadId, commentSubject, commentContentCleaned,
-//    					serviceContext);
-//        		
-//        	} catch (PortalException e) {
-//        		LOGGER.error(e.getMessage(), e);
-//        	} catch (SystemException e) {
-//        		LOGGER.error(e.getMessage(), e);
-//        	}
-//        	
-//        }
+        if(!comment.equals("")) {
+        	
+        	try {
+        		//IdeaContent ideaContent = ideaService.
+        		
+        		
+            	Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
+            	
+            	long ideaCommentClassPK = -1;
+            	
+            	if(ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PUBLIC) {
+            		ideaCommentClassPK = idea.getIdeaContentPublic().getId();
+            	} else if(ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE) {
+            		ideaCommentClassPK = idea.getIdeaContentPrivate().getId();
+            	}
+            	
+            	ServiceContext serviceContext = ServiceContextFactory.getInstance(Idea.class.getName(), request);
+            	
+    			User user = UserLocalServiceUtil.getUser(userId);
+
+    			String threadView = PropsKeys.DISCUSSION_THREAD_VIEW;
+
+    			MBMessageDisplay messageDisplay = MBMessageLocalServiceUtil.getDiscussionMessageDisplay(
+    				userId, groupId, IdeaContent.class.getName(), ideaCommentClassPK,
+    				WorkflowConstants.STATUS_ANY, threadView);
+
+    			MBThread thread = messageDisplay.getThread();
+
+    			long threadId = thread.getThreadId();
+    			long rootThreadId = thread.getRootMessageId();
+    			
+    			String commentContentCleaned = comment;
+    			
+    			String commentSubject = comment;
+    			commentSubject = StringUtil.shorten(commentSubject, 50);
+    			commentSubject  += "...";
+            	
+    			// TODO - validate comment and preserve line breaks
+    			MBMessageLocalServiceUtil.addDiscussionMessage(
+    					userId, user.getScreenName(), groupId,
+    					IdeaContent.class.getName(), ideaCommentClassPK, threadId,
+    					rootThreadId, commentSubject, commentContentCleaned,
+    					serviceContext);
+        		
+        	} catch (PortalException e) {
+        		LOGGER.error(e.getMessage(), e);
+        	} catch (SystemException e) {
+        		LOGGER.error(e.getMessage(), e);
+        	}
+        	
+        }
 
         response.setRenderParameter("jspPage", "/html/idea/view.jsp");
         response.setRenderParameter("urlTitle", urlTitle);

@@ -95,7 +95,7 @@
 					</div>
 				
 					<h1>
-						${idea.ideaRestricted.title}
+						${idea.title}
 					</h1>
 					
 					<aui:layout>
@@ -107,7 +107,7 @@
 							--%>
 							<div class="description">
 								<p>
-									${idea.ideaRestricted.description}
+									${idea.ideaContentPublic.description}
 									<%-- 
 									Donec posuere enim ut lectus semper feugiat.Nunc libero velit, venenatis et gravida ac, feugiat a lacus. Integer eget mauris in purus aliquam volutpat. Mauris dictum tortor sit amet lacus tincidunt pretium eu sed nibh. Donec est ligula, ultrices eget porttitor vitae, bibendum ac orci. Nulla hendrerit, dui rhoncus vulputate feugiat, diam nisl scelerisque mi, in adipiscing odio quam vel magna...
 									--%>
@@ -133,7 +133,7 @@
 						</aui:column>
 					</aui:layout>
 		
-					<%@ include file="comments.jsp" %>
+					<%@ include file="comments_public.jsp" %>
 				
 				</c:when>
 				<c:otherwise>

@@ -2,6 +2,7 @@ package se.vgregion.portal.innovationsslussen.domain.jpa;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -62,6 +63,12 @@ public class IdeaPerson extends AbstractEntity<Long> {
      * Constructor.
      */
     public IdeaPerson() {
+    }
+    
+    public IdeaPerson(long companyId, long groupId, long userId) {
+    	this.companyId = companyId;
+    	this.groupId = groupId;
+    	this.userId = userId;
     }
 
 	public Long getId() {
@@ -138,6 +145,10 @@ public class IdeaPerson extends AbstractEntity<Long> {
 	
 	public Idea getIdea() {
 		return idea;
+	}
+	
+	public void setIdea(Idea idea) {
+		this.idea = idea;
 	}
     
 }

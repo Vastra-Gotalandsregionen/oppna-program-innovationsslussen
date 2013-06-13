@@ -1,20 +1,31 @@
 package se.vgregion.portal.innovationsslussen.domain.jpa;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
+import se.vgregion.portal.innovationsslussen.domain.IdeaConstants;
 
 /**
  * JPA entity class representing a Idea for Innovationsslussen
@@ -44,9 +55,6 @@ public class Idea extends AbstractEntity<Long> {
     @Column(name = "user_id")
     private long userId;
     
-    @Column(name = "resourceprimkey")
-    private long resourcePrimKey;
-    
     // Idea Related
     
     @Column(name = "barium_id")
@@ -62,15 +70,23 @@ public class Idea extends AbstractEntity<Long> {
     private int phase;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idea")
+    @JoinColumn(name= "idea_id")
     private Set<IdeaContent> ideaContents = new HashSet<IdeaContent>();
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idea")
+    @JoinColumn(name= "idea_id")
     private Set<IdeaPerson> ideaPersons = new HashSet<IdeaPerson>();
 
     /**
      * Constructor.
      */
     public Idea() {
+    }
+    
+    public Idea(long companyId, long groupId, long userId) {
+    	this.companyId = companyId;
+    	this.groupId = groupId;
+    	this.userId = userId;
     }
 
 	public Long getId() {
@@ -103,14 +119,6 @@ public class Idea extends AbstractEntity<Long> {
 
 	public void setUserId(long userId) {
 		this.userId = userId;
-	}
-
-	public long getResourcePrimKey() {
-		return resourcePrimKey;
-	}
-
-	public void setResourcePrimKey(long resourcePrimKey) {
-		this.resourcePrimKey = resourcePrimKey;
 	}
 
 	public String getBariumId() {
@@ -146,20 +154,46 @@ public class Idea extends AbstractEntity<Long> {
 	}
 	
     public Set<IdeaContent> getIdeaContents() {
+    	
         return ideaContents;
     }
 
-    public void setIdeaContents(Set<IdeaContent> ideaContents) {
-        this.ideaContents = ideaContents;
+    public void addIdeaContent(IdeaContent ideaContent) {
+    	ideaContent.setIdea(this);
+    	
+    	this.ideaContents.add(ideaContent);
     }
-
+    
     public Set<IdeaPerson> getIdeaPersons() {
+    	
         return ideaPersons;
     }
 
-    public void setIdeaPersons(Set<IdeaPerson> ideaPersons) {
-        this.ideaPersons = ideaPersons;
+    public void addIdeaPerson(IdeaPerson ideaPerson) {
+    	
+    	ideaPerson.setIdea(this);   	
+    	this.ideaPersons.add(ideaPerson);
     }
 	
+    public IdeaContent getIdeaContentPublic () {
+    	return getIdeaContent(IdeaConstants.IDEA_CONTENT_TYPE_PUBLIC);
+    }
+    
+    public IdeaContent getIdeaContentPrivate () {
+    	return getIdeaContent(IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE);
+    }
+    
+    private IdeaContent getIdeaContent (int type) {
+    	IdeaContent ideaContent = null;
+    	
+    	for(IdeaContent ic : ideaContents) {
+    		if(ic.getType() == type) {
+    			ideaContent = ic;
+    		}
+    	}
+    	
+    	return ideaContent;
+    }
+    
     
 }

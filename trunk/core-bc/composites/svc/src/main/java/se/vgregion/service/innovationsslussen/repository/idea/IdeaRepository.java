@@ -12,9 +12,18 @@ import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
  * @company Monator Technologies AB
  */
 public interface IdeaRepository extends Repository<Idea, Long> {
+
+    /**
+     * Find an {@link Idea} with urlTitle specified
+     *
+     * @param id the id
+     * @return an {@link Idea}
+     */
+	Idea find(long id);
+	
 	
     /**
-     * Find an {@link IdeaRestricted} with urlTitle specified
+     * Find an {@link Idea} with urlTitle specified
      *
      * @param urlTitle the urlTitle
      * @return an {@link Idea}
@@ -38,4 +47,14 @@ public interface IdeaRepository extends Repository<Idea, Long> {
      * @return a {@link List} of {@link Idea}s
      */
     List<Idea> findIdeasByGroupId(long companyId, long groupId);
+    
+    /**
+     * Remove the {@link Idea} with the id
+     *
+     * @param ideaId the id of the idea to remove
+     * @return void
+     */
+    void remove(long ideaId);
+    
+    
 }

@@ -9,18 +9,16 @@
 <%@ taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 
 <%@ page import="com.liferay.portal.kernel.dao.search.ResultRow" %>
-<%@ page import="se.vgregion.portal.innovationsslussen.domain.jpa.IdeaRestricted" %>
+<%@ page import="se.vgregion.portal.innovationsslussen.domain.jpa.Idea" %>
 <%@ page import="com.liferay.portal.kernel.util.WebKeys" %>
 
 <portlet:defineObjects />
 <liferay-theme:defineObjects />	
 
-
-
 <%
-		ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
-		IdeaRestricted curEntry = (IdeaRestricted)row.getObject();
-	%>
+	ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
+	Idea curEntry = (Idea)row.getObject();
+%>
 
 <c:set var="curIdea" scope="page" value="<%= curEntry %>" />
 

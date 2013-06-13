@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
+import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
 import se.vgregion.service.barium.BariumService;
 import se.vgregion.service.innovationsslussen.exception.CreateIdeaException;
@@ -19,6 +20,7 @@ import se.vgregion.service.innovationsslussen.repository.ideacontent.IdeaContent
 import se.vgregion.service.innovationsslussen.repository.ideaperson.IdeaPersonRepository;
 import se.vgregion.service.innovationsslussen.util.FriendlyURLNormalizer;
 
+import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.Validator;
@@ -68,44 +70,33 @@ public class IdeaServiceImpl implements IdeaService {
     @Transactional(rollbackFor = CreateIdeaException.class)
     public Idea addIdea(Idea idea) {
     	
-//        try {
-//        	
-//        	long ideaId = CounterLocalServiceUtil.increment(Idea.class.getName());
-//        	long resourcePrimKey = CounterLocalServiceUtil.increment();
-//        	String urlTitle = generateUrlTitle(ideaId, idea.getTitle());
-//        	
-//        	idea.setId(ideaId);
-//        	idea.setResourcePrimKey(resourcePrimKey);
-//        	idea.setUrlTitle(urlTitle);
-//        	
-//            idea = ideaRepository.merge(idea);
-//
-//            /* */
-//            // Need to specify resource-actions in a file that typically resides in src in a folder called resource-actions. File should be called default.xml
-//            // The use of these resource actions should be specified in a file called portlet.properties like this:
-//            // resource.actions.configs=resource-actions/default.xml
-//            // Add resources
-//            String[] communityPermissions = new String[0];
-//            String[] guestPermissions = new String[0];
-//        	
-//            ResourceLocalServiceUtil.addModelResources(idea.getCompanyId(), idea.getGroupId(), idea.getUserId(),
-//            		Idea.class.getName(), idea.getId(), communityPermissions, guestPermissions);
-//            
-//            
-//            // Add asset
-//            long[] categoryIds = new long [0];
-//            String[] tagNames = new String [0];
-//            
-//    		// Message Boards
-//    		MBMessageLocalServiceUtil.addDiscussionMessage(
-//    			idea.getUserId(), String.valueOf(idea.getUserId()), idea.getGroupId(), Idea.class.getName(),
-//    			resourcePrimKey, WorkflowConstants.ACTION_PUBLISH);        
-//            
-//        } catch (SystemException e) {
-//        	LOGGER.error(e.getMessage(), e);
-//        } catch (PortalException e) {
-//        	LOGGER.error(e.getMessage(), e);
-//        }
+    	try {
+    		
+    		idea.setUrlTitle(generateUrlTitle(idea.getTitle()));
+    		
+    		// Persist idea
+    		idea = ideaRepository.merge(idea);
+    		
+    		// Get references to persisted IdeaContent (public and private)
+    		IdeaContent ideaContentPublic = idea.getIdeaContentPublic();
+    		IdeaContent ideaContentPrivate = idea.getIdeaContentPrivate();
+    		
+			// Add public discussion
+			MBMessageLocalServiceUtil.addDiscussionMessage(
+				idea.getUserId(), String.valueOf(ideaContentPublic.getUserId()), ideaContentPublic.getGroupId(), IdeaContent.class.getName(),
+				ideaContentPublic.getId(), WorkflowConstants.ACTION_PUBLISH);           
+			
+			// Add private discussion
+			MBMessageLocalServiceUtil.addDiscussionMessage(
+				idea.getUserId(), String.valueOf(ideaContentPrivate.getUserId()), ideaContentPrivate.getGroupId(), IdeaContent.class.getName(),
+				ideaContentPrivate.getId(), WorkflowConstants.ACTION_PUBLISH);
+  		
+    		
+    	} catch (SystemException e) {
+    		LOGGER.error(e.getMessage(), e);
+    	} catch (PortalException e) {
+    		LOGGER.error(e.getMessage(), e);
+    	}
 
         return idea;
     }    
@@ -138,11 +129,13 @@ public class IdeaServiceImpl implements IdeaService {
     	
     	Idea idea = ideaRepository.findIdeaByUrlTitle(urlTitle);
     	
-//    	if(idea != null) {
-//        	List<CommentItemVO> commentsList = getComments(idea);
-//        	
-//        	idea.setComments(commentsList);
-//    	}
+    	if(idea != null) {
+        	List<CommentItemVO> commentsListPublic = getPublicComments(idea);
+        	List<CommentItemVO> commentsListPrivate = getPrivateComments(idea);
+        	
+        	idea.getIdeaContentPublic().setComments(commentsListPublic);
+        	idea.getIdeaContentPrivate().setComments(commentsListPrivate);
+    	}
     	
         return idea;
     }
@@ -157,24 +150,23 @@ public class IdeaServiceImpl implements IdeaService {
     @Override
     @Transactional
     public void remove(Idea idea) {
-    	   	
-//    	try {
-//    		/* */
-//    		// Delete resources
-//			ResourceLocalServiceUtil.deleteResource(idea.getCompanyId(), Idea.class.getName(),
-//					ResourceConstants.SCOPE_INDIVIDUAL, idea.getResourcePrimKey());
-//			
-//	    	// Delete message board entries
-//	    	MBMessageLocalServiceUtil.deleteDiscussionMessages(Idea.class.getName(), idea.getResourcePrimKey());
-//	    	
-//	    	// Delete idea
-//	        ideaRepository.remove(idea);
-//			
-//		} catch (PortalException e) {
-//			LOGGER.error(e.getMessage(), e);
-//		} catch (SystemException e) {
-//			LOGGER.error(e.getMessage(), e);
-//		}
+    	
+    	System.out.println("IdeaServiceImpl - remove");
+    	
+    	try {
+    		
+	    	// Delete message board entries
+	    	MBMessageLocalServiceUtil.deleteDiscussionMessages(IdeaContent.class.getName(), idea.getIdeaContentPublic().getId());
+	    	MBMessageLocalServiceUtil.deleteDiscussionMessages(IdeaContent.class.getName(), idea.getIdeaContentPrivate().getId());
+	    	
+	    	// Delete idea
+	        ideaRepository.remove(idea);
+			
+		} catch (PortalException e) {
+			LOGGER.error(e.getMessage(), e);
+		} catch (SystemException e) {
+			LOGGER.error(e.getMessage(), e);
+		}
     	
     }
     
@@ -195,11 +187,12 @@ public class IdeaServiceImpl implements IdeaService {
         return idea;
     }    
 	
-	protected String generateUrlTitle(long entryId, String title) throws PortalException, SystemException {
+	protected String generateUrlTitle(String title) throws PortalException, SystemException {
 		title = title.trim().toLowerCase();
 
 		if (Validator.isNull(title) || Validator.isNumber(title) || title.equals("")) {
-			return String.valueOf(entryId);
+			long generatedId = CounterLocalServiceUtil.increment();
+			return String.valueOf(generatedId);
 		}
 		else {
 			String urlTitle = FriendlyURLNormalizer.normalize(
@@ -223,7 +216,7 @@ public class IdeaServiceImpl implements IdeaService {
 		}
 	}
 	
-	protected List<CommentItemVO> getComments(Idea idea) {
+	protected List<CommentItemVO> getComments(IdeaContent ideaContent) {
 		
 		ArrayList<CommentItemVO> commentsList = new ArrayList<CommentItemVO>();
 		
@@ -233,8 +226,8 @@ public class IdeaServiceImpl implements IdeaService {
 			
 			try {
 				messageDisplay = MBMessageLocalServiceUtil.getDiscussionMessageDisplay(
-						idea.getUserId(), idea.getGroupId(), Idea.class.getName(),
-						idea.getId(), WorkflowConstants.STATUS_ANY);
+						ideaContent.getUserId(), ideaContent.getGroupId(), IdeaContent.class.getName(),
+						ideaContent.getId(), WorkflowConstants.STATUS_ANY);
 			} catch(NullPointerException e) {
 				return commentsList;
 			}
@@ -248,8 +241,6 @@ public class IdeaServiceImpl implements IdeaService {
 			
 			List<MBMessage> mbMessages = MBMessageLocalServiceUtil.getThreadMessages(
 					threadId, WorkflowConstants.STATUS_ANY, messageComparator);
-			
-			System.out.println("IdeaServiceImpl - getComments - mbMessages.size() is: " + mbMessages.size());
 			
 			for(MBMessage mbMessage : mbMessages) {
 				 
@@ -279,6 +270,14 @@ public class IdeaServiceImpl implements IdeaService {
 		}
 		
 		return commentsList;
+	}
+	
+	protected List<CommentItemVO> getPublicComments(Idea idea) {
+		return getComments(idea.getIdeaContentPublic());
+	}
+	
+	protected List<CommentItemVO> getPrivateComments(Idea idea) {
+		return getComments(idea.getIdeaContentPrivate());
 	}
     
 	protected boolean isUniqueUrlTitle(String urlTitle) {

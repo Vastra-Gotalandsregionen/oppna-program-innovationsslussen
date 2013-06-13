@@ -1,7 +1,11 @@
 package se.vgregion.portal.innovationsslussen.createidea.controller;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.portlet.PortletRequest;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -15,6 +19,9 @@ import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
+import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
+import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaPerson;
+import se.vgregion.portal.innovationsslussen.util.IdeaPortletUtil;
 import se.vgregion.service.innovationsslussen.IdeaService;
 
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -98,34 +105,15 @@ public class CreateIdeaViewController {
         LOGGER.info("submitIdea");
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-        long companyId = themeDisplay.getCompanyId();
-        long groupId = themeDisplay.getScopeGroupId();
-        long userId = themeDisplay.getUserId();
+
+        Idea idea = IdeaPortletUtil.getIdeaFromRequest(request);
         
-        String title = ParamUtil.getString(request, "title", "");
-        String description = ParamUtil.getString(request, "description", "");
-        String solvesProblem = ParamUtil.getString(request, "solvesProblem", "");
-        String wantsHelpWith = ParamUtil.getString(request, "wantsHelpWith", "");
-        String name = ParamUtil.getString(request, "name", "");
-        String email = ParamUtil.getString(request, "email", "");
-        String phone = ParamUtil.getString(request, "phone", "");
-        String administrativeUnit = ParamUtil.getString(request, "administrativeUnit", "");
-        String jobPosition = ParamUtil.getString(request, "jobPosition", "");
-        
-        String vgrId = "none";
-        
-//        IdeaRestricted ideaRestricted = new IdeaRestricted(companyId, groupId, userId, description, solvesProblem, title, wantsHelpWith, vgrId, name, email, phone, administrativeUnit, jobPosition);
-//        IdeaOpen ideaOpen = new IdeaOpen(companyId, groupId, userId);
-//        
-//        IdeaOld idea = new IdeaOld(ideaOpen, ideaRestricted);
-//        
-//        ideaService.addIdea(idea);
+        ideaService.addIdea(idea);
 
         response.setRenderParameter("view", "confirmation");
 
 
     }
-    
 
 }
 
