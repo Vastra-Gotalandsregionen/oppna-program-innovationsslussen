@@ -22,13 +22,13 @@
 
 	<portlet:actionURL name="addComment" var="addCommentUrl">
 		<portlet:param name="action" value="addComment" />
+		<portlet:param name="urlTitle" value="${idea.urlTitle}" />
+		<portlet:param name="ideaContentType" value="0" />
 	</portlet:actionURL>
 	
 	<div class="add-comment">
 		<aui:form action="${addCommentUrl}" cssClass="add-comment-form clearfix" method="POST">
 			
-			<aui:input name="urlTitle" type="hidden" value="${idea.ideaOpen.urlTitle}" />
-		
 			<div class="field-wrap">
 				<label for="<portlet:namespace />comment">
 					L&auml;gg till din kommentar
@@ -48,10 +48,9 @@
 		</aui:form>
 	</div>
 	
-	<%-- 
 	<c:choose>
-		<c:when test="${not empty idea.comments}">
-			<c:forEach items="${idea.comments}" var="comment" varStatus="status">
+		<c:when test="${not empty idea.ideaContentPublic.comments}">
+			<c:forEach items="${idea.ideaContentPublic.comments}" var="comment" varStatus="status">
 				<c:set var="commentItemCssClass" scope="page" value="comment" />
 				<c:if test="${status.index % 2 != 0}">
 					<c:set var="commentItemCssClass" scope="page" value="comment comment-alt" />
@@ -84,9 +83,9 @@
 			<p>Det finns inga kommentarer p&aring; denna id&eacute; &auml;nnu. Posta din kommentar och bli f&ouml;rst!</p>
 		</c:otherwise>
 	</c:choose>
-	--%>
 	
-	<%-- --%>
+	
+	<%-- 
 	<div class="comment clearfix">
 		<div class="comment-author">
 			<div class="comment-author-name">

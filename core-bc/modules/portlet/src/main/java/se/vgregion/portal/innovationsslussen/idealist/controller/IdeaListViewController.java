@@ -75,6 +75,8 @@ public class IdeaListViewController {
 			
 			List<Idea> ideaList = ideaService.findIdeasByGroupId(companyId, scopeGroupId);
 			
+			System.out.println("IdeaListViewController - showIdeaList - ideaList.size(): " + ideaList.size());
+			
 			model.addAttribute("ideaList", ideaList);
 			
 		} catch (PortalException e) {
