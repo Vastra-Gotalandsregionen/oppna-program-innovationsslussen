@@ -76,6 +76,11 @@ public class Idea extends AbstractEntity<Long> {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idea")
     @JoinColumn(name= "idea_id")
     private Set<IdeaPerson> ideaPersons = new HashSet<IdeaPerson>();
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idea")
+    @JoinColumn(name= "idea_id")
+    private Set<IdeaUserLike> likes = new HashSet<IdeaUserLike>();
+    
 
     /**
      * Constructor.
@@ -194,6 +199,18 @@ public class Idea extends AbstractEntity<Long> {
     	
     	return ideaContent;
     }
+    
+    public Set<IdeaUserLike> getLikes() {
+    	
+        return likes;
+    }
+
+    public void addLike(IdeaUserLike ideaUserLike) {
+    	ideaUserLike.setIdea(this);
+    	
+    	this.likes.add(ideaUserLike);
+    }
+    
     
     
 }

@@ -64,17 +64,38 @@
 							
 								<li class="icon comment">
 									<a href="#">
-										<span>Kommentera (7)</span>
+										<span>Kommentera (${fn:length(idea.ideaContentPrivate.comments)})</span>
 									</a>
 								</li>
-								<li class="icon like">
-									<a href="#">
-										<span>Gilla (10)</span>
-									</a>
-								</li>
+								<c:choose>
+									<c:when test="${isIdeaUserLiked}">
+										<li class="icon like">
+											<portlet:actionURL name="removeLike" var="removeLikeUrl">
+												<portlet:param name="action" value="removeLike" />
+												<portlet:param name="urlTitle" value="${idea.urlTitle}" />
+												<portlet:param name="ideaContentType" value="1" />
+											</portlet:actionURL>
+											<a href="${removeLikeUrl}">
+												<span>Sluta gilla (${fn:length(idea.likes)})</span>
+											</a>
+										</li>									
+									</c:when>
+									<c:otherwise>
+										<li class="icon like">
+											<portlet:actionURL name="addLike" var="addLikeUrl">
+												<portlet:param name="action" value="addLike" />
+												<portlet:param name="urlTitle" value="${idea.urlTitle}" />
+												<portlet:param name="ideaContentType" value="1" />
+											</portlet:actionURL>
+											<a href="${addLikeUrl}">
+												<span>Gilla (${fn:length(idea.likes)})</span>
+											</a>
+										</li>
+									</c:otherwise>
+								</c:choose>
 								<li class="icon favourite last">
 									<a href="#">
-										<span>L&auml;gg till som favorit (4)</span>
+										<span>L&auml;gg till som favorit (3)</span>
 									</a>
 								</li>
 								

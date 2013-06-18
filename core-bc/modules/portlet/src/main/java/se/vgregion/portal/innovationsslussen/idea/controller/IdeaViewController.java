@@ -69,18 +69,19 @@ public class IdeaViewController {
     @RenderMapping()
     public String showIdea(RenderRequest request, RenderResponse response, final ModelMap model) {
 
-    	//ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-        //long scopeGroupId = themeDisplay.getScopeGroupId();
-        //long companyId = themeDisplay.getCompanyId();
-        //boolean isSignedIn = themeDisplay.isSignedIn();
+    	ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+        long scopeGroupId = themeDisplay.getScopeGroupId();
+        long companyId = themeDisplay.getCompanyId();
+        long userId = themeDisplay.getUserId();
         
         String urlTitle = ParamUtil.getString(request, "urlTitle", "");
         
-        System.out.println("IdeaViewController - showIdea - urlTitle is: " + urlTitle);
-        
         if(!urlTitle.equals("")) {
             Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
+            boolean isIdeaUserLiked = ideaService.getIsIdeaUserLiked(companyId, scopeGroupId, userId, urlTitle);
+            
             model.addAttribute("idea", idea);
+            model.addAttribute("isIdeaUserLiked", isIdeaUserLiked);
         }
 
         return "view_public";
@@ -97,18 +98,19 @@ public class IdeaViewController {
     @RenderMapping(params = "type=private")
     public String showIdeaPrivate(RenderRequest request, RenderResponse response, final ModelMap model) {
 
-    	//ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-        //long scopeGroupId = themeDisplay.getScopeGroupId();
-        //long companyId = themeDisplay.getCompanyId();
-        //boolean isSignedIn = themeDisplay.isSignedIn();
+    	ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+        long scopeGroupId = themeDisplay.getScopeGroupId();
+        long companyId = themeDisplay.getCompanyId();
+        long userId = themeDisplay.getUserId();
         
         String urlTitle = ParamUtil.getString(request, "urlTitle", "");
         
-        System.out.println("IdeaViewController - showIdea - urlTitle is: " + urlTitle);
-        
         if(!urlTitle.equals("")) {
             Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
+            boolean isIdeaUserLiked = ideaService.getIsIdeaUserLiked(companyId, scopeGroupId, userId, urlTitle);
+            
             model.addAttribute("idea", idea);
+            model.addAttribute("isIdeaUserLiked", isIdeaUserLiked);
         }
 
         return "view_private";
@@ -124,16 +126,8 @@ public class IdeaViewController {
      */
     @ActionMapping("someAction")
     public final void someAction(ActionRequest request, ActionResponse response, final ModelMap model) {
-    	
     	System.out.println("someAction");
-
         LOGGER.info("someAction");
-
-        //ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-        //long companyId = themeDisplay.getCompanyId();
-        //long groupId = themeDisplay.getScopeGroupId();
-        //long userId = themeDisplay.getUserId();
-        
         response.setRenderParameter("view", "view");
     }    
     
@@ -163,9 +157,6 @@ public class IdeaViewController {
         if(!comment.equals("")) {
         	
         	try {
-        		//IdeaContent ideaContent = ideaService.
-        		
-        		
             	Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
             	
             	long ideaCommentClassPK = -1;
@@ -218,7 +209,73 @@ public class IdeaViewController {
         
         response.setRenderParameter("urlTitle", urlTitle);
 
+    }
+    
+    /**
+     * Method handling Action request.
+     *
+     * @param request  the request
+     * @param response the response
+     * @param model    the model
+     */
+    @ActionMapping(params = "action=addLike")
+    public final void addLike(ActionRequest request, ActionResponse response, final ModelMap model) {
+    	
+    	System.out.println("addLike");
+        LOGGER.info("addLike");
+
+        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+        long companyId = themeDisplay.getCompanyId();
+        long groupId = themeDisplay.getScopeGroupId();
+        long userId = themeDisplay.getUserId();
+        
+        int ideaContentType = ParamUtil.getInteger(request, "ideaContentType");
+        String urlTitle = ParamUtil.getString(request, "urlTitle", "");
+        
+        if(themeDisplay.isSignedIn()) {
+        	ideaService.addLike(companyId, groupId, userId, urlTitle);
+        }
+
+        if(ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE) {
+        	response.setRenderParameter("type", "private");	
+        }
+        
+        response.setRenderParameter("urlTitle", urlTitle);
     }    
+
+    /**
+     * Method handling Action request.
+     *
+     * @param request  the request
+     * @param response the response
+     * @param model    the model
+     */
+    @ActionMapping(params = "action=removeLike")
+    public final void removeLike(ActionRequest request, ActionResponse response, final ModelMap model) {
+    	
+    	System.out.println("removeLike");
+        LOGGER.info("removeLike");
+
+        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+        long companyId = themeDisplay.getCompanyId();
+        long groupId = themeDisplay.getScopeGroupId();
+        long userId = themeDisplay.getUserId();
+        
+        int ideaContentType = ParamUtil.getInteger(request, "ideaContentType");
+        String urlTitle = ParamUtil.getString(request, "urlTitle", "");
+        
+        if(themeDisplay.isSignedIn()) {
+        	ideaService.removeLike(companyId, groupId, userId, urlTitle);
+        }
+
+        if(ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE) {
+        	response.setRenderParameter("type", "private");	
+        }
+        
+        response.setRenderParameter("urlTitle", urlTitle);
+
+    }    
+    
 
 }
 

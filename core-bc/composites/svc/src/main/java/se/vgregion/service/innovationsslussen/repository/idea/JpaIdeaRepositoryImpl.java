@@ -1,8 +1,5 @@
 package se.vgregion.service.innovationsslussen.repository.idea;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.List;
 
 import se.vgregion.dao.domain.patterns.repository.db.jpa.DefaultJpaRepository;
@@ -22,7 +19,14 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, Long> impl
     	Idea idea = null;
     	
         //String queryString = "SELECT DISTINCT n, (select count(*) from Like ) into foo.countPROPERTY  FROM Idea n LEFT JOIN FETCH n.ideaContents LEFT JOIN FETCH n.ideaPersons WHERE n.id = ?1";
-    	String queryString = "SELECT DISTINCT n FROM Idea n LEFT JOIN FETCH n.ideaContents LEFT JOIN FETCH n.ideaPersons WHERE n.id = ?1";
+    	
+        String queryString = "" 
+        		+ " SELECT DISTINCT n FROM Idea n" 
+        		+ " LEFT JOIN FETCH n.ideaContents" 
+        		+ " LEFT JOIN FETCH n.ideaPersons"
+        		+ " LEFT JOIN FETCH n.likes"
+        		+ " WHERE n.id = ?1" 
+        		+ " ORDER BY n.id ASC";
         
         Object[] queryObject = new Object[]{id};
 
@@ -40,7 +44,13 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, Long> impl
     public Idea findIdeaByUrlTitle(String urlTitle) {
     	Idea idea = null;
     	
-        String queryString = "SELECT DISTINCT n FROM Idea n LEFT JOIN FETCH n.ideaContents LEFT JOIN FETCH n.ideaPersons WHERE n.urlTitle = ?1 ORDER BY n.id ASC";
+        String queryString = "" 
+        		+ " SELECT DISTINCT n FROM Idea n" 
+        		+ " LEFT JOIN FETCH n.ideaContents" 
+        		+ " LEFT JOIN FETCH n.ideaPersons"
+        		+ " LEFT JOIN FETCH n.likes"
+        		+ " WHERE n.urlTitle = ?1" 
+        		+ " ORDER BY n.id ASC";
         
         Object[] queryObject = new Object[]{urlTitle};
 
