@@ -7,7 +7,7 @@ import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserLike;
 
 /**
- * Repository interface for managing {@code Idea}s.
+ * Repository interface for managing {@code IdeaUserLike}s.
  *
  * @author Erik Andersson
  * @company Monator Technologies AB

@@ -12,14 +12,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
+import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserFavorite;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserLike;
 import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
 import se.vgregion.service.barium.BariumService;
 import se.vgregion.service.innovationsslussen.exception.CreateIdeaException;
+import se.vgregion.service.innovationsslussen.exception.FavoriteException;
 import se.vgregion.service.innovationsslussen.exception.LikeException;
 import se.vgregion.service.innovationsslussen.repository.idea.IdeaRepository;
 import se.vgregion.service.innovationsslussen.repository.ideacontent.IdeaContentRepository;
 import se.vgregion.service.innovationsslussen.repository.ideaperson.IdeaPersonRepository;
+import se.vgregion.service.innovationsslussen.repository.ideauserfavorite.IdeaUserFavoriteRepository;
 import se.vgregion.service.innovationsslussen.repository.ideauserlike.IdeaUserLikeRepository;
 import se.vgregion.service.innovationsslussen.util.FriendlyURLNormalizer;
 
@@ -48,6 +51,7 @@ public class IdeaServiceImpl implements IdeaService {
     private IdeaContentRepository ideaContentRepository;
     private IdeaPersonRepository ideaPersonRepository;
     private IdeaUserLikeRepository ideaUserLikeRepository;
+    private IdeaUserFavoriteRepository ideaUserFavoriteRepository;
     private BariumService bariumService;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(IdeaServiceImpl.class);
@@ -65,13 +69,34 @@ public class IdeaServiceImpl implements IdeaService {
     @Autowired
     public IdeaServiceImpl(IdeaRepository ideaRepository, IdeaContentRepository ideaContentRepository,
     		IdeaPersonRepository ideaPersonRepository, IdeaUserLikeRepository ideaUserLikeRepository,
-    		BariumService bariumService) {
+    		IdeaUserFavoriteRepository ideaUserFavoriteRepository, BariumService bariumService) {
         this.ideaRepository = ideaRepository;
         this.ideaContentRepository = ideaContentRepository;
         this.ideaPersonRepository = ideaPersonRepository;
         this.ideaUserLikeRepository = ideaUserLikeRepository;
+        this.ideaUserFavoriteRepository = ideaUserFavoriteRepository;
         this.bariumService = bariumService;
     }
+    
+    @Override
+    @Transactional(rollbackFor = FavoriteException.class)
+    public void addFavorite(long companyId, long groupId, long userId, String urlTitle) {
+    	
+    	boolean isIdeaUserFavorite = getIsIdeaUserFavorite(companyId, groupId, userId, urlTitle);
+    	
+    	if(isIdeaUserFavorite) {
+    		// User already has the idea as a favorite
+    		return;
+    	}
+    	
+    	Idea idea = findIdeaByUrlTitle(urlTitle);
+    	
+    	IdeaUserFavorite ideaUserFavorite = new IdeaUserFavorite(companyId, groupId, userId);
+    	ideaUserFavorite.setIdea(idea);
+    	
+    	ideaUserFavorite = ideaUserFavoriteRepository.merge(ideaUserFavorite);
+    }
+    
     
     @Override
     @Transactional(rollbackFor = LikeException.class)
@@ -167,6 +192,23 @@ public class IdeaServiceImpl implements IdeaService {
     }
     
     @Override
+    public boolean getIsIdeaUserFavorite(long companyId, long groupId, long userId, String urlTitle) {
+    	boolean isIdeaUserFavorite = false;
+    	
+    	Idea idea = findIdeaByUrlTitle(urlTitle);
+    	long ideaId = idea.getId();
+    	
+    	List<IdeaUserFavorite> ideaUserFavorites = ideaUserFavoriteRepository.findFavoritesByUserAndIdea(companyId, groupId, userId, ideaId);
+    	
+    	if(ideaUserFavorites.size() > 0 ) {
+    		isIdeaUserFavorite = true;
+    	}
+    	
+    	return isIdeaUserFavorite;
+    }
+    
+    
+    @Override
     public boolean getIsIdeaUserLiked(long companyId, long groupId, long userId, String urlTitle) {
     	boolean isIdeaUserLiked = false;
     	
@@ -224,6 +266,16 @@ public class IdeaServiceImpl implements IdeaService {
 //        }
     }
     
+    @Override
+    @Transactional
+    public void removeFavorite(long companyId, long groupId, long userId, String urlTitle) {
+    	
+    	Idea idea = ideaRepository.findIdeaByUrlTitle(urlTitle);
+    	
+    	if(idea != null) {
+    		ideaUserFavoriteRepository.removeByUserAndIdea(companyId, groupId, userId, idea.getId());	
+    	}
+    }
     
     @Override
     @Transactional
@@ -235,7 +287,6 @@ public class IdeaServiceImpl implements IdeaService {
     		ideaUserLikeRepository.removeByUserAndIdea(companyId, groupId, userId, idea.getId());	
     	}
     }
-    
     
     @Override
     public Idea updateIdea(Idea idea) {

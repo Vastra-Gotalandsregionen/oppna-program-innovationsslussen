@@ -8,6 +8,7 @@
 		<class>se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent</class>
 		<class>se.vgregion.portal.innovationsslussen.domain.jpa.IdeaPerson</class>
 		<class>se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserLike</class>
+		<class>se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserFavorite</class>
 	</persistence-unit>
 
 </persistence>

@@ -71,9 +71,9 @@
 									</a>
 								</li>
 								
-								<c:choose>
-									<c:when test="${isIdeaUserLiked}">
-										<li class="icon like">
+								<li class="icon like">
+									<c:choose>
+										<c:when test="${isIdeaUserLiked}">
 											<portlet:actionURL name="removeLike" var="removeLikeUrl">
 												<portlet:param name="action" value="removeLike" />
 												<portlet:param name="urlTitle" value="${idea.urlTitle}" />
@@ -82,10 +82,8 @@
 											<a href="${removeLikeUrl}">
 												<span>Sluta gilla (${fn:length(idea.likes)})</span>
 											</a>
-										</li>									
-									</c:when>
-									<c:otherwise>
-										<li class="icon like">
+										</c:when>
+										<c:otherwise>
 											<portlet:actionURL name="addLike" var="addLikeUrl">
 												<portlet:param name="action" value="addLike" />
 												<portlet:param name="urlTitle" value="${idea.urlTitle}" />
@@ -94,13 +92,33 @@
 											<a href="${addLikeUrl}">
 												<span>Gilla (${fn:length(idea.likes)})</span>
 											</a>
-										</li>
-									</c:otherwise>
-								</c:choose>
-								<li class="icon favourite last">
-									<a href="#">
-										<span>L&auml;gg till som favorit (4)</span>
-									</a>
+										</c:otherwise>
+									</c:choose>
+								</li>
+								
+								<li class="icon favorite last">
+									<c:choose>
+										<c:when test="${isIdeaUserFavorite}">
+											<portlet:actionURL name="removeFavorite" var="removeFavoriteUrl">
+												<portlet:param name="action" value="removeFavorite" />
+												<portlet:param name="urlTitle" value="${idea.urlTitle}" />
+												<portlet:param name="ideaContentType" value="0" />
+											</portlet:actionURL>
+											<a href="${removeFavoriteUrl}">
+												<span>Ta bort som favorit (${fn:length(idea.favorites)})</span>
+											</a>
+										</c:when>
+										<c:otherwise>
+											<portlet:actionURL name="addFavorite" var="addFavoriteUrl">
+												<portlet:param name="action" value="addFavorite" />
+												<portlet:param name="urlTitle" value="${idea.urlTitle}" />
+												<portlet:param name="ideaContentType" value="0" />
+											</portlet:actionURL>
+											<a href="${addFavoriteUrl}">
+												<span>L&auml;gg till som favorit (${fn:length(idea.favorites)})</span>
+											</a>
+										</c:otherwise>
+									</c:choose>
 								</li>
 								
 							</ul>

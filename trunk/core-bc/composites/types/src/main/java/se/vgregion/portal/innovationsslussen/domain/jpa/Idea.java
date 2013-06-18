@@ -80,6 +80,10 @@ public class Idea extends AbstractEntity<Long> {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idea")
     @JoinColumn(name= "idea_id")
     private Set<IdeaUserLike> likes = new HashSet<IdeaUserLike>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idea")
+    @JoinColumn(name= "idea_id")
+    private Set<IdeaUserFavorite> favorites = new HashSet<IdeaUserFavorite>();
     
 
     /**
@@ -205,12 +209,22 @@ public class Idea extends AbstractEntity<Long> {
         return likes;
     }
 
+    public void addFavorite(IdeaUserFavorite ideaUserFavorite) {
+    	ideaUserFavorite.setIdea(this);
+    	
+    	this.favorites.add(ideaUserFavorite);
+    }
+    
+    public Set<IdeaUserFavorite> getFavorites() {
+    	
+        return favorites;
+    }
+
     public void addLike(IdeaUserLike ideaUserLike) {
     	ideaUserLike.setIdea(this);
     	
     	this.likes.add(ideaUserLike);
     }
-    
     
     
 }
