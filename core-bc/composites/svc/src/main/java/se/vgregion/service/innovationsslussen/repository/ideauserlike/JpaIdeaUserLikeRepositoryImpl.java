@@ -31,8 +31,6 @@ public class JpaIdeaUserLikeRepositoryImpl extends DefaultJpaRepository<IdeaUser
     public List<IdeaUserLike> findLikesByGroupId(long companyId, long groupId) {
         String queryString = "SELECT n FROM IdeaUserLike n WHERE n.companyId = ?1 AND n.groupId = ?2 ORDER BY n.id ASC";
         
-        System.out.println("JpaIdeaUserLikeRepositoryImpl - findIdeaUserLikesByGroupId");
-        
         Object[] queryObject = new Object[]{companyId, groupId};
 
         List<IdeaUserLike> ideaUserLike = findByQuery(queryString, queryObject);
@@ -44,8 +42,6 @@ public class JpaIdeaUserLikeRepositoryImpl extends DefaultJpaRepository<IdeaUser
     public List<IdeaUserLike> findLikesByIdeaId(long companyId, long groupId, long ideaId) {
         String queryString = "SELECT n FROM IdeaUserLike n WHERE n.companyId = ?1 AND n.groupId = ?2 AND n.idea.id = ?3  ORDER BY n.id ASC";
         
-        System.out.println("JpaIdeaUserLikeRepositoryImpl - findLikesByIdeaId");
-        
         Object[] queryObject = new Object[]{companyId, groupId, ideaId};
 
         List<IdeaUserLike> ideaUserLike = findByQuery(queryString, queryObject);
@@ -56,8 +52,6 @@ public class JpaIdeaUserLikeRepositoryImpl extends DefaultJpaRepository<IdeaUser
     @Override
     public List<IdeaUserLike> findLikesByUserId(long companyId, long groupId, long userId) {
         String queryString = "SELECT n FROM IdeaUserLike n WHERE n.companyId = ?1 AND n.groupId = ?2 AND n.userId = ?3  ORDER BY n.id ASC";
-        
-        System.out.println("JpaIdeaUserLikeRepositoryImpl - findLikesByIdeaId");
         
         Object[] queryObject = new Object[]{companyId, groupId, userId};
 
@@ -76,8 +70,6 @@ public class JpaIdeaUserLikeRepositoryImpl extends DefaultJpaRepository<IdeaUser
     			+ " n.userId = ?3 AND"
     			+ " n.idea.id = ?4"
     			+ " ORDER BY n.id ASC";
-        
-        System.out.println("JpaIdeaUserLikeRepositoryImpl - findLikesByUserAndIdea");
         
         Object[] queryObject = new Object[]{companyId, groupId, userId, ideaId};
 
