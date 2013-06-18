@@ -25,6 +25,7 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, Long> impl
         		+ " LEFT JOIN FETCH n.ideaContents" 
         		+ " LEFT JOIN FETCH n.ideaPersons"
         		+ " LEFT JOIN FETCH n.likes"
+        		+ " LEFT JOIN FETCH n.favorites"
         		+ " WHERE n.id = ?1" 
         		+ " ORDER BY n.id ASC";
         
@@ -49,6 +50,7 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, Long> impl
         		+ " LEFT JOIN FETCH n.ideaContents" 
         		+ " LEFT JOIN FETCH n.ideaPersons"
         		+ " LEFT JOIN FETCH n.likes"
+        		+ " LEFT JOIN FETCH n.favorites"
         		+ " WHERE n.urlTitle = ?1" 
         		+ " ORDER BY n.id ASC";
         

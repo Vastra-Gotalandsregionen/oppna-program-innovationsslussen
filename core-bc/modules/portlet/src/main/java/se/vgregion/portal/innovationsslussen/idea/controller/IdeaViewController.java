@@ -79,8 +79,10 @@ public class IdeaViewController {
         if(!urlTitle.equals("")) {
             Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
             boolean isIdeaUserLiked = ideaService.getIsIdeaUserLiked(companyId, scopeGroupId, userId, urlTitle);
+            boolean isIdeaUserFavorite = ideaService.getIsIdeaUserFavorite(companyId, scopeGroupId, userId, urlTitle);
             
             model.addAttribute("idea", idea);
+            model.addAttribute("isIdeaUserFavorite", isIdeaUserFavorite);
             model.addAttribute("isIdeaUserLiked", isIdeaUserLiked);
         }
 
@@ -107,9 +109,11 @@ public class IdeaViewController {
         
         if(!urlTitle.equals("")) {
             Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
+            boolean isIdeaUserFavorite = ideaService.getIsIdeaUserFavorite(companyId, scopeGroupId, userId, urlTitle);
             boolean isIdeaUserLiked = ideaService.getIsIdeaUserLiked(companyId, scopeGroupId, userId, urlTitle);
             
             model.addAttribute("idea", idea);
+            model.addAttribute("isIdeaUserFavorite", isIdeaUserFavorite);
             model.addAttribute("isIdeaUserLiked", isIdeaUserLiked);
         }
 
@@ -218,6 +222,39 @@ public class IdeaViewController {
      * @param response the response
      * @param model    the model
      */
+    @ActionMapping(params = "action=addFavorite")
+    public final void addFavorite(ActionRequest request, ActionResponse response, final ModelMap model) {
+    	
+    	System.out.println("addFavorite");
+        LOGGER.info("addFavorite");
+
+        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+        long companyId = themeDisplay.getCompanyId();
+        long groupId = themeDisplay.getScopeGroupId();
+        long userId = themeDisplay.getUserId();
+        
+        int ideaContentType = ParamUtil.getInteger(request, "ideaContentType");
+        String urlTitle = ParamUtil.getString(request, "urlTitle", "");
+        
+        if(themeDisplay.isSignedIn()) {
+        	ideaService.addFavorite(companyId, groupId, userId, urlTitle);
+        }
+
+        if(ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE) {
+        	response.setRenderParameter("type", "private");	
+        }
+        
+        response.setRenderParameter("urlTitle", urlTitle);
+    }    
+    
+    
+    /**
+     * Method handling Action request.
+     *
+     * @param request  the request
+     * @param response the response
+     * @param model    the model
+     */
     @ActionMapping(params = "action=addLike")
     public final void addLike(ActionRequest request, ActionResponse response, final ModelMap model) {
     	
@@ -241,6 +278,39 @@ public class IdeaViewController {
         }
         
         response.setRenderParameter("urlTitle", urlTitle);
+    }
+    
+    /**
+     * Method handling Action request.
+     *
+     * @param request  the request
+     * @param response the response
+     * @param model    the model
+     */
+    @ActionMapping(params = "action=removeFavorite")
+    public final void removeFavorite(ActionRequest request, ActionResponse response, final ModelMap model) {
+    	
+    	System.out.println("removeFavorite");
+        LOGGER.info("removeFavorite");
+
+        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+        long companyId = themeDisplay.getCompanyId();
+        long groupId = themeDisplay.getScopeGroupId();
+        long userId = themeDisplay.getUserId();
+        
+        int ideaContentType = ParamUtil.getInteger(request, "ideaContentType");
+        String urlTitle = ParamUtil.getString(request, "urlTitle", "");
+        
+        if(themeDisplay.isSignedIn()) {
+        	ideaService.removeFavorite(companyId, groupId, userId, urlTitle);
+        }
+
+        if(ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE) {
+        	response.setRenderParameter("type", "private");	
+        }
+        
+        response.setRenderParameter("urlTitle", urlTitle);
+
     }    
 
     /**
@@ -273,7 +343,6 @@ public class IdeaViewController {
         }
         
         response.setRenderParameter("urlTitle", urlTitle);
-
     }    
     
 
