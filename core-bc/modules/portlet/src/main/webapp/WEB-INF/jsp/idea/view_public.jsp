@@ -11,34 +11,6 @@
 <portlet:defineObjects />
 <liferay-theme:defineObjects />	
 
-<%-- Should be moved out of jsp --%>
-<liferay-util:html-bottom>
-	<script type="text/javascript">
-
-		AUI().ready('aui-tooltip', function(A) {
-
-			var portletNode = A.one('#p_p_id' + '<portlet:namespace />');
-
-			if(portletNode) {
-				var flowNodes = portletNode.all('.idea-flow-list li');
-
-				new A.Tooltip({
-			         trigger: flowNodes,
-			         align: { points: [ 'tc', 'bc' ] },
-			         cssClass: 'rp-tooltip',
-			         showArrow: false,
-			         title: true
-			 	}).render();
-
-				
-			}
-			
-		});
-	
-	</script>
-</liferay-util:html-bottom>
-
-
 <div class="idea-outer">
 	<div class="idea">
 		<div class="idea-inner">
@@ -204,3 +176,17 @@
 		</div>
 	</div>
 </div>
+
+<liferay-util:html-bottom>
+	<script type="text/javascript" src="<%= request.getContextPath() %>/js/innovationsslussen-idea.js"></script>
+	<script type="text/javascript">
+		AUI().ready('aui-base','innovationsslussen-idea', function (A) {
+			var innovationsslussenIdea = new A.InnovationsslussenIdea({
+				commentsInput: '#<portlet:namespace />comment',
+				portletNamespace: '<portlet:namespace />',
+				portletNode: '#p_p_id<portlet:namespace />'
+			});
+			innovationsslussenIdea.render();
+		});
+	</script>
+</liferay-util:html-bottom>
