@@ -1,5 +1,8 @@
 package se.vgregion.service.innovationsslussen.repository.idea;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import se.vgregion.dao.domain.patterns.repository.db.jpa.DefaultJpaRepository;
@@ -18,7 +21,8 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, Long> impl
     public Idea find(long id) {
     	Idea idea = null;
     	
-        String queryString = "SELECT n FROM Idea n LEFT JOIN FETCH n.ideaContents LEFT JOIN FETCH n.ideaPersons WHERE n.id = ?1";
+        //String queryString = "SELECT DISTINCT n, (select count(*) from Like ) into foo.countPROPERTY  FROM Idea n LEFT JOIN FETCH n.ideaContents LEFT JOIN FETCH n.ideaPersons WHERE n.id = ?1";
+    	String queryString = "SELECT DISTINCT n FROM Idea n LEFT JOIN FETCH n.ideaContents LEFT JOIN FETCH n.ideaPersons WHERE n.id = ?1";
         
         Object[] queryObject = new Object[]{id};
 
@@ -36,7 +40,7 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, Long> impl
     public Idea findIdeaByUrlTitle(String urlTitle) {
     	Idea idea = null;
     	
-        String queryString = "SELECT n FROM Idea n LEFT JOIN FETCH n.ideaContents LEFT JOIN FETCH n.ideaPersons WHERE n.urlTitle = ?1 ORDER BY n.id ASC";
+        String queryString = "SELECT DISTINCT n FROM Idea n LEFT JOIN FETCH n.ideaContents LEFT JOIN FETCH n.ideaPersons WHERE n.urlTitle = ?1 ORDER BY n.id ASC";
         
         Object[] queryObject = new Object[]{urlTitle};
 
@@ -51,7 +55,7 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, Long> impl
 	
     @Override
     public List<Idea> findIdeasByCompanyId(long companyId) {
-        String queryString = "SELECT n FROM Idea n LEFT JOIN FETCH n.ideaContents LEFT JOIN FETCH n.ideaPersons WHERE n.companyId = ?1 ORDER BY n.id ASC";
+        String queryString = "SELECT DISTINCT n FROM Idea n LEFT JOIN FETCH n.ideaContents LEFT JOIN FETCH n.ideaPersons WHERE n.companyId = ?1 ORDER BY n.id ASC";
         
         Object[] queryObject = new Object[]{companyId};
 
@@ -62,24 +66,12 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, Long> impl
 
     @Override
     public List<Idea> findIdeasByGroupId(long companyId, long groupId) {
-        String queryString = "SELECT n FROM Idea n LEFT JOIN FETCH n.ideaContents LEFT JOIN FETCH n.ideaPersons WHERE n.companyId = ?1 AND n.groupId = ?2 ORDER BY "
+        String queryString = "SELECT DISTINCT n FROM Idea n LEFT JOIN FETCH n.ideaContents LEFT JOIN FETCH n.ideaPersons WHERE n.companyId = ?1 AND n.groupId = ?2 ORDER BY "
                 + "n.id ASC";
-        
-        // TODO - return duplicates because of the left join fetch
-        // Fix - http://stackoverflow.com/questions/592825/jpa-please-help-understanding-join-fetch
-        // How to use this with the VGR framework?
-        
-        System.out.println("JpaIdeaRepositoryImpl - findIdeasByGroupId");
         
         Object[] queryObject = new Object[]{companyId, groupId};
 
         List<Idea> ideas = findByQuery(queryString, queryObject);
-        
-        System.out.println("JpaIdeaRepositoryImpl - findIdeasByGroupId ideas.size is: " + ideas.size() + " (companyId is: " + companyId + " and groupId is: " + groupId + ")");
-        
-        for(Idea idea : ideas) {
-        	System.out.println("JpaIdeaRepositoryImpl - findIdeasByGroupId idea id is: " + idea.getId());
-        }
 
         return ideas;
     }

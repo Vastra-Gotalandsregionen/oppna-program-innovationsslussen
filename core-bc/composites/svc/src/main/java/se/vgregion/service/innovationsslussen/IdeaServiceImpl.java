@@ -144,7 +144,10 @@ public class IdeaServiceImpl implements IdeaService {
     @Transactional
     public void remove(long ideaId) {
     	Idea idea = ideaRepository.find(ideaId);
-        ideaRepository.remove(idea);
+        
+    	remove(idea);
+    	
+    	//ideaRepository.remove(idea);
     }
 
     @Override

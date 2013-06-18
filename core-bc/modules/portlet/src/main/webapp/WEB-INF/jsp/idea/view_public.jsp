@@ -52,7 +52,7 @@
 							<ul class="rp-toolbar clearfix">
 							
 								<%-- Add logic that controls whether link is shown or not --%>
-								<li class="icon private">
+								<li class="icon closed">
 								
 									<liferay-portlet:renderURL var="ideaPrivateUrl">
 										<liferay-portlet:param name="showView" value="showIdea" />

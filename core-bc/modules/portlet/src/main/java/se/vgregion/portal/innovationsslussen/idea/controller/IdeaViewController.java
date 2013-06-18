@@ -212,7 +212,10 @@ public class IdeaViewController {
         	
         }
 
-        response.setRenderParameter("jspPage", "/html/idea/view.jsp");
+        if(ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE) {
+        	response.setRenderParameter("type", "private");	
+        }
+        
         response.setRenderParameter("urlTitle", urlTitle);
 
     }    
