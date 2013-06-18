@@ -67,7 +67,15 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, Long> impl
 	
     @Override
     public List<Idea> findIdeasByCompanyId(long companyId) {
-        String queryString = "SELECT DISTINCT n FROM Idea n LEFT JOIN FETCH n.ideaContents LEFT JOIN FETCH n.ideaPersons WHERE n.companyId = ?1 ORDER BY n.id ASC";
+        
+        String queryString = "" 
+        		+ " SELECT DISTINCT n FROM Idea n" 
+        		+ " LEFT JOIN FETCH n.ideaContents" 
+        		+ " LEFT JOIN FETCH n.ideaPersons"
+        		+ " LEFT JOIN FETCH n.likes"
+        		+ " LEFT JOIN FETCH n.favorites"
+        		+ " WHERE n.companyId = ?1" 
+        		+ " ORDER BY n.id ASC";
         
         Object[] queryObject = new Object[]{companyId};
 
@@ -78,8 +86,16 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, Long> impl
 
     @Override
     public List<Idea> findIdeasByGroupId(long companyId, long groupId) {
-        String queryString = "SELECT DISTINCT n FROM Idea n LEFT JOIN FETCH n.ideaContents LEFT JOIN FETCH n.ideaPersons WHERE n.companyId = ?1 AND n.groupId = ?2 ORDER BY "
-                + "n.id ASC";
+        
+        String queryString = "" 
+        		+ " SELECT DISTINCT n FROM Idea n" 
+        		+ " LEFT JOIN FETCH n.ideaContents" 
+        		+ " LEFT JOIN FETCH n.ideaPersons"
+        		+ " LEFT JOIN FETCH n.likes"
+        		+ " LEFT JOIN FETCH n.favorites"
+        		+ " WHERE n.companyId = ?1"
+        		+ " AND n.groupId = ?2"
+        		+ " ORDER BY n.id ASC";
         
         Object[] queryObject = new Object[]{companyId, groupId};
 

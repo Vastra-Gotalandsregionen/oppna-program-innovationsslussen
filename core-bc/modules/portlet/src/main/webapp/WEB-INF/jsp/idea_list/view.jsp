@@ -56,14 +56,16 @@
 		<li>
 			<div class="idea">
 				<div class="idea-content">
-					<h2>
+					<h2 class="title clearfix">
 						<a href="${ideaUrl}">${idea.title}</a>
+						<span class="likes">(${fn:length(idea.likes)})</span>
 					</h2>
 					<div class="description">
 						<a href="${ideaUrl}">
 							<a href="${ideaUrl}">${fn:substring(idea.ideaContentPrivate.description, 0, 150)}</a>
 						</a>
 					</div>
+					
 					<ul class="idea-flow-list">
 						<li class="done"><span>1</span></li>
 						<li class="done"><span>2</span></li>
