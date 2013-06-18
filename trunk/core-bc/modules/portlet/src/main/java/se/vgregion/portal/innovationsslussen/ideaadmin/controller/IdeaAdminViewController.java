@@ -113,9 +113,9 @@ public class IdeaAdminViewController {
         
         long ideaId = ParamUtil.getLong(request, "entryId", -1);
         
-        Idea idea = ideaService.find(ideaId);
+        //Idea idea = ideaService.find(ideaId);
         
-        ideaService.remove(idea);
+        ideaService.remove(ideaId);
         
         response.setRenderParameter("view", "view");
     }

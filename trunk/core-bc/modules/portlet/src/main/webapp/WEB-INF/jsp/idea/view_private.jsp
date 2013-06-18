@@ -50,7 +50,7 @@
 					
 						<div class="idea-toolbar-wrap">
 							<ul class="rp-toolbar clearfix">
-								<li class="icon public">
+								<li class="icon open">
 								
 									<liferay-portlet:renderURL var="ideaPublicUrl">
 										<liferay-portlet:param name="showView" value="showIdea" />
@@ -107,22 +107,34 @@
 					</div>
 				
 					<h1>
-						${idea.title}
+						${idea.title} <span>(st&auml;ngd version)</span>
 					</h1>
 					
 					<aui:layout>
 						<aui:column first="true" columnWidth="60" cssClass="idea-content">
-							<%-- 
-							<p class="intro">
-								Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec porta ante ut tortor rutrum facilisis. Sed varius sodales tellus, vel dictum risus imperdiet eu.
-							</p>
-							--%>
-							<div class="description">
+						
+							<div class="idea-content-item">
+								<div class="label">
+									Beskrivning
+								</div>
 								<p>
 									${idea.ideaContentPrivate.description}
-									<%-- 
-									Donec posuere enim ut lectus semper feugiat.Nunc libero velit, venenatis et gravida ac, feugiat a lacus. Integer eget mauris in purus aliquam volutpat. Mauris dictum tortor sit amet lacus tincidunt pretium eu sed nibh. Donec est ligula, ultrices eget porttitor vitae, bibendum ac orci. Nulla hendrerit, dui rhoncus vulputate feugiat, diam nisl scelerisque mi, in adipiscing odio quam vel magna...
-									--%>
+								</p>
+							</div>
+							<div class="idea-content-item">
+								<div class="label">
+									L&ouml;ser behov
+								</div>
+								<p>
+									${idea.ideaContentPrivate.solvesProblem}
+								</p>
+							</div>
+							<div class="idea-content-item">
+								<div class="label">
+									Beh&ouml;ver hj&auml;lp med
+								</div>
+								<p>
+									${idea.ideaContentPrivate.wantsHelpWith}
 								</p>
 							</div>
 						</aui:column>
@@ -144,7 +156,7 @@
 							</ul>
 						</aui:column>
 					</aui:layout>
-		
+					
 					<%@ include file="comments_private.jsp" %>
 				
 				</c:when>
