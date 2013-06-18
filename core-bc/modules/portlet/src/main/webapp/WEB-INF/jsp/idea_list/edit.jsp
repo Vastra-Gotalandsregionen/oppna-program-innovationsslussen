@@ -1,0 +1,56 @@
+<%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/portlet" prefix="portlet" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
+<%@ taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet" %>
+<%@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %>
+<%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %>
+<%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
+<%@ taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
+
+<portlet:defineObjects />
+<liferay-theme:defineObjects />	
+
+<p>This is the edit view</p>
+
+ <portlet:actionURL name="save" var="saveURL">
+    <portlet:param name="action" value="save"/>
+</portlet:actionURL>
+
+<aui:form action="${saveURL}" method="post" name="preferencesForm" cssClass="idea-list-preferences-form">
+	
+	<%-- All different types of ideaListType are listed in se.vgregion.portal.innovationsslussen.util.IdeaPortletsConstants --%>
+	<aui:select name="ideaListType" label="Visa f&ouml;ljande typ av id&eacute;er">
+	
+		<c:set var="isOptionSelected" target="page" value="false" />
+		<c:if test="${ideaListType == '0'}">
+			<c:set var="isOptionSelected" target="page" value="true" />
+		</c:if>
+		<aui:option value="0" selected="${isOptionSelected}" label="Alla &ouml;ppna id&eacute;er" />
+		
+		<c:set var="isOptionSelected" target="page" value="false" />
+		<c:if test="${ideaListType == '1'}">
+			<c:set var="isOptionSelected" target="page" value="true" />
+		</c:if>
+		<aui:option value="1" selected="${isOptionSelected}" label="Alla id&eacute;er skapade av den inloggade anv&auml;ndaren (b&ouml;r bara visas p&aring; anv&auml;ndarens egna sida)" />
+
+		<c:set var="isOptionSelected" target="page" value="false" />
+		<c:if test="${ideaListType == '2'}">
+			<c:set var="isOptionSelected" target="page" value="true" />
+		</c:if>
+		<aui:option value="2" selected="${isOptionSelected}" label="Alla id&eacute;er som den inloggade anv&auml;ndaren har lagt till som favorit (b&ouml;r bara visas p&aring; anv&auml;ndarens egna sida)" />
+
+		<c:set var="isOptionSelected" target="page" value="false" />
+		<c:if test="${ideaListType == '3'}">
+			<c:set var="isOptionSelected" target="page" value="true" />
+		</c:if>
+		<aui:option value="3" selected="${isOptionSelected}" label="Alla st&auml;ngda id&eacute;er (b&ouml;r bara visas p&aring; id&eacute;transport&ouml;rernas sida)" />
+		
+	
+	</aui:select>
+	
+	
+	<aui:button-row>
+		<aui:button type="submit" value="save" />
+	</aui:button-row>
+</aui:form>

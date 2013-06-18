@@ -66,6 +66,28 @@ public interface IdeaService {
     List<Idea> findIdeasByGroupId(long companyId, long groupId);
     
     /**
+     * Find {@link Idea}s by company, group and user.
+     *
+     * @param companyId the companyId
+     * @param groupId   the groupId
+     * @param userId   the userId
+     * @return a {@link List} of {@link Idea}s
+     */
+    List<Idea> findIdeasByGroupIdAndUserId(long companyId, long groupId, long userId);
+    
+    /**
+     * Find {@link Idea}s by company, group and user that the user has favorited.
+     *
+     * @param companyId the companyId
+     * @param groupId   the groupId
+     * @param userId   the userId
+     * @return a {@link List} of {@link Idea}s
+     */
+    List<Idea> findUserFavoritedIdeas(long companyId, long groupId, long userId);
+    
+    
+    
+    /**
      * Find {@link Idea} by urlTitle
      *
      * @param urlTitle the urlTitle

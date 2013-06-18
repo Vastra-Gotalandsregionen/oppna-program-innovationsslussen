@@ -176,6 +176,18 @@ public class IdeaServiceImpl implements IdeaService {
     }
     
     @Override
+    public List<Idea> findIdeasByGroupIdAndUserId(long companyId, long groupId, long userId) {
+    	
+        return ideaRepository.findIdeasByGroupIdAndUserId(companyId, groupId, userId);
+    }
+    
+    @Override
+    public List<Idea> findUserFavoritedIdeas(long companyId, long groupId, long userId) {
+    	
+        return ideaRepository.findUserFavoritedIdeas(companyId, groupId, userId);
+    }
+    
+    @Override
     public Idea findIdeaByUrlTitle(String urlTitle) {
     	
     	Idea idea = ideaRepository.findIdeaByUrlTitle(urlTitle);
