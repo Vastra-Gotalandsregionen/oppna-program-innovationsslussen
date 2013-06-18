@@ -105,6 +105,51 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, Long> impl
     }
     
     @Override
+    public List<Idea> findIdeasByGroupIdAndUserId(long companyId, long groupId, long userId) {
+        
+        String queryString = "" 
+        		+ " SELECT DISTINCT n FROM Idea n" 
+        		+ " LEFT JOIN FETCH n.ideaContents" 
+        		+ " LEFT JOIN FETCH n.ideaPersons"
+        		+ " LEFT JOIN FETCH n.likes"
+        		+ " LEFT JOIN FETCH n.favorites"
+        		+ " WHERE n.companyId = ?1"
+        		+ " AND n.groupId = ?2"
+        		+ " AND n.userId = ?3"
+        		+ " ORDER BY n.id ASC";
+        
+        Object[] queryObject = new Object[]{companyId, groupId, userId};
+
+        List<Idea> ideas = findByQuery(queryString, queryObject);
+
+        return ideas;
+    }
+    
+    @Override
+    public List<Idea> findUserFavoritedIdeas(long companyId, long groupId, long userId) {
+        
+        String queryString = "" 
+        		+ " SELECT DISTINCT n FROM Idea n, IdeaUserFavorite f"  
+        		+ " LEFT JOIN FETCH n.ideaContents" 
+        		+ " LEFT JOIN FETCH n.ideaPersons"
+        		+ " LEFT JOIN FETCH n.likes"
+        		+ " LEFT JOIN FETCH n.favorites"
+        		+ " WHERE n.companyId = ?1"
+        		+ " AND n.groupId = ?2"
+        		+ " AND f.userId = ?3" 
+        		+ " AND f.idea.id = n.id"
+        		+ " ORDER BY n.id ASC";    	
+        
+        Object[] queryObject = new Object[]{companyId, groupId, userId};
+
+        List<Idea> ideas = findByQuery(queryString, queryObject);
+
+        return ideas;
+    }
+    
+    
+    
+    @Override
     public void remove(long ideaId) {
     	
     	Idea idea = find(ideaId);

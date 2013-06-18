@@ -11,40 +11,20 @@
 <portlet:defineObjects />
 <liferay-theme:defineObjects />	
 
-<ul class="idea-list">
+<c:choose>
+	<c:when test="${ideaListType == '1'}">
+		<h2>Mina id&eacute;er</h2>
+	</c:when>
+	<c:when test="${ideaListType == '2'}">
+		<h2>Mina favoriter</h2>
+	</c:when>
+	<c:when test="${ideaListType == '3'}">
+		<h2>St&auml;ngda id&eacute;er</h2>
+	</c:when>
+	<c:otherwise></c:otherwise>
+</c:choose>
 
-	<%-- 
-	<c:forEach begin="1" end="9">
-	
-		<liferay-portlet:renderURL var="ideaUrl" plid="${ideaPlid}" portletName="${ideaPortletName}">
-			<liferay-portlet:param name="jspPage" value="/html/idea/view.jsp" />
-			<liferay-portlet:param name="urlTitle" value="some-dummy-url-title-here" />
-		</liferay-portlet:renderURL>
-	
-		<li>
-			<div class="idea">
-				<div class="idea-content">
-					<h2>
-						<a href="${ideaUrl}">Lorem ipsum dolarem</a>
-					</h2>
-					<div class="description">
-						<a href="${ideaUrl}">
-							Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-						</a>
-					</div>
-					<ul class="idea-flow-list">
-						<li class="done"><span>1</span></li>
-						<li class="done"><span>2</span></li>
-						<li><span>3</span></li>
-						<li><span>4</span></li>
-						<li><span>5</span></li>
-						<li><span>6</span></li>
-					</ul>
-				</div>
-			</div>
-		</li>
-	</c:forEach>
-	--%>
+<ul class="idea-list">
 	
 	<c:forEach items="${ideaList}" var="idea" varStatus="index">
 	

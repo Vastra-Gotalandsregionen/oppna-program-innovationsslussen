@@ -49,6 +49,27 @@ public interface IdeaRepository extends Repository<Idea, Long> {
     List<Idea> findIdeasByGroupId(long companyId, long groupId);
     
     /**
+     * Find all {@link Idea}s for a group in a company.
+     *
+     * @param companyId the companyid
+     * @param groupId   the groupId
+     * @param userId   the userId
+     * @return a {@link List} of {@link Idea}s
+     */
+    List<Idea> findIdeasByGroupIdAndUserId(long companyId, long groupId, long userId);
+    
+    /**
+     * Find all {@link Idea}s which a user has added as a favorite.
+     *
+     * @param companyId the companyid
+     * @param groupId   the groupId
+     * @param userId   the userId
+     * @return a {@link List} of {@link Idea}s
+     */
+    List<Idea> findUserFavoritedIdeas(long companyId, long groupId, long userId);
+    
+    
+    /**
      * Remove the {@link Idea} with the id
      *
      * @param ideaId the id of the idea to remove

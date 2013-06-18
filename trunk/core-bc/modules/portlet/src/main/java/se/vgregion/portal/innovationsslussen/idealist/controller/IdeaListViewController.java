@@ -1,7 +1,9 @@
 package se.vgregion.portal.innovationsslussen.idealist.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.portlet.PortletPreferences;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
+import se.vgregion.portal.innovationsslussen.util.IdeaPortletsConstants;
 import se.vgregion.service.innovationsslussen.IdeaService;
 
 import com.liferay.portal.kernel.exception.PortalException;
@@ -61,23 +64,46 @@ public class IdeaListViewController {
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
         long scopeGroupId = themeDisplay.getScopeGroupId();
         long companyId = themeDisplay.getCompanyId();
+        long userId = themeDisplay.getUserId();
         boolean isSignedIn = themeDisplay.isSignedIn();
         
-		// Get plid for idea page
 		try {
-			Layout ideaLayout = LayoutLocalServiceUtil.getFriendlyURLLayout(scopeGroupId, themeDisplay.getLayout()
-                    .isPrivateLayout(), "/ide");
+			
+	        PortletPreferences prefs = request.getPreferences();
+	        String ideaListType = prefs.getValue("ideaListType", "0");
+	        
+			
+			Layout ideaLayout = LayoutLocalServiceUtil.getFriendlyURLLayout(scopeGroupId,
+					themeDisplay.getLayout().isPrivateLayout(), "/ide");
 			
 			long ideaPlid = ideaLayout.getPlid();
 			
+			List<Idea> ideaList = new ArrayList<Idea>();
+			
+			if(ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_OPEN_IDEAS)) {
+				// TODO - change to only pull out OPEN ideas
+				ideaList = ideaService.findIdeasByGroupId(companyId, scopeGroupId);
+			}
+			
+			else if(ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_USER_IDEAS)) {
+				ideaList = ideaService.findIdeasByGroupIdAndUserId(companyId, scopeGroupId, userId);
+			}
+			
+			else if(ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_USER_FAVORITED_IDEAS)) {
+				ideaList = ideaService.findUserFavoritedIdeas(companyId, scopeGroupId, userId);
+			}
+			
+			else if(ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_CLOSED_IDEAS)) {
+				// TODO - change to only pull out CLOSED ideas
+				ideaList = ideaService.findIdeasByGroupId(companyId, scopeGroupId);
+			}
+			
+						
+			
 			model.addAttribute("ideaPlid", ideaPlid);
-			model.addAttribute("ideaPortletName","idea_WAR_innovationsslussenportlet");
-			
-			List<Idea> ideaList = ideaService.findIdeasByGroupId(companyId, scopeGroupId);
-			
-			System.out.println("IdeaListViewController - showIdeaList - ideaList.size(): " + ideaList.size());
-			
+			model.addAttribute("ideaPortletName",IdeaPortletsConstants.PORTLET_NAME_IDEA_PORTLET);
 			model.addAttribute("ideaList", ideaList);
+			model.addAttribute("ideaListType", ideaListType);
 			
 		} catch (PortalException e) {
 			e.printStackTrace();
