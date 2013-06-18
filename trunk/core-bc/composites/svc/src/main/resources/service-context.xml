@@ -20,29 +20,17 @@
 	    <constructor-arg index="0" ref="bariumRestClient" />
     </bean>
     
-	<!--  
-	<bean id="ideaRestrictedRepository" class="se.vgregion.service.innovationsslussen.repository.idearestricted.JpaIdeaRestrictedRepositoryImpl"/>
-	<bean id="ideaOpenRepository" class="se.vgregion.service.innovationsslussen.repository.ideaopen.JpaIdeaOpenRepositoryImpl"/>
-
-	<bean id="ideaRestrictedService" class="se.vgregion.service.innovationsslussen.idearestricted.IdeaRestrictedServiceImpl">
-	    <constructor-arg index="0" ref="bariumService" />
-	    <constructor-arg index="1" ref="ideaRestrictedRepository" />
-	</bean>
-	
-	<bean id="ideaOpenService" class="se.vgregion.service.innovationsslussen.ideaopen.IdeaOpenServiceImpl">
-	    <constructor-arg index="0" ref="ideaOpenRepository" />
-	</bean>
-	-->
-
 	<bean id="ideaRepository" class="se.vgregion.service.innovationsslussen.repository.idea.JpaIdeaRepositoryImpl"/>
 	<bean id="ideaContentRepository" class="se.vgregion.service.innovationsslussen.repository.ideacontent.JpaIdeaContentRepositoryImpl"/>
 	<bean id="ideaPersonRepository" class="se.vgregion.service.innovationsslussen.repository.ideaperson.JpaIdeaPersonRepositoryImpl"/>
+	<bean id="ideaUserLikeRepository" class="se.vgregion.service.innovationsslussen.repository.ideauserlike.JpaIdeaUserLikeRepositoryImpl"/>
 
 	<bean id="ideaService" class="se.vgregion.service.innovationsslussen.IdeaServiceImpl">
 	    <constructor-arg index="0" ref="ideaRepository" />
 	    <constructor-arg index="1" ref="ideaContentRepository" />
 	    <constructor-arg index="2" ref="ideaPersonRepository" />
-	    <constructor-arg index="3" ref="bariumService" />
+	    <constructor-arg index="3" ref="ideaUserLikeRepository" />
+	    <constructor-arg index="4" ref="bariumService" />
 	</bean>
 		
     

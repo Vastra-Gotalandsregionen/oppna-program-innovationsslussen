@@ -12,12 +12,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
+import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserLike;
 import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
 import se.vgregion.service.barium.BariumService;
 import se.vgregion.service.innovationsslussen.exception.CreateIdeaException;
+import se.vgregion.service.innovationsslussen.exception.LikeException;
 import se.vgregion.service.innovationsslussen.repository.idea.IdeaRepository;
 import se.vgregion.service.innovationsslussen.repository.ideacontent.IdeaContentRepository;
 import se.vgregion.service.innovationsslussen.repository.ideaperson.IdeaPersonRepository;
+import se.vgregion.service.innovationsslussen.repository.ideauserlike.IdeaUserLikeRepository;
 import se.vgregion.service.innovationsslussen.util.FriendlyURLNormalizer;
 
 import com.liferay.counter.service.CounterLocalServiceUtil;
@@ -44,6 +47,7 @@ public class IdeaServiceImpl implements IdeaService {
     private IdeaRepository ideaRepository;
     private IdeaContentRepository ideaContentRepository;
     private IdeaPersonRepository ideaPersonRepository;
+    private IdeaUserLikeRepository ideaUserLikeRepository;
     private BariumService bariumService;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(IdeaServiceImpl.class);
@@ -59,11 +63,33 @@ public class IdeaServiceImpl implements IdeaService {
      * @param bariumService the {@link BariumService}
      */
     @Autowired
-    public IdeaServiceImpl(IdeaRepository ideaRepository, IdeaContentRepository ideaContentRepository, IdeaPersonRepository ideaPersonRepository, BariumService bariumService) {
+    public IdeaServiceImpl(IdeaRepository ideaRepository, IdeaContentRepository ideaContentRepository,
+    		IdeaPersonRepository ideaPersonRepository, IdeaUserLikeRepository ideaUserLikeRepository,
+    		BariumService bariumService) {
         this.ideaRepository = ideaRepository;
         this.ideaContentRepository = ideaContentRepository;
         this.ideaPersonRepository = ideaPersonRepository;
+        this.ideaUserLikeRepository = ideaUserLikeRepository;
         this.bariumService = bariumService;
+    }
+    
+    @Override
+    @Transactional(rollbackFor = LikeException.class)
+    public void addLike(long companyId, long groupId, long userId, String urlTitle) {
+    	
+    	boolean isIdeaUserLiked = getIsIdeaUserLiked(companyId, groupId, userId, urlTitle);
+    	
+    	if(isIdeaUserLiked) {
+    		// User already likes the idea
+    		return;
+    	}
+    	
+    	Idea idea = findIdeaByUrlTitle(urlTitle);
+    	
+    	IdeaUserLike ideaUserLike = new IdeaUserLike(companyId, groupId, userId);
+    	ideaUserLike.setIdea(idea);
+    	
+    	ideaUserLike = ideaUserLikeRepository.merge(ideaUserLike);
     }
     
     @Override
@@ -141,6 +167,22 @@ public class IdeaServiceImpl implements IdeaService {
     }
     
     @Override
+    public boolean getIsIdeaUserLiked(long companyId, long groupId, long userId, String urlTitle) {
+    	boolean isIdeaUserLiked = false;
+    	
+    	Idea idea = findIdeaByUrlTitle(urlTitle);
+    	long ideaId = idea.getId();
+    	
+    	List<IdeaUserLike> ideaUserLikes = ideaUserLikeRepository.findLikesByUserAndIdea(companyId, groupId, userId, ideaId);
+    	
+    	if(ideaUserLikes.size() > 0 ) {
+    		isIdeaUserLiked = true;
+    	}
+    	
+    	return isIdeaUserLiked;
+    }
+    
+    @Override
     @Transactional
     public void remove(long ideaId) {
     	Idea idea = ideaRepository.find(ideaId);
@@ -181,6 +223,19 @@ public class IdeaServiceImpl implements IdeaService {
 //            ideaRepository.remove(idea);
 //        }
     }
+    
+    
+    @Override
+    @Transactional
+    public void removeLike(long companyId, long groupId, long userId, String urlTitle) {
+    	
+    	Idea idea = ideaRepository.findIdeaByUrlTitle(urlTitle);
+    	
+    	if(idea != null) {
+    		ideaUserLikeRepository.removeByUserAndIdea(companyId, groupId, userId, idea.getId());	
+    	}
+    }
+    
     
     @Override
     public Idea updateIdea(Idea idea) {

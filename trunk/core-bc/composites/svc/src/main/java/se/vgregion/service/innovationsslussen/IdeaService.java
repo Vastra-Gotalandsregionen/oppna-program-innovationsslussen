@@ -14,6 +14,13 @@ import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 public interface IdeaService {
 
     /**
+     * Add an {@link IdeaUserLike}.
+     *
+     */
+    void addLike(long companyId, long groupId, long userId, String urlTitle);
+	
+	
+    /**
      * Add a {@link Idea}.
      *
      */
@@ -60,6 +67,13 @@ public interface IdeaService {
      * @return a {@link List} of {@link Idea}s
      */
     Idea findIdeaByUrlTitle(String urlTitle);
+    
+    /**
+     * Get whether user has liked a certain idea or not
+     *
+     */
+    boolean getIsIdeaUserLiked(long companyId, long groupId, long userId, String urlTitle);
+    
 
     /**
      * Remove a {@link Idea}.
@@ -80,6 +94,13 @@ public interface IdeaService {
      * Remove all {@link Idea}s.
      */
     void removeAll();
+    
+    /**
+     * Remove an {@link IdeaUserLike}.
+     *
+     */
+    void removeLike(long companyId, long groupId, long userId, String urlTitle);
+    
     
     /**
      * Updates an {@link Idea}.
