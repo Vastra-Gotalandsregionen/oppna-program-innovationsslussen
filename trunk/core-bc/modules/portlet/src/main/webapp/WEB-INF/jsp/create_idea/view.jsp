@@ -78,6 +78,18 @@
 									F&ouml;rklara det behov eller problem som din id&eacute; l&ouml;ser
 								</span>
 							</div>
+							
+							<div class="element-wrap">
+						    	<aui:field-wrapper cssClass="element-field-wrap">
+						    		<label for="<portlet:namespace />ideaTested">
+						    			<span>Testning av id&eacute;</span>
+						    		</label>
+						    		<aui:input cssClass="element-field" type="textarea" name="ideaTested" value="" label ="" />			    		
+						    	</aui:field-wrapper>
+								<span class="element-field-help">
+									Har du testat din id&eacute; p&aring; n&aring;got s&auml;tt? Vilka tester har du gjort? Vad visade testerna?
+								</span>
+							</div>
 		
 							<div class="element-wrap">
 						    	<aui:field-wrapper cssClass="element-field-wrap">
@@ -131,6 +143,18 @@
 								<span class="element-field-help">
 									Skriv in ditt telefonnummer
 								</span>
+							</div>
+							
+							<div class="element-wrap">
+						    	<aui:field-wrapper cssClass="element-field-wrap">
+						    		<label for="<portlet:namespace />phoneMobile">
+						    			<span>Mobiltelefon</span>
+						    		</label>
+						    		<aui:input cssClass="element-field" type="text" name="phoneMobile" value="" label ="" />			    		
+						    	</aui:field-wrapper>
+								<span class="element-field-help">
+									Skriv in ditt mobiltelefonnummer
+								</span>
 							</div>				
 											
 							<div class="element-wrap">
@@ -155,7 +179,20 @@
 								<span class="element-field-help">
 									Skriv in vilken yrkesroll du har
 								</span>
-							</div>				
+							</div>
+							
+							<div class="element-wrap">
+						    	<aui:field-wrapper cssClass="element-field-wrap">
+						    		<label for="<portlet:namespace />additionalPersonInfo">
+						    			<span>Fler id&eacute;givare</span>
+						    		</label>
+						    		<aui:input cssClass="element-field" type="textarea" name="additionalPersonInfo" value="" label ="" />			    		
+						    	</aui:field-wrapper>
+								<span class="element-field-help">
+									&Auml;r ni fler id&eacute;givare? Fyll g&auml;rna i uppgifter om dessa personer i s&aring;dana fall.
+								</span>
+							</div>
+							
 							
 						</aui:fieldset>
 						

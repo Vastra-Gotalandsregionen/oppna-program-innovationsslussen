@@ -6,6 +6,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -40,6 +41,11 @@ public class IdeaPerson extends AbstractEntity<Long> {
     private long userId;
     
     // IdeaPerson Related
+    
+    @Lob
+    @Column(name = "additional_persons_info")
+	private String additionalPersonsInfo;
+    
     @Column(name = "vgr_id")
 	private String vgrId;
 	
@@ -54,6 +60,9 @@ public class IdeaPerson extends AbstractEntity<Long> {
     
     @Column(name = "phone")
     private String phone;
+    
+    @Column(name = "phone_mobile")
+    private String phoneMobile;
     
     // Foreign
     @ManyToOne
@@ -102,6 +111,14 @@ public class IdeaPerson extends AbstractEntity<Long> {
 	public void setUserId(long userId) {
 		this.userId = userId;
 	}
+	
+	public String getAdditionalPersonsInfo() {
+		return additionalPersonsInfo;
+	}
+	
+	public void setAdditionalPersonsInfo(String additionalPersonsInfo) {
+		this.additionalPersonsInfo = additionalPersonsInfo;
+	}
 
 	public String getVgrId() {
 		return vgrId;
@@ -141,6 +158,14 @@ public class IdeaPerson extends AbstractEntity<Long> {
 
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+	
+	public String getPhoneMobile() {
+		return phoneMobile;
+	}
+
+	public void setPhoneMobile(String phoneMobile) {
+		this.phoneMobile = phoneMobile;
 	}
 	
 	public Idea getIdea() {

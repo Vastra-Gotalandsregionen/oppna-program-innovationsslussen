@@ -29,11 +29,15 @@ public class IdeaObjectFields {
     private String idetranportorensKommentar;
     private String instanceName; // instance.name
     private String kommavidare;
+    private String komplnamn;
     private String koordinatornsskommentar;
     private String prio1kommentar;
     private String prio2kommentar;
     private String prioriteringsradsmote;
-    private String telefonnummer;
+    private String siteLank;
+    private String telefonnummer; // VGR-ID.hsapublictelephonenumber
+    private String telefonnummerMobil; // VGR-ID.mobiletelephonenumber
+    private String testat;
     private String vgrIdFullname; // VGR-ID.fullname
     private String vgrIdHsaPostalAdress; // VGR-ID.hsapostaladress
     private String vgrIdTitel; // VGR-ID.titel
@@ -48,6 +52,8 @@ public class IdeaObjectFields {
         specialFieldMappings.put("HSA-ID.KIVenhet", "hsaIdKivEnhet");
         specialFieldMappings.put("VGR-ID.fullname", "vgrIdFullname");
         specialFieldMappings.put("VGR-ID.hsapostaladress", "vgrIdHsaPostalAdress");
+        specialFieldMappings.put("VGR-ID.hsapublictelephonenumber", "telefonnummer");
+        specialFieldMappings.put("VGR-ID.mobiletelephonenumber", "mobiletelephonenumber");
         specialFieldMappings.put("VGR-ID.titel", "vgrIdTitel");
     }
 
@@ -179,6 +185,15 @@ public class IdeaObjectFields {
     public void setKommavidare(String kommavidare) {
         this.kommavidare = kommavidare;
     }
+    
+    public String getKomplnamn() {
+    	return komplnamn;
+    }
+    
+    public void setKomplnamn(String setKomplnamn) {
+    	this.komplnamn = setKomplnamn;
+    }
+    
 
     public String getKoordinatornsskommentar() {
         return koordinatornsskommentar;
@@ -211,6 +226,14 @@ public class IdeaObjectFields {
     public void setPrioriteringsradsmote(String prioriteringsradsmote) {
         this.prioriteringsradsmote = prioriteringsradsmote;
     }
+    
+    public String getSiteLank() {
+    	return siteLank;
+    }
+    
+    public void setSiteLank(String siteLank) {
+    	this.siteLank = siteLank;
+    }
 
     public String getTelefonnummer() {
         return telefonnummer;
@@ -218,6 +241,23 @@ public class IdeaObjectFields {
 
     public void setTelefonnummer(String telefonnummer) {
         this.telefonnummer = telefonnummer;
+    }
+    
+    public String getTelefonnummerMobil() {
+        return telefonnummerMobil;
+    }
+
+    public void setTelefonnummerMobil(String telefonnummerMobil) {
+        this.telefonnummerMobil = telefonnummerMobil;
+    }
+    
+    
+    public String getTestat() {
+    	return testat;
+    }
+    
+    public void setTestat(String testat) {
+    	this.testat = testat;
     }
 
     public String getVgrIdFullname() {

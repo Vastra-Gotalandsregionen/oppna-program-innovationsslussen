@@ -104,23 +104,36 @@ public class BariumService {
         IdeaContent ideaContentPrivate = idea.getIdeaContentPrivate();
         IdeaPerson ideaPerson = idea.getIdeaPerson();
         
+        // Todo - get real link to Liferay Page
+        String ideaSiteLink = "";
         
         String solvesProblem = ideaContentPrivate.getSolvesProblem();
         String email = ideaPerson.getEmail();
         String description = ideaContentPrivate.getDescription();
+        String ideaTested = ideaContentPrivate.getIdeaTested();
         String title = idea.getTitle();
         String wantsHelpWith = ideaContentPrivate.getWantsHelpWith();
+        
+        String additonalPersonsInfo = ideaPerson.getAdditionalPersonsInfo();
         String phone = ideaPerson.getPhone();
+        String phoneMobile = ideaPerson.getPhoneMobile();
         String vgrId = ideaPerson.getVgrId();
         String name = ideaPerson.getName();
         String jobPosition = ideaPerson.getJobPosition();
+        
+        System.out.println("BariumService - createIdea - ideaTested has value: " + ideaTested);
         
         ideaObjectFields.setBehov(solvesProblem);     
         ideaObjectFields.setEpost(email);
         ideaObjectFields.setIde(description);
         ideaObjectFields.setInstanceName(title);
-        ideaObjectFields.setKommavidare(wantsHelpWith);       
+        ideaObjectFields.setKomplnamn(additonalPersonsInfo);
+        ideaObjectFields.setKommavidare(wantsHelpWith);
+        ideaObjectFields.setSiteLank(ideaSiteLink);
         ideaObjectFields.setTelefonnummer(phone);
+        ideaObjectFields.setTelefonnummerMobil(phoneMobile);
+        ideaObjectFields.setTestat(ideaTested);
+        
         
         ideaObjectFields.setVgrId(vgrId);
         ideaObjectFields.setVgrIdFullname(name);

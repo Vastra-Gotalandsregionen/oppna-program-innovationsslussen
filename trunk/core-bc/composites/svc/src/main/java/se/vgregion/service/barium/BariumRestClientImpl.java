@@ -431,8 +431,11 @@ public class BariumRestClientImpl implements BariumRestClient {
         if (ideaObjectFields.getKommavidare() != null) {
             sb.append("&kommavidare=").append(ideaObjectFields.getKommavidare());
         }
+        if (ideaObjectFields.getKomplnamn() != null) {
+            sb.append("&komplnamn=").append(ideaObjectFields.getKomplnamn());
+        }
         if (ideaObjectFields.getEpost() != null) {
-            sb.append("&e-post=").append(ideaObjectFields.getEpost());
+            sb.append("&VGR-ID.email=").append(ideaObjectFields.getEpost());
         }
         if (ideaObjectFields.getInstanceName() != null) {
             sb.append("&instance.name=").append(ideaObjectFields.getInstanceName());
@@ -443,8 +446,17 @@ public class BariumRestClientImpl implements BariumRestClient {
         if (ideaObjectFields.getPrio2kommentar() != null) {
             sb.append("&prio2kommentar=").append(ideaObjectFields.getPrio2kommentar());
         }
+        if (ideaObjectFields.getSiteLank() != null) {
+            sb.append("&siteLank=").append(ideaObjectFields.getSiteLank());
+        }
+        if (ideaObjectFields.getTestat() != null) {
+            sb.append("&testat=").append(ideaObjectFields.getTestat());
+        }
         if (ideaObjectFields.getTelefonnummer() != null) {
-            sb.append("&telefonnummer=").append(ideaObjectFields.getTelefonnummer());
+            sb.append("&VGR-ID.hsapublictelephonenumber=").append(ideaObjectFields.getTelefonnummer());
+        }
+        if (ideaObjectFields.getTelefonnummerMobil() != null) {
+            sb.append("&VGR-ID.mobiletelephonenumber=").append(ideaObjectFields.getTelefonnummerMobil());
         }
         if (ideaObjectFields.getVgrId() != null) {
             sb.append("&VGR-ID=").append(ideaObjectFields.getVgrId());
