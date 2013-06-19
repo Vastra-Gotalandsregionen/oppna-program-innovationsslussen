@@ -21,79 +21,81 @@
 					<div class="idea-hd clearfix">
 					
 						<div class="idea-toolbar-wrap">
-							<ul class="rp-toolbar clearfix">
-							
-								<%-- Add logic that controls whether link is shown or not --%>
-								<li class="icon closed">
+						
+							<c:if test="${isSignedIn}">
+								<ul class="rp-toolbar clearfix">
 								
-									<liferay-portlet:renderURL var="ideaPrivateUrl">
-										<liferay-portlet:param name="showView" value="showIdea" />
-										<liferay-portlet:param name="type" value="private" />
-										<liferay-portlet:param name="urlTitle" value="${idea.urlTitle}" />
-									</liferay-portlet:renderURL>
+									<%-- Add logic that controls whether link is shown or not --%>
+									<li class="icon closed">
+									
+										<liferay-portlet:renderURL var="ideaPrivateUrl">
+											<liferay-portlet:param name="showView" value="showIdea" />
+											<liferay-portlet:param name="type" value="private" />
+											<liferay-portlet:param name="urlTitle" value="${idea.urlTitle}" />
+										</liferay-portlet:renderURL>
+									
+										<a href="${ideaPrivateUrl}">
+											<span>Visa st&auml;ngd beskrivning</span>
+										</a>
+									</li>
 								
-									<a href="${ideaPrivateUrl}">
-										<span>Visa st&auml;ngd beskrivning</span>
-									</a>
-								</li>
-							
-								<li class="icon comment">
-									<a href="#">
-										<span>Kommentera (${fn:length(idea.ideaContentPublic.comments)})</span>
-									</a>
-								</li>
-								
-								<li class="icon like">
-									<c:choose>
-										<c:when test="${isIdeaUserLiked}">
-											<portlet:actionURL name="removeLike" var="removeLikeUrl">
-												<portlet:param name="action" value="removeLike" />
-												<portlet:param name="urlTitle" value="${idea.urlTitle}" />
-												<portlet:param name="ideaContentType" value="0" />
-											</portlet:actionURL>
-											<a href="${removeLikeUrl}">
-												<span>Sluta gilla (${fn:length(idea.likes)})</span>
-											</a>
-										</c:when>
-										<c:otherwise>
-											<portlet:actionURL name="addLike" var="addLikeUrl">
-												<portlet:param name="action" value="addLike" />
-												<portlet:param name="urlTitle" value="${idea.urlTitle}" />
-												<portlet:param name="ideaContentType" value="0" />
-											</portlet:actionURL>
-											<a href="${addLikeUrl}">
-												<span>Gilla (${fn:length(idea.likes)})</span>
-											</a>
-										</c:otherwise>
-									</c:choose>
-								</li>
-								
-								<li class="icon favorite last">
-									<c:choose>
-										<c:when test="${isIdeaUserFavorite}">
-											<portlet:actionURL name="removeFavorite" var="removeFavoriteUrl">
-												<portlet:param name="action" value="removeFavorite" />
-												<portlet:param name="urlTitle" value="${idea.urlTitle}" />
-												<portlet:param name="ideaContentType" value="0" />
-											</portlet:actionURL>
-											<a href="${removeFavoriteUrl}">
-												<span>Ta bort som favorit (${fn:length(idea.favorites)})</span>
-											</a>
-										</c:when>
-										<c:otherwise>
-											<portlet:actionURL name="addFavorite" var="addFavoriteUrl">
-												<portlet:param name="action" value="addFavorite" />
-												<portlet:param name="urlTitle" value="${idea.urlTitle}" />
-												<portlet:param name="ideaContentType" value="0" />
-											</portlet:actionURL>
-											<a href="${addFavoriteUrl}">
-												<span>L&auml;gg till som favorit (${fn:length(idea.favorites)})</span>
-											</a>
-										</c:otherwise>
-									</c:choose>
-								</li>
-								
-							</ul>
+									<li class="icon comment">
+										<a href="#">
+											<span>Kommentera (${fn:length(idea.ideaContentPublic.comments)})</span>
+										</a>
+									</li>
+									
+									<li class="icon like">
+										<c:choose>
+											<c:when test="${isIdeaUserLiked}">
+												<portlet:actionURL name="removeLike" var="removeLikeUrl">
+													<portlet:param name="action" value="removeLike" />
+													<portlet:param name="urlTitle" value="${idea.urlTitle}" />
+													<portlet:param name="ideaContentType" value="0" />
+												</portlet:actionURL>
+												<a href="${removeLikeUrl}">
+													<span>Sluta gilla (${fn:length(idea.likes)})</span>
+												</a>
+											</c:when>
+											<c:otherwise>
+												<portlet:actionURL name="addLike" var="addLikeUrl">
+													<portlet:param name="action" value="addLike" />
+													<portlet:param name="urlTitle" value="${idea.urlTitle}" />
+													<portlet:param name="ideaContentType" value="0" />
+												</portlet:actionURL>
+												<a href="${addLikeUrl}">
+													<span>Gilla (${fn:length(idea.likes)})</span>
+												</a>
+											</c:otherwise>
+										</c:choose>
+									</li>
+									
+									<li class="icon favorite last">
+										<c:choose>
+											<c:when test="${isIdeaUserFavorite}">
+												<portlet:actionURL name="removeFavorite" var="removeFavoriteUrl">
+													<portlet:param name="action" value="removeFavorite" />
+													<portlet:param name="urlTitle" value="${idea.urlTitle}" />
+													<portlet:param name="ideaContentType" value="0" />
+												</portlet:actionURL>
+												<a href="${removeFavoriteUrl}">
+													<span>Ta bort som favorit (${fn:length(idea.favorites)})</span>
+												</a>
+											</c:when>
+											<c:otherwise>
+												<portlet:actionURL name="addFavorite" var="addFavoriteUrl">
+													<portlet:param name="action" value="addFavorite" />
+													<portlet:param name="urlTitle" value="${idea.urlTitle}" />
+													<portlet:param name="ideaContentType" value="0" />
+												</portlet:actionURL>
+												<a href="${addFavoriteUrl}">
+													<span>L&auml;gg till som favorit (${fn:length(idea.favorites)})</span>
+												</a>
+											</c:otherwise>
+										</c:choose>
+									</li>
+								</ul>
+							</c:if>
 						</div>
 						
 						<div class="idea-flow-wrap">
@@ -132,13 +134,19 @@
 								Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec porta ante ut tortor rutrum facilisis. Sed varius sodales tellus, vel dictum risus imperdiet eu.
 							</p>
 							--%>
-							<div class="description">
-								<p>
-									${idea.ideaContentPublic.description}
-									<%-- 
-									Donec posuere enim ut lectus semper feugiat.Nunc libero velit, venenatis et gravida ac, feugiat a lacus. Integer eget mauris in purus aliquam volutpat. Mauris dictum tortor sit amet lacus tincidunt pretium eu sed nibh. Donec est ligula, ultrices eget porttitor vitae, bibendum ac orci. Nulla hendrerit, dui rhoncus vulputate feugiat, diam nisl scelerisque mi, in adipiscing odio quam vel magna...
-									--%>
+							
+							<c:if test="${fn:length(idea.ideaContentPublic.intro) gt 0}">
+								<p class="intro">
+									${idea.ideaContentPublic.intro}
 								</p>
+							</c:if>
+							
+							<div class="description">
+								<c:if test="${fn:length(idea.ideaContentPublic.description) gt 0}">
+									<p>
+										${idea.ideaContentPublic.description}
+									</p>
+								</c:if>
 							</div>
 						</aui:column>
 						<aui:column last="true" columnWidth="40" cssClass="idea-meta">
@@ -169,9 +177,6 @@
 					</div>
 				</c:otherwise>
 			</c:choose>
-			
-			
-
 			
 		</div>
 	</div>

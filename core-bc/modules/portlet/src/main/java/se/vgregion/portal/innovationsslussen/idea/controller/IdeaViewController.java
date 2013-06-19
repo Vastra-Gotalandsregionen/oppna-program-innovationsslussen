@@ -73,6 +73,7 @@ public class IdeaViewController {
         long scopeGroupId = themeDisplay.getScopeGroupId();
         long companyId = themeDisplay.getCompanyId();
         long userId = themeDisplay.getUserId();
+        boolean isSignedIn = themeDisplay.isSignedIn();
         
         String urlTitle = ParamUtil.getString(request, "urlTitle", "");
         
@@ -84,6 +85,8 @@ public class IdeaViewController {
             model.addAttribute("idea", idea);
             model.addAttribute("isIdeaUserFavorite", isIdeaUserFavorite);
             model.addAttribute("isIdeaUserLiked", isIdeaUserLiked);
+            
+            model.addAttribute("isSignedIn", isSignedIn);
         }
 
         return "view_public";
@@ -104,10 +107,11 @@ public class IdeaViewController {
         long scopeGroupId = themeDisplay.getScopeGroupId();
         long companyId = themeDisplay.getCompanyId();
         long userId = themeDisplay.getUserId();
+        boolean isSignedIn = themeDisplay.isSignedIn();
         
         String urlTitle = ParamUtil.getString(request, "urlTitle", "");
         
-        if(!urlTitle.equals("")) {
+        if(!urlTitle.equals("") && isSignedIn) {
             Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
             boolean isIdeaUserFavorite = ideaService.getIsIdeaUserFavorite(companyId, scopeGroupId, userId, urlTitle);
             boolean isIdeaUserLiked = ideaService.getIsIdeaUserLiked(companyId, scopeGroupId, userId, urlTitle);
