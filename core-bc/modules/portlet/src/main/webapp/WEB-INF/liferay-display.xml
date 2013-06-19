@@ -6,6 +6,7 @@
 		<portlet id="idealist"></portlet>
 		<portlet id="idea"></portlet>
 		<portlet id="createidea"></portlet>
+		<portlet id="usersettings"></portlet>
 	</category>
 	
 	<category name="category.hidden">
