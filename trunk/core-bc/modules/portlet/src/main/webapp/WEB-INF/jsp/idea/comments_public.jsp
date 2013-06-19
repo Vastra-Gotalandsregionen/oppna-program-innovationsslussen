@@ -18,25 +18,32 @@
 	</portlet:actionURL>
 	
 	<div class="add-comment">
-		<aui:form action="${addCommentUrl}" cssClass="add-comment-form clearfix" method="POST">
-			
-			<div class="field-wrap">
-				<label for="<portlet:namespace />comment">
-					L&auml;gg till din kommentar
-				</label>
-				<div class="field-element-wrap">
-					<textarea name="<portlet:namespace />comment" id="<portlet:namespace />comment"></textarea>
-					<p class="notice">
-						Notera att denna kommentar kommer att synas &ouml;ppet f&ouml;r alla bes&ouml;kare p&aring; siten.
-					</p>	
+	
+		<c:choose>
+			<c:when test="${isSignedIn}">
+				<aui:form action="${addCommentUrl}" cssClass="add-comment-form clearfix" method="POST">
+					<div class="field-wrap">
+						<label for="<portlet:namespace />comment">
+							L&auml;gg till din kommentar
+						</label>
+						<div class="field-element-wrap">
+							<textarea name="<portlet:namespace />comment" id="<portlet:namespace />comment"></textarea>
+							<p class="notice">
+								Notera att denna kommentar kommer att synas &ouml;ppet f&ouml;r alla bes&ouml;kare p&aring; siten.
+							</p>	
+						</div>
+					</div>
+					<aui:button-row>
+						<aui:button type="submit" value="Posta" cssClass="rp-button" />
+					</aui:button-row>
+				</aui:form>			
+			</c:when>
+			<c:otherwise>
+				<div class="info-logged-out">
+					Du m&aring;ste vara inloggad f&ouml;r att f&aring; vara med och kommentera p&aring; en id&eacute;.
 				</div>
-			</div>
-			
-			<aui:button-row>
-				<aui:button type="submit" value="Posta" cssClass="rp-button" />
-			</aui:button-row>
-		
-		</aui:form>
+			</c:otherwise>
+		</c:choose>
 	</div>
 	
 	<c:choose>
@@ -71,7 +78,7 @@
 			</c:forEach>
 		</c:when>
 		<c:otherwise>
-			<p>Det finns inga kommentarer p&aring; denna id&eacute; &auml;nnu. Posta din kommentar och bli f&ouml;rst!</p>
+			<p>Det finns inga kommentarer p&aring; denna id&eacute; &auml;nnu. <c:if test="${isSignedIn}">Posta din kommentar och bli f&ouml;rst!</c:if></p>
 		</c:otherwise>
 	</c:choose>
 	
