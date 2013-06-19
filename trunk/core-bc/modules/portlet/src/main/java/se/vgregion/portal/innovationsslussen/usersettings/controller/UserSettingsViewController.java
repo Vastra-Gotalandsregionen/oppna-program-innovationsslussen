@@ -17,7 +17,7 @@ import org.springframework.web.portlet.bind.annotation.RenderMapping;
 import se.vgregion.portal.innovationsslussen.domain.IdeaConstants;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
-import se.vgregion.service.innovationsslussen.IdeaService;
+import se.vgregion.service.innovationsslussen.idea.IdeaService;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;

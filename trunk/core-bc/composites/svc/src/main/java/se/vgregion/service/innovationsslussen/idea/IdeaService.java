@@ -1,4 +1,4 @@
-package se.vgregion.service.innovationsslussen;
+package se.vgregion.service.innovationsslussen.idea;
 
 import java.util.Collection;
 import java.util.List;

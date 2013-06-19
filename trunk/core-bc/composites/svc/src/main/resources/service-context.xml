@@ -26,7 +26,7 @@
 	<bean id="ideaUserLikeRepository" class="se.vgregion.service.innovationsslussen.repository.ideauserlike.JpaIdeaUserLikeRepositoryImpl"/>
 	<bean id="ideaUserFavoriteRepository" class="se.vgregion.service.innovationsslussen.repository.ideauserfavorite.JpaIdeaUserFavoriteRepositoryImpl"/>
 
-	<bean id="ideaService" class="se.vgregion.service.innovationsslussen.IdeaServiceImpl">
+	<bean id="ideaService" class="se.vgregion.service.innovationsslussen.idea.IdeaServiceImpl">
 	    <constructor-arg index="0" ref="ideaRepository" />
 	    <constructor-arg index="1" ref="ideaContentRepository" />
 	    <constructor-arg index="2" ref="ideaPersonRepository" />

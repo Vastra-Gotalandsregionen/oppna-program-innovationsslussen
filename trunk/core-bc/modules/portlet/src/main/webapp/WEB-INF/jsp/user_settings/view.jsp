@@ -13,12 +13,13 @@
 
 <h1>Min sida</h1>
 
+<%-- 
 <aui:layout>
 	<aui:column columnWidth="50" first="true" cssClass="">
-		Left column here
+		&nbsp;
 	</aui:column>
 	<aui:column columnWidth="50" last="true" cssClass="">
-		Right column here
+		&nbsp;
 	</aui:column>
 </aui:layout>
-
+--%>
