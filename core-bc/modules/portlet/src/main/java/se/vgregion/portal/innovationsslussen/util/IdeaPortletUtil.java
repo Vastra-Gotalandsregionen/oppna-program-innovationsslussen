@@ -27,11 +27,14 @@ public class IdeaPortletUtil {
         
         String title = ParamUtil.getString(request, "title", "");
         String description = ParamUtil.getString(request, "description", "");
+        String ideaTested = ParamUtil.getString(request, "ideaTested", "");
         String solvesProblem = ParamUtil.getString(request, "solvesProblem", "");
         String wantsHelpWith = ParamUtil.getString(request, "wantsHelpWith", "");
+        String additionalPersonInfo = ParamUtil.getString(request, "additionalPersonInfo", "");
         String name = ParamUtil.getString(request, "name", "");
         String email = ParamUtil.getString(request, "email", "");
         String phone = ParamUtil.getString(request, "phone", "");
+        String phoneMobile = ParamUtil.getString(request, "phoneMobile", "");
         String administrativeUnit = ParamUtil.getString(request, "administrativeUnit", "");
         String jobPosition = ParamUtil.getString(request, "jobPosition", "");
         
@@ -46,15 +49,17 @@ public class IdeaPortletUtil {
         
         ideaContentPrivate.setType(IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE);
         ideaContentPrivate.setDescription(description);
-        //ideaContentPrivate.setIdeaTested(ideaTested)
+        ideaContentPrivate.setIdeaTested(ideaTested);
         ideaContentPrivate.setSolvesProblem(solvesProblem);
         ideaContentPrivate.setWantsHelpWith(wantsHelpWith);
         
         ideaPerson.setName(name);
         ideaPerson.setEmail(email);
         ideaPerson.setPhone(phone);
+        ideaPerson.setPhoneMobile(phoneMobile);
         ideaPerson.setJobPosition(jobPosition);
         ideaPerson.setVgrId(vgrId);
+        ideaPerson.setAdditionalPersonsInfo(additionalPersonInfo);
         //ideaPerson.setAdministrativeUnit(administrativeUnit);
         
         
