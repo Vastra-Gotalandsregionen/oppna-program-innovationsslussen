@@ -20,4 +20,4 @@
 /**
  * Service classes.
  */
-package se.vgregion.service.innovationsslussen;
+package se.vgregion.service.innovationsslussen.idea;
