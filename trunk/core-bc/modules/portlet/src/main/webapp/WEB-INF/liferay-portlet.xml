@@ -5,7 +5,7 @@
 	<portlet>
 		<portlet-name>idealist</portlet-name>
 		<instanceable>true</instanceable>
-		<css-class-wrapper>idealist-portlet</css-class-wrapper>
+		<css-class-wrapper>innovation-idealist-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
 		<portlet-name>idea</portlet-name>
@@ -14,13 +14,13 @@
 		<friendly-url-routes>idea-portlet-friendly-url-routes.xml</friendly-url-routes>
 		<action-url-redirect>true</action-url-redirect>
 		<instanceable>false</instanceable>
-		<css-class-wrapper>idea-portlet</css-class-wrapper>
+		<css-class-wrapper>innovation-idea-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
 		<portlet-name>createidea</portlet-name>
 		<action-url-redirect>true</action-url-redirect>
 		<instanceable>false</instanceable>
-		<css-class-wrapper>create-idea-portlet</css-class-wrapper>
+		<css-class-wrapper>innovation-create-idea-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
 		<portlet-name>ideaadmin</portlet-name>
@@ -28,7 +28,12 @@
 		<control-panel-entry-weight>7.4</control-panel-entry-weight>
 		<action-url-redirect>true</action-url-redirect>
 		<instanceable>false</instanceable>
-		<css-class-wrapper>idea-admin-portlet</css-class-wrapper>
+		<css-class-wrapper>innovation-idea-admin-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>usersettings</portlet-name>
+		<instanceable>true</instanceable>
+		<css-class-wrapper>innovation-usersettings-portlet</css-class-wrapper>
 	</portlet>
 	<role-mapper>
 		<role-name>administrator</role-name>
