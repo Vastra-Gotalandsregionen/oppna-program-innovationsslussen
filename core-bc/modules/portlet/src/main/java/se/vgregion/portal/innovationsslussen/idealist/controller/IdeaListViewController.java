@@ -67,6 +67,8 @@ public class IdeaListViewController {
         long userId = themeDisplay.getUserId();
         boolean isSignedIn = themeDisplay.isSignedIn();
         
+        String returnView = "view_open_ideas";
+        
 		try {
 			
 	        PortletPreferences prefs = request.getPreferences();
@@ -81,29 +83,44 @@ public class IdeaListViewController {
 			List<Idea> ideaList = new ArrayList<Idea>();
 			
 			if(ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_OPEN_IDEAS)) {
+				
 				// TODO - change to only pull out OPEN ideas
 				ideaList = ideaService.findIdeasByGroupId(companyId, scopeGroupId);
 			}
 			
 			else if(ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_USER_IDEAS)) {
-				ideaList = ideaService.findIdeasByGroupIdAndUserId(companyId, scopeGroupId, userId);
+				
+				if(isSignedIn) {
+					ideaList = ideaService.findIdeasByGroupIdAndUserId(companyId, scopeGroupId, userId);	
+				}
+				
+				returnView = "view_user_ideas";
 			}
 			
 			else if(ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_USER_FAVORITED_IDEAS)) {
-				ideaList = ideaService.findUserFavoritedIdeas(companyId, scopeGroupId, userId);
+				
+				if(isSignedIn) {
+					ideaList = ideaService.findUserFavoritedIdeas(companyId, scopeGroupId, userId);
+				}
+				
+				returnView = "view_user_favorites";
 			}
 			
 			else if(ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_CLOSED_IDEAS)) {
-				// TODO - change to only pull out CLOSED ideas
-				ideaList = ideaService.findIdeasByGroupId(companyId, scopeGroupId);
+				
+				if(isSignedIn) {
+					// TODO - change to only pull out CLOSED ideas
+					ideaList = ideaService.findIdeasByGroupId(companyId, scopeGroupId);	
+				}
+				
+				returnView = "view_closed_ideas";
 			}
-			
-						
 			
 			model.addAttribute("ideaPlid", ideaPlid);
 			model.addAttribute("ideaPortletName",IdeaPortletsConstants.PORTLET_NAME_IDEA_PORTLET);
 			model.addAttribute("ideaList", ideaList);
 			model.addAttribute("ideaListType", ideaListType);
+			model.addAttribute("isSignedIn", isSignedIn);
 			
 		} catch (PortalException e) {
 			e.printStackTrace();
@@ -111,10 +128,7 @@ public class IdeaListViewController {
 			e.printStackTrace();
 		}
         
-
-        model.addAttribute("foo", "bar");
-
-        return "view";
+        return returnView;
     }
 
 }
