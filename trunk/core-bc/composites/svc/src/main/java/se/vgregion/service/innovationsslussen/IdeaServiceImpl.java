@@ -125,6 +125,11 @@ public class IdeaServiceImpl implements IdeaService {
     		
     		idea.setUrlTitle(generateUrlTitle(idea.getTitle()));
     		
+        	// Create Barium Idea
+        	String bariumId = bariumService.createIdea(idea);
+    		
+        	idea.setBariumId(bariumId);
+    		
     		// Persist idea
     		idea = ideaRepository.merge(idea);
     		
