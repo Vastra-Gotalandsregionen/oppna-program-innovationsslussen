@@ -2,9 +2,12 @@ package se.vgregion.service.barium;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
+import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
+import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaPerson;
 import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstance;
 import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstances;
 import se.vgregion.portal.innovationsslussen.domain.json.ObjectField;
@@ -95,33 +100,44 @@ public class BariumService {
     	
         IdeaObjectFields ideaObjectFields = new IdeaObjectFields();
         
+        IdeaContent ideaContentPublic = idea.getIdeaContentPublic();
+        IdeaContent ideaContentPrivate = idea.getIdeaContentPrivate();
+        IdeaPerson ideaPerson = idea.getIdeaPerson();
         
         
-//        ideaObjectFields.setBehov(idea.getSolvesProblem());     
-//        ideaObjectFields.setEpost(idea.getEmail());
-//        ideaObjectFields.setIde(idea.getDescription());
-//        ideaObjectFields.setInstanceName(idea.getTitle());
-//        ideaObjectFields.setKommavidare(idea.getWantsHelpWith());       
-//        ideaObjectFields.setTelefonnummer(idea.getPhone());
-//        
-//        ideaObjectFields.setVgrId(idea.getVgrId());
-//        ideaObjectFields.setVgrIdFullname(idea.getName());
-//        ideaObjectFields.setVgrIdTitel(idea.getJobPosition());
-//        
-//        System.out.println("BariumService - createIdea - idea.getWantsHelpWith() is: " + idea.getWantsHelpWith());
-//        
-//        String replyJson = bariumRestClient.createIdeaInstance(ideaObjectFields);
-//        
-//        try {
-//			JSONObject jsonObject = new JSONObject(replyJson);
-//			
-//			bariumId = jsonObject.getString("InstanceId");
-//			
-//			System.out.println("BariumService - createIdea - InstanceId: " + bariumId);
-//			
-//		} catch (JSONException e) {
-//			LOGGER.error(e.getMessage(), e);
-//		}
+        String solvesProblem = ideaContentPrivate.getSolvesProblem();
+        String email = ideaPerson.getEmail();
+        String description = ideaContentPrivate.getDescription();
+        String title = idea.getTitle();
+        String wantsHelpWith = ideaContentPrivate.getWantsHelpWith();
+        String phone = ideaPerson.getPhone();
+        String vgrId = ideaPerson.getVgrId();
+        String name = ideaPerson.getName();
+        String jobPosition = ideaPerson.getJobPosition();
+        
+        ideaObjectFields.setBehov(solvesProblem);     
+        ideaObjectFields.setEpost(email);
+        ideaObjectFields.setIde(description);
+        ideaObjectFields.setInstanceName(title);
+        ideaObjectFields.setKommavidare(wantsHelpWith);       
+        ideaObjectFields.setTelefonnummer(phone);
+        
+        ideaObjectFields.setVgrId(vgrId);
+        ideaObjectFields.setVgrIdFullname(name);
+        ideaObjectFields.setVgrIdTitel(jobPosition);
+        
+        String replyJson = bariumRestClient.createIdeaInstance(ideaObjectFields);
+        
+        try {
+			JSONObject jsonObject = new JSONObject(replyJson);
+			
+			bariumId = jsonObject.getString("InstanceId");
+			
+			System.out.println("BariumService - createIdea - InstanceId: " + bariumId);
+			
+		} catch (JSONException e) {
+			LOGGER.error(e.getMessage(), e);
+		}
 
         return bariumId;
     }
