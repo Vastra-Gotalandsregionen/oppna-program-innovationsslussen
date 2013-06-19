@@ -11,20 +11,7 @@
 <portlet:defineObjects />
 <liferay-theme:defineObjects />	
 
-<div class="idea-list-wrap">
-	<c:choose>
-		<c:when test="${ideaListType == '1'}">
-			<h2 class="title">Mina id&eacute;er</h2>
-		</c:when>
-		<c:when test="${ideaListType == '2'}">
-			<h2 class="title">Mina favoriter</h2>
-		</c:when>
-		<c:when test="${ideaListType == '3'}">
-			<h2 class="title">St&auml;ngda id&eacute;er</h2>
-		</c:when>
-		<c:otherwise></c:otherwise>
-	</c:choose>
-	
+<c:if test="${not empty ideaList}">
 	<ul class="idea-list">
 		
 		<c:forEach items="${ideaList}" var="idea" varStatus="index">
@@ -71,4 +58,4 @@
 		</c:forEach>	
 	
 	</ul>
-</div>
+</c:if>
