@@ -26,17 +26,17 @@ public class IdeaPortletUtil {
         long userId = themeDisplay.getUserId();
         
         String title = ParamUtil.getString(request, "title", "");
-        String description = ParamUtil.getString(request, "description", "");
-        String ideaTested = ParamUtil.getString(request, "ideaTested", "");
-        String solvesProblem = ParamUtil.getString(request, "solvesProblem", "");
-        String wantsHelpWith = ParamUtil.getString(request, "wantsHelpWith", "");
-        String additionalPersonInfo = ParamUtil.getString(request, "additionalPersonInfo", "");
-        String name = ParamUtil.getString(request, "name", "");
-        String email = ParamUtil.getString(request, "email", "");
-        String phone = ParamUtil.getString(request, "phone", "");
-        String phoneMobile = ParamUtil.getString(request, "phoneMobile", "");
+        String description = ParamUtil.getString(request, "ideaContentPrivate.description", "");
+        String ideaTested = ParamUtil.getString(request, "ideaContentPrivate.ideaTested", "");
+        String solvesProblem = ParamUtil.getString(request, "ideaContentPrivate.solvesProblem", "");
+        String wantsHelpWith = ParamUtil.getString(request, "ideaContentPrivate.wantsHelpWith", "");
+        String additionalPersonInfo = ParamUtil.getString(request, "ideaPerson.additionalPersonInfo", "");
+        String name = ParamUtil.getString(request, "ideaPerson.name", "");
+        String email = ParamUtil.getString(request, "ideaPerson.email", "");
+        String phone = ParamUtil.getString(request, "ideaPerson.phone", "");
+        String phoneMobile = ParamUtil.getString(request, "ideaPerson.phoneMobile", "");
         String administrativeUnit = ParamUtil.getString(request, "administrativeUnit", "");
-        String jobPosition = ParamUtil.getString(request, "jobPosition", "");
+        String jobPosition = ParamUtil.getString(request, "ideaPerson.jobPosition", "");
         
         String vgrId = "none";
         

@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import se.vgregion.portal.innovationsslussen.domain.BariumResponse;
 import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
@@ -87,16 +88,8 @@ public class BariumService {
         return ideas;
     }
 
-    public String createIdea() {
-        IdeaObjectFields ideaObjectFields = new IdeaObjectFields();
-        ideaObjectFields.setIde("en lysande idé");
-        bariumRestClient.createIdeaInstance(ideaObjectFields);
-
-        return "";
-    }
-    
-    public String createIdea(Idea idea) {
-    	String bariumId = "";
+    public BariumResponse createIdea(Idea idea) {
+    	BariumResponse bariumResponse = new BariumResponse();
     	
         IdeaObjectFields ideaObjectFields = new IdeaObjectFields();
         
@@ -144,15 +137,22 @@ public class BariumService {
         try {
 			JSONObject jsonObject = new JSONObject(replyJson);
 			
-			bariumId = jsonObject.getString("InstanceId");
+			System.out.println("BariumService - createIdea - jsonObject: " + jsonObject.toString());
 			
-			System.out.println("BariumService - createIdea - InstanceId: " + bariumId);
+			String instanceId = jsonObject.getString("InstanceId");
+			boolean success = jsonObject.getBoolean("success");
+			
+			bariumResponse.setInstanceId(instanceId);
+			bariumResponse.setSuccess(success);
+			bariumResponse.setJsonString(replyJson);
+			
+			System.out.println("BariumService - createIdea - InstanceId: " + instanceId);
 			
 		} catch (JSONException e) {
 			LOGGER.error(e.getMessage(), e);
 		}
 
-        return bariumId;
+        return bariumResponse;
     }
     
     

@@ -14,6 +14,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
@@ -22,11 +25,14 @@ import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaPerson;
 import se.vgregion.portal.innovationsslussen.util.IdeaPortletUtil;
+import se.vgregion.service.innovationsslussen.exception.CreateIdeaException;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
+import se.vgregion.service.innovationsslussen.validator.IdeaValidator;
 
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * Controller class for the view mode in the create idea portlet.
@@ -41,6 +47,9 @@ public class CreateIdeaViewController {
     private static final Logger LOGGER = LoggerFactory.getLogger(CreateIdeaViewController.class.getName());
     
     private IdeaService ideaService;
+    
+    @Autowired
+    private IdeaValidator validator;
 
     /**
      * Constructor.
@@ -79,12 +88,33 @@ public class CreateIdeaViewController {
      * @return the view
      */
     @RenderMapping()
-    public String showIdea(RenderRequest request, RenderResponse response, final ModelMap model) {
+    public String createIdea(RenderRequest request, RenderResponse response, final ModelMap model, @ModelAttribute Idea idea, BindingResult result) {
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
         boolean isSignedIn = themeDisplay.isSignedIn();
+        
+        if (model.get("errors") == null) {
+
+        	// No idea exists
+        	idea = IdeaPortletUtil.getIdeaFromRequest(request);
+        	
+            // Set dummy data for person
+            if(idea.getIdeaPerson().getName().equals("")) {
+                idea.getIdeaPerson().setEmail("erik.andersson@monator.com");
+                idea.getIdeaPerson().setJobPosition("Konsult");
+                idea.getIdeaPerson().setName("Erik Andersson");
+                idea.getIdeaPerson().setPhone("031123456");
+                idea.getIdeaPerson().setPhoneMobile("");
+                idea.getIdeaPerson().setAdditionalPersonsInfo("");
+            }
+        } else {
+            // Copy binding error from save action
+            result.addAllErrors((BindingResult) model.get("errors"));
+        }
 
         model.addAttribute("isSignedIn", isSignedIn);
+        model.addAttribute("idea", idea);
+        model.addAttribute("ideaClass", Idea.class);
 
         return "view";
     }
@@ -98,7 +128,7 @@ public class CreateIdeaViewController {
      * @param model    the model
      */
     @ActionMapping("submitIdea")
-    public final void submitIdea(ActionRequest request, ActionResponse response, final ModelMap model) {
+    public final void submitIdea(ActionRequest request, ActionResponse response, final ModelMap model, @ModelAttribute Idea idea, BindingResult result) {
     	
     	System.out.println("submitIdea");
 
@@ -106,11 +136,36 @@ public class CreateIdeaViewController {
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
 
-        Idea idea = IdeaPortletUtil.getIdeaFromRequest(request);
+        idea = IdeaPortletUtil.getIdeaFromRequest(request);
         
-        ideaService.addIdea(idea);
+        System.out.println("CreateIdeaViewController - submitIdea - idea title is: " + idea.getTitle() );
+        
+        validator.validate(idea, result);
+        
+        if(!result.hasErrors()) {
 
-        response.setRenderParameter("view", "confirmation");
+        	try {
+        		idea = ideaService.addIdea(idea);
+        		
+        		response.setRenderParameter("view", "confirmation");
+        		
+        	} catch (CreateIdeaException e) {
+        		
+        		// Add error - create failed
+        		
+            	PortalUtil.copyRequestParameters(request, response);
+            	response.setRenderParameter("view", "view");	
+			}
+        	
+        } else {
+        	model.addAttribute("errors", result);
+        	
+        	PortalUtil.copyRequestParameters(request, response);
+        	response.setRenderParameter("view", "view");	
+        }
+        
+        
+        
 
 
     }

@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
+import se.vgregion.service.innovationsslussen.exception.CreateIdeaException;
 
 /**
  * Service interface for managing {@link Idea}s.
@@ -30,7 +31,7 @@ public interface IdeaService {
      * Add a {@link Idea}.
      *
      */
-    Idea addIdea(Idea idea);
+    Idea addIdea(Idea idea) throws CreateIdeaException;
     
     /**
      * Find an {@link Idea}.
