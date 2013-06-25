@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
@@ -74,6 +75,16 @@ public class Idea extends AbstractEntity<Long> {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idea")
     @JoinColumn(name= "idea_id")
     private Set<IdeaUserFavorite> favorites = new HashSet<IdeaUserFavorite>();
+    
+    @Transient
+    private IdeaContent ideaContentPrivate;
+    
+    @Transient
+    private IdeaContent ideaContentPublic;
+    
+    @Transient
+    private IdeaPerson ideaPerson;
+    
     
 
     /**
@@ -171,18 +182,18 @@ public class Idea extends AbstractEntity<Long> {
     // Returns the first IdeaPerson found in set
     public IdeaPerson getIdeaPerson() {
     	
-    	IdeaPerson ideaPerson = null;
-    	
     	if(ideaPersons.size() > 0) {
-    		//ideaPerson = ideaPersons.
-    		ideaPerson = ideaPersons.iterator().next();
+    		setIdeaPerson(ideaPersons.iterator().next());
     	} else {
-    		ideaPerson = new IdeaPerson();
+    		setIdeaPerson(new IdeaPerson());
     	}
     	
         return ideaPerson;
     }
     
+    public void setIdeaPerson(IdeaPerson ideaPerson) {
+    	this.ideaPerson = ideaPerson;
+    }
 
     public void addIdeaPerson(IdeaPerson ideaPerson) {
     	
@@ -191,15 +202,37 @@ public class Idea extends AbstractEntity<Long> {
     }
 	
     public IdeaContent getIdeaContentPublic () {
-    	return getIdeaContent(IdeaConstants.IDEA_CONTENT_TYPE_PUBLIC);
+    	
+    	if(ideaContentPublic == null) {
+    		setIdeaContentPublic(getIdeaContent(IdeaConstants.IDEA_CONTENT_TYPE_PUBLIC));
+    	}
+    	
+    	return ideaContentPublic;
+    }
+    
+    public void setIdeaContentPublic (IdeaContent ideaContentPublic) {
+    	this.ideaContentPublic = ideaContentPublic;
     }
     
     public IdeaContent getIdeaContentPrivate () {
-    	return getIdeaContent(IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE);
+    	
+    	if(ideaContentPrivate == null) {
+    		setIdeaContentPrivate(getIdeaContent(IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE));
+    	}
+    	
+    	return ideaContentPrivate;
     }
     
+    public void setIdeaContentPrivate (IdeaContent ideaContentPrivate) {
+    	
+    	System.out.println("Idea - setIdeaContentPrivate");
+    	
+    	this.ideaContentPrivate = ideaContentPrivate;
+    }
+    
+    
     private IdeaContent getIdeaContent (int type) {
-    	IdeaContent ideaContent = null;
+    	IdeaContent ideaContent = new IdeaContent();
     	
     	for(IdeaContent ic : ideaContents) {
     		if(ic.getType() == type) {
