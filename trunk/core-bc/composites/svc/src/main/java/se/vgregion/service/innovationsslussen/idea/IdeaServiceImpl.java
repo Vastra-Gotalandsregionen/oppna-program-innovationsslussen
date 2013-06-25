@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import se.vgregion.portal.innovationsslussen.domain.BariumResponse;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserFavorite;
@@ -119,41 +120,62 @@ public class IdeaServiceImpl implements IdeaService {
     
     @Override
     @Transactional(rollbackFor = CreateIdeaException.class)
-    public Idea addIdea(Idea idea) {
+    public Idea addIdea(Idea idea) throws CreateIdeaException {
     	
-    	try {
+    	// Create Barium Idea
+    	BariumResponse bariumResponse = bariumService.createIdea(idea);
+    	
+    	if(bariumResponse.getSuccess()) {
     		
-    		idea.setUrlTitle(generateUrlTitle(idea.getTitle()));
+    		String bariumId = bariumResponse.getInstanceId();
     		
-        	// Create Barium Idea
-        	String bariumId = bariumService.createIdea(idea);
-    		
-        	idea.setBariumId(bariumId);
-    		
-    		// Persist idea
-    		idea = ideaRepository.merge(idea);
-    		
-    		// Get references to persisted IdeaContent (public and private)
-    		IdeaContent ideaContentPublic = idea.getIdeaContentPublic();
-    		IdeaContent ideaContentPrivate = idea.getIdeaContentPrivate();
-    		
-			// Add public discussion
-			MBMessageLocalServiceUtil.addDiscussionMessage(
-				idea.getUserId(), String.valueOf(ideaContentPublic.getUserId()), ideaContentPublic.getGroupId(), IdeaContent.class.getName(),
-				ideaContentPublic.getId(), WorkflowConstants.ACTION_PUBLISH);           
-			
-			// Add private discussion
-			MBMessageLocalServiceUtil.addDiscussionMessage(
-				idea.getUserId(), String.valueOf(ideaContentPrivate.getUserId()), ideaContentPrivate.getGroupId(), IdeaContent.class.getName(),
-				ideaContentPrivate.getId(), WorkflowConstants.ACTION_PUBLISH);
-  		
-    		
-    	} catch (SystemException e) {
-    		LOGGER.error(e.getMessage(), e);
-    	} catch (PortalException e) {
-    		LOGGER.error(e.getMessage(), e);
-    	}
+        		try {
+        			idea.setBariumId(bariumId);
+        			
+            		idea.setUrlTitle(generateUrlTitle(idea.getTitle()));
+        			
+            		// Persist idea
+            		idea = ideaRepository.merge(idea);
+            		
+            		// Get references to persisted IdeaContent (public and private)
+            		IdeaContent ideaContentPublic = idea.getIdeaContentPublic();
+            		IdeaContent ideaContentPrivate = idea.getIdeaContentPrivate();
+        			
+        			// Add public discussion
+        			MBMessageLocalServiceUtil.addDiscussionMessage(
+        				idea.getUserId(), String.valueOf(ideaContentPublic.getUserId()), ideaContentPublic.getGroupId(), IdeaContent.class.getName(),
+        				ideaContentPublic.getId(), WorkflowConstants.ACTION_PUBLISH);           
+        			
+        			// Add private discussion
+        			MBMessageLocalServiceUtil.addDiscussionMessage(
+        				idea.getUserId(), String.valueOf(ideaContentPrivate.getUserId()), ideaContentPrivate.getGroupId(), IdeaContent.class.getName(),
+        				ideaContentPrivate.getId(), WorkflowConstants.ACTION_PUBLISH);
+        			
+            	} catch (SystemException e) {
+            		LOGGER.error(e.getMessage(), e);
+            		
+            		// Delete idea from Barium
+            		// Delete message board threads
+            		// Set BariumId to blank for idea
+            		
+            		throw new CreateIdeaException(e);
+            	} catch (PortalException e) {
 
+            		LOGGER.error(e.getMessage(), e);                		
+            		
+            		// Delete idea from Barium
+            		// Delete message board threads
+            		// Set BariumId to blank for idea
+            		
+            		idea.setBariumId("");
+            		
+            		throw new CreateIdeaException(e);
+            	}            		
+        		
+        	} else {
+        		throw new CreateIdeaException("Failed to create idea in Barium, bariumRestClient returned: " + bariumResponse.getJsonString());
+        	}
+    		
         return idea;
     }    
     
