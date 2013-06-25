@@ -48,16 +48,17 @@ public class CreateIdeaViewController {
     
     private IdeaService ideaService;
     
-    @Autowired
-    private IdeaValidator validator;
+    //@Autowired
+    private IdeaValidator ideaValidator;
 
     /**
      * Constructor.
      *
      */
     @Autowired
-    public CreateIdeaViewController(IdeaService ideaService) {
+    public CreateIdeaViewController(IdeaService ideaService, IdeaValidator ideaValidator) {
         this.ideaService = ideaService;
+        this.ideaValidator = ideaValidator;
     }
 
 
@@ -140,7 +141,7 @@ public class CreateIdeaViewController {
         
         System.out.println("CreateIdeaViewController - submitIdea - idea title is: " + idea.getTitle() );
         
-        validator.validate(idea, result);
+        ideaValidator.validate(idea, result);
         
         if(!result.hasErrors()) {
 

@@ -27,6 +27,8 @@
 
 	<context:component-scan base-package="se.vgregion.portal.innovationsslussen.createidea.controller"/>
 	
+	<bean id="ideaValidator" class="se.vgregion.service.innovationsslussen.validator.IdeaValidator" />
+	
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
 		<property name="prefix" value="/WEB-INF/jsp/create_idea/"/>
