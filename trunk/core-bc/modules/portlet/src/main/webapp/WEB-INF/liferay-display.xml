@@ -10,7 +10,7 @@
 	</category>
 	
 	<category name="category.hidden">
-		<portlet id="createidea"></portlet>
+		<portlet id="ideaadmin"></portlet>
 	</category>	
 	
 </display>

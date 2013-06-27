@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import se.vgregion.portal.innovationsslussen.domain.BariumResponse;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
+import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaPerson;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserFavorite;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserLike;
 import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
@@ -32,7 +33,9 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.User;
+import com.liferay.portal.service.ResourceLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.messageboards.model.MBMessageDisplay;
@@ -140,6 +143,36 @@ public class IdeaServiceImpl implements IdeaService {
             		// Get references to persisted IdeaContent (public and private)
             		IdeaContent ideaContentPublic = idea.getIdeaContentPublic();
             		IdeaContent ideaContentPrivate = idea.getIdeaContentPrivate();
+            		
+            		// Get references to persisted IdeaPerson
+            		IdeaPerson ideaPerson = idea.getIdeaPerson();
+            		
+            		boolean addCommunityPermissions = true;
+            		boolean addGuestPermissions = true;
+            		
+            		// Add resource for Idea
+            		ResourceLocalServiceUtil.addResources(
+            			idea.getCompanyId(), idea.getGroupId(), idea.getUserId(),
+            			Idea.class.getName(), idea.getId(), false,
+            			addCommunityPermissions, addGuestPermissions);
+            		
+            		// Add resource for IdeaContentPublic
+            		ResourceLocalServiceUtil.addResources(
+        				ideaContentPublic.getCompanyId(), ideaContentPublic.getGroupId(), ideaContentPublic.getUserId(),
+        				IdeaContent.class.getName(), ideaContentPublic.getId(), false,
+            			addCommunityPermissions, addGuestPermissions);            		
+
+            		// Add resource for IdeaContentPrivate
+            		ResourceLocalServiceUtil.addResources(
+        				ideaContentPrivate.getCompanyId(), ideaContentPrivate.getGroupId(), ideaContentPrivate.getUserId(),
+        				IdeaContent.class.getName(), ideaContentPrivate.getId(), false,
+            			addCommunityPermissions, addGuestPermissions);            		
+
+            		// Add resource for IdeaPerson
+            		ResourceLocalServiceUtil.addResources(
+        				ideaPerson.getCompanyId(), ideaPerson.getGroupId(), ideaPerson.getUserId(),
+        				IdeaPerson.class.getName(), ideaPerson.getId(), false,
+            			addCommunityPermissions, addGuestPermissions);            		
         			
         			// Add public discussion
         			MBMessageLocalServiceUtil.addDiscussionMessage(
@@ -161,7 +194,7 @@ public class IdeaServiceImpl implements IdeaService {
             		throw new CreateIdeaException(e);
             	} catch (PortalException e) {
 
-            		LOGGER.error(e.getMessage(), e);                		
+            		LOGGER.error(e.getMessage(), e);
             		
             		// Delete idea from Barium
             		// Delete message board threads
@@ -177,7 +210,7 @@ public class IdeaServiceImpl implements IdeaService {
         	}
     		
         return idea;
-    }    
+    }
     
     @Override
     public Idea find(long ideaId) {
@@ -280,6 +313,27 @@ public class IdeaServiceImpl implements IdeaService {
     	System.out.println("IdeaServiceImpl - remove");
     	
     	try {
+    		
+    		IdeaContent ideaContentPublic = idea.getIdeaContentPublic();
+    		IdeaContent ideaContentPrivate = idea.getIdeaContentPrivate();
+    		IdeaPerson ideaPerson = idea.getIdeaPerson();
+    		
+    		// Delete resource for Idea
+    		ResourceLocalServiceUtil.deleteResource(
+    				idea.getCompanyId(), Idea.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, idea.getId());
+    		
+    		// Delete resource for IdeaContentPublic
+    		ResourceLocalServiceUtil.deleteResource(
+    				ideaContentPublic.getCompanyId(), IdeaContent.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, ideaContentPublic.getId());
+    		
+    		// Delete resource for IdeaContentPrivate
+    		ResourceLocalServiceUtil.deleteResource(
+    				ideaContentPrivate.getCompanyId(), IdeaContent.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, ideaContentPrivate.getId());
+
+    		// Delete resource for IdeaPerson
+    		ResourceLocalServiceUtil.deleteResource(
+    				ideaPerson.getCompanyId(), IdeaPerson.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, ideaPerson.getId());
+    		
     		
 	    	// Delete message board entries
 	    	MBMessageLocalServiceUtil.deleteDiscussionMessages(IdeaContent.class.getName(), idea.getIdeaContentPublic().getId());
