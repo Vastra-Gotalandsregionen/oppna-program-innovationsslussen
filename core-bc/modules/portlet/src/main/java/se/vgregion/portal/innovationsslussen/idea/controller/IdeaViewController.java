@@ -18,6 +18,8 @@ import se.vgregion.portal.innovationsslussen.domain.IdeaConstants;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
+import se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionChecker;
+import se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionCheckerService;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -27,6 +29,8 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.User;
+import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.service.UserLocalServiceUtil;
@@ -46,6 +50,7 @@ import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 public class IdeaViewController {
 
 	IdeaService ideaService;
+	IdeaPermissionCheckerService ideaPermissionCheckerService;
 	
     private static final Logger LOGGER = LoggerFactory.getLogger(IdeaViewController.class.getName());
 
@@ -54,8 +59,9 @@ public class IdeaViewController {
      *
      */
     @Autowired
-    public IdeaViewController(IdeaService ideaService) {
+    public IdeaViewController(IdeaService ideaService, IdeaPermissionCheckerService ideaPermissionCheckerService) {
         this.ideaService = ideaService;
+        this.ideaPermissionCheckerService = ideaPermissionCheckerService;
     }    
 
     /**
@@ -81,12 +87,15 @@ public class IdeaViewController {
             Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
             boolean isIdeaUserLiked = ideaService.getIsIdeaUserLiked(companyId, scopeGroupId, userId, urlTitle);
             boolean isIdeaUserFavorite = ideaService.getIsIdeaUserFavorite(companyId, scopeGroupId, userId, urlTitle);
+
+            IdeaPermissionChecker ideaPermissionChecker = ideaPermissionCheckerService.getIdeaPermissionChecker(scopeGroupId, userId, idea.getId());
             
             model.addAttribute("idea", idea);
             model.addAttribute("isIdeaUserFavorite", isIdeaUserFavorite);
             model.addAttribute("isIdeaUserLiked", isIdeaUserLiked);
             
             model.addAttribute("isSignedIn", isSignedIn);
+            model.addAttribute("ideaPermissionChecker", ideaPermissionChecker);
         }
 
         return "view_public";

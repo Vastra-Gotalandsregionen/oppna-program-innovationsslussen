@@ -38,6 +38,8 @@
 	    <constructor-arg index="4" ref="ideaUserFavoriteRepository" />
 	    <constructor-arg index="5" ref="bariumService" />
 	</bean>
+	
+	<bean id="ideaPermissionCheckerService" class="se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionCheckerServiceImpl" />
 		
     
 </beans>

@@ -224,9 +224,6 @@ public class Idea extends AbstractEntity<Long> {
     }
     
     public void setIdeaContentPrivate (IdeaContent ideaContentPrivate) {
-    	
-    	System.out.println("Idea - setIdeaContentPrivate");
-    	
     	this.ideaContentPrivate = ideaContentPrivate;
     }
     

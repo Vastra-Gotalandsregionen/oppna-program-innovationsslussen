@@ -56,7 +56,7 @@
 	
 	<portlet>
 		<portlet-name>idea</portlet-name>
-		<display-name>IdeaPortlet</display-name>
+		<display-name>Idea Portlet</display-name>
 		<portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
 		<init-param>
 			<name>check-auth-token</name>
@@ -68,8 +68,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>IdeaPortlet</title>
-			<short-title>IdeaPortlet</short-title>
+			<title>Idea Portlet</title>
+			<short-title>Idea Portlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<portlet-preferences>
@@ -94,7 +94,7 @@
 
 	<portlet>
 		<portlet-name>createidea</portlet-name>
-		<display-name>CreateIdeaPortlet</display-name>
+		<display-name>Idea Create Portlet</display-name>
 		<portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
 		<init-param>
 			<name>check-auth-token</name>
@@ -106,8 +106,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>CreateIdeaPortlet</title>
-			<short-title>CreateIdeaPortlet</short-title>
+			<title>Idea Create Portlet</title>
+			<short-title>Idea Create Portlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<portlet-preferences>
@@ -132,7 +132,7 @@
 
 	<portlet>
 		<portlet-name>ideaadmin</portlet-name>
-		<display-name>Idea Admin</display-name>
+		<display-name>Idea Admin Portlet</display-name>
 		<portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
 		<init-param>
 			<name>check-auth-token</name>

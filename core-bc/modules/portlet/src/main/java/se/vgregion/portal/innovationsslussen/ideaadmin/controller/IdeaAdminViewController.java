@@ -62,8 +62,6 @@ public class IdeaAdminViewController {
         long scopeGroupId = themeDisplay.getScopeGroupId();
         long companyId = themeDisplay.getCompanyId();
         
-        System.out.println("IdeaAdminViewController - showIdeaAdmin");
-        
         List<Idea> ideas = ideaService.findIdeasByGroupId(companyId, scopeGroupId);
 
         model.addAttribute("ideas", ideas);
@@ -82,10 +80,6 @@ public class IdeaAdminViewController {
     @ActionMapping("someAction")
     public final void someAction(ActionRequest request, ActionResponse response, final ModelMap model) {
     	
-    	System.out.println("someAction");
-
-        LOGGER.info("someAction");
-
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
         long companyId = themeDisplay.getCompanyId();
         long groupId = themeDisplay.getScopeGroupId();
@@ -104,8 +98,6 @@ public class IdeaAdminViewController {
     @ActionMapping(params = "action=deleteEntry")
     public final void deleteEntry(ActionRequest request, ActionResponse response, final ModelMap model) {
     	
-    	System.out.println("IdeaAdminViewController - deleteEntry");
-
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
         long companyId = themeDisplay.getCompanyId();
         long groupId = themeDisplay.getScopeGroupId();
