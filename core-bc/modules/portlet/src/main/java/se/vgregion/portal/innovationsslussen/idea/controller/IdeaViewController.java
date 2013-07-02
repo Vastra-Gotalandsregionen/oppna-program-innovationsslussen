@@ -1,5 +1,7 @@
 package se.vgregion.portal.innovationsslussen.idea.controller;
 
+import java.util.HashSet;
+
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.RenderRequest;
@@ -80,8 +82,10 @@ public class IdeaViewController {
         long companyId = themeDisplay.getCompanyId();
         long userId = themeDisplay.getUserId();
         boolean isSignedIn = themeDisplay.isSignedIn();
-        
+        String ideaType = ParamUtil.getString(request, "type", "public");
         String urlTitle = ParamUtil.getString(request, "urlTitle", "");
+        
+        String returnView = "view_public";
         
         if(!urlTitle.equals("")) {
             Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
@@ -90,15 +94,37 @@ public class IdeaViewController {
 
             IdeaPermissionChecker ideaPermissionChecker = ideaPermissionCheckerService.getIdeaPermissionChecker(scopeGroupId, userId, idea.getId());
             
+//            boolean hasPermissionAddFavorite = ideaPermissionChecker.getHasPermissionAddFavorite();
+//            boolean hasPermissionaddLike = ideaPermissionChecker.getHasPermissionAddLike();
+//            boolean hasPermissionDeleteFavorite = ideaPermissionChecker.getHasPermissionDeleteFavorite();
+//            boolean hasPermissionDeleteLike = ideaPermissionChecker.getHasPermissionDeleteLike();
+//            boolean hasPermissionViewIdeaPrivate = ideaPermissionChecker.getHasPermissionViewIdeaPrivate();
+//            boolean hasPermissionViewIdeaPublic = ideaPermissionChecker.getHasPermissionViewIdeaPublic();
+//            
+//            String screenName = themeDisplay.getUser().getScreenName();
+//            
+//            System.out.println("IdeaViewController -" + " screenname: " + screenName + " hasPermissionAddFavorite: " + hasPermissionAddFavorite);
+//            System.out.println("IdeaViewController -" + " screenname: " + screenName + " hasPermissionaddLike: " + hasPermissionaddLike);
+//            System.out.println("IdeaViewController -" + " screenname: " + screenName + " hasPermissionDeleteFavorite: " + hasPermissionDeleteFavorite);
+//            System.out.println("IdeaViewController -" + " screenname: " + screenName + " hasPermissionDeleteLike: " + hasPermissionDeleteLike);
+//            System.out.println("IdeaViewController -" + " screenname: " + screenName + " hasPermissionViewIdeaPrivate: " + hasPermissionViewIdeaPrivate);
+//            System.out.println("IdeaViewController -" + " screenname: " + screenName + " hasPermissionViewIdeaPublic: " + hasPermissionViewIdeaPublic);
+            
             model.addAttribute("idea", idea);
             model.addAttribute("isIdeaUserFavorite", isIdeaUserFavorite);
             model.addAttribute("isIdeaUserLiked", isIdeaUserLiked);
             
             model.addAttribute("isSignedIn", isSignedIn);
             model.addAttribute("ideaPermissionChecker", ideaPermissionChecker);
+            
+            if(ideaType.equals("private") && ideaPermissionChecker.getHasPermissionViewIdeaPrivate()) {
+            	returnView = "view_private";
+            }
         }
+        
+        
 
-        return "view_public";
+        return returnView;
     }
     
     /**
@@ -109,6 +135,7 @@ public class IdeaViewController {
      * @param model    the model
      * @return the view
      */
+    /*
     @RenderMapping(params = "type=private")
     public String showIdeaPrivate(RenderRequest request, RenderResponse response, final ModelMap model) {
 
@@ -132,7 +159,7 @@ public class IdeaViewController {
 
         return "view_private";
     }
-    
+    */
     
     /**
      * Method handling Action request.

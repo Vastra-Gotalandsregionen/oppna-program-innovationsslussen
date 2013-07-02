@@ -32,8 +32,6 @@ public class JpaIdeaUserFavoriteRepositoryImpl extends DefaultJpaRepository<Idea
     public List<IdeaUserFavorite> findFavoritesByGroupId(long companyId, long groupId) {
         String queryString = "SELECT n FROM IdeaUserFavorite n WHERE n.companyId = ?1 AND n.groupId = ?2 ORDER BY n.id ASC";
         
-        System.out.println("JpaIdeaUserFavoriteRepositoryImpl - findIdeaUserFavoritesByGroupId");
-        
         Object[] queryObject = new Object[]{companyId, groupId};
 
         List<IdeaUserFavorite> ideaUserFavorites = findByQuery(queryString, queryObject);
@@ -45,8 +43,6 @@ public class JpaIdeaUserFavoriteRepositoryImpl extends DefaultJpaRepository<Idea
     public List<IdeaUserFavorite> findFavoritesByIdeaId(long companyId, long groupId, long ideaId) {
         String queryString = "SELECT n FROM IdeaUserFavorite n WHERE n.companyId = ?1 AND n.groupId = ?2 AND n.idea.id = ?3  ORDER BY n.id ASC";
         
-        System.out.println("JpaIdeaUserFavoriteRepositoryImpl - findFavoritesByIdeaId");
-        
         Object[] queryObject = new Object[]{companyId, groupId, ideaId};
 
         List<IdeaUserFavorite> ideaUserFavorites = findByQuery(queryString, queryObject);
@@ -57,8 +53,6 @@ public class JpaIdeaUserFavoriteRepositoryImpl extends DefaultJpaRepository<Idea
     @Override
     public List<IdeaUserFavorite> findFavoritesByUserId(long companyId, long groupId, long userId) {
         String queryString = "SELECT n FROM IdeaUserFavorite n WHERE n.companyId = ?1 AND n.groupId = ?2 AND n.userId = ?3  ORDER BY n.id ASC";
-        
-        System.out.println("JpaIdeaUserFavoriteRepositoryImpl - findFavortiesByIdeaId");
         
         Object[] queryObject = new Object[]{companyId, groupId, userId};
 
@@ -77,8 +71,6 @@ public class JpaIdeaUserFavoriteRepositoryImpl extends DefaultJpaRepository<Idea
     			+ " n.userId = ?3 AND"
     			+ " n.idea.id = ?4"
     			+ " ORDER BY n.id ASC";
-        
-        System.out.println("JpaIdeaUserLikeRepositoryImpl - findLikesByUserAndIdea");
         
         Object[] queryObject = new Object[]{companyId, groupId, userId, ideaId};
 

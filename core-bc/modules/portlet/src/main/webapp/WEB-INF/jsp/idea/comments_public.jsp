@@ -11,39 +11,37 @@
 
 <div class="idea-comments">
 
-	<portlet:actionURL name="addComment" var="addCommentUrl">
-		<portlet:param name="action" value="addComment" />
-		<portlet:param name="urlTitle" value="${idea.urlTitle}" />
-		<portlet:param name="ideaContentType" value="0" />
-	</portlet:actionURL>
 	
 	<div class="add-comment">
 	
-		<c:choose>
-			<c:when test="${isSignedIn}">
-				<aui:form action="${addCommentUrl}" cssClass="add-comment-form clearfix" method="POST">
-					<div class="field-wrap">
-						<label for="<portlet:namespace />comment">
-							L&auml;gg till din kommentar
-						</label>
-						<div class="field-element-wrap">
-							<textarea name="<portlet:namespace />comment" id="<portlet:namespace />comment"></textarea>
-							<p class="notice">
-								Notera att denna kommentar kommer att synas &ouml;ppet f&ouml;r alla bes&ouml;kare p&aring; siten.
-							</p>	
-						</div>
-					</div>
-					<aui:button-row>
-						<aui:button type="submit" value="Posta" cssClass="rp-button" />
-					</aui:button-row>
-				</aui:form>			
-			</c:when>
-			<c:otherwise>
-				<div class="info-logged-out">
-					Du m&aring;ste vara inloggad f&ouml;r att f&aring; vara med och kommentera p&aring; en id&eacute;.
+		<c:set var="textareaCssClass" scope="page" value="innovationsslussen-signin-prompt" />
+		<c:set var="addCommentUrl" scope="page" value="#" />
+		<c:if test="${ideaPermissionChecker.hasPermissionAddCommentPublic}">
+			<c:set var="textareaCssClass" scope="page" value="" />
+			<portlet:actionURL name="addComment" var="addCommentUrl">
+				<portlet:param name="action" value="addComment" />
+				<portlet:param name="urlTitle" value="${idea.urlTitle}" />
+				<portlet:param name="ideaContentType" value="0" />
+			</portlet:actionURL>
+		</c:if>
+	
+	
+		<aui:form action="${addCommentUrl}" cssClass="add-comment-form clearfix" method="POST">
+			<div class="field-wrap">
+				<label for="<portlet:namespace />comment">
+					L&auml;gg till din kommentar
+				</label>
+				<div class="field-element-wrap">
+					<textarea class="${textareaCssClass}" name="<portlet:namespace />comment" id="<portlet:namespace />comment"></textarea>
+					<p class="notice">
+						Notera att denna kommentar kommer att synas &ouml;ppet f&ouml;r alla bes&ouml;kare p&aring; siten.
+					</p>	
 				</div>
-			</c:otherwise>
-		</c:choose>
+			</div>
+			<aui:button-row>
+				<aui:button type="submit" value="Posta" cssClass="rp-button" />
+			</aui:button-row>
+		</aui:form>
 	</div>
 	
 	<c:choose>
@@ -81,7 +79,7 @@
 			<p>Det finns inga kommentarer p&aring; denna id&eacute; &auml;nnu. <c:if test="${isSignedIn}">Posta din kommentar och bli f&ouml;rst!</c:if></p>
 		</c:otherwise>
 	</c:choose>
-	
+</div>	
 	
 	<%-- 
 	<div class="comment clearfix">
@@ -163,6 +161,7 @@
 	
 	
 </div>
+--%>
 
 <%-- 
 <div class="rp-paging clearfix">

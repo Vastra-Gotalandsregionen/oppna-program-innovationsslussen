@@ -52,12 +52,21 @@
 			<supports>
 				<action-key>ADD_COMMENT_PUBLIC</action-key>
 				<action-key>ADD_COMMENT_PRIVATE</action-key>
+				<action-key>ADD_FAVORITE</action-key>
+				<action-key>ADD_LIKE</action-key>
+				<action-key>DELETE_FAVORITE</action-key>
+				<action-key>DELETE_LIKE</action-key>
 				<action-key>VIEW_IDEA_PUBLIC</action-key>
 				<action-key>VIEW_IDEA_PRIVATE</action-key>
 				<action-key>VIEW_COMMENT_PUBLIC</action-key>
 				<action-key>VIEW_COMMENT_PRIVATE</action-key>
 			</supports>
 			<community-defaults>
+			    <action-key>ADD_COMMENT_PUBLIC</action-key>
+				<action-key>ADD_FAVORITE</action-key>
+				<action-key>ADD_LIKE</action-key>
+				<action-key>DELETE_FAVORITE</action-key>
+				<action-key>DELETE_LIKE</action-key>
 				<action-key>VIEW_IDEA_PUBLIC</action-key>
 				<action-key>VIEW_COMMENT_PUBLIC</action-key>
 			</community-defaults>
@@ -66,6 +75,10 @@
 				<action-key>VIEW_COMMENT_PUBLIC</action-key>
 			</guest-defaults>
 			<guest-unsupported>
+			    <action-key>ADD_COMMENT_PUBLIC</action-key>
+			    <action-key>ADD_COMMENT_PRIVATE</action-key>
+				<action-key>ADD_FAVORITE</action-key>
+				<action-key>ADD_LIKE</action-key>
 				<action-key>DELETE</action-key>
 				<action-key>PERMISSIONS</action-key>
 				<action-key>VIEW_IDEA_PRIVATE</action-key>
@@ -94,73 +107,5 @@
 			</guest-unsupported>
 		</permissions>
 	</model-resource>	
-		
-	<!-- 
-	<model-resource>
-		<model-name>se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent</model-name>
-		<portlet-ref>
-			<portlet-name>createidea</portlet-name>
-		</portlet-ref>
-		<permissions>
-			<supports>
-				<action-key>ADD_DISCUSSION</action-key>
-				<action-key>DELETE</action-key>
-				<action-key>DELETE_DISCUSSION</action-key>
-				<action-key>PERMISSIONS</action-key>
-				<action-key>UPDATE</action-key>
-				<action-key>UPDATE_DISCUSSION</action-key>
-				<action-key>VIEW</action-key>
-			</supports>
-			<community-defaults>
-				<action-key>ADD_DISCUSSION</action-key>
-				<action-key>VIEW</action-key>
-			</community-defaults>
-			<guest-defaults>
-				<action-key>VIEW</action-key>
-			</guest-defaults>
-			<guest-unsupported>
-				<action-key>ADD_DISCUSSION</action-key>
-				<action-key>DELETE</action-key>
-				<action-key>DELETE_DISCUSSION</action-key>
-				<action-key>PERMISSIONS</action-key>
-				<action-key>UPDATE</action-key>
-				<action-key>UPDATE_DISCUSSION</action-key>
-			</guest-unsupported>
-		</permissions>
-	</model-resource>
-
-	<model-resource>
-		<model-name>se.vgregion.portal.innovationsslussen.domain.jpa.IdeaPerson</model-name>
-		<portlet-ref>
-			<portlet-name>createidea</portlet-name>
-		</portlet-ref>
-		<permissions>
-			<supports>
-				<action-key>ADD_DISCUSSION</action-key>
-				<action-key>DELETE</action-key>
-				<action-key>DELETE_DISCUSSION</action-key>
-				<action-key>PERMISSIONS</action-key>
-				<action-key>UPDATE</action-key>
-				<action-key>UPDATE_DISCUSSION</action-key>
-				<action-key>VIEW</action-key>
-			</supports>
-			<community-defaults>
-				<action-key>ADD_DISCUSSION</action-key>
-				<action-key>VIEW</action-key>
-			</community-defaults>
-			<guest-defaults>
-				<action-key>VIEW</action-key>
-			</guest-defaults>
-			<guest-unsupported>
-				<action-key>ADD_DISCUSSION</action-key>
-				<action-key>DELETE</action-key>
-				<action-key>DELETE_DISCUSSION</action-key>
-				<action-key>PERMISSIONS</action-key>
-				<action-key>UPDATE</action-key>
-				<action-key>UPDATE_DISCUSSION</action-key>
-			</guest-unsupported>
-		</permissions>
-	</model-resource>
-	 -->
 	
 </resource-action-mapping>
