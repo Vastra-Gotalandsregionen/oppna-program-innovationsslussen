@@ -28,15 +28,38 @@ public class IdeaPermissionCheckerServiceImpl implements IdeaPermissionCheckerSe
 			
 			PermissionChecker permissionChecker = getPermissionChecker(user);
 			
-            boolean hasPermissionViewIdeaPublic = permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(), ideaId, IdeaActionKeys.VIEW_IDEA_PUBLIC);
-            boolean hasOwnerPermissionViewIdeaPublic = permissionChecker.hasOwnerPermission(scopeGroupId, Idea.class.getName(), ideaId, userId, IdeaActionKeys.VIEW_IDEA_PUBLIC);
-            
-            boolean hasPermissionViewIdeaPrivate = permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(), ideaId, IdeaActionKeys.VIEW_IDEA_PRIVATE);
-            boolean hasOwnerPermissionViewIdeaPrivate = permissionChecker.hasOwnerPermission(scopeGroupId, Idea.class.getName(), ideaId, userId, IdeaActionKeys.VIEW_IDEA_PRIVATE);
-            
-            ideaPermissionChecker.setHasPermissionViewIdeaPublic(hasPermissionViewIdeaPublic || hasOwnerPermissionViewIdeaPublic);
-            ideaPermissionChecker.setHasPermissionViewIdeaPrivate(hasPermissionViewIdeaPrivate || hasOwnerPermissionViewIdeaPrivate);
+			// Get add permissions
+			boolean hasPermissionAddCommentPublic = permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(), ideaId, IdeaActionKeys.ADD_COMMENT_PUBLIC);
+			boolean hasPermissionAddCommentPrivate = permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(), ideaId, IdeaActionKeys.ADD_COMMENT_PRIVATE);		
+			boolean hasPermissionAddFavorite = permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(), ideaId, IdeaActionKeys.ADD_FAVORITE);
+			boolean hasPermissionAddLike = permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(), ideaId, IdeaActionKeys.ADD_LIKE);
 			
+			// Get delete permissions
+			boolean hasPermissionDeleteFavorite= permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(), ideaId, IdeaActionKeys.DELETE_FAVORITE);
+			boolean hasPermissionDeleteLike= permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(), ideaId, IdeaActionKeys.DELETE_LIKE);
+			
+			// Get view permissions
+			boolean hasPermissionViewCommentPublic = permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(), ideaId, IdeaActionKeys.VIEW_COMMENT_PUBLIC);
+			boolean hasPermissionViewCommentPrivate = permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(), ideaId, IdeaActionKeys.VIEW_COMMENT_PRIVATE);
+            boolean hasPermissionViewIdeaPublic = permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(), ideaId, IdeaActionKeys.VIEW_IDEA_PUBLIC);
+            boolean hasPermissionViewIdeaPrivate = permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(), ideaId, IdeaActionKeys.VIEW_IDEA_PRIVATE);
+
+            // Set add permissions
+            ideaPermissionChecker.setHasPermissionAddCommentPrivate(hasPermissionAddCommentPrivate);
+            ideaPermissionChecker.setHasPermissionAddCommentPublic(hasPermissionAddCommentPublic);
+            ideaPermissionChecker.setHasPermissionAddFavorite(hasPermissionAddFavorite);
+            ideaPermissionChecker.setHasPermissionAddLike(hasPermissionAddLike);
+            
+            // Set delete permissions
+            ideaPermissionChecker.setHasPermissionDeleteFavorite(hasPermissionDeleteFavorite);
+            ideaPermissionChecker.setHasPermissionDeleteLike(hasPermissionDeleteLike);
+            
+            // Set view permissions
+            ideaPermissionChecker.setHasPermissionViewCommentPublic(hasPermissionViewCommentPublic);
+            ideaPermissionChecker.setHasPermissionViewCommentPrivate(hasPermissionViewCommentPrivate);
+            ideaPermissionChecker.setHasPermissionViewIdeaPublic(hasPermissionViewIdeaPublic);
+            ideaPermissionChecker.setHasPermissionViewIdeaPrivate(hasPermissionViewIdeaPrivate);
+            
 			
 		} catch (PortalException e) {
 			LOGGER.error(e.getMessage(), e);

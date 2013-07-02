@@ -21,11 +21,9 @@
 					<div class="idea-hd clearfix">
 					
 						<div class="idea-toolbar-wrap">
-						
-							<c:if test="${isSignedIn}">
-								<ul class="rp-toolbar clearfix">
-								
-									<%-- Add logic that controls whether link is shown or not --%>
+							<ul class="rp-toolbar clearfix">
+							
+								<c:if test="${ideaPermissionChecker.hasPermissionViewIdeaPrivate}">
 									<li class="icon closed">
 									
 										<liferay-portlet:renderURL var="ideaPrivateUrl">
@@ -38,64 +36,91 @@
 											<span>Visa st&auml;ngd beskrivning</span>
 										</a>
 									</li>
+								</c:if>
+							
+								<li class="icon comment">
+									<a href="#">
+										<span>Kommentera (${fn:length(idea.ideaContentPublic.comments)})</span>
+									</a>
+								</li>
 								
-									<li class="icon comment">
-										<a href="#">
-											<span>Kommentera (${fn:length(idea.ideaContentPublic.comments)})</span>
-										</a>
-									</li>
-									
-									<li class="icon like">
-										<c:choose>
-											<c:when test="${isIdeaUserLiked}">
+								<li class="icon like">
+									<c:choose>
+										<c:when test="${isIdeaUserLiked}">
+											
+											<c:set var="linkCssClass" scope="page" value="innovationsslussen-signin-prompt" />
+											<c:set var="removeLikeUrl" scope="page" value="#" />
+											<c:if test="${ideaPermissionChecker.hasPermissionDeleteLike}">
+												<c:set var="linkCssClass" scope="page" value="" />
 												<portlet:actionURL name="removeLike" var="removeLikeUrl">
 													<portlet:param name="action" value="removeLike" />
 													<portlet:param name="urlTitle" value="${idea.urlTitle}" />
 													<portlet:param name="ideaContentType" value="0" />
 												</portlet:actionURL>
-												<a href="${removeLikeUrl}">
-													<span>Sluta gilla (${fn:length(idea.likes)})</span>
-												</a>
-											</c:when>
-											<c:otherwise>
+											</c:if>
+										
+											<a class="${linkCssClass}" href="${removeLikeUrl}">
+												<span>Sluta gilla (${fn:length(idea.likes)})</span>
+											</a>
+										</c:when>
+										<c:otherwise>
+											<c:set var="linkCssClass" scope="page" value="innovationsslussen-signin-prompt" />
+											<c:set var="addLikeUrl" scope="page" value="#" />
+											<c:if test="${ideaPermissionChecker.hasPermissionAddLike}">
+												<c:set var="linkCssClass" scope="page" value="" />
 												<portlet:actionURL name="addLike" var="addLikeUrl">
 													<portlet:param name="action" value="addLike" />
 													<portlet:param name="urlTitle" value="${idea.urlTitle}" />
 													<portlet:param name="ideaContentType" value="0" />
 												</portlet:actionURL>
-												<a href="${addLikeUrl}">
-													<span>Gilla (${fn:length(idea.likes)})</span>
-												</a>
-											</c:otherwise>
-										</c:choose>
-									</li>
-									
-									<li class="icon favorite last">
-										<c:choose>
-											<c:when test="${isIdeaUserFavorite}">
+											</c:if>
+										
+											<a class="${linkCssClass}" href="${addLikeUrl}">
+												<span>Gilla (${fn:length(idea.likes)})</span>
+											</a>
+										</c:otherwise>
+									</c:choose>
+								</li>
+								
+								<li class="icon favorite last">
+									<c:choose>
+										<c:when test="${isIdeaUserFavorite}">
+										
+											<c:set var="linkCssClass" scope="page" value="innovationsslussen-signin-prompt" />
+											<c:set var="removeFavoriteUrl" scope="page" value="#" />
+											<c:if test="${ideaPermissionChecker.hasPermissionDeleteFavorite}">
+												<c:set var="linkCssClass" scope="page" value="" />
 												<portlet:actionURL name="removeFavorite" var="removeFavoriteUrl">
 													<portlet:param name="action" value="removeFavorite" />
 													<portlet:param name="urlTitle" value="${idea.urlTitle}" />
 													<portlet:param name="ideaContentType" value="0" />
 												</portlet:actionURL>
-												<a href="${removeFavoriteUrl}">
-													<span>Ta bort som favorit (${fn:length(idea.favorites)})</span>
-												</a>
-											</c:when>
-											<c:otherwise>
+											</c:if>
+										
+											<a class="${linkCssClass}" href="${removeFavoriteUrl}">
+												<span>Ta bort som favorit (${fn:length(idea.favorites)})</span>
+											</a>
+										</c:when>
+										<c:otherwise>
+										
+											<c:set var="linkCssClass" scope="page" value="innovationsslussen-signin-prompt" />
+											<c:set var="addFavoriteUrl" scope="page" value="#" />
+											<c:if test="${ideaPermissionChecker.hasPermissionAddFavorite}">
+												<c:set var="linkCssClass" scope="page" value="" />
 												<portlet:actionURL name="addFavorite" var="addFavoriteUrl">
 													<portlet:param name="action" value="addFavorite" />
 													<portlet:param name="urlTitle" value="${idea.urlTitle}" />
 													<portlet:param name="ideaContentType" value="0" />
 												</portlet:actionURL>
-												<a href="${addFavoriteUrl}">
-													<span>L&auml;gg till som favorit (${fn:length(idea.favorites)})</span>
-												</a>
-											</c:otherwise>
-										</c:choose>
-									</li>
-								</ul>
-							</c:if>
+											</c:if>
+										
+											<a class="${linkCssClass}" href="${addFavoriteUrl}">
+												<span>L&auml;gg till som favorit (${fn:length(idea.favorites)})</span>
+											</a>
+										</c:otherwise>
+									</c:choose>
+								</li>
+							</ul>
 						</div>
 						
 						<div class="idea-flow-wrap">
@@ -129,11 +154,6 @@
 					
 					<aui:layout>
 						<aui:column first="true" columnWidth="60" cssClass="idea-content">
-							<%-- 
-							<p class="intro">
-								Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec porta ante ut tortor rutrum facilisis. Sed varius sodales tellus, vel dictum risus imperdiet eu.
-							</p>
-							--%>
 							
 							<c:if test="${fn:length(idea.ideaContentPublic.intro) gt 0}">
 								<p class="intro">

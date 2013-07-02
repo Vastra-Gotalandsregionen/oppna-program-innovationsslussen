@@ -5,10 +5,14 @@ public class IdeaActionKeys {
 
 	public static final String ADD_COMMENT_PUBLIC = "ADD_COMMENT_PUBLIC";
 	public static final String ADD_COMMENT_PRIVATE = "ADD_COMMENT_PRIVATE";
+	public static final String ADD_LIKE = "ADD_LIKE";
+	public static final String ADD_FAVORITE = "ADD_FAVORITE";
 
 	public static final String CREATE_IDEA = "CREATE_IDEA";
 	
 	public static final String DELETE = "DELETE";
+	public static final String DELETE_LIKE = "DELETE_LIKE";
+	public static final String DELETE_FAVORITE = "DELETE_FAVORITE";
 	
 	public static final String PERMISSIONS = "PERMISSIONS";
 

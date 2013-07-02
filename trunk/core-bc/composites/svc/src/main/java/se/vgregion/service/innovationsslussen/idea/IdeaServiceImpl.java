@@ -156,24 +156,6 @@ public class IdeaServiceImpl implements IdeaService {
             			Idea.class.getName(), idea.getId(), false,
             			addCommunityPermissions, addGuestPermissions);
             		
-            		// Add resource for IdeaContentPublic
-            		ResourceLocalServiceUtil.addResources(
-        				ideaContentPublic.getCompanyId(), ideaContentPublic.getGroupId(), ideaContentPublic.getUserId(),
-        				IdeaContent.class.getName(), ideaContentPublic.getId(), false,
-            			addCommunityPermissions, addGuestPermissions);            		
-
-            		// Add resource for IdeaContentPrivate
-            		ResourceLocalServiceUtil.addResources(
-        				ideaContentPrivate.getCompanyId(), ideaContentPrivate.getGroupId(), ideaContentPrivate.getUserId(),
-        				IdeaContent.class.getName(), ideaContentPrivate.getId(), false,
-            			addCommunityPermissions, addGuestPermissions);            		
-
-            		// Add resource for IdeaPerson
-            		ResourceLocalServiceUtil.addResources(
-        				ideaPerson.getCompanyId(), ideaPerson.getGroupId(), ideaPerson.getUserId(),
-        				IdeaPerson.class.getName(), ideaPerson.getId(), false,
-            			addCommunityPermissions, addGuestPermissions);            		
-        			
         			// Add public discussion
         			MBMessageLocalServiceUtil.addDiscussionMessage(
         				idea.getUserId(), String.valueOf(ideaContentPublic.getUserId()), ideaContentPublic.getGroupId(), IdeaContent.class.getName(),
@@ -321,19 +303,6 @@ public class IdeaServiceImpl implements IdeaService {
     		// Delete resource for Idea
     		ResourceLocalServiceUtil.deleteResource(
     				idea.getCompanyId(), Idea.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, idea.getId());
-    		
-    		// Delete resource for IdeaContentPublic
-    		ResourceLocalServiceUtil.deleteResource(
-    				ideaContentPublic.getCompanyId(), IdeaContent.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, ideaContentPublic.getId());
-    		
-    		// Delete resource for IdeaContentPrivate
-    		ResourceLocalServiceUtil.deleteResource(
-    				ideaContentPrivate.getCompanyId(), IdeaContent.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, ideaContentPrivate.getId());
-
-    		// Delete resource for IdeaPerson
-    		ResourceLocalServiceUtil.deleteResource(
-    				ideaPerson.getCompanyId(), IdeaPerson.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL, ideaPerson.getId());
-    		
     		
 	    	// Delete message board entries
 	    	MBMessageLocalServiceUtil.deleteDiscussionMessages(IdeaContent.class.getName(), idea.getIdeaContentPublic().getId());
