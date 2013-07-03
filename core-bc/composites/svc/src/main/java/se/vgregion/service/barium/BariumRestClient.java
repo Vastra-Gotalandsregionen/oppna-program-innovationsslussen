@@ -5,6 +5,7 @@ import java.util.List;
 import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
 import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstance;
 import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstances;
+import se.vgregion.portal.innovationsslussen.domain.json.BariumInstance;
 import se.vgregion.portal.innovationsslussen.domain.json.ObjectField;
 import se.vgregion.portal.innovationsslussen.domain.json.Objects;
 
@@ -14,6 +15,10 @@ public interface BariumRestClient {
 
 	ApplicationInstances getApplicationInstances()
 			throws BariumException;
+	
+	BariumInstance getBariumInstance(String instanceId)
+			throws BariumException;
+	
 
 	boolean updateInstance(String values, String objectId);
 
@@ -28,4 +33,7 @@ public interface BariumRestClient {
 	List<ObjectField> getIdeaObjectFields(
 			ApplicationInstance applicationInstance);
 
+	List<ObjectField> getIdeaObjectFields(
+			BariumInstance bariumInstance);
+	
 }

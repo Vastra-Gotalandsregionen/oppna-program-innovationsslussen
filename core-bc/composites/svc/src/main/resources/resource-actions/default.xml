@@ -60,6 +60,7 @@
 				<action-key>VIEW_IDEA_PRIVATE</action-key>
 				<action-key>VIEW_COMMENT_PUBLIC</action-key>
 				<action-key>VIEW_COMMENT_PRIVATE</action-key>
+				<action-key>VIEW_IN_BARIUM</action-key>
 			</supports>
 			<community-defaults>
 			    <action-key>ADD_COMMENT_PUBLIC</action-key>
@@ -83,7 +84,20 @@
 				<action-key>PERMISSIONS</action-key>
 				<action-key>VIEW_IDEA_PRIVATE</action-key>
 				<action-key>VIEW_COMMENT_PRIVATE</action-key>
+				<action-key>VIEW_IN_BARIUM</action-key>
 			</guest-unsupported>
+			<owner-defaults>
+				<action-key>ADD_COMMENT_PUBLIC</action-key>
+				<action-key>ADD_COMMENT_PRIVATE</action-key>
+				<action-key>ADD_FAVORITE</action-key>
+				<action-key>ADD_LIKE</action-key>
+				<action-key>DELETE_FAVORITE</action-key>
+				<action-key>DELETE_LIKE</action-key>
+				<action-key>VIEW_IDEA_PUBLIC</action-key>
+				<action-key>VIEW_IDEA_PRIVATE</action-key>
+				<action-key>VIEW_COMMENT_PUBLIC</action-key>
+				<action-key>VIEW_COMMENT_PRIVATE</action-key>
+			</owner-defaults>
 		</permissions>
 	</model-resource>
 	

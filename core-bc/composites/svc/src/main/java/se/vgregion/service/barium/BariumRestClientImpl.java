@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import se.vgregion.portal.innovationsslussen.domain.*;
 import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstance;
 import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstances;
+import se.vgregion.portal.innovationsslussen.domain.json.BariumInstance;
 import se.vgregion.portal.innovationsslussen.domain.json.ObjectField;
 import se.vgregion.portal.innovationsslussen.domain.json.Objects;
 import se.vgregion.util.Util;
@@ -102,6 +103,33 @@ public class BariumRestClientImpl implements BariumRestClient {
             throw new RuntimeException(e);
         }
     }
+    
+    /* (non-Javadoc)
+	 * @see se.vgregion.service.barium.BariumRestClient#getApplicationInstance(String instanceId)
+	 */
+    @Override
+	public BariumInstance getBariumInstance(String instanceId) throws BariumException {
+    	
+    	String parameterString = "/Instances" + "/" + instanceId;
+    	
+    	System.out.println("BariumRestClientImpl - getBariumInstance - parameterString is: " + parameterString);
+    	
+        String instanceJson = doGet(parameterString);
+        
+        System.out.println("BariumRestClientImpl - getBariumInstance - instanceJson is: " + instanceJson);
+        
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(instanceJson, BariumInstance.class);
+        } catch (JsonMappingException e) {
+            throw new RuntimeException(e);
+        } catch (JsonParseException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
 
     public String doPostMultipart(String endpoint, byte[] bytes) throws BariumException {
         DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -402,6 +430,29 @@ public class BariumRestClientImpl implements BariumRestClient {
             throw new RuntimeException(e);
         }
     }
+    
+    public List<ObjectField> getIdeaObjectFields(BariumInstance instance) {
+        String objectJson = null;
+        try {
+            objectJson = doGet("/instances/" + instance.getId() + "/Objects/IDE/Fields");
+            LOGGER.info(objectJson);
+        } catch (BariumException e) {
+        	
+        	// TODO - we might want to check what kind of error we receive from Barium. (parse json string)
+            //LOGGER.error(e.getMessage(), e);
+            
+            return null;
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readValue(objectJson, TypeFactory.defaultInstance().constructCollectionType(List.class,
+                    ObjectField.class));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
 
     /* (non-Javadoc)
 	 * @see se.vgregion.service.barium.BariumRestClient#createIdeaInstance(se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields)

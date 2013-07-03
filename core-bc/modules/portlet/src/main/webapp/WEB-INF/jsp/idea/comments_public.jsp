@@ -45,11 +45,12 @@
 	</div>
 	
 	<c:choose>
-		<c:when test="${not empty idea.ideaContentPublic.comments}">
-			<c:forEach items="${idea.ideaContentPublic.comments}" var="comment" varStatus="status">
+		<c:when test="${not empty commentsList}">
+			<c:forEach items="${commentsList}" var="comment" varStatus="status">
 				<c:set var="commentItemCssClass" scope="page" value="comment" />
-				<c:if test="${status.index % 2 != 0}">
-					<c:set var="commentItemCssClass" scope="page" value="comment comment-alt" />
+				
+				<c:if test="${comment.isUserPrioCouncilMember or comment.isUserInnovationsslussenEmployee}">
+					<c:set var="commentItemCssClass" scope="page" value="comment comment-innovationsslussen" />
 				</c:if>
 			
 				<div class="${commentItemCssClass} clearfix">
@@ -58,7 +59,20 @@
 							${comment.name}
 						</div>
 						<div class="comment-author-title">
-							<% // Id&eacute;givare %>
+							<c:choose>
+								<c:when test="${comment.isUserCreator}">
+									Id&eacute;givare
+								</c:when>
+								<c:when test="${comment.isUserPrioCouncilMember}">
+									Prioriteringsr&aring;d
+								</c:when>
+								<c:when test="${comment.isUserInnovationsslussenEmployee}">
+									Innovationsslussen
+								</c:when>
+								<c:otherwise>
+									Sajtmedlem
+								</c:otherwise>
+							</c:choose>
 						</div>
 					</div>
 					<div class="comment-entry">

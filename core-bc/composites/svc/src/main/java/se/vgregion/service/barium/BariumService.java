@@ -20,6 +20,7 @@ import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaPerson;
 import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstance;
 import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstances;
+import se.vgregion.portal.innovationsslussen.domain.json.BariumInstance;
 import se.vgregion.portal.innovationsslussen.domain.json.ObjectField;
 
 /**
@@ -86,6 +87,33 @@ public class BariumService {
         }
 
         return ideas;
+    }
+    
+    public IdeaObjectFields getBariumIdea(String bariumId) {
+
+    	IdeaObjectFields bariumIdea = null;
+    	
+        try {
+            	BariumInstance bariumInstance = bariumRestClient.getBariumInstance(bariumId);
+            
+            	List<ObjectField> ideaObjectFieldsList = null;
+            	
+            	if(bariumInstance != null) {
+            		ideaObjectFieldsList = bariumRestClient.getIdeaObjectFields(bariumInstance);	
+            	}
+                
+                
+                if(ideaObjectFieldsList != null) {
+                    IdeaObjectFields ideaObjectFields = new IdeaObjectFields();
+                    ideaObjectFields.populate(ideaObjectFieldsList);
+                }
+                
+        } catch (BariumException e) {
+            throw new RuntimeException(e);
+        }
+    	
+    	
+    	return bariumIdea;
     }
 
     public BariumResponse createIdea(Idea idea) {

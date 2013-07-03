@@ -32,8 +32,16 @@
 	</portlet>
 	<portlet>
 		<portlet-name>usersettings</portlet-name>
-		<instanceable>true</instanceable>
+		<instanceable>false</instanceable>
 		<css-class-wrapper>innovation-usersettings-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>settings</portlet-name>
+		<control-panel-entry-category>content</control-panel-entry-category>
+		<control-panel-entry-weight>7.5</control-panel-entry-weight>
+		<action-url-redirect>true</action-url-redirect>
+		<instanceable>false</instanceable>
+		<css-class-wrapper>innovation-ideasettings-portlet</css-class-wrapper>
 	</portlet>
 	<role-mapper>
 		<role-name>administrator</role-name>

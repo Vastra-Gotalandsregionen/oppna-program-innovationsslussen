@@ -85,6 +85,8 @@ public class Idea extends AbstractEntity<Long> {
     @Transient
     private IdeaPerson ideaPerson;
     
+    @Transient
+    private String bariumUrl;
     
 
     /**
@@ -261,6 +263,14 @@ public class Idea extends AbstractEntity<Long> {
     	
     	this.likes.add(ideaUserLike);
     }
+
+	public String getBariumUrl() {
+		return bariumUrl;
+	}
+
+	public void setBariumUrl(String bariumUrl) {
+		this.bariumUrl = bariumUrl;
+	}
     
     
 }

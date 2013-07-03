@@ -4,7 +4,9 @@ import java.util.Collection;
 import java.util.List;
 
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
+import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
 import se.vgregion.service.innovationsslussen.exception.CreateIdeaException;
+import se.vgregion.service.innovationsslussen.exception.UpdateIdeaException;
 
 /**
  * Service interface for managing {@link Idea}s.
@@ -96,6 +98,25 @@ public interface IdeaService {
      * @return a {@link List} of {@link Idea}s
      */
     Idea findIdeaByUrlTitle(String urlTitle);
+    
+    /**
+     * Get all public comments for an {@link Idea} {@link CommentItemVO}
+     *
+     * @param {@link Idea} the idea
+     * @return a {@link Idea} of {@link Idea}s
+     */
+    
+    List<CommentItemVO> getPublicComments(Idea idea);
+    
+    /**
+     * Get all private comments for an {@link Idea} {@link CommentItemVO}
+     *
+     * @param {@link Idea} the idea
+     * @return a {@link Idea} of {@link Idea}s
+     */
+    
+    List<CommentItemVO> getPrivateComments(Idea idea);
+    
 
     /**
      * Get whether user has added an idea as a favorite
@@ -149,6 +170,13 @@ public interface IdeaService {
      *
      */
     Idea updateIdea(Idea idea);
+    
+    /**
+     * Updates an {@link Idea} from Barium
+     *
+     */
+    Idea updateFromBarium(long companyId, long groupId, String urlTitle) throws UpdateIdeaException;
+    
     
     
 }

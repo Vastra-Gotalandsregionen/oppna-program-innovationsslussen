@@ -17,6 +17,9 @@ public class CommentItemVO {
 	private long id;
 	private String commentText;
 	private Date createDate;
+	private boolean isUserCreator;
+	private boolean isUserInnovationsslussenEmployee;
+	private boolean isUserPrioCouncilMember;
 	private String name;
 	
 	public long getId() {
@@ -42,5 +45,30 @@ public class CommentItemVO {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public boolean getIsUserCreator() {
+		return isUserCreator;
+	}
+
+	public void setUserCreator(boolean isUserCreator) {
+		this.isUserCreator = isUserCreator;
+	}
+
+	public boolean getIsUserPrioCouncilMember() {
+		return isUserPrioCouncilMember;
+	}
+
+	public void setUserPrioCouncilMember(boolean isUserPrioCouncilMember) {
+		this.isUserPrioCouncilMember = isUserPrioCouncilMember;
+	}
+
+	public boolean getIsUserInnovationsslussenEmployee() {
+		return isUserInnovationsslussenEmployee;
+	}
+
+	public void setUserInnovationsslussenEmployee(
+			boolean isUserInnovationsslussenEmployee) {
+		this.isUserInnovationsslussenEmployee = isUserInnovationsslussenEmployee;
 	}
 }

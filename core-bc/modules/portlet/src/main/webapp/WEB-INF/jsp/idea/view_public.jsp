@@ -40,7 +40,7 @@
 							
 								<li class="icon comment">
 									<a href="#">
-										<span>Kommentera (${fn:length(idea.ideaContentPublic.comments)})</span>
+										<span>Kommentera (${fn:length(commentsList)})</span>
 									</a>
 								</li>
 								
@@ -82,7 +82,7 @@
 									</c:choose>
 								</li>
 								
-								<li class="icon favorite last">
+								<li class="icon favorite">
 									<c:choose>
 										<c:when test="${isIdeaUserFavorite}">
 										

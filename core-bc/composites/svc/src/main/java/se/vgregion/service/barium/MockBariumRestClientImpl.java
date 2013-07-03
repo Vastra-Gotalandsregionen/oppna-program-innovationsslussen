@@ -1,6 +1,7 @@
 package se.vgregion.service.barium;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
 import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstance;
 import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstances;
+import se.vgregion.portal.innovationsslussen.domain.json.BariumInstance;
 import se.vgregion.portal.innovationsslussen.domain.json.ObjectField;
 import se.vgregion.portal.innovationsslussen.domain.json.Objects;
 
@@ -66,6 +68,31 @@ public class MockBariumRestClientImpl implements BariumRestClient {
             throw new RuntimeException(e);
         }
     }
+    
+    /* (non-Javadoc)
+	 * @see se.vgregion.service.barium.BariumRestClient#getBariumInstance()
+	 */
+    @Override
+	public BariumInstance getBariumInstance(String instanceId) throws BariumException {
+    	
+    	/*
+        String instanceJson = doGet("/Apps/" + applicationId + "/Instances" + "/" + instanceId);
+        
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(instanceJson, ApplicationInstance.class);
+        } catch (JsonMappingException e) {
+            throw new RuntimeException(e);
+        } catch (JsonParseException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        */
+    	BariumInstance bariumInstance = null;
+    	
+    	return bariumInstance;
+    }    
 
     public String createInstance(String data) {
     	return RESPONSE_CREATE_INSTANCE;
@@ -94,6 +121,28 @@ public class MockBariumRestClientImpl implements BariumRestClient {
             throw new RuntimeException(e);
         }
     }
+    
+    public List<ObjectField> getIdeaObjectFields(BariumInstance instance) {
+    	
+    	
+    	/*
+        String objectJson = RESPONSE_GET_IDEA_OBJECTS_FIELDS;
+        LOGGER.info(objectJson);
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readValue(objectJson, TypeFactory.defaultInstance().constructCollectionType(List.class,
+                    ObjectField.class));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        */
+    	
+    	List<ObjectField> objectFields = new ArrayList<ObjectField>();
+    	
+    	return objectFields;
+    }
+    
 
     public String createIdeaInstance(IdeaObjectFields ideaObjectFields) {
     	
