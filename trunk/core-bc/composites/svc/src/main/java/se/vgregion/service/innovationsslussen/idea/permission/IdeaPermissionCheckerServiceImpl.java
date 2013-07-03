@@ -43,6 +43,8 @@ public class IdeaPermissionCheckerServiceImpl implements IdeaPermissionCheckerSe
 			boolean hasPermissionViewCommentPrivate = permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(), ideaId, IdeaActionKeys.VIEW_COMMENT_PRIVATE);
             boolean hasPermissionViewIdeaPublic = permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(), ideaId, IdeaActionKeys.VIEW_IDEA_PUBLIC);
             boolean hasPermissionViewIdeaPrivate = permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(), ideaId, IdeaActionKeys.VIEW_IDEA_PRIVATE);
+            
+            boolean hasPermissionViewInBarium = permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(), ideaId, IdeaActionKeys.VIEW_IN_BARIUM);
 
             // Set add permissions
             ideaPermissionChecker.setHasPermissionAddCommentPrivate(hasPermissionAddCommentPrivate);
@@ -59,6 +61,7 @@ public class IdeaPermissionCheckerServiceImpl implements IdeaPermissionCheckerSe
             ideaPermissionChecker.setHasPermissionViewCommentPrivate(hasPermissionViewCommentPrivate);
             ideaPermissionChecker.setHasPermissionViewIdeaPublic(hasPermissionViewIdeaPublic);
             ideaPermissionChecker.setHasPermissionViewIdeaPrivate(hasPermissionViewIdeaPrivate);
+            ideaPermissionChecker.setHasPermissionViewInBarium(hasPermissionViewInBarium);
             
 			
 		} catch (PortalException e) {

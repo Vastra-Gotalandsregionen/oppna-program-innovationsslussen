@@ -16,6 +16,8 @@ public class IdeaPermissionChecker {
 	private boolean hasPermissionViewIdeaPublic;
 	private boolean hasPermissionViewIdeaPrivate;
 	
+	private boolean hasPermissionViewInBarium;
+	
 	public IdeaPermissionChecker() {
 	}
 
@@ -101,6 +103,14 @@ public class IdeaPermissionChecker {
 	public void setHasPermissionViewCommentPrivate(
 			boolean hasPermissionViewCommentPrivate) {
 		this.hasPermissionViewCommentPrivate = hasPermissionViewCommentPrivate;
+	}
+
+	public boolean isHasPermissionViewInBarium() {
+		return hasPermissionViewInBarium;
+	}
+
+	public void setHasPermissionViewInBarium(boolean hasPermissionViewInBarium) {
+		this.hasPermissionViewInBarium = hasPermissionViewInBarium;
 	}
 
 	

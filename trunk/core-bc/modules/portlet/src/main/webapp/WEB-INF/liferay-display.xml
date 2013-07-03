@@ -11,6 +11,7 @@
 	
 	<category name="category.hidden">
 		<portlet id="ideaadmin"></portlet>
+		<portlet id="settings"></portlet>
 	</category>	
 	
 </display>

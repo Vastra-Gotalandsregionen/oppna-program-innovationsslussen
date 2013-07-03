@@ -20,6 +20,8 @@ public class IdeaActionKeys {
 	public static final String VIEW_COMMENT_PRIVATE = "VIEW_COMMENT_PRIVATE";
 
 	public static final String VIEW_IDEA_PUBLIC = "VIEW_IDEA_PUBLIC";
-	public static final String VIEW_IDEA_PRIVATE = "VIEW_IDEA_PRIVATE"; 
+	public static final String VIEW_IDEA_PRIVATE = "VIEW_IDEA_PRIVATE";
+	
+	public static final String VIEW_IN_BARIUM = "VIEW_IN_BARIUM";
 	
 }

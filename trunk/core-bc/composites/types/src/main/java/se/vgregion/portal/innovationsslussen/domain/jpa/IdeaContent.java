@@ -71,9 +71,6 @@ public class IdeaContent extends AbstractEntity<Long> {
     @ManyToOne
     private Idea idea;
     
-    @Transient
-	private List<CommentItemVO> comments;
-    
     /**
      * Constructor.
      */
@@ -191,12 +188,4 @@ public class IdeaContent extends AbstractEntity<Long> {
 		return idea;
 	}
 	
-	public List<CommentItemVO> getComments() {
-		return comments;
-	}
-
-	public void setComments(List<CommentItemVO> comments) {
-		this.comments = comments;
-	}
-    
 }

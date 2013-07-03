@@ -1,6 +1,8 @@
 package se.vgregion.portal.innovationsslussen.idea.controller;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -19,6 +21,8 @@ import org.springframework.web.portlet.bind.annotation.RenderMapping;
 import se.vgregion.portal.innovationsslussen.domain.IdeaConstants;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
+import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
+import se.vgregion.service.innovationsslussen.exception.UpdateIdeaException;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
 import se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionChecker;
 import se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionCheckerService;
@@ -91,26 +95,19 @@ public class IdeaViewController {
             Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
             boolean isIdeaUserLiked = ideaService.getIsIdeaUserLiked(companyId, scopeGroupId, userId, urlTitle);
             boolean isIdeaUserFavorite = ideaService.getIsIdeaUserFavorite(companyId, scopeGroupId, userId, urlTitle);
+            
+            List<CommentItemVO> commentsList = new ArrayList<CommentItemVO>();
+            if(ideaType.equals("private")) {
+            	commentsList = ideaService.getPrivateComments(idea);
+            } else {
+            	commentsList = ideaService.getPublicComments(idea);;
+            }
 
             IdeaPermissionChecker ideaPermissionChecker = ideaPermissionCheckerService.getIdeaPermissionChecker(scopeGroupId, userId, idea.getId());
             
-//            boolean hasPermissionAddFavorite = ideaPermissionChecker.getHasPermissionAddFavorite();
-//            boolean hasPermissionaddLike = ideaPermissionChecker.getHasPermissionAddLike();
-//            boolean hasPermissionDeleteFavorite = ideaPermissionChecker.getHasPermissionDeleteFavorite();
-//            boolean hasPermissionDeleteLike = ideaPermissionChecker.getHasPermissionDeleteLike();
-//            boolean hasPermissionViewIdeaPrivate = ideaPermissionChecker.getHasPermissionViewIdeaPrivate();
-//            boolean hasPermissionViewIdeaPublic = ideaPermissionChecker.getHasPermissionViewIdeaPublic();
-//            
-//            String screenName = themeDisplay.getUser().getScreenName();
-//            
-//            System.out.println("IdeaViewController -" + " screenname: " + screenName + " hasPermissionAddFavorite: " + hasPermissionAddFavorite);
-//            System.out.println("IdeaViewController -" + " screenname: " + screenName + " hasPermissionaddLike: " + hasPermissionaddLike);
-//            System.out.println("IdeaViewController -" + " screenname: " + screenName + " hasPermissionDeleteFavorite: " + hasPermissionDeleteFavorite);
-//            System.out.println("IdeaViewController -" + " screenname: " + screenName + " hasPermissionDeleteLike: " + hasPermissionDeleteLike);
-//            System.out.println("IdeaViewController -" + " screenname: " + screenName + " hasPermissionViewIdeaPrivate: " + hasPermissionViewIdeaPrivate);
-//            System.out.println("IdeaViewController -" + " screenname: " + screenName + " hasPermissionViewIdeaPublic: " + hasPermissionViewIdeaPublic);
             
             model.addAttribute("idea", idea);
+            model.addAttribute("commentsList", commentsList);
             model.addAttribute("isIdeaUserFavorite", isIdeaUserFavorite);
             model.addAttribute("isIdeaUserLiked", isIdeaUserLiked);
             
@@ -383,7 +380,46 @@ public class IdeaViewController {
         }
         
         response.setRenderParameter("urlTitle", urlTitle);
+    }
+    
+    /**
+     * Method handling Action request.
+     *
+     * @param request  the request
+     * @param response the response
+     * @param model    the model
+     */
+    @ActionMapping(params = "action=updateFromBarium")
+    public final void updateFromBarium(ActionRequest request, ActionResponse response, final ModelMap model) {
+    	
+    	System.out.println("updateFromBarium");
+        LOGGER.info("updateFromBarium");
+
+        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+        long companyId = themeDisplay.getCompanyId();
+        long groupId = themeDisplay.getScopeGroupId();
+        long userId = themeDisplay.getUserId();
+        
+        int ideaContentType = ParamUtil.getInteger(request, "ideaContentType");
+        String urlTitle = ParamUtil.getString(request, "urlTitle", "");
+        
+        if(themeDisplay.isSignedIn()) {
+        	System.out.println("Should now do update");
+        	
+        	try {
+				ideaService.updateFromBarium(companyId, groupId, urlTitle);
+			} catch (UpdateIdeaException e) {
+				LOGGER.error(e.getMessage(), e);
+			}
+        }
+
+        if(ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE) {
+        	response.setRenderParameter("type", "private");	
+        }
+        
+        response.setRenderParameter("urlTitle", urlTitle);
     }    
+    
     
 
 }

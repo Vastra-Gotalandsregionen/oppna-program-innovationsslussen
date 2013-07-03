@@ -29,6 +29,8 @@
 	<bean id="ideaPersonRepository" class="se.vgregion.service.innovationsslussen.repository.ideaperson.JpaIdeaPersonRepositoryImpl"/>
 	<bean id="ideaUserLikeRepository" class="se.vgregion.service.innovationsslussen.repository.ideauserlike.JpaIdeaUserLikeRepositoryImpl"/>
 	<bean id="ideaUserFavoriteRepository" class="se.vgregion.service.innovationsslussen.repository.ideauserfavorite.JpaIdeaUserFavoriteRepositoryImpl"/>
+	
+	<bean id="ideaSettingsService" class="se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsServiceImpl"/>
 
 	<bean id="ideaService" class="se.vgregion.service.innovationsslussen.idea.IdeaServiceImpl">
 	    <constructor-arg index="0" ref="ideaRepository" />
@@ -37,9 +39,15 @@
 	    <constructor-arg index="3" ref="ideaUserLikeRepository" />
 	    <constructor-arg index="4" ref="ideaUserFavoriteRepository" />
 	    <constructor-arg index="5" ref="bariumService" />
+	    <constructor-arg index="6" ref="ideaSettingsService" />
 	</bean>
 	
 	<bean id="ideaPermissionCheckerService" class="se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionCheckerServiceImpl" />
+	
+  <bean id="expandoColumnService" class="com.liferay.portlet.expando.service.ExpandoColumnLocalServiceUtil" factory-method="getService" />
+  <bean id="expandoTableService" class="com.liferay.portlet.expando.service.ExpandoTableLocalServiceUtil" factory-method="getService" />
+  <bean id="expandoValueService" class="com.liferay.portlet.expando.service.ExpandoValueLocalServiceUtil" factory-method="getService" />
+		
 		
     
 </beans>

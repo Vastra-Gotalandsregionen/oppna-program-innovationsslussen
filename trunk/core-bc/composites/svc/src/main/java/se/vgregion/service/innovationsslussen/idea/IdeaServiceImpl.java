@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import se.vgregion.portal.innovationsslussen.domain.BariumResponse;
+import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaPerson;
@@ -21,12 +22,16 @@ import se.vgregion.service.barium.BariumService;
 import se.vgregion.service.innovationsslussen.exception.CreateIdeaException;
 import se.vgregion.service.innovationsslussen.exception.FavoriteException;
 import se.vgregion.service.innovationsslussen.exception.LikeException;
+import se.vgregion.service.innovationsslussen.exception.UpdateIdeaException;
+import se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsService;
+import se.vgregion.service.innovationsslussen.idea.settings.util.ExpandoConstants;
 import se.vgregion.service.innovationsslussen.repository.idea.IdeaRepository;
 import se.vgregion.service.innovationsslussen.repository.ideacontent.IdeaContentRepository;
 import se.vgregion.service.innovationsslussen.repository.ideaperson.IdeaPersonRepository;
 import se.vgregion.service.innovationsslussen.repository.ideauserfavorite.IdeaUserFavoriteRepository;
 import se.vgregion.service.innovationsslussen.repository.ideauserlike.IdeaUserLikeRepository;
 import se.vgregion.service.innovationsslussen.util.FriendlyURLNormalizer;
+import se.vgregion.service.innovationsslussen.util.IdeaServiceConstants;
 
 import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -36,6 +41,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ResourceLocalServiceUtil;
+import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.messageboards.model.MBMessageDisplay;
@@ -44,7 +50,7 @@ import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 import com.liferay.portlet.messageboards.util.comparator.MessageCreateDateComparator;
 
 /**
- * Implementation of {@link IdeaRestrictedService}.
+ * Implementation of {@link IdeaService}.
  *
  * @author Erik Andersson
  * @company Monator Technologies AB
@@ -57,6 +63,7 @@ public class IdeaServiceImpl implements IdeaService {
     private IdeaUserLikeRepository ideaUserLikeRepository;
     private IdeaUserFavoriteRepository ideaUserFavoriteRepository;
     private BariumService bariumService;
+    private IdeaSettingsService ideaSettingsService;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(IdeaServiceImpl.class);
 	
@@ -73,13 +80,15 @@ public class IdeaServiceImpl implements IdeaService {
     @Autowired
     public IdeaServiceImpl(IdeaRepository ideaRepository, IdeaContentRepository ideaContentRepository,
     		IdeaPersonRepository ideaPersonRepository, IdeaUserLikeRepository ideaUserLikeRepository,
-    		IdeaUserFavoriteRepository ideaUserFavoriteRepository, BariumService bariumService) {
+    		IdeaUserFavoriteRepository ideaUserFavoriteRepository, BariumService bariumService,
+    		IdeaSettingsService ideaSettingsService) {
         this.ideaRepository = ideaRepository;
         this.ideaContentRepository = ideaContentRepository;
         this.ideaPersonRepository = ideaPersonRepository;
         this.ideaUserLikeRepository = ideaUserLikeRepository;
         this.ideaUserFavoriteRepository = ideaUserFavoriteRepository;
         this.bariumService = bariumService;
+        this.ideaSettingsService = ideaSettingsService;
     }
     
     @Override
@@ -234,16 +243,21 @@ public class IdeaServiceImpl implements IdeaService {
     	
     	Idea idea = ideaRepository.findIdeaByUrlTitle(urlTitle);
     	
-    	if(idea != null) {
-        	List<CommentItemVO> commentsListPublic = getPublicComments(idea);
-        	List<CommentItemVO> commentsListPrivate = getPrivateComments(idea);
-        	
-        	idea.getIdeaContentPublic().setComments(commentsListPublic);
-        	idea.getIdeaContentPrivate().setComments(commentsListPrivate);
-    	}
+    	idea.setBariumUrl(getBariumUrl(idea));
     	
         return idea;
     }
+    
+    @Override
+	public List<CommentItemVO> getPublicComments(Idea idea) {
+		return getComments(idea.getIdeaContentPublic());
+	}
+	
+    @Override
+	public List<CommentItemVO> getPrivateComments(Idea idea) {
+		return getComments(idea.getIdeaContentPrivate());
+	}
+    
     
     @Override
     public boolean getIsIdeaUserFavorite(long companyId, long groupId, long userId, String urlTitle) {
@@ -356,7 +370,29 @@ public class IdeaServiceImpl implements IdeaService {
 //        idea = ideaRepository.merge(idea);
 
         return idea;
-    }    
+    }
+    
+    @Override
+    @Transactional(rollbackFor = UpdateIdeaException.class)
+    public Idea updateFromBarium(long companyId, long groupId, String urlTitle) throws UpdateIdeaException {
+    	
+    	System.out.println("IdeaServiceImpl - updateFromBarium");
+    	
+    	Idea idea = findIdeaByUrlTitle(urlTitle);
+    	
+    	String bariumId = idea.getBariumId();
+    	
+    	IdeaObjectFields ideaObjectFields = bariumService.getBariumIdea(bariumId);
+    	
+    	/*
+    	String title = ideaObjectFields.getInstanceName();
+    	
+    	System.out.println("IdeaServiceImpl - updateFromBarium - title for fetched idea is: " + title);
+    	*/
+    	
+    	return idea;
+    }
+    
 	
 	protected String generateUrlTitle(String title) throws PortalException, SystemException {
 		title = title.trim().toLowerCase();
@@ -387,6 +423,19 @@ public class IdeaServiceImpl implements IdeaService {
 		}
 	}
 	
+	protected String getBariumUrl(Idea idea) {
+		String bariumUrl = "";
+		
+        String bariumDetailsViewUrlPrefix =ideaSettingsService.getSetting(
+        		ExpandoConstants.BARIUM_DETAILS_VIEW_URL_PREFIX, idea.getCompanyId(), idea.getGroupId());
+		
+        if(!bariumDetailsViewUrlPrefix.equals("")) {
+        	bariumUrl = bariumDetailsViewUrlPrefix + idea.getBariumId();	
+        }
+		
+		return bariumUrl;
+	}
+	
 	protected List<CommentItemVO> getComments(IdeaContent ideaContent) {
 		
 		ArrayList<CommentItemVO> commentsList = new ArrayList<CommentItemVO>();
@@ -402,6 +451,8 @@ public class IdeaServiceImpl implements IdeaService {
 			} catch(NullPointerException e) {
 				return commentsList;
 			}
+			
+			Idea idea = ideaContent.getIdea();
 			
 			MBThread thread = messageDisplay.getThread();
 			
@@ -421,14 +472,22 @@ public class IdeaServiceImpl implements IdeaService {
 				
 				if(commentId != rootMessageId) {
 					long curCommentUserId = mbMessage.getUserId();
+					long scopeGroupId = mbMessage.getGroupId();
 					User curCommentUser = UserLocalServiceUtil.getUser(curCommentUserId);
 					String curCommentUserFullName = curCommentUser.getFullName();
+					
+					boolean isUserIdeaCreator = isUserIdeaCreator(curCommentUserId, idea);
+					boolean isUserPrioCouncilMember = isUserPrioCouncilMember(curCommentUserId, scopeGroupId);
+					boolean isUserInnovationsslussenEmployee = isUserInnovationsslussenEmployee(curCommentUserId, scopeGroupId);
 					
 					CommentItemVO commentItem = new CommentItemVO();
 					commentItem.setCommentText(curCommentText);
 					commentItem.setCreateDate(createDate);
 					commentItem.setId(commentId);
 					commentItem.setName(curCommentUserFullName);
+					commentItem.setUserCreator(isUserIdeaCreator);
+					commentItem.setUserPrioCouncilMember(isUserPrioCouncilMember);
+					commentItem.setUserInnovationsslussenEmployee(isUserInnovationsslussenEmployee);
 
 					commentsList.add(commentItem);
 				}
@@ -443,14 +502,6 @@ public class IdeaServiceImpl implements IdeaService {
 		return commentsList;
 	}
 	
-	protected List<CommentItemVO> getPublicComments(Idea idea) {
-		return getComments(idea.getIdeaContentPublic());
-	}
-	
-	protected List<CommentItemVO> getPrivateComments(Idea idea) {
-		return getComments(idea.getIdeaContentPrivate());
-	}
-    
 	protected boolean isUniqueUrlTitle(String urlTitle) {
 		boolean isUnique = false;
 		
@@ -462,6 +513,54 @@ public class IdeaServiceImpl implements IdeaService {
 		
 		return isUnique;
 	}
+	
+	protected boolean isUserIdeaCreator(long userId, Idea idea) {
+		boolean isUserIdeaCreator = false;
+		
+		if(userId == idea.getUserId()) {
+			isUserIdeaCreator = true;
+		}
+		
+		return isUserIdeaCreator;
+	}
+	
+	protected boolean isUserInnovationsslussenEmployee(long userId, long groupId) {
+		
+		boolean isUserInnovationsslussenEmployee = false;
+		
+		boolean checkInheritedRoles = true;
+
+		try {
+			isUserInnovationsslussenEmployee = UserGroupRoleLocalServiceUtil.hasUserGroupRole(userId, groupId, IdeaServiceConstants.ROLE_NAME_COMMUNITY_INNOVATIONSSLUSSEN, checkInheritedRoles);
+		} catch (PortalException e) {
+			LOGGER.error(e.getMessage(), e);
+		} catch (SystemException e) {
+			LOGGER.error(e.getMessage(), e);
+		}		
+		
+		return isUserInnovationsslussenEmployee;
+
+	}
+	
+	
+	protected boolean isUserPrioCouncilMember(long userId, long groupId) {
+		
+		boolean isUserPrioCouncilMember = false;
+		
+		boolean checkInheritedRoles = true;
+
+		try {
+			isUserPrioCouncilMember = UserGroupRoleLocalServiceUtil.hasUserGroupRole(userId, groupId, IdeaServiceConstants.ROLE_NAME_COMMUNITY_PRIO_COUNCIL, checkInheritedRoles);
+		} catch (PortalException e) {
+			LOGGER.error(e.getMessage(), e);
+		} catch (SystemException e) {
+			LOGGER.error(e.getMessage(), e);
+		}		
+		
+		return isUserPrioCouncilMember;
+
+	}
+	
 	
 
 }

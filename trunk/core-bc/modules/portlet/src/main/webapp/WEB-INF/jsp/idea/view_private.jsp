@@ -34,7 +34,7 @@
 							
 								<li class="icon comment">
 									<a href="#">
-										<span>Kommentera (${fn:length(idea.ideaContentPrivate.comments)})</span>
+										<span>Kommentera (${fn:length(commentsList)})</span>
 									</a>
 								</li>
 								
@@ -63,7 +63,7 @@
 									</c:choose>
 								</li>
 								
-								<li class="icon favorite last">
+								<li class="icon favorite">
 									<c:choose>
 										<c:when test="${isIdeaUserFavorite}">
 											<portlet:actionURL name="removeFavorite" var="removeFavoriteUrl">
@@ -89,6 +89,23 @@
 								</li>								
 								
 							</ul>
+							<ul class="rp-toolbar clearfix">
+								<li class="icon barium">
+									<a href="${idea.bariumUrl}" target="_BLANK">Visa i Barium</a>
+								</li>
+								<li class="icon reload">
+								
+									<portlet:actionURL name="updateFromBarium" var="updateFromBariumUrl">
+										<portlet:param name="action" value="updateFromBarium" />
+										<portlet:param name="urlTitle" value="${idea.urlTitle}" />
+										<portlet:param name="ideaContentType" value="1" />
+									</portlet:actionURL>
+								
+								
+									<a href="${updateFromBariumUrl}">Uppdatera fr&aring;n Barium</a>
+								</li>
+								
+							</ul>							
 						</div>
 						
 						<div class="idea-flow-wrap">
