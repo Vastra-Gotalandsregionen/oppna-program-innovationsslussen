@@ -12,13 +12,14 @@
 	<context:annotation-config />
 	
 	<!--  Mock Client -->
-	<!--   
+	<!-- -->   
 	<bean id="bariumRestClient" class="se.vgregion.service.barium.MockBariumRestClientImpl" />
-	-->
+	
 	
 	<!--  "Real" Client -->
-	  
+	<!--   
 	<bean id="bariumRestClient" class="se.vgregion.service.barium.BariumRestClientImpl" />
+	 -->
 	 
 	<bean id="bariumService" class="se.vgregion.service.barium.BariumService">
 	    <constructor-arg index="0" ref="bariumRestClient" />

@@ -135,7 +135,8 @@ public class IdeaServiceImpl implements IdeaService {
     public Idea addIdea(Idea idea) throws CreateIdeaException {
     	
     	// Create Barium Idea
-    	BariumResponse bariumResponse = bariumService.createIdea(idea);
+    	//BariumResponse bariumResponse = bariumService.createIdea(idea);
+    	BariumResponse bariumResponse = new BariumResponse(true, "MOCKAD-12345666", "");
     	
     	if(bariumResponse.getSuccess()) {
     		
@@ -214,28 +215,65 @@ public class IdeaServiceImpl implements IdeaService {
     	
         return ideaRepository.findAll();
     }
+    
+    @Override
+    public int findIdeasCountByCompanyId(long companyId) {
+    	return ideaRepository.findIdeasCountByCompanyId(companyId);
+    }
 
     @Override
     public List<Idea> findIdeasByCompanyId(long companyId) {
         return ideaRepository.findIdeasByCompanyId(companyId);
     }
+    
+    @Override
+    public List<Idea> findIdeasByCompanyId(long companyId, int start, int offset) {
+        return ideaRepository.findIdeasByCompanyId(companyId, start, offset);
+    }
 
     @Override
+    public int findIdeaCountByGroupId(long companyId, long groupId) {
+    	return ideaRepository.findIdeaCountByGroupId(companyId, groupId);
+    }
+    
+    @Override
     public List<Idea> findIdeasByGroupId(long companyId, long groupId) {
-    	
         return ideaRepository.findIdeasByGroupId(companyId, groupId);
     }
     
     @Override
+    public List<Idea> findIdeasByGroupId(long companyId, long groupId, int start, int offset) {
+        return ideaRepository.findIdeasByGroupId(companyId, groupId, start, offset);
+    }
+    
+    @Override
+    public int findIdeasCountByGroupIdAndUserId(long companyId, long groupId, long userId) {
+    	return ideaRepository.findIdeasCountByGroupIdAndUserId(companyId, groupId, userId);
+    }
+    
+    @Override
     public List<Idea> findIdeasByGroupIdAndUserId(long companyId, long groupId, long userId) {
-    	
         return ideaRepository.findIdeasByGroupIdAndUserId(companyId, groupId, userId);
     }
     
     @Override
+    public List<Idea> findIdeasByGroupIdAndUserId(long companyId, long groupId, long userId, int start, int offset) {
+        return ideaRepository.findIdeasByGroupIdAndUserId(companyId, groupId, userId, start, offset);
+    }
+    
+    @Override
+    public int findUserFavoritedIdeasCount(long companyId, long groupId, long userId) {
+    	return ideaRepository.findUserFavoritedIdeasCount(companyId, groupId, userId);
+    }
+    
+    @Override
     public List<Idea> findUserFavoritedIdeas(long companyId, long groupId, long userId) {
-    	
         return ideaRepository.findUserFavoritedIdeas(companyId, groupId, userId);
+    }
+    
+    @Override
+    public List<Idea> findUserFavoritedIdeas(long companyId, long groupId, long userId, int start, int offset) {
+        return ideaRepository.findUserFavoritedIdeas(companyId, groupId, userId, start, offset);
     }
     
     @Override
@@ -247,6 +285,19 @@ public class IdeaServiceImpl implements IdeaService {
     	
         return idea;
     }
+    
+    @Override
+    public Idea findIdeaByUrlTitle(String urlTitle, boolean getBariumUrl) {
+    	
+    	Idea idea = ideaRepository.findIdeaByUrlTitle(urlTitle);
+    	
+    	if(getBariumUrl) {
+    		idea.setBariumUrl(getBariumUrl(idea));	
+    	}
+    	
+        return idea;
+    }
+    
     
     @Override
 	public List<CommentItemVO> getPublicComments(Idea idea) {
@@ -392,7 +443,6 @@ public class IdeaServiceImpl implements IdeaService {
     	
     	return idea;
     }
-    
 	
 	protected String generateUrlTitle(String title) throws PortalException, SystemException {
 		title = title.trim().toLowerCase();
@@ -426,12 +476,14 @@ public class IdeaServiceImpl implements IdeaService {
 	protected String getBariumUrl(Idea idea) {
 		String bariumUrl = "";
 		
+		/*
         String bariumDetailsViewUrlPrefix =ideaSettingsService.getSetting(
         		ExpandoConstants.BARIUM_DETAILS_VIEW_URL_PREFIX, idea.getCompanyId(), idea.getGroupId());
 		
         if(!bariumDetailsViewUrlPrefix.equals("")) {
         	bariumUrl = bariumDetailsViewUrlPrefix + idea.getBariumId();	
         }
+        */
 		
 		return bariumUrl;
 	}
@@ -505,7 +557,7 @@ public class IdeaServiceImpl implements IdeaService {
 	protected boolean isUniqueUrlTitle(String urlTitle) {
 		boolean isUnique = false;
 		
-		Idea idea = findIdeaByUrlTitle(urlTitle);
+		Idea idea = findIdeaByUrlTitle(urlTitle, false);
 		
 		if(idea == null) {
 			isUnique = true;
