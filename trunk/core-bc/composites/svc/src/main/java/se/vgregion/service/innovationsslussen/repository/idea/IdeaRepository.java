@@ -29,6 +29,14 @@ public interface IdeaRepository extends Repository<Idea, Long> {
      * @return an {@link Idea}
      */
 	Idea findIdeaByUrlTitle(String urlTitle);
+
+    /**
+     * Find the number of {@link Idea}s for a company.
+     *
+     * @param companyId the companyid
+     * @return an int with the number of Idea
+     */
+    int findIdeasCountByCompanyId(long companyId);
 	
 	
     /**
@@ -38,7 +46,25 @@ public interface IdeaRepository extends Repository<Idea, Long> {
      * @return a {@link List} of {@link Idea}s
      */
     List<Idea> findIdeasByCompanyId(long companyId);
+    
+    /**
+     * Find {@link Idea}s for a company.
+     *
+     * @param companyId the companyid
+     * @return a {@link List} of {@link Idea}s
+     */
+    List<Idea> findIdeasByCompanyId(long companyId, int start, int offset);
+    
 
+    /**
+     * Find the number of {@link Idea}s for a group in a company.
+     *
+     * @param companyId the companyid
+     * @param groupId   the groupId
+     * @return an int with the number of Idea
+     */
+    int findIdeaCountByGroupId(long companyId, long groupId);
+    
     /**
      * Find all {@link Idea}s for a group in a company.
      *
@@ -49,7 +75,28 @@ public interface IdeaRepository extends Repository<Idea, Long> {
     List<Idea> findIdeasByGroupId(long companyId, long groupId);
     
     /**
-     * Find all {@link Idea}s for a group in a company.
+     * Find {@link Idea}s for a group in a company.
+     *
+     * @param companyId the companyid
+     * @param groupId   the groupId
+     * @return a {@link List} of {@link Idea}s
+     */
+    List<Idea> findIdeasByGroupId(long companyId, long groupId, int start, int offset);
+    
+
+    /**
+     * Find the number of {@link Idea}s for a user in a group in a company.
+     *
+     * @param companyId the companyid
+     * @param groupId   the groupId
+     * @param userId   the userId
+     * @return a {@link List} of {@link Idea}s
+     */
+    int findIdeasCountByGroupIdAndUserId(long companyId, long groupId, long userId);
+    
+    
+    /**
+     * Find all {@link Idea}s for a user in a group in a company.
      *
      * @param companyId the companyid
      * @param groupId   the groupId
@@ -57,6 +104,27 @@ public interface IdeaRepository extends Repository<Idea, Long> {
      * @return a {@link List} of {@link Idea}s
      */
     List<Idea> findIdeasByGroupIdAndUserId(long companyId, long groupId, long userId);
+    
+    /**
+     * Find {@link Idea}s for a user in a group in a company.
+     *
+     * @param companyId the companyid
+     * @param groupId   the groupId
+     * @param userId   the userId
+     * @return a {@link List} of {@link Idea}s
+     */
+    List<Idea> findIdeasByGroupIdAndUserId(long companyId, long groupId, long userId, int start, int offset);
+    
+    /**
+     * Find the number of {@link Idea}s which a user has added as a favorite.
+     *
+     * @param companyId the companyid
+     * @param groupId   the groupId
+     * @param userId   the userId
+     * @return a {@link List} of {@link Idea}s
+     */
+    int findUserFavoritedIdeasCount(long companyId, long groupId, long userId);
+    
     
     /**
      * Find all {@link Idea}s which a user has added as a favorite.
@@ -67,6 +135,16 @@ public interface IdeaRepository extends Repository<Idea, Long> {
      * @return a {@link List} of {@link Idea}s
      */
     List<Idea> findUserFavoritedIdeas(long companyId, long groupId, long userId);
+    
+    /**
+     * Find {@link Idea}s which a user has added as a favorite.
+     *
+     * @param companyId the companyid
+     * @param groupId   the groupId
+     * @param userId   the userId
+     * @return a {@link List} of {@link Idea}s
+     */
+    List<Idea> findUserFavoritedIdeas(long companyId, long groupId, long userId, int start, int offset);
     
     
     /**

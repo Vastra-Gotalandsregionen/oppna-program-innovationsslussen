@@ -50,6 +50,14 @@ public interface IdeaService {
      * @return all {@link Idea}s.
      */
     Collection<Idea> findAll();
+    
+    /**
+     * Find the number of {@link Idea}s for a company.
+     *
+     * @param companyId the companyid
+     * @return an int with the number of Idea
+     */
+    int findIdeasCountByCompanyId(long companyId);
 
     /**
      * Find all {@link Idea} for a given company.
@@ -58,7 +66,24 @@ public interface IdeaService {
      * @return all {@link Idea} for a given company
      */
     List<Idea> findIdeasByCompanyId(long companyId);
+    
+    /**
+     * Find {@link Idea}s for a company.
+     *
+     * @param companyId the companyid
+     * @return a {@link List} of {@link Idea}s
+     */
+    List<Idea> findIdeasByCompanyId(long companyId, int start, int offset);
 
+    /**
+     * Find the number of {@link Idea}s for a group in a company.
+     *
+     * @param companyId the companyid
+     * @param groupId   the groupId
+     * @return an int with the number of Idea
+     */
+    int findIdeaCountByGroupId(long companyId, long groupId);
+    
     /**
      * Find {@link Idea}s by company and group.
      *
@@ -67,6 +92,25 @@ public interface IdeaService {
      * @return a {@link List} of {@link Idea}s
      */
     List<Idea> findIdeasByGroupId(long companyId, long groupId);
+    
+    /**
+     * Find {@link Idea}s for a group in a company.
+     *
+     * @param companyId the companyid
+     * @param groupId   the groupId
+     * @return a {@link List} of {@link Idea}s
+     */
+    List<Idea> findIdeasByGroupId(long companyId, long groupId, int start, int offset);
+    
+    /**
+     * Find the number of {@link Idea}s for a user in a group in a company.
+     *
+     * @param companyId the companyid
+     * @param groupId   the groupId
+     * @param userId   the userId
+     * @return a {@link List} of {@link Idea}s
+     */
+    int findIdeasCountByGroupIdAndUserId(long companyId, long groupId, long userId);
     
     /**
      * Find {@link Idea}s by company, group and user.
@@ -79,6 +123,26 @@ public interface IdeaService {
     List<Idea> findIdeasByGroupIdAndUserId(long companyId, long groupId, long userId);
     
     /**
+     * Find {@link Idea}s for a user in a group in a company.
+     *
+     * @param companyId the companyid
+     * @param groupId   the groupId
+     * @param userId   the userId
+     * @return a {@link List} of {@link Idea}s
+     */
+    List<Idea> findIdeasByGroupIdAndUserId(long companyId, long groupId, long userId, int start, int offset);
+    
+    /**
+     * Find the number of {@link Idea}s which a user has added as a favorite.
+     *
+     * @param companyId the companyid
+     * @param groupId   the groupId
+     * @param userId   the userId
+     * @return a {@link List} of {@link Idea}s
+     */
+    int findUserFavoritedIdeasCount(long companyId, long groupId, long userId);
+    
+    /**
      * Find {@link Idea}s by company, group and user that the user has favorited.
      *
      * @param companyId the companyId
@@ -88,16 +152,33 @@ public interface IdeaService {
      */
     List<Idea> findUserFavoritedIdeas(long companyId, long groupId, long userId);
     
-    
+    /**
+     * Find {@link Idea}s which a user has added as a favorite.
+     *
+     * @param companyId the companyid
+     * @param groupId   the groupId
+     * @param userId   the userId
+     * @return a {@link List} of {@link Idea}s
+     */
+    List<Idea> findUserFavoritedIdeas(long companyId, long groupId, long userId, int start, int offset);
     
     /**
      * Find {@link Idea} by urlTitle
      *
      * @param urlTitle the urlTitle
-     * @param groupId   the groupId
      * @return a {@link List} of {@link Idea}s
      */
     Idea findIdeaByUrlTitle(String urlTitle);
+    
+    /**
+     * Find {@link Idea} by urlTitle
+     *
+     * @param urlTitle the urlTitle
+     * @param getBariumUrl   whether or not to get barium url for idea
+     * @return a {@link List} of {@link Idea}s
+     */
+    Idea findIdeaByUrlTitle(String urlTitle, boolean getBariumUrl);
+    
     
     /**
      * Get all public comments for an {@link Idea} {@link CommentItemVO}

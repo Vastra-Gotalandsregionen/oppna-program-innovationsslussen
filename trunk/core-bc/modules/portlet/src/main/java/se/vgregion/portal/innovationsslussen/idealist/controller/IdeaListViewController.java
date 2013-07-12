@@ -16,11 +16,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
+import se.vgregion.portal.innovationsslussen.domain.pageiterator.PageIterator;
+import se.vgregion.portal.innovationsslussen.domain.pageiterator.PageIteratorConstants;
 import se.vgregion.portal.innovationsslussen.util.IdeaPortletsConstants;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
@@ -74,7 +77,6 @@ public class IdeaListViewController {
 	        PortletPreferences prefs = request.getPreferences();
 	        String ideaListType = prefs.getValue("ideaListType", "0");
 	        
-			
 			Layout ideaLayout = LayoutLocalServiceUtil.getFriendlyURLLayout(scopeGroupId,
 					themeDisplay.getLayout().isPrivateLayout(), "/ide");
 			
@@ -82,10 +84,17 @@ public class IdeaListViewController {
 			
 			List<Idea> ideaList = new ArrayList<Idea>();
 			
+	        int currentPage = ParamUtil.getInteger(request, "pageNumber", PageIteratorConstants.PAGINATOR_START_DEFAULT);
+	        int pageSize = PageIteratorConstants.PAGE_SIZE_DEFAULT;
+	        int maxPages = PageIteratorConstants.MAX_PAGES_DEFAULT;
+	        int totalCount = 0;
+			
 			if(ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_OPEN_IDEAS)) {
 				
 				// TODO - change to only pull out OPEN ideas
-				ideaList = ideaService.findIdeasByGroupId(companyId, scopeGroupId);
+				ideaList = ideaService.findIdeasByGroupId(companyId, scopeGroupId, currentPage, pageSize);
+				
+				totalCount = ideaService.findIdeaCountByGroupId(companyId, scopeGroupId);
 			}
 			
 			else if(ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_USER_IDEAS)) {
@@ -116,11 +125,17 @@ public class IdeaListViewController {
 				returnView = "view_closed_ideas";
 			}
 			
+	        PageIterator pageIterator = new PageIterator(totalCount, currentPage, pageSize, maxPages);
+	        pageIterator.setShowFirst(false);
+	        pageIterator.setShowLast(false);
+			
+			
 			model.addAttribute("ideaPlid", ideaPlid);
 			model.addAttribute("ideaPortletName",IdeaPortletsConstants.PORTLET_NAME_IDEA_PORTLET);
 			model.addAttribute("ideaList", ideaList);
 			model.addAttribute("ideaListType", ideaListType);
 			model.addAttribute("isSignedIn", isSignedIn);
+			model.addAttribute("pageIterator", pageIterator);
 			
 		} catch (PortalException e) {
 			e.printStackTrace();
