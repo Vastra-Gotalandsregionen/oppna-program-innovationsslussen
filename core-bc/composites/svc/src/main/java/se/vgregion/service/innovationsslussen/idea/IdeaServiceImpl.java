@@ -236,6 +236,7 @@ public class IdeaServiceImpl implements IdeaService {
     	return ideaRepository.findIdeaCountByGroupId(companyId, groupId);
     }
     
+    
     @Override
     public List<Idea> findIdeasByGroupId(long companyId, long groupId) {
         return ideaRepository.findIdeasByGroupId(companyId, groupId);

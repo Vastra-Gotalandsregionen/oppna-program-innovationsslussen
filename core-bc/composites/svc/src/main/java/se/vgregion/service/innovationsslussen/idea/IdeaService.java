@@ -17,6 +17,7 @@ import se.vgregion.service.innovationsslussen.exception.UpdateIdeaException;
 public interface IdeaService {
 
     /**
+     * 
      * Add an {@link IdeaUserFavorite}.
      *
      */

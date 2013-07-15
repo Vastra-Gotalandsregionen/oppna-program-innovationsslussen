@@ -72,7 +72,7 @@ public class PageIterator {
         this.currentPage = currentPage;
         this.pageSize = pageSize;
         this.maxPages = maxPages;
-
+        
         showPaginator = true;
 
         pages = new ArrayList<PageIteratorPage>();
@@ -85,7 +85,10 @@ public class PageIterator {
 
         int endPage = (startPage + maxPages) - 1;
 
-        int numberOfPages = totalHits / pageSize;
+        double totalHitsDouble = totalHits;
+        double pageSizeDouble = pageSize;
+        
+        int numberOfPages = (int)Math.ceil(totalHitsDouble/pageSizeDouble);
         last = numberOfPages;
 
         if (endPage > numberOfPages) {
@@ -95,7 +98,7 @@ public class PageIterator {
                 startPage = 1;
             }
         }
-
+        
         for (int i = startPage; i <= endPage; i++) {
 
             PageIteratorPage page = new PageIteratorPage();

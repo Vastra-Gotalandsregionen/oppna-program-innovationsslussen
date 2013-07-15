@@ -11,6 +11,7 @@
 <portlet:defineObjects />
 <liferay-theme:defineObjects />
 
+
 <c:if test="${not empty pageIterator}">
 	<c:if test="${pageIterator.showPaginator}">
 		<div class="paginator-wrap">

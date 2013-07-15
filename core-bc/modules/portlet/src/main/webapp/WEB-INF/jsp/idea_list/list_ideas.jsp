@@ -11,6 +11,7 @@
 <portlet:defineObjects />
 <liferay-theme:defineObjects />	
 
+
 <c:if test="${not empty ideaList}">
 	<ul class="idea-list">
 		
