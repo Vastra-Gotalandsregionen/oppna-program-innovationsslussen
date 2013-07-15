@@ -88,11 +88,16 @@ public class IdeaListViewController {
 	        int pageSize = PageIteratorConstants.PAGE_SIZE_DEFAULT;
 	        int maxPages = PageIteratorConstants.MAX_PAGES_DEFAULT;
 	        int totalCount = 0;
+	        
+	        int start = (currentPage - 1)*pageSize;
+	        
+	        System.out.println("start is: " + start + " offset is: " + pageSize);
+	        
 			
 			if(ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_OPEN_IDEAS)) {
 				
 				// TODO - change to only pull out OPEN ideas
-				ideaList = ideaService.findIdeasByGroupId(companyId, scopeGroupId, currentPage, pageSize);
+				ideaList = ideaService.findIdeasByGroupId(companyId, scopeGroupId, start, pageSize);
 				
 				totalCount = ideaService.findIdeaCountByGroupId(companyId, scopeGroupId);
 			}

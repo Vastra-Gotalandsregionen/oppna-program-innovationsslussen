@@ -168,6 +168,7 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, Long> impl
         Object[] queryObject = new Object[]{companyId, groupId};
 
         List<Idea> ideas = findByPagedQuery(queryString, queryObject, start, offset);
+        
 
         return ideas;
     }
