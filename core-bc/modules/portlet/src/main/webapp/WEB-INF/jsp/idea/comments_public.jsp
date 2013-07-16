@@ -16,8 +16,12 @@
 	
 		<c:set var="textareaCssClass" scope="page" value="innovationsslussen-signin-prompt" />
 		<c:set var="addCommentUrl" scope="page" value="#" />
+		<c:set var="signinPromptMsg" scope="page" value="Du m&aring;ste vara inloggad f&ouml;r att f&aring; kommentera p&aring; en id&eacute;" />
+		
 		<c:if test="${ideaPermissionChecker.hasPermissionAddCommentPublic}">
 			<c:set var="textareaCssClass" scope="page" value="" />
+			<c:set var="signinPromptMsg" scope="page" value="" />
+			
 			<portlet:actionURL name="addComment" var="addCommentUrl">
 				<portlet:param name="action" value="addComment" />
 				<portlet:param name="urlTitle" value="${idea.urlTitle}" />
@@ -32,7 +36,7 @@
 					L&auml;gg till din kommentar
 				</label>
 				<div class="field-element-wrap">
-					<textarea class="${textareaCssClass}" name="<portlet:namespace />comment" id="<portlet:namespace />comment"></textarea>
+					<textarea class="${textareaCssClass}" name="<portlet:namespace />comment" id="<portlet:namespace />comment" data-promptmsg="${signinPromptMsg}"></textarea>
 					<p class="notice">
 						Notera att denna kommentar kommer att synas &ouml;ppet f&ouml;r alla bes&ouml;kare p&aring; siten.
 					</p>	

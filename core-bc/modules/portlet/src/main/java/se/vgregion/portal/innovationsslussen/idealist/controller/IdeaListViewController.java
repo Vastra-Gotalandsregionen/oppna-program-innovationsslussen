@@ -91,9 +91,6 @@ public class IdeaListViewController {
 	        
 	        int start = (currentPage - 1)*pageSize;
 	        
-	        System.out.println("start is: " + start + " offset is: " + pageSize);
-	        
-			
 			if(ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_OPEN_IDEAS)) {
 				
 				// TODO - change to only pull out OPEN ideas
