@@ -39,7 +39,15 @@
 								</c:if>
 							
 								<li class="icon comment">
-									<a href="#">
+									<c:set var="linkCssClass" scope="page" value="innovationsslussen-signin-prompt" />
+									<c:set var="signinPromptMsg" scope="page" value="Du m&aring;ste vara inloggad f&ouml;r att f&aring; kommentera p&aring; en id&eacute;" />
+									
+									<c:if test="${ideaPermissionChecker.hasPermissionAddCommentPublic}">
+										<c:set var="linkCssClass" scope="page" value="" />
+										<c:set var="signinPromptMsg" scope="page" value="" />
+									</c:if>
+								
+									<a class="${linkCssClass}" href="#" data-promptmsg="${signinPromptMsg}">
 										<span>Kommentera (${fn:length(commentsList)})</span>
 									</a>
 								</li>
@@ -50,8 +58,12 @@
 											
 											<c:set var="linkCssClass" scope="page" value="innovationsslussen-signin-prompt" />
 											<c:set var="removeLikeUrl" scope="page" value="#" />
+											<c:set var="signinPromptMsg" scope="page" value="Du m&aring;ste vara inloggad f&ouml;r att f&aring; sluta gilla en id&eacute;" />
+											
 											<c:if test="${ideaPermissionChecker.hasPermissionDeleteLike}">
 												<c:set var="linkCssClass" scope="page" value="" />
+												<c:set var="signinPromptMsg" scope="page" value="" />
+												
 												<portlet:actionURL name="removeLike" var="removeLikeUrl">
 													<portlet:param name="action" value="removeLike" />
 													<portlet:param name="urlTitle" value="${idea.urlTitle}" />
@@ -59,15 +71,19 @@
 												</portlet:actionURL>
 											</c:if>
 										
-											<a class="${linkCssClass}" href="${removeLikeUrl}">
+											<a class="${linkCssClass}" href="${removeLikeUrl}" data-promptmsg="${signinPromptMsg}">
 												<span>Sluta gilla (${fn:length(idea.likes)})</span>
 											</a>
 										</c:when>
 										<c:otherwise>
 											<c:set var="linkCssClass" scope="page" value="innovationsslussen-signin-prompt" />
 											<c:set var="addLikeUrl" scope="page" value="#" />
+											<c:set var="signinPromptMsg" scope="page" value="Du m&aring;ste vara inloggad f&ouml;r att f&aring; gilla en id&eacute;" />
+											
 											<c:if test="${ideaPermissionChecker.hasPermissionAddLike}">
 												<c:set var="linkCssClass" scope="page" value="" />
+												<c:set var="signinPromptMsg" scope="page" value="" />
+												
 												<portlet:actionURL name="addLike" var="addLikeUrl">
 													<portlet:param name="action" value="addLike" />
 													<portlet:param name="urlTitle" value="${idea.urlTitle}" />
@@ -75,7 +91,7 @@
 												</portlet:actionURL>
 											</c:if>
 										
-											<a class="${linkCssClass}" href="${addLikeUrl}">
+											<a class="${linkCssClass}" href="${addLikeUrl}" data-promptmsg="${signinPromptMsg}">
 												<span>Gilla (${fn:length(idea.likes)})</span>
 											</a>
 										</c:otherwise>
@@ -88,8 +104,12 @@
 										
 											<c:set var="linkCssClass" scope="page" value="innovationsslussen-signin-prompt" />
 											<c:set var="removeFavoriteUrl" scope="page" value="#" />
+											<c:set var="signinPromptMsg" scope="page" value="Du m&aring;ste vara inloggad f&ouml;r att f&aring; ta bort en id&eacute; som favorit" />
+											
 											<c:if test="${ideaPermissionChecker.hasPermissionDeleteFavorite}">
 												<c:set var="linkCssClass" scope="page" value="" />
+												<c:set var="signinPromptMsg" scope="page" value="" />
+												
 												<portlet:actionURL name="removeFavorite" var="removeFavoriteUrl">
 													<portlet:param name="action" value="removeFavorite" />
 													<portlet:param name="urlTitle" value="${idea.urlTitle}" />
@@ -97,7 +117,7 @@
 												</portlet:actionURL>
 											</c:if>
 										
-											<a class="${linkCssClass}" href="${removeFavoriteUrl}">
+											<a class="${linkCssClass}" href="${removeFavoriteUrl}" data-promptmsg="${signinPromptMsg}">
 												<span>Ta bort som favorit (${fn:length(idea.favorites)})</span>
 											</a>
 										</c:when>
@@ -105,8 +125,12 @@
 										
 											<c:set var="linkCssClass" scope="page" value="innovationsslussen-signin-prompt" />
 											<c:set var="addFavoriteUrl" scope="page" value="#" />
+											<c:set var="signinPromptMsg" scope="page" value="Du m&aring;ste vara inloggad f&ouml;r att f&aring; l&auml;gga till en id&eacute; som favorit" />
+											
 											<c:if test="${ideaPermissionChecker.hasPermissionAddFavorite}">
 												<c:set var="linkCssClass" scope="page" value="" />
+												<c:set var="signinPromptMsg" scope="page" value="" />
+												
 												<portlet:actionURL name="addFavorite" var="addFavoriteUrl">
 													<portlet:param name="action" value="addFavorite" />
 													<portlet:param name="urlTitle" value="${idea.urlTitle}" />
@@ -114,7 +138,7 @@
 												</portlet:actionURL>
 											</c:if>
 										
-											<a class="${linkCssClass}" href="${addFavoriteUrl}">
+											<a class="${linkCssClass}" href="${addFavoriteUrl}" data-promptmsg="${signinPromptMsg}">
 												<span>L&auml;gg till som favorit (${fn:length(idea.favorites)})</span>
 											</a>
 										</c:otherwise>

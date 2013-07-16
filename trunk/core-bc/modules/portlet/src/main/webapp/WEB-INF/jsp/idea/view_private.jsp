@@ -32,11 +32,13 @@
 									</a>
 								</li>
 							
-								<li class="icon comment">
-									<a href="#">
-										<span>Kommentera (${fn:length(commentsList)})</span>
-									</a>
-								</li>
+								<c:if test="${ideaPermissionChecker.hasPermissionAddCommentPrivate}">
+									<li class="icon comment">
+										<a class="" href="#">
+											<span>Kommentera (${fn:length(commentsList)})</span>
+										</a>
+									</li>
+								</c:if>
 								
 								<li class="icon like">
 									<c:choose>
