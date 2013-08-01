@@ -136,7 +136,7 @@
 					</div>
 				
 					<h1>
-						${idea.title} <span>(st&auml;ngd version)</span>
+            <c:out value="${idea.title}"/> <span>(st&auml;ngd version)</span>
 					</h1>
 					
 					<aui:layout>
@@ -168,21 +168,7 @@
 							</div>
 						</aui:column>
 						<aui:column last="true" columnWidth="40" cssClass="idea-meta">
-							<h2><span>Dokument</span></h2>
-							<ul class="documents-list">
-								<li class="pdf">
-									<a href="#">Ett dokument h&auml;r som beskriver n&aring;got</a>
-								</li>
-								<li class="doc">
-									<a href="#">H&auml;r &auml;r ett annat dokument</a>
-								</li>
-								<li class="img">
-									<a href="#">Sen en bild p&aring; n&aring;got</a>
-								</li>
-								<li class="img">
-									<a href="#">Och en bild till h&auml;r</a>
-								</li>
-							</ul>
+              <%@ include file="document_list.jspf" %>
 						</aui:column>
 					</aui:layout>
 					

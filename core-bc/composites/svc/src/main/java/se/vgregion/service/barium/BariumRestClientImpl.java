@@ -1,12 +1,12 @@
 package se.vgregion.service.barium;
 
-import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.params.ConnRoutePNames;
+import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.*;
+import org.apache.http.entity.mime.content.ContentBody;
+import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -17,19 +17,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.vgregion.portal.innovationsslussen.domain.*;
-import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstance;
-import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstances;
-import se.vgregion.portal.innovationsslussen.domain.json.BariumInstance;
-import se.vgregion.portal.innovationsslussen.domain.json.ObjectField;
-import se.vgregion.portal.innovationsslussen.domain.json.Objects;
+import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
+import se.vgregion.portal.innovationsslussen.domain.json.*;
 import se.vgregion.util.Util;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
-import java.util.concurrent.*;
+import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class BariumRestClientImpl implements BariumRestClient {
 
@@ -61,10 +61,10 @@ public class BariumRestClientImpl implements BariumRestClient {
     }
 
     /* (non-Javadoc)
-	 * @see se.vgregion.service.barium.BariumRestClient#connect()
+     * @see se.vgregion.service.barium.BariumRestClient#connect()
 	 */
     @Override
-	public boolean connect() throws BariumException {
+    public boolean connect() throws BariumException {
         return connectInternal();
     }
 
@@ -89,9 +89,9 @@ public class BariumRestClientImpl implements BariumRestClient {
 	 * @see se.vgregion.service.barium.BariumRestClient#getApplicationInstances()
 	 */
     @Override
-	public ApplicationInstances getApplicationInstances() throws BariumException {
+    public ApplicationInstances getApplicationInstances() throws BariumException {
         String instancesJson = doGet("/Apps/" + applicationId + "/Instances");
-        
+
         try {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(instancesJson, ApplicationInstances.class);
@@ -103,21 +103,21 @@ public class BariumRestClientImpl implements BariumRestClient {
             throw new RuntimeException(e);
         }
     }
-    
+
     /* (non-Javadoc)
 	 * @see se.vgregion.service.barium.BariumRestClient#getApplicationInstance(String instanceId)
 	 */
     @Override
-	public BariumInstance getBariumInstance(String instanceId) throws BariumException {
-    	
-    	String parameterString = "/Instances" + "/" + instanceId;
-    	
-    	System.out.println("BariumRestClientImpl - getBariumInstance - parameterString is: " + parameterString);
-    	
+    public BariumInstance getBariumInstance(String instanceId) throws BariumException {
+
+        String parameterString = "/Instances" + "/" + instanceId;
+
+        System.out.println("BariumRestClientImpl - getBariumInstance - parameterString is: " + parameterString);
+
         String instanceJson = doGet(parameterString);
-        
+
         System.out.println("BariumRestClientImpl - getBariumInstance - instanceJson is: " + instanceJson);
-        
+
         try {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(instanceJson, BariumInstance.class);
@@ -129,12 +129,35 @@ public class BariumRestClientImpl implements BariumRestClient {
             throw new RuntimeException(e);
         }
     }
-    
 
-    public String doPostMultipart(String endpoint, byte[] bytes) throws BariumException {
+    public void uploadFile(String instanceId, String fileName, InputStream inputStream) throws BariumException {
+        doPostMultipart("/Instances/" + instanceId + "/Objects", fileName, inputStream);
+    }
+
+    @Override
+    public ObjectEntry getObject(String id) {
+        String objectJson = null;
+        try {
+            objectJson = doGet("/Objects/" + id);
+            LOGGER.debug(objectJson);
+        } catch (BariumException e) {
+            // TODO - we might want to check what kind of error we receive from Barium. (parse json string)
+            //LOGGER.error(e.getMessage(), e);
+            return null;
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readValue(objectJson, ObjectEntry.class);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    String doPostMultipart(String endpoint, String fileName, InputStream inputStream) throws BariumException {
         DefaultHttpClient httpClient = new DefaultHttpClient();
 
-        httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, new HttpHost("127.0.0.1", 8888));
+//        httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, new HttpHost("127.0.0.1", 8888));
 
         HttpPost httpPost = new HttpPost(this.apiLocation + endpoint);
 
@@ -146,19 +169,39 @@ public class BariumRestClientImpl implements BariumRestClient {
         }
 
         try {
-            AbstractContentBody contentBody = new InputStreamBody(new ByteArrayInputStream(bytes), "filnamnet4.txt");//new ByteArrayBody("ett filinnehåll".getBytes("UTF-8"), "filnamnet");
+            ContentBody contentBody = new InputStreamBody(inputStream, fileName);
 
-            MultipartEntity multipartEntity = new MultipartEntity();
+            // Must use HttpMultipartMode.BROWSER_COMPATIBLE in order to use UTF-8 instead of US_ASCII to handle special
+            // characters.
+            MultipartEntity multipartEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null,
+                    Charset.forName("UTF-8")) {
 
+                // Due to a bug in Barium we must not append the charset directive to the content-type header since
+                // nothing is created in Barium if doing so.
+                // todo Try skipping this when we use Barium Live?
+                @Override
+                protected String generateContentType(final String boundary, final Charset charset) {
+                    StringBuilder buffer = new StringBuilder();
+                    buffer.append("multipart/form-data; boundary=");
+                    buffer.append(boundary);
+                    // Comment out this
+                    /*if (charset != null) {
+                        buffer.append("; charset=");
+                        buffer.append(charset.name());
+                    }*/
+                    return buffer.toString();
+                }
+            };
 
-//            multipartEntity.addPart("field", new StringBody("fileuploadfield"));
-//            multipartEntity.addPart("field", new StringBody("{name: \"fileuploadfield\", objectclass: \"repository.file\"}"));
-
-            multipartEntity.addPart("part1", contentBody);
+            multipartEntity.addPart("Data", contentBody);
 
             httpPost.setEntity(multipartEntity);
 
             HttpResponse response = httpClient.execute(httpPost);
+
+            if (response.getStatusLine().getStatusCode() != 200) {
+                throw new BariumException("Failed to post multipart. Reason: " + response.getStatusLine().getReasonPhrase());
+            }
 
             InputStream content = response.getEntity().getContent();
 
@@ -169,6 +212,34 @@ public class BariumRestClientImpl implements BariumRestClient {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public InputStream doGetFileStream(String objectId) throws BariumException {
+        URL url = null;
+        try {
+            url = new URL(this.apiLocation + "/Objects/" + objectId + "/File");
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            if (ticket != null) {
+                conn.setRequestProperty("ticket", ticket);
+            } else {
+                this.connect();
+                conn.setRequestProperty("ticket", ticket);
+            }
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("charset", "utf-8");
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+
+            return conn.getInputStream();
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new BariumException("Filed to get filestream. ", e);
         }
     }
 
@@ -213,6 +284,11 @@ public class BariumRestClientImpl implements BariumRestClient {
                 bos = new BufferedOutputStream(outputStream);
                 bos.write(data);
                 bos.flush();
+            }
+
+            int responseCode = conn.getResponseCode();
+            if (responseCode == 401) {
+                ticket = null; // We weren't authorized, possibly due to an old ticket.
             }
 
             inputStream = conn.getInputStream();
@@ -315,7 +391,7 @@ public class BariumRestClientImpl implements BariumRestClient {
 	 * @see se.vgregion.service.barium.BariumRestClient#updateInstance(java.lang.String, java.lang.String)
 	 */
     @Override
-	public boolean updateInstance(String values, String objectId) {
+    public boolean updateInstance(String values, String objectId) {
         try {
             doPost("/Objects/" + objectId + "/Fields", values);
         } catch (BariumException e) {
@@ -398,8 +474,8 @@ public class BariumRestClientImpl implements BariumRestClient {
 	 * @see se.vgregion.service.barium.BariumRestClient#getInstanceObjects(se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstance)
 	 */
     @Override
-	public Objects getInstanceObjects(ApplicationInstance instance) throws BariumException {
-        String objectsJson = doGet("/Instances/" + instance.getId() + "/Objects");
+    public Objects getInstanceObjects(String instanceId) throws BariumException {
+        String objectsJson = doGet("/Instances/" + instanceId + "/Objects");
 
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -415,10 +491,10 @@ public class BariumRestClientImpl implements BariumRestClient {
             objectJson = doGet("/instances/" + instance.getId() + "/Objects/IDE/Fields");
             LOGGER.info(objectJson);
         } catch (BariumException e) {
-        	
-        	// TODO - we might want to check what kind of error we receive from Barium. (parse json string)
+
+            // TODO - we might want to check what kind of error we receive from Barium. (parse json string)
             //LOGGER.error(e.getMessage(), e);
-            
+
             return null;
         }
 
@@ -430,17 +506,17 @@ public class BariumRestClientImpl implements BariumRestClient {
             throw new RuntimeException(e);
         }
     }
-    
-    public List<ObjectField> getIdeaObjectFields(BariumInstance instance) {
+
+    public List<ObjectField> getIdeaObjectFields(String instanceId) {
         String objectJson = null;
         try {
-            objectJson = doGet("/instances/" + instance.getId() + "/Objects/IDE/Fields");
+            objectJson = doGet("/instances/" + instanceId + "/Objects/IDE/Fields");
             LOGGER.info(objectJson);
         } catch (BariumException e) {
-        	
-        	// TODO - we might want to check what kind of error we receive from Barium. (parse json string)
+
+            // TODO - we might want to check what kind of error we receive from Barium. (parse json string)
             //LOGGER.error(e.getMessage(), e);
-            
+
             return null;
         }
 
@@ -452,13 +528,13 @@ public class BariumRestClientImpl implements BariumRestClient {
             throw new RuntimeException(e);
         }
     }
-    
+
 
     /* (non-Javadoc)
 	 * @see se.vgregion.service.barium.BariumRestClient#createIdeaInstance(se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields)
 	 */
     @Override
-	public String createIdeaInstance(IdeaObjectFields ideaObjectFields) {
+    public String createIdeaInstance(IdeaObjectFields ideaObjectFields) {
 
         StringBuilder sb = new StringBuilder();
 
@@ -523,9 +599,9 @@ public class BariumRestClientImpl implements BariumRestClient {
         }
 
         String replyJson = createInstance(sb.toString());
-        
+
         LOGGER.info("createIdeaInstance - replyJson is: " + replyJson);
-        
+
         return replyJson;
     }
 }

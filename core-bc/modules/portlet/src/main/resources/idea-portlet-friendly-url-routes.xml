@@ -13,4 +13,9 @@
 		<pattern>/{urlTitle}</pattern>
 		<implicit-parameter name="showView">showIdea</implicit-parameter>
 	</route>	
+
+	<route>
+		<pattern>/{urlTitle}/uploadFile</pattern>
+		<implicit-parameter name="showView">showUploadFile</implicit-parameter>
+	</route>
 </routes>

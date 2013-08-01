@@ -1,8 +1,7 @@
 package se.vgregion.service.barium;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.io.InputStream;
+import java.util.*;
 
 import javax.annotation.PostConstruct;
 
@@ -18,10 +17,7 @@ import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaPerson;
-import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstance;
-import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstances;
-import se.vgregion.portal.innovationsslussen.domain.json.BariumInstance;
-import se.vgregion.portal.innovationsslussen.domain.json.ObjectField;
+import se.vgregion.portal.innovationsslussen.domain.json.*;
 
 /**
  * @author Patrik Bergström
@@ -99,9 +95,8 @@ public class BariumService {
             	List<ObjectField> ideaObjectFieldsList = null;
             	
             	if(bariumInstance != null) {
-            		ideaObjectFieldsList = bariumRestClient.getIdeaObjectFields(bariumInstance);	
+            		ideaObjectFieldsList = bariumRestClient.getIdeaObjectFields(bariumInstance.getId());
             	}
-                
                 
                 if(ideaObjectFieldsList != null) {
                     IdeaObjectFields ideaObjectFields = new IdeaObjectFields();
@@ -187,7 +182,40 @@ public class BariumService {
     public String createIdea(IdeaObjectFields ideaObjectFields) {
         bariumRestClient.createIdeaInstance(ideaObjectFields);
         return "";
-    }    
-    
-    
+    }
+
+    public void uploadFile(Idea idea, String fileName, InputStream inputStream) throws BariumException {
+        bariumRestClient.uploadFile(idea.getBariumId(), fileName, inputStream);
+    }
+
+    public List<ObjectEntry> getIdeaFiles(Idea idea) throws BariumException {
+        Objects instanceObjects = bariumRestClient.getInstanceObjects(idea.getBariumId());
+
+        SortedSet<ObjectEntry > objectEntries = new TreeSet<ObjectEntry>(new Comparator<ObjectEntry>() {
+            @Override
+            public int compare(ObjectEntry o1, ObjectEntry o2) {
+                try {
+                    return o1.getName().compareTo(o2.getName());
+                } catch (RuntimeException e) {
+                    return o1.hashCode() > o2.hashCode() ? 1 : -1;
+                }
+            }
+        });
+
+        for (ObjectEntry instanceObject : instanceObjects.getData()) {
+            if (instanceObject.getType() != null && instanceObject.getType().equals("file")) {
+                objectEntries.add(instanceObject);
+            }
+        }
+
+        return new ArrayList<ObjectEntry>(objectEntries);
+    }
+
+    public ObjectEntry getObject(String id) {
+        return bariumRestClient.getObject(id);
+    }
+
+    public InputStream downloadFile(String id) throws BariumException {
+        return bariumRestClient.doGetFileStream(id);
+    }
 }

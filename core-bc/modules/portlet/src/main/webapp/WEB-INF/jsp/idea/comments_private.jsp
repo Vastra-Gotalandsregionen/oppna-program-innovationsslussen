@@ -46,7 +46,7 @@
 				<div class="${commentItemCssClass} clearfix">
 					<div class="comment-author">
 						<div class="comment-author-name">
-							${comment.name}
+							<c:out value="${comment.name}"/>
 						</div>
 						<div class="comment-author-title">
 							<c:choose>
@@ -73,7 +73,7 @@
 							%>
 						</div>
 						<div class="comment-entry-text">
-							${comment.commentText} 
+							<c:out value="${comment.commentText}" escapeXml="false"/>
 						</div>
 					</div>
 				</div>

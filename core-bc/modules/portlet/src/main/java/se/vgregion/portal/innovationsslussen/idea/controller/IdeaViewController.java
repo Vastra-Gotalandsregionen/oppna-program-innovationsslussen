@@ -1,32 +1,5 @@
 package se.vgregion.portal.innovationsslussen.idea.controller;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.portlet.bind.annotation.ActionMapping;
-import org.springframework.web.portlet.bind.annotation.RenderMapping;
-
-import se.vgregion.portal.innovationsslussen.domain.IdeaConstants;
-import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
-import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
-import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
-import se.vgregion.service.innovationsslussen.exception.UpdateIdeaException;
-import se.vgregion.service.innovationsslussen.idea.IdeaService;
-import se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionChecker;
-import se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionCheckerService;
-
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -35,8 +8,6 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.User;
-import com.liferay.portal.security.permission.PermissionChecker;
-import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.service.UserLocalServiceUtil;
@@ -44,6 +15,36 @@ import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.messageboards.model.MBMessageDisplay;
 import com.liferay.portlet.messageboards.model.MBThread;
 import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.portlet.PortletFileUpload;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.portlet.bind.annotation.ActionMapping;
+import org.springframework.web.portlet.bind.annotation.RenderMapping;
+import org.springframework.web.portlet.bind.annotation.ResourceMapping;
+import se.vgregion.portal.innovationsslussen.domain.IdeaConstants;
+import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
+import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
+import se.vgregion.portal.innovationsslussen.domain.json.ObjectEntry;
+import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
+import se.vgregion.service.barium.BariumException;
+import se.vgregion.service.innovationsslussen.exception.UpdateIdeaException;
+import se.vgregion.service.innovationsslussen.idea.IdeaService;
+import se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionChecker;
+import se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionCheckerService;
+import se.vgregion.util.Util;
+
+import javax.portlet.*;
+import java.io.*;
+import java.util.List;
 
 /**
  * Controller class for the view mode in idea portlet.
@@ -55,20 +56,19 @@ import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 @RequestMapping(value = "VIEW")
 public class IdeaViewController {
 
-	IdeaService ideaService;
-	IdeaPermissionCheckerService ideaPermissionCheckerService;
-	
+    IdeaService ideaService;
+    IdeaPermissionCheckerService ideaPermissionCheckerService;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(IdeaViewController.class.getName());
 
     /**
      * Constructor.
-     *
      */
     @Autowired
     public IdeaViewController(IdeaService ideaService, IdeaPermissionCheckerService ideaPermissionCheckerService) {
         this.ideaService = ideaService;
         this.ideaPermissionCheckerService = ideaPermissionCheckerService;
-    }    
+    }
 
     /**
      * The default render method.
@@ -81,49 +81,63 @@ public class IdeaViewController {
     @RenderMapping()
     public String showIdea(RenderRequest request, RenderResponse response, final ModelMap model) {
 
-    	ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
         long scopeGroupId = themeDisplay.getScopeGroupId();
         long companyId = themeDisplay.getCompanyId();
         long userId = themeDisplay.getUserId();
         boolean isSignedIn = themeDisplay.isSignedIn();
         String ideaType = ParamUtil.getString(request, "type", "public");
         String urlTitle = ParamUtil.getString(request, "urlTitle", "");
-        
+
         String returnView = "view_public";
-        
-        if(!urlTitle.equals("")) {
+
+        if (!urlTitle.equals("")) {
             Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
             boolean isIdeaUserLiked = ideaService.getIsIdeaUserLiked(companyId, scopeGroupId, userId, urlTitle);
             boolean isIdeaUserFavorite = ideaService.getIsIdeaUserFavorite(companyId, scopeGroupId, userId, urlTitle);
-            
-            List<CommentItemVO> commentsList = new ArrayList<CommentItemVO>();
-            if(ideaType.equals("private")) {
-            	commentsList = ideaService.getPrivateComments(idea);
+
+            List<CommentItemVO> commentsList;
+            if (ideaType.equals("private")) {
+                commentsList = ideaService.getPrivateComments(idea);
             } else {
-            	commentsList = ideaService.getPublicComments(idea);;
+                commentsList = ideaService.getPublicComments(idea);
+            }
+
+            // todo Behöver vi tänka på hurivida användaren har behörighet att se alla filer?
+            try {
+                List<ObjectEntry> ideaFiles = ideaService.getIdeaFiles(idea);
+                model.addAttribute("ideaFiles", ideaFiles);
+            } catch (BariumException e) {
+                LOGGER.error(e.getMessage(), e);
             }
 
             IdeaPermissionChecker ideaPermissionChecker = ideaPermissionCheckerService.getIdeaPermissionChecker(scopeGroupId, userId, idea.getId());
-            
-            
+
             model.addAttribute("idea", idea);
             model.addAttribute("commentsList", commentsList);
             model.addAttribute("isIdeaUserFavorite", isIdeaUserFavorite);
             model.addAttribute("isIdeaUserLiked", isIdeaUserLiked);
-            
+            model.addAttribute("urlTitle", urlTitle);
+
             model.addAttribute("isSignedIn", isSignedIn);
             model.addAttribute("ideaPermissionChecker", ideaPermissionChecker);
-            
-            if(ideaType.equals("private") && ideaPermissionChecker.getHasPermissionViewIdeaPrivate()) {
-            	returnView = "view_private";
+
+            model.addAttribute("isIdeaOwner", idea.getUserId() == userId);
+
+            if (ideaType.equals("private") && ideaPermissionChecker.getHasPermissionViewIdeaPrivate()) {
+                returnView = "view_private";
             }
         }
-        
-        
 
         return returnView;
     }
-    
+
+    @RenderMapping(params = "showView=showUploadFile")
+    public String uploadFile(RenderRequest request, RenderResponse response, Model model) {
+        model.addAttribute("urlTitle", request.getParameter("urlTitle"));
+        return "upload_file";
+    }
+
     /**
      * The default render method.
      *
@@ -157,7 +171,7 @@ public class IdeaViewController {
         return "view_private";
     }
     */
-    
+
     /**
      * Method handling Action request.
      *
@@ -167,11 +181,11 @@ public class IdeaViewController {
      */
     @ActionMapping("someAction")
     public final void someAction(ActionRequest request, ActionResponse response, final ModelMap model) {
-    	System.out.println("someAction");
+        System.out.println("someAction");
         LOGGER.info("someAction");
         response.setRenderParameter("view", "view");
-    }    
-    
+    }
+
     /**
      * Method handling Action request.
      *
@@ -181,8 +195,8 @@ public class IdeaViewController {
      */
     @ActionMapping(params = "action=addComment")
     public final void addComment(ActionRequest request, ActionResponse response, final ModelMap model) {
-    	
-    	System.out.println("addComment");
+
+        System.out.println("addComment");
 
         LOGGER.info("addComment");
 
@@ -190,68 +204,68 @@ public class IdeaViewController {
         long companyId = themeDisplay.getCompanyId();
         long groupId = themeDisplay.getScopeGroupId();
         long userId = themeDisplay.getUserId();
-        
+
         int ideaContentType = ParamUtil.getInteger(request, "ideaContentType");
         String urlTitle = ParamUtil.getString(request, "urlTitle", "");
         String comment = ParamUtil.getString(request, "comment", "");
-        
-        if(!comment.equals("")) {
-        	
-        	try {
-            	Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
-            	
-            	long ideaCommentClassPK = -1;
-            	
-            	if(ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PUBLIC) {
-            		ideaCommentClassPK = idea.getIdeaContentPublic().getId();
-            	} else if(ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE) {
-            		ideaCommentClassPK = idea.getIdeaContentPrivate().getId();
-            	}
-            	
-            	ServiceContext serviceContext = ServiceContextFactory.getInstance(Idea.class.getName(), request);
-            	
-    			User user = UserLocalServiceUtil.getUser(userId);
 
-    			String threadView = PropsKeys.DISCUSSION_THREAD_VIEW;
+        if (!comment.equals("")) {
 
-    			MBMessageDisplay messageDisplay = MBMessageLocalServiceUtil.getDiscussionMessageDisplay(
-    				userId, groupId, IdeaContent.class.getName(), ideaCommentClassPK,
-    				WorkflowConstants.STATUS_ANY, threadView);
+            try {
+                Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
 
-    			MBThread thread = messageDisplay.getThread();
+                long ideaCommentClassPK = -1;
 
-    			long threadId = thread.getThreadId();
-    			long rootThreadId = thread.getRootMessageId();
-    			
-    			String commentContentCleaned = comment;
-    			
-    			String commentSubject = comment;
-    			commentSubject = StringUtil.shorten(commentSubject, 50);
-    			commentSubject  += "...";
-            	
-    			// TODO - validate comment and preserve line breaks
-    			MBMessageLocalServiceUtil.addDiscussionMessage(
-    					userId, user.getScreenName(), groupId,
-    					IdeaContent.class.getName(), ideaCommentClassPK, threadId,
-    					rootThreadId, commentSubject, commentContentCleaned,
-    					serviceContext);
-        		
-        	} catch (PortalException e) {
-        		LOGGER.error(e.getMessage(), e);
-        	} catch (SystemException e) {
-        		LOGGER.error(e.getMessage(), e);
-        	}
-        	
+                if (ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PUBLIC) {
+                    ideaCommentClassPK = idea.getIdeaContentPublic().getId();
+                } else if (ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE) {
+                    ideaCommentClassPK = idea.getIdeaContentPrivate().getId();
+                }
+
+                ServiceContext serviceContext = ServiceContextFactory.getInstance(Idea.class.getName(), request);
+
+                User user = UserLocalServiceUtil.getUser(userId);
+
+                String threadView = PropsKeys.DISCUSSION_THREAD_VIEW;
+
+                MBMessageDisplay messageDisplay = MBMessageLocalServiceUtil.getDiscussionMessageDisplay(
+                        userId, groupId, IdeaContent.class.getName(), ideaCommentClassPK,
+                        WorkflowConstants.STATUS_ANY, threadView);
+
+                MBThread thread = messageDisplay.getThread();
+
+                long threadId = thread.getThreadId();
+                long rootThreadId = thread.getRootMessageId();
+
+                String commentContentCleaned = comment;
+
+                String commentSubject = comment;
+                commentSubject = StringUtil.shorten(commentSubject, 50);
+                commentSubject += "...";
+
+                // TODO - validate comment and preserve line breaks
+                MBMessageLocalServiceUtil.addDiscussionMessage(
+                        userId, user.getScreenName(), groupId,
+                        IdeaContent.class.getName(), ideaCommentClassPK, threadId,
+                        rootThreadId, commentSubject, commentContentCleaned,
+                        serviceContext);
+
+            } catch (PortalException e) {
+                LOGGER.error(e.getMessage(), e);
+            } catch (SystemException e) {
+                LOGGER.error(e.getMessage(), e);
+            }
+
         }
 
-        if(ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE) {
-        	response.setRenderParameter("type", "private");	
+        if (ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE) {
+            response.setRenderParameter("type", "private");
         }
-        
+
         response.setRenderParameter("urlTitle", urlTitle);
 
     }
-    
+
     /**
      * Method handling Action request.
      *
@@ -261,30 +275,30 @@ public class IdeaViewController {
      */
     @ActionMapping(params = "action=addFavorite")
     public final void addFavorite(ActionRequest request, ActionResponse response, final ModelMap model) {
-    	
-    	System.out.println("addFavorite");
+
+        System.out.println("addFavorite");
         LOGGER.info("addFavorite");
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
         long companyId = themeDisplay.getCompanyId();
         long groupId = themeDisplay.getScopeGroupId();
         long userId = themeDisplay.getUserId();
-        
+
         int ideaContentType = ParamUtil.getInteger(request, "ideaContentType");
         String urlTitle = ParamUtil.getString(request, "urlTitle", "");
-        
-        if(themeDisplay.isSignedIn()) {
-        	ideaService.addFavorite(companyId, groupId, userId, urlTitle);
+
+        if (themeDisplay.isSignedIn()) {
+            ideaService.addFavorite(companyId, groupId, userId, urlTitle);
         }
 
-        if(ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE) {
-        	response.setRenderParameter("type", "private");	
+        if (ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE) {
+            response.setRenderParameter("type", "private");
         }
-        
+
         response.setRenderParameter("urlTitle", urlTitle);
-    }    
-    
-    
+    }
+
+
     /**
      * Method handling Action request.
      *
@@ -294,29 +308,29 @@ public class IdeaViewController {
      */
     @ActionMapping(params = "action=addLike")
     public final void addLike(ActionRequest request, ActionResponse response, final ModelMap model) {
-    	
-    	System.out.println("addLike");
+
+        System.out.println("addLike");
         LOGGER.info("addLike");
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
         long companyId = themeDisplay.getCompanyId();
         long groupId = themeDisplay.getScopeGroupId();
         long userId = themeDisplay.getUserId();
-        
+
         int ideaContentType = ParamUtil.getInteger(request, "ideaContentType");
         String urlTitle = ParamUtil.getString(request, "urlTitle", "");
-        
-        if(themeDisplay.isSignedIn()) {
-        	ideaService.addLike(companyId, groupId, userId, urlTitle);
+
+        if (themeDisplay.isSignedIn()) {
+            ideaService.addLike(companyId, groupId, userId, urlTitle);
         }
 
-        if(ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE) {
-        	response.setRenderParameter("type", "private");	
+        if (ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE) {
+            response.setRenderParameter("type", "private");
         }
-        
+
         response.setRenderParameter("urlTitle", urlTitle);
     }
-    
+
     /**
      * Method handling Action request.
      *
@@ -326,29 +340,29 @@ public class IdeaViewController {
      */
     @ActionMapping(params = "action=removeFavorite")
     public final void removeFavorite(ActionRequest request, ActionResponse response, final ModelMap model) {
-    	
-    	System.out.println("removeFavorite");
+
+        System.out.println("removeFavorite");
         LOGGER.info("removeFavorite");
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
         long companyId = themeDisplay.getCompanyId();
         long groupId = themeDisplay.getScopeGroupId();
         long userId = themeDisplay.getUserId();
-        
+
         int ideaContentType = ParamUtil.getInteger(request, "ideaContentType");
         String urlTitle = ParamUtil.getString(request, "urlTitle", "");
-        
-        if(themeDisplay.isSignedIn()) {
-        	ideaService.removeFavorite(companyId, groupId, userId, urlTitle);
+
+        if (themeDisplay.isSignedIn()) {
+            ideaService.removeFavorite(companyId, groupId, userId, urlTitle);
         }
 
-        if(ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE) {
-        	response.setRenderParameter("type", "private");	
+        if (ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE) {
+            response.setRenderParameter("type", "private");
         }
-        
+
         response.setRenderParameter("urlTitle", urlTitle);
 
-    }    
+    }
 
     /**
      * Method handling Action request.
@@ -359,29 +373,29 @@ public class IdeaViewController {
      */
     @ActionMapping(params = "action=removeLike")
     public final void removeLike(ActionRequest request, ActionResponse response, final ModelMap model) {
-    	
-    	System.out.println("removeLike");
+
+        System.out.println("removeLike");
         LOGGER.info("removeLike");
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
         long companyId = themeDisplay.getCompanyId();
         long groupId = themeDisplay.getScopeGroupId();
         long userId = themeDisplay.getUserId();
-        
+
         int ideaContentType = ParamUtil.getInteger(request, "ideaContentType");
         String urlTitle = ParamUtil.getString(request, "urlTitle", "");
-        
-        if(themeDisplay.isSignedIn()) {
-        	ideaService.removeLike(companyId, groupId, userId, urlTitle);
+
+        if (themeDisplay.isSignedIn()) {
+            ideaService.removeLike(companyId, groupId, userId, urlTitle);
         }
 
-        if(ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE) {
-        	response.setRenderParameter("type", "private");	
+        if (ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE) {
+            response.setRenderParameter("type", "private");
         }
-        
+
         response.setRenderParameter("urlTitle", urlTitle);
     }
-    
+
     /**
      * Method handling Action request.
      *
@@ -391,36 +405,124 @@ public class IdeaViewController {
      */
     @ActionMapping(params = "action=updateFromBarium")
     public final void updateFromBarium(ActionRequest request, ActionResponse response, final ModelMap model) {
-    	
-    	System.out.println("updateFromBarium");
+
+        System.out.println("updateFromBarium");
         LOGGER.info("updateFromBarium");
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
         long companyId = themeDisplay.getCompanyId();
         long groupId = themeDisplay.getScopeGroupId();
         long userId = themeDisplay.getUserId();
-        
+
         int ideaContentType = ParamUtil.getInteger(request, "ideaContentType");
         String urlTitle = ParamUtil.getString(request, "urlTitle", "");
-        
-        if(themeDisplay.isSignedIn()) {
-        	System.out.println("Should now do update");
-        	
-        	try {
-				ideaService.updateFromBarium(companyId, groupId, urlTitle);
-			} catch (UpdateIdeaException e) {
-				LOGGER.error(e.getMessage(), e);
-			}
+
+        if (themeDisplay.isSignedIn()) {
+            System.out.println("Should now do update");
+
+            try {
+                ideaService.updateFromBarium(companyId, groupId, urlTitle);
+            } catch (UpdateIdeaException e) {
+                LOGGER.error(e.getMessage(), e);
+            }
         }
 
-        if(ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE) {
-        	response.setRenderParameter("type", "private");	
+        if (ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE) {
+            response.setRenderParameter("type", "private");
         }
-        
+
         response.setRenderParameter("urlTitle", urlTitle);
-    }    
-    
-    
+    }
 
+    @ActionMapping(params = "action=uploadFile")
+    public void uploadFile(ActionRequest request, ActionResponse response, Model model) throws FileUploadException {
+        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+        long userId = themeDisplay.getUserId();
+
+        String urlTitle = request.getParameter("urlTitle");
+        // todo onödig slagning? Cacha?
+        Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);// todo Kan det inte finnas flera med samma titel i olika communities?
+
+        boolean isIdeaOwner = idea.getUserId() == userId;
+
+        if (!isIdeaOwner) {
+            throw new FileUploadException("The user is not authorized to upload to this idea instance.");
+        }
+
+        response.setRenderParameter("urlTitle", urlTitle);
+
+        PortletFileUpload p = new PortletFileUpload();
+
+        try {
+            FileItemIterator itemIterator = p.getItemIterator(request);
+
+            while (itemIterator.hasNext()) {
+                FileItemStream fileItemStream = itemIterator.next();
+
+                if (fileItemStream.getFieldName().equals("file")) {
+                    InputStream is = fileItemStream.openStream();
+                    BufferedInputStream bis = new BufferedInputStream(is);
+
+                    String fileName = fileItemStream.getName();
+                    ideaService.uploadFile(idea, fileName, bis);
+                }
+
+            }
+        } catch (FileUploadException e) {
+            doExceptionStuff(e, response, model);
+            return;
+        } catch (IOException e) {
+            doExceptionStuff(e, response, model);
+            return;
+        } catch (se.vgregion.service.innovationsslussen.exception.FileUploadException e) {
+            doExceptionStuff(e, response, model);
+            return;
+        }
+
+        response.setRenderParameter("urlTitle", urlTitle);
+        response.setRenderParameter("showView", "showIdea");
+    }
+    
+    private void doExceptionStuff(Exception e, ActionResponse response, Model model) {
+        LOGGER.error(e.getMessage(), e);
+        response.setRenderParameter("showView", "showUploadFile");
+        model.addAttribute("errorMessage", "Uppladdningen misslyckades");
+    }
+
+    @ResourceMapping("downloadFile")
+    public void downloadFile(@RequestParam("id") String id, ResourceResponse response) throws BariumException, IOException {
+        ObjectEntry objectEntry = ideaService.getObject(id);
+        String name = objectEntry.getName();
+
+        //set http headers to instruct the browser how it should deliver the content
+        String fileType = objectEntry.getFileType();
+        if (fileType == null || "".equals(fileType)) {
+            fileType = "octet-stream";
+        }
+
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/" + fileType);
+        response.setProperty("Content-Disposition", "inline; filename=" + name);
+
+        BufferedOutputStream bos = null;
+        OutputStream pos = null;
+        BufferedInputStream bis = null;
+        InputStream is = null;
+        try {
+            is = ideaService.downloadFile(id);
+            bis = new BufferedInputStream(is);
+
+            pos = response.getPortletOutputStream();
+            bos = new BufferedOutputStream(pos);
+
+            byte[] buf = new byte[1024];
+            int n;
+            while ((n = bis.read(buf)) != -1) {
+                bos.write(buf, 0, n);
+            }
+        } finally {
+            Util.closeClosables(bos, pos, bis, is);
+        }
+    }
 }
 

@@ -13,8 +13,9 @@
 	
 	<!--  Mock Client -->
 	<!-- -->   
-	<bean id="bariumRestClient" class="se.vgregion.service.barium.MockBariumRestClientImpl" />
-	
+	<bean id="bariumRestClient" class="se.vgregion.service.barium.BariumRestClientImpl" />
+	<!--<bean id="bariumRestClient" class="se.vgregion.service.barium.MockBariumRestClientImpl" />-->
+
 	
 	<!--  "Real" Client -->
 	<!--   
