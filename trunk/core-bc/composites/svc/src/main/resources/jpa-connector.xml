@@ -9,7 +9,6 @@
 
   <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
 
-
   <!-- Uses by default transaction bean with name transactionManager -->
   <tx:annotation-driven />
 

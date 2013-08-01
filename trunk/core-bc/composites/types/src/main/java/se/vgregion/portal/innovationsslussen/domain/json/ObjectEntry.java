@@ -19,6 +19,7 @@ public class ObjectEntry {
 	@JsonProperty("TypeNamespace") private Object TypeNamespace;
 	@JsonProperty("ReferenceId") private Object ReferenceId;
 	@JsonProperty("Container") private Boolean Container;
+	@JsonProperty("ParentId") private String ParentId;
 
     public Boolean getReadOnly() {
         return ReadOnly;
@@ -146,5 +147,13 @@ public class ObjectEntry {
 
     public void setContainer(Boolean container) {
         Container = container;
+    }
+
+    public String getParentId() {
+        return ParentId;
+    }
+
+    public void setParentId(String parentId) {
+        ParentId = parentId;
     }
 }

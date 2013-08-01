@@ -9,6 +9,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import se.vgregion.portal.innovationsslussen.domain.*;
 import se.vgregion.portal.innovationsslussen.domain.json.*;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
@@ -40,6 +44,7 @@ public class BariumRestClientIT {
     }
 
     @Test
+    @Ignore
     public void testGetApplicationInstances() throws BariumException {
         BariumRestClientImpl bariumRestClient = createBariumRestClient();
 
@@ -47,7 +52,7 @@ public class BariumRestClientIT {
 
         for (ApplicationInstance instance : applicationInstances.getData()) {
             System.out.println(instance.getId() + " " + instance.getName() + " " + instance.getReferenceId());
-            Objects instanceObjects = bariumRestClient.getInstanceObjects(instance);
+            Objects instanceObjects = bariumRestClient.getInstanceObjects(instance.getId());
             for (ObjectEntry objectEntry : instanceObjects.getData()) {
                 System.out.println("ObjectEntry: " + objectEntry.getFileType() + " " + objectEntry.getName());
             }
@@ -64,7 +69,7 @@ public class BariumRestClientIT {
     }
 
     @Test
-    //@Ignore
+    @Ignore
     public void testCreateFormInstance() throws Exception {
         BariumRestClient bariumRestClient = createBariumRestClient();
 
@@ -85,9 +90,10 @@ public class BariumRestClientIT {
     }
 
     @Test
+    @Ignore
     public void testGetAllTaskInfo2() throws Exception {
         BariumRestClientImpl bariumRestClient = createBariumRestClient();
-        
+
 //        String s = bariumRestClient.doGet("/DataFormTemplates/565d4c81-4baa-451b-aacc-5f7ae295bfaf/Fields"); // Får formulär-modell
 //        String s = bariumRestClient.doGet("Tasks");
 //        String s = bariumRestClient.doGet("/Apps/a29b55e4-68d6-41dd-872e-877badb566cb/Instances");
@@ -97,14 +103,19 @@ public class BariumRestClientIT {
 //        String s = bariumRestClient.doPostMultipart("/Objects/f5b8cf5f-f214-4e35-9e13-fb04223568db/Objects", new byte[]{1, 2, 3, 4, 5, 6}); //
 
 //        String s = bariumRestClient.doPostMultipart("/Objects/5e2b60b2-a582-4521-ac6a-49e218734096/Objects", "blabla...".getBytes()); // Laddar upp fil till mappen
+//        String s = bariumRestClient.doPostMultipart("/Instances/9c9e2b6c-93ec-4334-acb0-dfabffdd5dc8/Objects", "tasdf332.txt", new ByteArrayInputStream("blabla...".getBytes())); // Laddar upp fil till instansen
+        String s = bariumRestClient.doPostMultipart("/Objects/5493ce84-077e-4554-a86e-c2fdf3011787/Objects", "tåhävning.txt", new ByteArrayInputStream("blabla...".getBytes())); // Laddar upp fil till instansen
 //        String s = bariumRestClient.doPost("/Objects/f5b8cf5f-f214-4e35-9e13-fb04223568db/Fields/fileuploadfield", new byte[]{1,2,3,4,5,6});
 //        String s = bariumRestClient.doGet("/startevents");
+
+//        String s = bariumRestClient.doGet("/Instances/9c9e2b6c-93ec-4334-acb0-dfabffdd5dc8/Objects");
+
 //        String s = bariumRestClient.doGet("/Instances/ef7ea30b-5089-428f-87e8-f10acd285cb6");
 //        String s = bariumRestClient.doGet("/Instances/2c75baaf-6a60-476e-ad2d-724f965f7817/Objects/IDE/Fields");
 //        String s = bariumRestClient.doGet("/Instances");
-//        String s = bariumRestClient.doGet("/Objects");
+//        String s = bariumRestClient.doGet("/Objects/89d4e894-bc31-4ecd-ab6d-d4fb993d9edd/File");
 //        String s = bariumRestClient.doGet("/Instances/ef7ea30b-5089-428f-87e8-f10acd285cb6/Objects/IDE");
-        String s = bariumRestClient.doGet("/Instances/ef7ea30b-5089-428f-87e8-f10acd285cb6/Objects/IDE/Fields");
+//        String s = bariumRestClient.doGet("/Instances/ef7ea30b-5089-428f-87e8-f10acd285cb6/Objects/IDE/Fields");
 //        String s = bariumRestClient.doGet("/Instances/ef7ea30b-5089-428f-87e8-f10acd285cb6/Objects");
 //        String s = bariumRestClient.doGet("/Instances/ef7ea30b-5089-428f-87e8-f10acd285cb6/Fields");
 //        String s = bariumRestClient.doGet("/Instances/f3d2aca1-acb0-4853-b9a5-9e743d77b6a0/Objects/IDE/Fields"); // the newly created with the api
@@ -115,9 +126,26 @@ public class BariumRestClientIT {
 //        String s = bariumRestClient.doGet("/Objects/f5b8cf5f-f214-4e35-9e13-fb04223568db"); // Formuläret
 //        String s = bariumRestClient.doGet("/Objects/0290a271-e592-4617-8fbb-10c08303b7e2"); // asdf-filen
         System.out.println("BariumRestClientIT - testGetAllTaskInfo2 s: " + s);
+        System.out.println(s.length());
 //        System.out.println("s: " + s2);
 
 //        System.out.println(s.contains("INNOVATION"));
+    }
+
+    @Test
+    @Ignore
+    public void doGetFileStream() throws BariumException, IOException {
+        BariumRestClientImpl bariumRestClient = createBariumRestClient();
+
+        InputStream inputStream = bariumRestClient.doGetFileStream("89d4e894-bc31-4ecd-ab6d-d4fb993d9edd");
+
+        BufferedInputStream bis = new BufferedInputStream(inputStream);
+
+        int n;
+        byte[] buf = new byte[1024];
+        while ((n = bis.read(buf)) != -1) {
+            System.out.println(new String(buf, 0, n));
+        }
     }
 
     private BariumRestClientImpl createBariumRestClient() {

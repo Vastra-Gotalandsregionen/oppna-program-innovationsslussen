@@ -1,13 +1,16 @@
 package se.vgregion.service.innovationsslussen.idea;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import se.vgregion.portal.innovationsslussen.domain.BariumResponse;
@@ -17,12 +20,15 @@ import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaPerson;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserFavorite;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserLike;
+import se.vgregion.portal.innovationsslussen.domain.json.ObjectEntry;
 import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
+import se.vgregion.service.barium.BariumException;
 import se.vgregion.service.barium.BariumService;
 import se.vgregion.service.innovationsslussen.exception.CreateIdeaException;
 import se.vgregion.service.innovationsslussen.exception.FavoriteException;
 import se.vgregion.service.innovationsslussen.exception.LikeException;
 import se.vgregion.service.innovationsslussen.exception.UpdateIdeaException;
+import se.vgregion.service.innovationsslussen.exception.FileUploadException;
 import se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsService;
 import se.vgregion.service.innovationsslussen.idea.settings.util.ExpandoConstants;
 import se.vgregion.service.innovationsslussen.repository.idea.IdeaRepository;
@@ -55,6 +61,7 @@ import com.liferay.portlet.messageboards.util.comparator.MessageCreateDateCompar
  * @author Erik Andersson
  * @company Monator Technologies AB
  */
+@Service
 public class IdeaServiceImpl implements IdeaService {
 
     private IdeaRepository ideaRepository;
@@ -135,8 +142,8 @@ public class IdeaServiceImpl implements IdeaService {
     public Idea addIdea(Idea idea) throws CreateIdeaException {
     	
     	// Create Barium Idea
-    	//BariumResponse bariumResponse = bariumService.createIdea(idea);
-    	BariumResponse bariumResponse = new BariumResponse(true, "MOCKAD-12345666", "");
+    	BariumResponse bariumResponse = bariumService.createIdea(idea);
+//    	BariumResponse bariumResponse = new BariumResponse(true, "MOCKAD-12345666", "");
     	
     	if(bariumResponse.getSuccess()) {
     		
@@ -159,7 +166,7 @@ public class IdeaServiceImpl implements IdeaService {
             		
             		boolean addCommunityPermissions = true;
             		boolean addGuestPermissions = true;
-            		
+
             		// Add resource for Idea
             		ResourceLocalServiceUtil.addResources(
             			idea.getCompanyId(), idea.getGroupId(), idea.getUserId(),
@@ -444,8 +451,32 @@ public class IdeaServiceImpl implements IdeaService {
     	
     	return idea;
     }
-	
-	protected String generateUrlTitle(String title) throws PortalException, SystemException {
+
+    @Override
+    public void uploadFile(Idea idea, String fileName, InputStream inputStream) throws FileUploadException {
+        try {
+            bariumService.uploadFile(idea, fileName, inputStream);
+        } catch (BariumException e) {
+            throw new FileUploadException(e);
+        }
+    }
+
+    @Override
+    public List<ObjectEntry> getIdeaFiles(Idea idea) throws BariumException {
+        return bariumService.getIdeaFiles(idea);
+    }
+
+    @Override
+    public ObjectEntry getObject(String id) {
+        return bariumService.getObject(id);
+    }
+
+    @Override
+    public InputStream downloadFile(String id) throws BariumException {
+        return bariumService.downloadFile(id);
+    }
+
+    protected String generateUrlTitle(String title) throws PortalException, SystemException {
 		title = title.trim().toLowerCase();
 
 		if (Validator.isNull(title) || Validator.isNumber(title) || title.equals("")) {
@@ -534,8 +565,10 @@ public class IdeaServiceImpl implements IdeaService {
 					boolean isUserInnovationsslussenEmployee = isUserInnovationsslussenEmployee(curCommentUserId, scopeGroupId);
 					
 					CommentItemVO commentItem = new CommentItemVO();
-					commentItem.setCommentText(curCommentText);
-					commentItem.setCreateDate(createDate);
+                    commentItem.setCommentText(StringEscapeUtils.escapeHtml(curCommentText)
+                            .replaceAll("\\r\\n", "\\n").replaceAll("\\n\\r", "\\n")
+                            .replaceAll("\\n", "<br/>").replaceAll("\\r", "<br/"));
+                    commentItem.setCreateDate(createDate);
 					commentItem.setId(commentId);
 					commentItem.setName(curCommentUserFullName);
 					commentItem.setUserCreator(isUserIdeaCreator);

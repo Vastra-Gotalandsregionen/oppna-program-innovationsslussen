@@ -1,6 +1,7 @@
 package se.vgregion.service.barium;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -16,11 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
-import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstance;
-import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstances;
-import se.vgregion.portal.innovationsslussen.domain.json.BariumInstance;
-import se.vgregion.portal.innovationsslussen.domain.json.ObjectField;
-import se.vgregion.portal.innovationsslussen.domain.json.Objects;
+import se.vgregion.portal.innovationsslussen.domain.json.*;
 
 public class MockBariumRestClientImpl implements BariumRestClient {
 	
@@ -98,7 +95,7 @@ public class MockBariumRestClientImpl implements BariumRestClient {
     	return RESPONSE_CREATE_INSTANCE;
     }
 
-    public Objects getInstanceObjects(ApplicationInstance instance) throws BariumException {
+    public Objects getInstanceObjects(String instanceId) throws BariumException {
         String objectsJson = RESPONE_GET_INSTANCE_OBJECTS;
 
         ObjectMapper mapper = new ObjectMapper();
@@ -122,7 +119,7 @@ public class MockBariumRestClientImpl implements BariumRestClient {
         }
     }
     
-    public List<ObjectField> getIdeaObjectFields(BariumInstance instance) {
+    public List<ObjectField> getIdeaObjectFields(String instanceId) {
     	
     	
     	/*
@@ -142,7 +139,22 @@ public class MockBariumRestClientImpl implements BariumRestClient {
     	
     	return objectFields;
     }
-    
+
+    @Override
+    public void uploadFile(String instanceId, String fileName, InputStream inputStream) throws BariumException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public ObjectEntry getObject(String id) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public InputStream doGetFileStream(String objectId) throws BariumException {
+        throw new UnsupportedOperationException();
+    }
+
 
     public String createIdeaInstance(IdeaObjectFields ideaObjectFields) {
     	

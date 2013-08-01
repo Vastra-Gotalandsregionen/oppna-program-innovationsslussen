@@ -1,12 +1,16 @@
 package se.vgregion.service.innovationsslussen.idea;
 
+import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
+import se.vgregion.portal.innovationsslussen.domain.json.ObjectEntry;
+import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
+import se.vgregion.service.barium.BariumException;
+import se.vgregion.service.innovationsslussen.exception.CreateIdeaException;
+import se.vgregion.service.innovationsslussen.exception.FileUploadException;
+import se.vgregion.service.innovationsslussen.exception.UpdateIdeaException;
+
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
-
-import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
-import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
-import se.vgregion.service.innovationsslussen.exception.CreateIdeaException;
-import se.vgregion.service.innovationsslussen.exception.UpdateIdeaException;
 
 /**
  * Service interface for managing {@link Idea}s.
@@ -258,7 +262,12 @@ public interface IdeaService {
      *
      */
     Idea updateFromBarium(long companyId, long groupId, String urlTitle) throws UpdateIdeaException;
-    
-    
-    
+
+    void uploadFile(Idea idea, String fileName, InputStream bis) throws FileUploadException;
+
+    List<ObjectEntry> getIdeaFiles(Idea idea) throws BariumException;
+
+    ObjectEntry getObject(String id);
+
+    InputStream downloadFile(String id) throws BariumException;
 }

@@ -1,13 +1,10 @@
 package se.vgregion.service.barium;
 
+import java.io.InputStream;
 import java.util.List;
 
 import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
-import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstance;
-import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstances;
-import se.vgregion.portal.innovationsslussen.domain.json.BariumInstance;
-import se.vgregion.portal.innovationsslussen.domain.json.ObjectField;
-import se.vgregion.portal.innovationsslussen.domain.json.Objects;
+import se.vgregion.portal.innovationsslussen.domain.json.*;
 
 public interface BariumRestClient {
 
@@ -22,7 +19,7 @@ public interface BariumRestClient {
 
 	boolean updateInstance(String values, String objectId);
 
-	Objects getInstanceObjects(ApplicationInstance instance)
+	Objects getInstanceObjects(String instanceId)
 			throws BariumException;
 
 	String createIdeaInstance(IdeaObjectFields ideaObjectFields);
@@ -33,7 +30,12 @@ public interface BariumRestClient {
 	List<ObjectField> getIdeaObjectFields(
 			ApplicationInstance applicationInstance);
 
-	List<ObjectField> getIdeaObjectFields(
-			BariumInstance bariumInstance);
-	
+	List<ObjectField> getIdeaObjectFields(String instanceId);
+
+    void uploadFile(String instanceId, String fileName, InputStream inputStream) throws BariumException;
+
+    ObjectEntry getObject(String id);
+
+    InputStream doGetFileStream(String objectId) throws BariumException;
+
 }
