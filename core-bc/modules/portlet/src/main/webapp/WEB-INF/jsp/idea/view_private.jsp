@@ -7,6 +7,7 @@
 <%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %>
 <%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 <%@ taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
+<%@ taglib uri="http://portalen.vgregion.se/util" prefix="vgrutil" %>
 
 <portlet:defineObjects />
 <liferay-theme:defineObjects />	
@@ -46,7 +47,7 @@
 											<portlet:actionURL name="removeLike" var="removeLikeUrl">
 												<portlet:param name="action" value="removeLike" />
 												<portlet:param name="urlTitle" value="${idea.urlTitle}" />
-												<portlet:param name="ideaContentType" value="1" />
+												<portlet:param name="ideaContentType" value="IDEA_CONTENT_TYPE_PRIVATE" />
 											</portlet:actionURL>
 											<a href="${removeLikeUrl}">
 												<span>Sluta gilla (${fn:length(idea.likes)})</span>
@@ -56,7 +57,7 @@
 											<portlet:actionURL name="addLike" var="addLikeUrl">
 												<portlet:param name="action" value="addLike" />
 												<portlet:param name="urlTitle" value="${idea.urlTitle}" />
-												<portlet:param name="ideaContentType" value="1" />
+												<portlet:param name="ideaContentType" value="IDEA_CONTENT_TYPE_PRIVATE" />
 											</portlet:actionURL>
 											<a href="${addLikeUrl}">
 												<span>Gilla (${fn:length(idea.likes)})</span>
@@ -71,7 +72,7 @@
 											<portlet:actionURL name="removeFavorite" var="removeFavoriteUrl">
 												<portlet:param name="action" value="removeFavorite" />
 												<portlet:param name="urlTitle" value="${idea.urlTitle}" />
-												<portlet:param name="ideaContentType" value="1" />
+												<portlet:param name="ideaContentType" value="IDEA_CONTENT_TYPE_PRIVATE" />
 											</portlet:actionURL>
 											<a href="${removeFavoriteUrl}">
 												<span>Ta bort som favorit (${fn:length(idea.favorites)})</span>
@@ -81,7 +82,7 @@
 											<portlet:actionURL name="addFavorite" var="addFavoriteUrl">
 												<portlet:param name="action" value="addFavorite" />
 												<portlet:param name="urlTitle" value="${idea.urlTitle}" />
-												<portlet:param name="ideaContentType" value="1" />
+												<portlet:param name="ideaContentType" value="IDEA_CONTENT_TYPE_PRIVATE" />
 											</portlet:actionURL>
 											<a href="${addFavoriteUrl}">
 												<span>L&auml;gg till som favorit (${fn:length(idea.favorites)})</span>
@@ -100,7 +101,7 @@
 									<portlet:actionURL name="updateFromBarium" var="updateFromBariumUrl">
 										<portlet:param name="action" value="updateFromBarium" />
 										<portlet:param name="urlTitle" value="${idea.urlTitle}" />
-										<portlet:param name="ideaContentType" value="1" />
+										<portlet:param name="ideaContentType" value="IDEA_CONTENT_TYPE_PRIVATE" />
 									</portlet:actionURL>
 								
 								
@@ -155,7 +156,7 @@
 									L&ouml;ser behov
 								</div>
 								<p>
-									${idea.ideaContentPrivate.solvesProblem}
+									${vgrutil:escapeHtmlWithLineBreaks(idea.ideaContentPrivate.solvesProblem)}
 								</p>
 							</div>
 							<div class="idea-content-item">

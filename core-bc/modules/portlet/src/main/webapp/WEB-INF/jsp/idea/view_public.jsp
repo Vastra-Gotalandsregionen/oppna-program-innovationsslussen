@@ -68,7 +68,7 @@
 												<portlet:actionURL name="removeLike" var="removeLikeUrl">
 													<portlet:param name="action" value="removeLike" />
 													<portlet:param name="urlTitle" value="${idea.urlTitle}" />
-													<portlet:param name="ideaContentType" value="0" />
+													<portlet:param name="ideaContentType" value="IDEA_CONTENT_TYPE_PUBLIC" />
 												</portlet:actionURL>
 											</c:if>
 										
@@ -88,7 +88,7 @@
 												<portlet:actionURL name="addLike" var="addLikeUrl">
 													<portlet:param name="action" value="addLike" />
 													<portlet:param name="urlTitle" value="${idea.urlTitle}" />
-													<portlet:param name="ideaContentType" value="0" />
+													<portlet:param name="ideaContentType" value="IDEA_CONTENT_TYPE_PUBLIC" />
 												</portlet:actionURL>
 											</c:if>
 										
@@ -114,7 +114,7 @@
 												<portlet:actionURL name="removeFavorite" var="removeFavoriteUrl">
 													<portlet:param name="action" value="removeFavorite" />
 													<portlet:param name="urlTitle" value="${idea.urlTitle}" />
-													<portlet:param name="ideaContentType" value="0" />
+													<portlet:param name="ideaContentType" value="IDEA_CONTENT_TYPE_PUBLIC" />
 												</portlet:actionURL>
 											</c:if>
 										
@@ -135,7 +135,7 @@
 												<portlet:actionURL name="addFavorite" var="addFavoriteUrl">
 													<portlet:param name="action" value="addFavorite" />
 													<portlet:param name="urlTitle" value="${idea.urlTitle}" />
-													<portlet:param name="ideaContentType" value="0" />
+													<portlet:param name="ideaContentType" value="IDEA_CONTENT_TYPE_PUBLIC" />
 												</portlet:actionURL>
 											</c:if>
 										

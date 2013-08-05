@@ -442,8 +442,16 @@ public class IdeaServiceImpl implements IdeaService {
     	String bariumId = idea.getBariumId();
     	
     	IdeaObjectFields ideaObjectFields = bariumService.getBariumIdea(bariumId);
-    	
-    	/*
+
+        IdeaContent ideaContentPrivate = idea.getIdeaContentPrivate(); // TODO Vet vi att det ska vara private?
+
+        ideaContentPrivate.setSolvesProblem(ideaObjectFields.getBehov());
+        ideaContentPrivate.setDescription(ideaObjectFields.getIde());
+        ideaContentPrivate.setIdeaTested(ideaObjectFields.getTestat());
+        ideaContentPrivate.setWantsHelpWith(ideaObjectFields.getKommavidare());
+
+        idea = ideaRepository.merge(idea);
+        /*
     	String title = ideaObjectFields.getInstanceName();
     	
     	System.out.println("IdeaServiceImpl - updateFromBarium - title for fetched idea is: " + title);
@@ -565,9 +573,7 @@ public class IdeaServiceImpl implements IdeaService {
 					boolean isUserInnovationsslussenEmployee = isUserInnovationsslussenEmployee(curCommentUserId, scopeGroupId);
 					
 					CommentItemVO commentItem = new CommentItemVO();
-                    commentItem.setCommentText(StringEscapeUtils.escapeHtml(curCommentText)
-                            .replaceAll("\\r\\n", "\\n").replaceAll("\\n\\r", "\\n")
-                            .replaceAll("\\n", "<br/>").replaceAll("\\r", "<br/"));
+                    commentItem.setCommentText(curCommentText);
                     commentItem.setCreateDate(createDate);
 					commentItem.setId(commentId);
 					commentItem.setName(curCommentUserFullName);
@@ -587,8 +593,8 @@ public class IdeaServiceImpl implements IdeaService {
 		
 		return commentsList;
 	}
-	
-	protected boolean isUniqueUrlTitle(String urlTitle) {
+
+    protected boolean isUniqueUrlTitle(String urlTitle) {
 		boolean isUnique = false;
 		
 		Idea idea = findIdeaByUrlTitle(urlTitle, false);

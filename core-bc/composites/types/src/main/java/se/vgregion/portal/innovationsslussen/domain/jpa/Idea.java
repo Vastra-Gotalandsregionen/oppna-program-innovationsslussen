@@ -16,7 +16,7 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
-import se.vgregion.portal.innovationsslussen.domain.IdeaConstants;
+import se.vgregion.portal.innovationsslussen.domain.IdeaContentType;
 
 /**
  * JPA entity class representing a Idea for Innovationsslussen
@@ -206,7 +206,7 @@ public class Idea extends AbstractEntity<Long> {
     public IdeaContent getIdeaContentPublic () {
     	
     	if(ideaContentPublic == null) {
-    		setIdeaContentPublic(getIdeaContent(IdeaConstants.IDEA_CONTENT_TYPE_PUBLIC));
+    		setIdeaContentPublic(getIdeaContent(IdeaContentType.IDEA_CONTENT_TYPE_PUBLIC));
     	}
     	
     	return ideaContentPublic;
@@ -219,7 +219,7 @@ public class Idea extends AbstractEntity<Long> {
     public IdeaContent getIdeaContentPrivate () {
     	
     	if(ideaContentPrivate == null) {
-    		setIdeaContentPrivate(getIdeaContent(IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE));
+    		setIdeaContentPrivate(getIdeaContent(IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE));
     	}
     	
     	return ideaContentPrivate;
@@ -230,7 +230,7 @@ public class Idea extends AbstractEntity<Long> {
     }
     
     
-    private IdeaContent getIdeaContent (int type) {
+    private IdeaContent getIdeaContent (IdeaContentType type) {
     	IdeaContent ideaContent = new IdeaContent();
     	
     	for(IdeaContent ic : ideaContents) {

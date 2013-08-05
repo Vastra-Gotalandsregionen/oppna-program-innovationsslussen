@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
-import se.vgregion.portal.innovationsslussen.domain.IdeaConstants;
+import se.vgregion.portal.innovationsslussen.domain.IdeaContentType;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.portal.innovationsslussen.domain.json.ObjectEntry;
@@ -205,7 +205,7 @@ public class IdeaViewController {
         long groupId = themeDisplay.getScopeGroupId();
         long userId = themeDisplay.getUserId();
 
-        int ideaContentType = ParamUtil.getInteger(request, "ideaContentType");
+        IdeaContentType ideaContentType = IdeaContentType.valueOf(ParamUtil.getString(request, "ideaContentType"));
         String urlTitle = ParamUtil.getString(request, "urlTitle", "");
         String comment = ParamUtil.getString(request, "comment", "");
 
@@ -216,9 +216,9 @@ public class IdeaViewController {
 
                 long ideaCommentClassPK = -1;
 
-                if (ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PUBLIC) {
+                if (ideaContentType == IdeaContentType.IDEA_CONTENT_TYPE_PUBLIC) {
                     ideaCommentClassPK = idea.getIdeaContentPublic().getId();
-                } else if (ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE) {
+                } else if (ideaContentType == IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE) {
                     ideaCommentClassPK = idea.getIdeaContentPrivate().getId();
                 }
 
@@ -258,7 +258,7 @@ public class IdeaViewController {
 
         }
 
-        if (ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE) {
+        if (ideaContentType == IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE) {
             response.setRenderParameter("type", "private");
         }
 
@@ -284,14 +284,14 @@ public class IdeaViewController {
         long groupId = themeDisplay.getScopeGroupId();
         long userId = themeDisplay.getUserId();
 
-        int ideaContentType = ParamUtil.getInteger(request, "ideaContentType");
+        IdeaContentType ideaContentType = IdeaContentType.valueOf(ParamUtil.getString(request, "ideaContentType"));
         String urlTitle = ParamUtil.getString(request, "urlTitle", "");
 
         if (themeDisplay.isSignedIn()) {
             ideaService.addFavorite(companyId, groupId, userId, urlTitle);
         }
 
-        if (ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE) {
+        if (ideaContentType == IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE) {
             response.setRenderParameter("type", "private");
         }
 
@@ -317,14 +317,14 @@ public class IdeaViewController {
         long groupId = themeDisplay.getScopeGroupId();
         long userId = themeDisplay.getUserId();
 
-        int ideaContentType = ParamUtil.getInteger(request, "ideaContentType");
+        IdeaContentType ideaContentType = IdeaContentType.valueOf(ParamUtil.getString(request, "ideaContentType"));
         String urlTitle = ParamUtil.getString(request, "urlTitle", "");
 
         if (themeDisplay.isSignedIn()) {
             ideaService.addLike(companyId, groupId, userId, urlTitle);
         }
 
-        if (ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE) {
+        if (ideaContentType == IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE) {
             response.setRenderParameter("type", "private");
         }
 
@@ -349,14 +349,14 @@ public class IdeaViewController {
         long groupId = themeDisplay.getScopeGroupId();
         long userId = themeDisplay.getUserId();
 
-        int ideaContentType = ParamUtil.getInteger(request, "ideaContentType");
+        IdeaContentType ideaContentType = IdeaContentType.valueOf(ParamUtil.getString(request, "ideaContentType"));
         String urlTitle = ParamUtil.getString(request, "urlTitle", "");
 
         if (themeDisplay.isSignedIn()) {
             ideaService.removeFavorite(companyId, groupId, userId, urlTitle);
         }
 
-        if (ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE) {
+        if (ideaContentType == IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE) {
             response.setRenderParameter("type", "private");
         }
 
@@ -382,14 +382,14 @@ public class IdeaViewController {
         long groupId = themeDisplay.getScopeGroupId();
         long userId = themeDisplay.getUserId();
 
-        int ideaContentType = ParamUtil.getInteger(request, "ideaContentType");
+        IdeaContentType ideaContentType = IdeaContentType.valueOf(ParamUtil.getString(request, "ideaContentType"));
         String urlTitle = ParamUtil.getString(request, "urlTitle", "");
 
         if (themeDisplay.isSignedIn()) {
             ideaService.removeLike(companyId, groupId, userId, urlTitle);
         }
 
-        if (ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE) {
+        if (ideaContentType == IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE) {
             response.setRenderParameter("type", "private");
         }
 
@@ -414,7 +414,7 @@ public class IdeaViewController {
         long groupId = themeDisplay.getScopeGroupId();
         long userId = themeDisplay.getUserId();
 
-        int ideaContentType = ParamUtil.getInteger(request, "ideaContentType");
+        IdeaContentType ideaContentType = IdeaContentType.valueOf(ParamUtil.getString(request, "ideaContentType"));
         String urlTitle = ParamUtil.getString(request, "urlTitle", "");
 
         if (themeDisplay.isSignedIn()) {
@@ -427,7 +427,7 @@ public class IdeaViewController {
             }
         }
 
-        if (ideaContentType == IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE) {
+        if (ideaContentType == IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE) {
             response.setRenderParameter("type", "private");
         }
 
