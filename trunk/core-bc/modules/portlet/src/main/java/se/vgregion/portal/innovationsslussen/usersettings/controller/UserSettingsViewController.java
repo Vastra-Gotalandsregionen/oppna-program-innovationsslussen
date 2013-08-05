@@ -1,39 +1,23 @@
 package se.vgregion.portal.innovationsslussen.usersettings.controller;
 
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
-import se.vgregion.portal.innovationsslussen.domain.IdeaConstants;
-import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
-import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.PropsKeys;
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.User;
-import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portlet.messageboards.model.MBMessageDisplay;
-import com.liferay.portlet.messageboards.model.MBThread;
-import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 
 /**
  * Controller class for the view mode in idea portlet.
@@ -88,9 +72,7 @@ public class UserSettingsViewController {
 		} catch (SystemException e) {
 			LOGGER.error(e.getMessage(), e);
 		}
-        
-        
-        
+
         return "view";
     }
     

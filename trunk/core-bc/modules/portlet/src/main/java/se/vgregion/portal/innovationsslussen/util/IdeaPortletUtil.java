@@ -1,11 +1,8 @@
 package se.vgregion.portal.innovationsslussen.util;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.portlet.PortletRequest;
 
-import se.vgregion.portal.innovationsslussen.domain.IdeaConstants;
+import se.vgregion.portal.innovationsslussen.domain.IdeaContentType;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaPerson;
@@ -45,9 +42,9 @@ public class IdeaPortletUtil {
         IdeaContent ideaContentPrivate = new IdeaContent(companyId, groupId, userId);
         IdeaPerson ideaPerson = new IdeaPerson(companyId, groupId, userId);
         
-        ideaContentPublic.setType(IdeaConstants.IDEA_CONTENT_TYPE_PUBLIC);
+        ideaContentPublic.setType(IdeaContentType.IDEA_CONTENT_TYPE_PUBLIC);
         
-        ideaContentPrivate.setType(IdeaConstants.IDEA_CONTENT_TYPE_PRIVATE);
+        ideaContentPrivate.setType(IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE);
         ideaContentPrivate.setDescription(description);
         ideaContentPrivate.setIdeaTested(ideaTested);
         ideaContentPrivate.setSolvesProblem(solvesProblem);

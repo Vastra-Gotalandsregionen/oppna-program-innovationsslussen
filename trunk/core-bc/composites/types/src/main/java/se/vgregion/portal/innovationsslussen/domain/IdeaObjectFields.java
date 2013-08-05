@@ -43,6 +43,7 @@ public class IdeaObjectFields {
     private String vgrIdTitel; // VGR-ID.titel
     private String vgrId;
 
+    // specialFieldMappings are needed to automate population of an instance, see the populate() method
     private Map<String, String> specialFieldMappings = new HashMap<String, String>();
 
     {

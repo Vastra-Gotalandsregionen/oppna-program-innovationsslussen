@@ -43,9 +43,7 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, Long> impl
 	
     @Override
     public Idea findIdeaByUrlTitle(String urlTitle) {
-    	Idea idea = null;
-    	
-        String queryString = "" 
+        String queryString = ""
         		+ " SELECT DISTINCT n FROM Idea n" 
         		+ " LEFT JOIN FETCH n.ideaContents" 
         		+ " LEFT JOIN FETCH n.ideaPersons"
@@ -58,11 +56,14 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, Long> impl
 
         List<Idea> ideas = findByQuery(queryString, queryObject);
         
-        if(ideas.size() > 0) {
-        	idea = ideas.get(0);
+        if(ideas.size() > 1) {
+            throw new IllegalStateException("There shouldn't be more than one idea with the same title."); // TODO Erik, vi får diskutera detta. /Patrik
+        } else if (ideas.size() == 1) {
+            return ideas.get(0);
+        } else {
+            return null;
         }
 
-        return idea;
     }
     
     @Override
@@ -301,7 +302,6 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, Long> impl
     	Idea idea = find(ideaId);
     	
     	remove(idea);
-    	
     }
     
     private List<Idea> findByPagedQuery(String queryString, Object[] queryObject, int firstResult, int maxResult) {
@@ -320,7 +320,6 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, Long> impl
         Number result = (Number) query.getSingleResult();
         
         return result.intValue();
-    	
     }
     
     private Query createQuery(String queryString, Object[] queryObject) {
@@ -334,6 +333,4 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, Long> impl
         
         return query;
     }
-    
-
 }

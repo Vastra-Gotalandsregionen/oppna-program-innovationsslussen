@@ -8,13 +8,14 @@
 <%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %>
 <%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 <%@ taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
+<%@ taglib uri="http://portalen.vgregion.se/util" prefix="vgrutil" %>
 
 <div class="idea-comments">
 
 	<portlet:actionURL name="addComment" var="addCommentUrl">
 		<portlet:param name="action" value="addComment" />
 		<portlet:param name="urlTitle" value="${idea.urlTitle}" />
-		<portlet:param name="ideaContentType" value="1" />
+		<portlet:param name="ideaContentType" value="IDEA_CONTENT_TYPE_PRIVATE" />
 	</portlet:actionURL>
 	
 	<div class="add-comment">
@@ -73,7 +74,7 @@
 							%>
 						</div>
 						<div class="comment-entry-text">
-							<c:out value="${comment.commentText}" escapeXml="false"/>
+              ${vgrutil:escapeHtmlWithLineBreaks(comment.commentText)}
 						</div>
 					</div>
 				</div>

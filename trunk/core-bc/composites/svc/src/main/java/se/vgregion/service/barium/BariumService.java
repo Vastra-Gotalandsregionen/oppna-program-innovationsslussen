@@ -87,28 +87,26 @@ public class BariumService {
     
     public IdeaObjectFields getBariumIdea(String bariumId) {
 
-    	IdeaObjectFields bariumIdea = null;
-    	
+        IdeaObjectFields bariumIdea = null;
         try {
-            	BariumInstance bariumInstance = bariumRestClient.getBariumInstance(bariumId);
-            
-            	List<ObjectField> ideaObjectFieldsList = null;
-            	
-            	if(bariumInstance != null) {
-            		ideaObjectFieldsList = bariumRestClient.getIdeaObjectFields(bariumInstance.getId());
-            	}
-                
-                if(ideaObjectFieldsList != null) {
-                    IdeaObjectFields ideaObjectFields = new IdeaObjectFields();
-                    ideaObjectFields.populate(ideaObjectFieldsList);
-                }
-                
+            BariumInstance bariumInstance = bariumRestClient.getBariumInstance(bariumId);
+
+            List<ObjectField> ideaObjectFieldsList = null;
+
+            if (bariumInstance != null) {
+                ideaObjectFieldsList = bariumRestClient.getIdeaObjectFields(bariumInstance.getId());
+            }
+
+            if (ideaObjectFieldsList != null) {
+                bariumIdea = new IdeaObjectFields();
+                bariumIdea.populate(ideaObjectFieldsList);
+            }
+
         } catch (BariumException e) {
             throw new RuntimeException(e);
         }
-    	
-    	
-    	return bariumIdea;
+
+        return bariumIdea;
     }
 
     public BariumResponse createIdea(Idea idea) {
