@@ -523,7 +523,7 @@ public class IdeaServiceImpl implements IdeaService {
     private void populateIdea(IdeaObjectFields ideaObjectFields, Idea idea) {
 
         idea.setTitle(ideaObjectFields.getInstanceName());
-        idea.setUrlTitle(titleToUrlTitle(ideaObjectFields.getVgrIdTitel()));
+        idea.setUrlTitle(titleToUrlTitle(ideaObjectFields.getInstanceName()));
 
         IdeaContent ideaContentPrivate = idea.getIdeaContentPrivate(); // TODO Vet vi att det ska vara private?
 

@@ -23,6 +23,7 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
 /**
@@ -82,7 +83,7 @@ public class IdeaServiceImplTest {
 
         IdeaObjectFields ideaObjectFields = new IdeaObjectFields();
         ideaObjectFields.setIde("The description1");
-        ideaObjectFields.setVgrIdTitel("Stora titeln");
+        ideaObjectFields.setInstanceName("Stora titeln");
 
         when(bariumService.getBariumIdea("bariumId1")).thenReturn(ideaObjectFields);
     }
@@ -96,7 +97,7 @@ public class IdeaServiceImplTest {
         // Given
         IdeaObjectFields ideaObjectFields = new IdeaObjectFields();
         ideaObjectFields.setIde("The description has changed");
-        ideaObjectFields.setVgrIdTitel("Stora titeln");
+        ideaObjectFields.setInstanceName("Stora titeln");
 
         when(bariumService.getBariumIdea("bariumId1")).thenReturn(ideaObjectFields);
 
@@ -116,7 +117,7 @@ public class IdeaServiceImplTest {
         // Given
         IdeaObjectFields ideaObjectFields = new IdeaObjectFields();
         ideaObjectFields.setIde("The description has changed");
-        ideaObjectFields.setVgrIdTitel("Stora titeln");
+        ideaObjectFields.setInstanceName("Stora titeln");
 
         when(bariumService.getBariumIdea("bariumId1")).thenReturn(ideaObjectFields);
 
@@ -145,6 +146,13 @@ public class IdeaServiceImplTest {
         for (Idea idea : ideasByGroupId) {
             System.out.println(idea.getTitle() + " - " + idea.getCreated());
         }
+    }
+
+    @Test
+    public void testFindIdeaByUrlTitle() throws Exception {
+        Idea ideaByUrlTitle = ideaService.findIdeaByUrlTitle("stora-titeln");
+
+        assertNotNull(ideaByUrlTitle);
     }
 
 }
