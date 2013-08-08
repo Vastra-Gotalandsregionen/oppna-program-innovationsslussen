@@ -22,9 +22,7 @@ import se.vgregion.portal.innovationsslussen.domain.json.*;
 import se.vgregion.util.Util;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.*;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
@@ -68,17 +66,17 @@ public class BariumRestClientImpl implements BariumRestClient {
         return connectInternal();
     }
 
-    public String doGet(String parameters) throws BariumException {
-        return doRequest(parameters, "GET", null, null);
+    public String doGet(String uri) throws BariumException {
+        return doRequest("GET", uri, null);
     }
 
-    public String doDelete(String parameters) throws BariumException {
-        return doRequest(parameters, "DELETE", null, null);
+    public String doDelete(String uri) throws BariumException {
+        return doRequest("DELETE", uri, null);
     }
 
-    public String doPost(String endpoint, String parameters) throws BariumException {
+    public String doPost(String uri, String parameters) throws BariumException {
         try {
-            return doRequest(null, "POST", endpoint, parameters.getBytes("UTF-8"));
+            return doRequest("POST", uri, parameters.getBytes("UTF-8"));
         } catch (UnsupportedEncodingException e) {
             // won't happen
             throw new RuntimeException(e);
@@ -86,7 +84,7 @@ public class BariumRestClientImpl implements BariumRestClient {
     }
 
     /* (non-Javadoc)
-	 * @see se.vgregion.service.barium.BariumRestClient#getApplicationInstances()
+     * @see se.vgregion.service.barium.BariumRestClient#getApplicationInstances()
 	 */
     @Override
     public ApplicationInstances getApplicationInstances() throws BariumException {
@@ -243,7 +241,30 @@ public class BariumRestClientImpl implements BariumRestClient {
         }
     }
 
-    private String doRequest(String parameters, String method, String endpoint, byte[] data) throws BariumException {
+    @Override
+    public String updateField(String instanceId, String field, String value) throws BariumException {
+        try {
+            String formId = getFormId(instanceId);
+            return doPost("/Objects/" + formId + "/Fields", field + "=" + URLEncoder.encode(value, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            // won't happen
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String getFormId(String instanceId) throws BariumException {
+        String json = doGet("/Instances/" + instanceId + "/Objects/IDE/");
+
+        JSONObject jsonObject;
+        try {
+            jsonObject = new JSONObject(json);
+            return (String) jsonObject.get("Id");
+        } catch (JSONException e) {
+            throw new BariumException(e);
+        }
+    }
+
+    private String doRequest(String method, String uri, byte[] data) throws BariumException {
 
         URL url;
         HttpURLConnection conn = null;
@@ -256,19 +277,20 @@ public class BariumRestClientImpl implements BariumRestClient {
         BufferedOutputStream bos = null;
         try {
             if (method.equalsIgnoreCase("POST")) {
-                if (endpoint != null) {
-                    url = new URL(this.apiLocation + endpoint);
+                if (uri != null) {
+                    url = new URL(this.apiLocation + uri);
                 } else {
-                    throw new RuntimeException("For POST requests an endpoint is expected.");
+                    throw new RuntimeException("For POST requests a uri is expected.");
                 }
             } else {
-                url = new URL(this.apiLocation + parameters);
+                url = new URL(this.apiLocation + uri);
             }
 
+            //Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(8888));
             conn = (HttpURLConnection) url.openConnection(/*proxy*/);
             if (ticket != null) {
                 conn.setRequestProperty("ticket", ticket);
-            } else if (!(endpoint + endpoint).contains("authenticate")) {
+            } else if (!uri.contains("authenticate")) {
                 this.connect();
                 conn.setRequestProperty("ticket", ticket);
             }

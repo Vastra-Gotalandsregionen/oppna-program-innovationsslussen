@@ -1,13 +1,10 @@
 package se.vgregion.portal.innovationsslussen.createidea.controller;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
-import javax.portlet.PortletRequest;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,21 +12,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
-import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
-import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaPerson;
 import se.vgregion.portal.innovationsslussen.util.IdeaPortletUtil;
 import se.vgregion.service.innovationsslussen.exception.CreateIdeaException;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
 import se.vgregion.service.innovationsslussen.validator.IdeaValidator;
 
-import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
@@ -130,15 +123,13 @@ public class CreateIdeaViewController {
      */
     @ActionMapping("submitIdea")
     public final void submitIdea(ActionRequest request, ActionResponse response, final ModelMap model, @ModelAttribute Idea idea, BindingResult result) {
-    	
-    	System.out.println("submitIdea");
+
+        // todo auktoriseringskontroll?
 
         LOGGER.info("submitIdea");
 
-        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-
         idea = IdeaPortletUtil.getIdeaFromRequest(request);
-        
+
         System.out.println("CreateIdeaViewController - submitIdea - idea title is: " + idea.getTitle() );
         
         ideaValidator.validate(idea, result);
@@ -146,7 +137,8 @@ public class CreateIdeaViewController {
         if(!result.hasErrors()) {
 
         	try {
-        		idea = ideaService.addIdea(idea);
+                String schemeServerNamePort = generateSchemeServerNamePort(request);
+        		idea = ideaService.addIdea(idea, schemeServerNamePort);
         		
         		response.setRenderParameter("view", "confirmation");
         		
@@ -164,12 +156,24 @@ public class CreateIdeaViewController {
         	PortalUtil.copyRequestParameters(request, response);
         	response.setRenderParameter("view", "view");	
         }
-        
-        
-        
-
 
     }
 
+    private String generateSchemeServerNamePort(ActionRequest request) {
+        HttpServletRequest httpServletRequest = PortalUtil.getHttpServletRequest(request);
+
+        String scheme = httpServletRequest.getScheme();
+        String serverName = httpServletRequest.getServerName();
+        int serverPort = httpServletRequest.getServerPort();
+
+        String serverPortString;
+        if (serverPort == 80 || serverPort == 443) {
+            serverPortString = "";
+        } else {
+            serverPortString = ":" + serverPort;
+        }
+
+        return scheme + "://" + serverName + serverPortString;
+    }
 }
 

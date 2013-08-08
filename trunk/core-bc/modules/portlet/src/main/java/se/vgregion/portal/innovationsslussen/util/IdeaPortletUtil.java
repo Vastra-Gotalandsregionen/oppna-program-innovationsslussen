@@ -13,8 +13,7 @@ import com.liferay.portal.theme.ThemeDisplay;
 
 public class IdeaPortletUtil {
 
-	
-    public static Idea getIdeaFromRequest(PortletRequest request) {
+	public static Idea getIdeaFromRequest(PortletRequest request) {
     	
     	ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
     	
@@ -59,9 +58,8 @@ public class IdeaPortletUtil {
         ideaPerson.setAdditionalPersonsInfo(additionalPersonInfo);
         //ideaPerson.setAdministrativeUnit(administrativeUnit);
         
-        
         idea.setTitle(title);
-        
+
         idea.addIdeaContent(ideaContentPublic);
         idea.addIdeaContent(ideaContentPrivate);
         idea.addIdeaPerson(ideaPerson);

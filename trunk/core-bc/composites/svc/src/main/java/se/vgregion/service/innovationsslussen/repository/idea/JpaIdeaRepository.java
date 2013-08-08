@@ -9,7 +9,7 @@ import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
  * @author Erik Andersson
  * @company Monator Technologies AB
  */
-public interface JpaIdeaRepository extends JpaRepository<Idea, Long, Long>,
+public interface JpaIdeaRepository extends JpaRepository<Idea, String, String>,
         IdeaRepository {
 
 }

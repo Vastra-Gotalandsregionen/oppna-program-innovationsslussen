@@ -61,8 +61,9 @@ public class JpaIdeaUserFavoriteRepositoryImpl extends DefaultJpaRepository<Idea
         return ideaUserFavorites;
     }
 
+    // Todo companyId och groupId tillför inget här?
     @Override
-    public List<IdeaUserFavorite> findFavoritesByUserAndIdea(long companyId, long groupId, long userId, long ideaId) {
+    public List<IdeaUserFavorite> findFavoritesByUserAndIdea(long companyId, long groupId, long userId, String ideaId) {
         
     	String queryString = ""
     			+ " SELECT n FROM IdeaUserFavorite n" 
@@ -89,7 +90,7 @@ public class JpaIdeaUserFavoriteRepositoryImpl extends DefaultJpaRepository<Idea
     }
     
     @Override
-    public void removeByUserAndIdea(long companyId, long groupId, long userId, long ideaId) {
+    public void removeByUserAndIdea(long companyId, long groupId, long userId, String ideaId) {
     	
     	String queryString = ""
     			+ " DELETE FROM IdeaUserFavorite n" 

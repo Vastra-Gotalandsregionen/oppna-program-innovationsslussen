@@ -61,7 +61,7 @@ public interface IdeaUserFavoriteRepository extends Repository<IdeaUserFavorite,
      * @param ideaId   the ideaId
      * @return a {@link List} of {@link IdeaUserFavorite}s
      */
-    List<IdeaUserFavorite> findFavoritesByUserAndIdea(long companyId, long groupId, long userId, long ideaId);
+    List<IdeaUserFavorite> findFavoritesByUserAndIdea(long companyId, long groupId, long userId, String ideaId);
 
     /**
      * Remove the {@link IdeaUserFavorite} with the id
@@ -76,6 +76,6 @@ public interface IdeaUserFavoriteRepository extends Repository<IdeaUserFavorite,
      *
      * @return void
      */
-    void removeByUserAndIdea(long companyId, long groupId, long userId, long ideaId);    
+    void removeByUserAndIdea(long companyId, long groupId, long userId, String ideaId);
     
 }

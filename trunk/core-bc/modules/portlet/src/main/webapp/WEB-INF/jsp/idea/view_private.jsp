@@ -101,6 +101,7 @@
 									<portlet:actionURL name="updateFromBarium" var="updateFromBariumUrl">
 										<portlet:param name="action" value="updateFromBarium" />
 										<portlet:param name="urlTitle" value="${idea.urlTitle}" />
+										<portlet:param name="id" value="${idea.id}" />
 										<portlet:param name="ideaContentType" value="IDEA_CONTENT_TYPE_PRIVATE" />
 									</portlet:actionURL>
 								

@@ -60,7 +60,7 @@ public interface IdeaUserLikeRepository extends Repository<IdeaUserLike, Long> {
      * @param ideaId   the ideaId
      * @return a {@link List} of {@link IdeaUserLike}s
      */
-    List<IdeaUserLike> findLikesByUserAndIdea(long companyId, long groupId, long userId, long ideaId);
+    List<IdeaUserLike> findLikesByUserAndIdea(long companyId, long groupId, long userId, String ideaId);
 
     /**
      * Remove the {@link IdeaUserLike} with the id
@@ -76,6 +76,6 @@ public interface IdeaUserLikeRepository extends Repository<IdeaUserLike, Long> {
      * @param ideaUserLikeId the id of the IdeaUserLike to remove
      * @return void
      */
-    void removeByUserAndIdea(long companyId, long groupId, long userId, long ideaId);    
+    void removeByUserAndIdea(long companyId, long groupId, long userId, String ideaId);
     
 }

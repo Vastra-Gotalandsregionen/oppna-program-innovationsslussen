@@ -118,8 +118,7 @@ public class BariumService {
         IdeaContent ideaContentPrivate = idea.getIdeaContentPrivate();
         IdeaPerson ideaPerson = idea.getIdeaPerson();
         
-        // Todo - get real link to Liferay Page
-        String ideaSiteLink = "";
+        String ideaSiteLink = idea.getIdeaSiteLink();
         
         String solvesProblem = ideaContentPrivate.getSolvesProblem();
         String email = ideaPerson.getEmail();
@@ -175,19 +174,13 @@ public class BariumService {
 
         return bariumResponse;
     }
-    
-    
-    public String createIdea(IdeaObjectFields ideaObjectFields) {
-        bariumRestClient.createIdeaInstance(ideaObjectFields);
-        return "";
-    }
 
     public void uploadFile(Idea idea, String fileName, InputStream inputStream) throws BariumException {
-        bariumRestClient.uploadFile(idea.getBariumId(), fileName, inputStream);
+        bariumRestClient.uploadFile(idea.getId(), fileName, inputStream);
     }
 
     public List<ObjectEntry> getIdeaFiles(Idea idea) throws BariumException {
-        Objects instanceObjects = bariumRestClient.getInstanceObjects(idea.getBariumId());
+        Objects instanceObjects = bariumRestClient.getInstanceObjects(idea.getId());
 
         SortedSet<ObjectEntry > objectEntries = new TreeSet<ObjectEntry>(new Comparator<ObjectEntry>() {
             @Override
@@ -215,5 +208,9 @@ public class BariumService {
 
     public InputStream downloadFile(String id) throws BariumException {
         return bariumRestClient.doGetFileStream(id);
+    }
+
+    public void updateIdea(String id, String field, String value) throws BariumException {
+        bariumRestClient.updateField(id, field, value);
     }
 }

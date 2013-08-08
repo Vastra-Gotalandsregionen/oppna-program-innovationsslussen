@@ -38,4 +38,5 @@ public interface BariumRestClient {
 
     InputStream doGetFileStream(String objectId) throws BariumException;
 
+    String updateField(String instanceId, String field, String value) throws BariumException;
 }

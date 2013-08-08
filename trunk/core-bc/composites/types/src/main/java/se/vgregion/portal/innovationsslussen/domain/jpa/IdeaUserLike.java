@@ -44,9 +44,6 @@ public class IdeaUserLike extends AbstractEntity<Long> {
     @ManyToOne
     private Idea idea;
     
-    @Transient
-    private long ideaId;
-    
     /**
      * Constructor.
      */
@@ -99,20 +96,4 @@ public class IdeaUserLike extends AbstractEntity<Long> {
 		this.idea = idea;
 	}
 	
-	public void setIdeaId(long ideaId) {
-		this.ideaId = ideaId;
-	}
-	
-	public long getIdeaId() {
-		long ideaId = 0;
-		
-		if(this.idea != null) {
-			ideaId = idea.getId();
-		}
-		
-		setIdeaId(ideaId);
-		
-		return this.ideaId;
-	}
-    
 }

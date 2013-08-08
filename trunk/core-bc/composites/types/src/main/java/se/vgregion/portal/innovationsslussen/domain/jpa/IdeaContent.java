@@ -39,7 +39,7 @@ public class IdeaContent extends AbstractEntity<Long> {
     @Column(name = "intro")
 	private String intro;
 	
-    @Lob
+    @Lob // Todo Varför har vi denna annoteringen?
     @Column(name = "description")
     private String description;
     
@@ -62,7 +62,11 @@ public class IdeaContent extends AbstractEntity<Long> {
     // Foreign
     @ManyToOne
     private Idea idea;
-    
+
+    @Lob
+    @Column(name = "idea_transporter_comment")
+    private String ideaTransporterComment;
+
     /**
      * Constructor.
      */
@@ -179,5 +183,12 @@ public class IdeaContent extends AbstractEntity<Long> {
 	public Idea getIdea() {
 		return idea;
 	}
-	
+
+    public void setIdeaTransporterComment(String ideaTransporterComment) {
+        this.ideaTransporterComment = ideaTransporterComment;
+    }
+
+    public String getIdeaTransporterComment() {
+        return ideaTransporterComment;
+    }
 }
