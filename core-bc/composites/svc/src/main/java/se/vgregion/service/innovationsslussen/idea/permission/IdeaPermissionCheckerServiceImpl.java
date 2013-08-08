@@ -18,7 +18,7 @@ public class IdeaPermissionCheckerServiceImpl implements IdeaPermissionCheckerSe
 	private static final Logger LOGGER = LoggerFactory.getLogger(IdeaPermissionCheckerServiceImpl.class);
 	
 	@Override
-	public IdeaPermissionChecker getIdeaPermissionChecker(long scopeGroupId, long userId, long ideaId) {
+	public IdeaPermissionChecker getIdeaPermissionChecker(long scopeGroupId, long userId, String ideaId) {
 		
 		
 		IdeaPermissionChecker ideaPermissionChecker = new IdeaPermissionChecker();

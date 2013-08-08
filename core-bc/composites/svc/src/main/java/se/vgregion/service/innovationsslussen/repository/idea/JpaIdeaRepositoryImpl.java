@@ -13,11 +13,11 @@ import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
  * @author Erik Andersson
  * @company Monator Technologies AB
  */
-public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, Long> implements JpaIdeaRepository {
+public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> implements JpaIdeaRepository {
 
 	
     @Override
-    public Idea find(long id) {
+    public Idea find(String id) {
     	Idea idea = null;
     	
         String queryString = "" 
@@ -144,7 +144,7 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, Long> impl
         		+ " LEFT JOIN FETCH n.favorites"
         		+ " WHERE n.companyId = ?1"
         		+ " AND n.groupId = ?2"
-        		+ " ORDER BY n.id ASC";
+        		+ " ORDER BY n.created DESC";
         
         Object[] queryObject = new Object[]{companyId, groupId};
 
@@ -297,7 +297,7 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, Long> impl
     
     
     @Override
-    public void remove(long ideaId) {
+    public void remove(String ideaId) {
     	
     	Idea idea = find(ideaId);
     	

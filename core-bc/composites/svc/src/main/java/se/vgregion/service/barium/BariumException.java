@@ -13,4 +13,7 @@ public class BariumException extends Exception {
         super(message, throwable);
     }
 
+    public BariumException(Throwable e) {
+        super(e);
+    }
 }

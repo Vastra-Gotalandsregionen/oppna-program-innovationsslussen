@@ -61,7 +61,7 @@ public class JpaIdeaUserLikeRepositoryImpl extends DefaultJpaRepository<IdeaUser
     }
 
     @Override
-    public List<IdeaUserLike> findLikesByUserAndIdea(long companyId, long groupId, long userId, long ideaId) {
+    public List<IdeaUserLike> findLikesByUserAndIdea(long companyId, long groupId, long userId, String ideaId) {
         
     	String queryString = ""
     			+ " SELECT n FROM IdeaUserLike n" 
@@ -88,7 +88,7 @@ public class JpaIdeaUserLikeRepositoryImpl extends DefaultJpaRepository<IdeaUser
     }
     
     @Override
-    public void removeByUserAndIdea(long companyId, long groupId, long userId, long ideaId) {
+    public void removeByUserAndIdea(long companyId, long groupId, long userId, String ideaId) {
     	
     	String queryString = ""
     			+ " DELETE FROM IdeaUserLike n" 

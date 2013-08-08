@@ -410,18 +410,17 @@ public class IdeaViewController {
         LOGGER.info("updateFromBarium");
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-        long companyId = themeDisplay.getCompanyId();
-        long groupId = themeDisplay.getScopeGroupId();
-        long userId = themeDisplay.getUserId();
 
         IdeaContentType ideaContentType = IdeaContentType.valueOf(ParamUtil.getString(request, "ideaContentType"));
+        String id = ParamUtil.getString(request, "id");
         String urlTitle = ParamUtil.getString(request, "urlTitle", "");
 
         if (themeDisplay.isSignedIn()) {
             System.out.println("Should now do update");
 
             try {
-                ideaService.updateFromBarium(companyId, groupId, urlTitle);
+                Idea idea = ideaService.find(id);
+                ideaService.updateFromBarium(idea);
             } catch (UpdateIdeaException e) {
                 LOGGER.error(e.getMessage(), e);
             }

@@ -98,20 +98,17 @@ public class IdeaAdminViewController {
     @ActionMapping(params = "action=deleteEntry")
     public final void deleteEntry(ActionRequest request, ActionResponse response, final ModelMap model) {
     	
-        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-        long companyId = themeDisplay.getCompanyId();
-        long groupId = themeDisplay.getScopeGroupId();
-        long userId = themeDisplay.getUserId();
-        
-        long ideaId = ParamUtil.getLong(request, "entryId", -1);
-        
-        //Idea idea = ideaService.find(ideaId);
+        String ideaId = ParamUtil.getString(request, "entryId");
         
         ideaService.remove(ideaId);
         
         response.setRenderParameter("view", "view");
     }
-    
+
+    @ActionMapping(params = "action=syncFromBarium")
+    public void syncFromBarium() {
+        ideaService.updateAllIdeasFromBarium();
+    }
     
 
 }

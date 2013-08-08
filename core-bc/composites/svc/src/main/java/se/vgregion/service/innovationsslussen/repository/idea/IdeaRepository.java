@@ -11,7 +11,7 @@ import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
  * @author Erik Andersson
  * @company Monator Technologies AB
  */
-public interface IdeaRepository extends Repository<Idea, Long> {
+public interface IdeaRepository extends Repository<Idea, String> {
 
     /**
      * Find an {@link Idea} with urlTitle specified
@@ -19,7 +19,7 @@ public interface IdeaRepository extends Repository<Idea, Long> {
      * @param id the id
      * @return an {@link Idea}
      */
-	Idea find(long id);
+	Idea find(String id);
 	
 	
     /**
@@ -153,7 +153,7 @@ public interface IdeaRepository extends Repository<Idea, Long> {
      * @param ideaId the id of the idea to remove
      * @return void
      */
-    void remove(long ideaId);
+    void remove(String ideaId);
     
     
 }

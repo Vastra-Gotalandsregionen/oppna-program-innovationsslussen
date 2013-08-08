@@ -155,6 +155,11 @@ public class MockBariumRestClientImpl implements BariumRestClient {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public String updateField(String id, String field, String value) {
+        throw new UnsupportedOperationException();
+    }
+
 
     public String createIdeaInstance(IdeaObjectFields ideaObjectFields) {
     	

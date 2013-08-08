@@ -38,7 +38,7 @@ public interface IdeaService {
      * Add a {@link Idea}.
      *
      */
-    Idea addIdea(Idea idea) throws CreateIdeaException;
+    Idea addIdea(Idea idea, String schemeServerNamePort) throws CreateIdeaException;
     
     /**
      * Find an {@link Idea}.
@@ -47,7 +47,7 @@ public interface IdeaService {
      *
      * @return the {@link Idea}.
      */
-    Idea find(long ideaId);
+    Idea find(String ideaId);
     
     /**
      * Find all {@link Idea}s.
@@ -223,7 +223,7 @@ public interface IdeaService {
      *
      * @param idea the primaryKey (id) of the {@link Idea} to remove
      */
-    void remove(long ideaId);
+    void remove(String ideaId);
     
     
     /**
@@ -261,7 +261,10 @@ public interface IdeaService {
      * Updates an {@link Idea} from Barium
      *
      */
-    Idea updateFromBarium(long companyId, long groupId, String urlTitle) throws UpdateIdeaException;
+    Idea updateFromBarium(Idea id) throws UpdateIdeaException;
+//    Idea updateFromBarium(long companyId, long groupId, String urlTitle) throws UpdateIdeaException;
+
+    void updateAllIdeasFromBarium();
 
     void uploadFile(Idea idea, String fileName, InputStream bis) throws FileUploadException;
 
@@ -270,4 +273,6 @@ public interface IdeaService {
     ObjectEntry getObject(String id);
 
     InputStream downloadFile(String id) throws BariumException;
+
+    String generateNewUrlTitle(String title);
 }
