@@ -19,8 +19,9 @@ public interface BariumRestClient {
 
 	boolean updateInstance(String values, String objectId);
 
-	Objects getInstanceObjects(String instanceId)
-			throws BariumException;
+	Objects getInstanceObjects(String instanceId) throws BariumException;
+
+	Objects getObjectObjects(String objectId) throws BariumException;
 
 	String createIdeaInstance(IdeaObjectFields ideaObjectFields);
 
@@ -39,4 +40,8 @@ public interface BariumRestClient {
     InputStream doGetFileStream(String objectId) throws BariumException;
 
     String updateField(String instanceId, String field, String value) throws BariumException;
+
+    String findFolder(String instanceId, String folderName) throws BariumException;
+
+    void uploadFile(String instanceId, String folderName, String fileName, InputStream inputStream) throws BariumException;
 }

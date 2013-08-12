@@ -1,0 +1,103 @@
+package se.vgregion.service.innovationsslussen.validator;
+
+import junit.framework.Assert;
+import org.junit.Test;
+import org.springframework.validation.MapBindingResult;
+import org.springframework.validation.ObjectError;
+import se.vgregion.portal.innovationsslussen.domain.IdeaContentType;
+import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
+import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
+import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaPerson;
+
+import java.util.HashMap;
+import java.util.List;
+
+import static junit.framework.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+/**
+ * @author Patrik Bergström
+ */
+public class IdeaValidatorTest {
+
+    private IdeaValidator ideaValidator = new IdeaValidator();
+
+    @Test
+    public void testIsValidEmail() throws Exception {
+        assertTrue(ideaValidator.isValidEmail("arne.anka@ankeborg.com"));
+        assertFalse(ideaValidator.isValidEmail("arne.anka(at)ankeborg.com"));
+        assertTrue(ideaValidator.isValidEmail("arne.anka@ankeborgcom"));
+        assertTrue(ideaValidator.isValidEmail("arneanka@ankeborg.com"));
+
+        assertTrue(ideaValidator.isValidEmail("\"Arne Anka\"@ankeborg.com"));
+        assertTrue(ideaValidator.isValidEmail("Arne\\@Anka@ankeborg.com"));
+        assertTrue(ideaValidator.isValidEmail("$Arne=Anka@ankeborg.com"));
+        assertTrue(ideaValidator.isValidEmail("_A!r%ne.Anka@ankeborg.com"));
+        assertFalse(ideaValidator.isValidEmail("Arne@Anka@ankeborg.com"));
+    }
+
+    @Test
+    public void validate() throws Exception {
+        HashMap map = new HashMap();
+        Idea idea = new Idea();
+        IdeaPerson ideaPerson = new IdeaPerson();
+        ideaPerson.setEmail("akjhkljhfgtdfhgdfhgfjhgfjhgfjhgfjhgfjhgfjhgfrsgrsgsdfj@@skladjflakj.com"); // Note double-@
+        idea.addIdeaPerson(ideaPerson);
+        IdeaContent ideaContent = new IdeaContent();
+        ideaContent.setType(IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE);
+        idea.getIdeaContents().add(ideaContent);
+        MapBindingResult result = new MapBindingResult(map, "aName");
+        ideaValidator.validate(idea, result);
+
+        String errorsConcatenated = "";
+        List<ObjectError> allErrors = result.getAllErrors();
+        for (ObjectError error : allErrors) {
+            errorsConcatenated += error.toString();
+        }
+
+        Assert.assertTrue(errorsConcatenated.contains(IdeaValidator.TITLE_MANDATORY));
+        Assert.assertTrue(errorsConcatenated.contains(IdeaValidator.DESCRIPTION_MANDATORY));
+        Assert.assertTrue(errorsConcatenated.contains(IdeaValidator.SOLVES_PROBLEM_MANDATORY));
+        Assert.assertTrue(errorsConcatenated.contains(IdeaValidator.NAME_MANDATORY));
+        Assert.assertTrue(errorsConcatenated.contains(IdeaValidator.INVALID_EMAIL));
+
+        assertEquals(5, allErrors.size());
+    }
+
+    @Test
+    public void validateOk() throws Exception {
+        HashMap map = new HashMap();
+
+        Idea idea = new Idea();
+        idea.setTitle("title");
+
+        IdeaPerson ideaPerson = new IdeaPerson();
+        ideaPerson.setName("name");
+        ideaPerson.setEmail("valid@email.com");
+        idea.addIdeaPerson(ideaPerson);
+
+        IdeaContent ideaContent = new IdeaContent();
+        ideaContent.setType(IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE);
+        ideaContent.setDescription("sadfasdf");
+        ideaContent.setSolvesProblem("saldkfj");
+
+        idea.getIdeaContents().add(ideaContent);
+        MapBindingResult result = new MapBindingResult(map, "aName");
+        ideaValidator.validate(idea, result);
+
+        String errorsConcatenated = "";
+        List<ObjectError> allErrors = result.getAllErrors();
+        for (ObjectError error : allErrors) {
+            errorsConcatenated += error.toString();
+        }
+
+        Assert.assertFalse(errorsConcatenated.contains(IdeaValidator.TITLE_MANDATORY));
+        Assert.assertFalse(errorsConcatenated.contains(IdeaValidator.DESCRIPTION_MANDATORY));
+        Assert.assertFalse(errorsConcatenated.contains(IdeaValidator.SOLVES_PROBLEM_MANDATORY));
+        Assert.assertFalse(errorsConcatenated.contains(IdeaValidator.NAME_MANDATORY));
+        Assert.assertFalse(errorsConcatenated.contains(IdeaValidator.INVALID_EMAIL));
+
+        assertEquals(0, allErrors.size());
+    }
+}

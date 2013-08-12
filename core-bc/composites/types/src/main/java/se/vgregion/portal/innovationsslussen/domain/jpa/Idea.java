@@ -67,8 +67,8 @@ public class Idea extends AbstractEntity<String> {
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
-    @Transient
-    private IdeaPerson ideaPerson;
+    /*@Transient
+    private IdeaPerson ideaPerson;*/
 
     @Transient
     private String bariumUrl;
@@ -161,16 +161,14 @@ public class Idea extends AbstractEntity<String> {
     public IdeaPerson getIdeaPerson() {
 
         if (ideaPersons.size() > 0) {
-            setIdeaPerson(ideaPersons.iterator().next());
+            return ideaPersons.iterator().next();
         } else {
-            setIdeaPerson(new IdeaPerson());
+            return null;
         }
-
-        return ideaPerson;
     }
 
     public void setIdeaPerson(IdeaPerson ideaPerson) {
-        this.ideaPerson = ideaPerson;
+        // Keep here for IdeaValidator to work
     }
 
     public void addIdeaPerson(IdeaPerson ideaPerson) {
@@ -201,6 +199,14 @@ public class Idea extends AbstractEntity<String> {
             }
         }
         return content;
+    }
+
+    public void setIdeaContentPrivate(IdeaContent ideaContent) {
+        // Keep here for IdeaValidator to work
+    }
+
+    public void setIdeaContentsPublic(IdeaContent ideaContent) {
+        // Keep here for IdeaValidator to work
     }
 
     public Set<IdeaUserLike> getLikes() {

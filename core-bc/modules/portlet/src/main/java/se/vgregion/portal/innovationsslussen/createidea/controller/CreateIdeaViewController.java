@@ -122,7 +122,8 @@ public class CreateIdeaViewController {
      * @param model    the model
      */
     @ActionMapping("submitIdea")
-    public final void submitIdea(ActionRequest request, ActionResponse response, final ModelMap model, @ModelAttribute Idea idea, BindingResult result) {
+    public final void submitIdea(ActionRequest request, ActionResponse response, final ModelMap model,
+                                 @ModelAttribute Idea idea, BindingResult result) {
 
         // todo auktoriseringskontroll?
 
