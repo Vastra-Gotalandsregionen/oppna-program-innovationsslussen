@@ -1,19 +1,26 @@
 package se.vgregion.service.innovationsslussen.validator;
 
-import org.springframework.beans.BeanWrapper;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
-import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
-import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
+
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 
 @Component
 public class IdeaValidator implements Validator {
 
-	
-	/**
+
+    static final String TITLE_MANDATORY = "Titel är obligatorisk";
+    static final String DESCRIPTION_MANDATORY = "Beskrivning är obligatorisk";
+    static final String SOLVES_PROBLEM_MANDATORY = "Löser behov / problem är obligatoriskt";
+    static final String NAME_MANDATORY = "Namn är obligatoriskt";
+    static final String EMAIL_MANDATORY = "E-post är obligatorisk";
+    static final String INVALID_EMAIL = "Angiven e-post är ogiltig";
+
+    /**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -27,22 +34,28 @@ public class IdeaValidator implements Validator {
 		
 		validateTitle(idea, errors);
 		validateDescription(idea, errors);
+		validateNeed(idea, errors);
 		validateName(idea, errors);
 		validateEmail(idea, errors);
-		
-		//ValidationUtils.rejectIfEmptyOrWhitespace(errors, "title", "required.title", "title-is-required");
-		
 	}
-	
-	private void validateTitle(Idea idea, Errors errors) {
+
+    private void validateNeed(Idea idea, Errors errors) {
+        String solvesProblem = idea.getIdeaContentPrivate().getSolvesProblem();
+
+        if (solvesProblem == null || "".equals(solvesProblem)) {
+            errors.rejectValue("ideaContentPrivate.solvesProblem", "ideaContentPrivate.solvesProblem", SOLVES_PROBLEM_MANDATORY);
+        }
+    }
+
+    private void validateTitle(Idea idea, Errors errors) {
 		
 		String title = idea.getTitle();
 		
 		if(title == null) {
-			errors.rejectValue("title", "title.not-null", "title-must-not-be-null");
+			errors.rejectValue("title", "title.not-null", TITLE_MANDATORY);
 		}
 		else if(title.equals("")) {
-			errors.rejectValue("title", "title.not-empty", "title-must-not-be-empty");
+			errors.rejectValue("title", "title.not-empty", TITLE_MANDATORY);
 		}
 	}
 	
@@ -51,10 +64,10 @@ public class IdeaValidator implements Validator {
 		String description = idea.getIdeaContentPrivate().getDescription();
 		
 		if(description == null) {
-			errors.rejectValue("ideaContentPrivate.description", "description.not-null", "description-must-not-be-null");
+			errors.rejectValue("ideaContentPrivate.description", "description.not-null", DESCRIPTION_MANDATORY);
 		}
 		else if(description.equals("")) {
-			errors.rejectValue("ideaContentPrivate.description", "description.not-empty", "description-must-not-be-empty");
+			errors.rejectValue("ideaContentPrivate.description", "description.not-empty", DESCRIPTION_MANDATORY);
 		}
 	}
 	
@@ -63,10 +76,10 @@ public class IdeaValidator implements Validator {
 		String name = idea.getIdeaPerson().getName();
 		
 		if(name == null) {
-			errors.rejectValue("ideaPerson.name", "name.not-null", "name-must-not-be-null");
+			errors.rejectValue("ideaPerson.name", "name.not-null", NAME_MANDATORY);
 		}
 		else if(name.equals("")) {
-			errors.rejectValue("ideaPerson.name", "name.not-empty", "name-must-not-be-empty");
+			errors.rejectValue("ideaPerson.name", "name.not-empty", NAME_MANDATORY);
 		}
 	}
 	
@@ -75,12 +88,25 @@ public class IdeaValidator implements Validator {
 		String email = idea.getIdeaPerson().getEmail();
 		
 		if(email == null) {
-			errors.rejectValue("ideaPerson.email", "email.not-null", "email-must-not-be-null");
+			errors.rejectValue("ideaPerson.email", "email.not-null", EMAIL_MANDATORY);
 		}
 		else if(email.equals("")) {
-			errors.rejectValue("ideaPerson.email", "email.not-empty", "email-must-not-be-empty");
-		}
-	}
-	
-	
+			errors.rejectValue("ideaPerson.email", "email.not-empty", EMAIL_MANDATORY);
+		} else if (!isValidEmail(email)) {
+            errors.rejectValue("ideaPerson.email", "email.not-empty", INVALID_EMAIL);
+        }
+    }
+
+    // Validate according to RFC822
+    boolean isValidEmail(String email) {
+        boolean result = true;
+        try {
+            InternetAddress emailAddress = new InternetAddress(email);
+            emailAddress.validate();
+        } catch (AddressException ex) {
+            result = false;
+        }
+        return result;
+    }
+
 }

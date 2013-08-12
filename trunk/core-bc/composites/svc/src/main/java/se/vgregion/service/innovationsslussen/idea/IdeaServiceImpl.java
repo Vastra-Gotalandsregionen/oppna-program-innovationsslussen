@@ -164,6 +164,12 @@ public class IdeaServiceImpl implements IdeaService {
     @Transactional(rollbackFor = CreateIdeaException.class)
     public Idea addIdea(Idea idea, String schemeServerNamePort) throws CreateIdeaException {
 
+        // Do the urlTitle and ideaSiteLink before sending to Barium
+        if (idea.getUrlTitle() == null) {
+            idea.setUrlTitle(generateNewUrlTitle(idea.getTitle()));
+        }
+        idea.setIdeaSiteLink(generateIdeaSiteLink(schemeServerNamePort, idea.getUrlTitle()));
+
         // Create Barium Idea
         BariumResponse bariumResponse = bariumService.createIdea(idea);
 //    	BariumResponse bariumResponse = new BariumResponse(true, "MOCKAD-12345666", "");
@@ -174,12 +180,6 @@ public class IdeaServiceImpl implements IdeaService {
 
             try {
                 idea.setId(bariumId);
-
-                if (idea.getUrlTitle() == null) {
-                    idea.setUrlTitle(generateNewUrlTitle(idea.getTitle()));
-                }
-
-                idea.setIdeaSiteLink(generateIdeaSiteLink(schemeServerNamePort, idea.getUrlTitle()));
 
                 // Persist idea
                 idea = ideaRepository.persist(idea); // Use persist to assure it doesn't exist already.
@@ -536,6 +536,7 @@ public class IdeaServiceImpl implements IdeaService {
     }
 
     @Override
+    @Deprecated // Probably not needed?
     public void uploadFile(Idea idea, String fileName, InputStream inputStream) throws FileUploadException {
         try {
             bariumService.uploadFile(idea, fileName, inputStream);
@@ -545,8 +546,17 @@ public class IdeaServiceImpl implements IdeaService {
     }
 
     @Override
-    public List<ObjectEntry> getIdeaFiles(Idea idea) throws BariumException {
-        return bariumService.getIdeaFiles(idea);
+    public void uploadFile(Idea idea, String folderName, String fileName, InputStream inputStream) throws FileUploadException {
+        try {
+            bariumService.uploadFile(idea, folderName, fileName, inputStream);
+        } catch (BariumException e) {
+            throw new FileUploadException(e);
+        }
+    }
+
+    @Override
+    public List<ObjectEntry> getIdeaFiles(Idea idea, String folderName) throws BariumException {
+        return bariumService.getIdeaFiles(idea, folderName);
     }
 
     @Override

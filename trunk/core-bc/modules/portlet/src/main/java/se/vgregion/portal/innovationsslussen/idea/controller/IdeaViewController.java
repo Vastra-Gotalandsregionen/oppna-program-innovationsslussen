@@ -99,19 +99,26 @@ public class IdeaViewController {
             List<CommentItemVO> commentsList;
             if (ideaType.equals("private")) {
                 commentsList = ideaService.getPrivateComments(idea);
+                try {
+                    List<ObjectEntry> ideaFilesClosed = ideaService.getIdeaFiles(idea, "Liferay Stängda");
+                    model.addAttribute("ideaFilesClosed", ideaFilesClosed);
+                } catch (BariumException e) {
+                    LOGGER.error(e.getMessage(), e);
+                }
             } else {
                 commentsList = ideaService.getPublicComments(idea);
             }
 
-            // todo Behöver vi tänka på hurivida användaren har behörighet att se alla filer?
+            // Add these independently of private/public view.
             try {
-                List<ObjectEntry> ideaFiles = ideaService.getIdeaFiles(idea);
-                model.addAttribute("ideaFiles", ideaFiles);
+                List<ObjectEntry> ideaFilesOpen = ideaService.getIdeaFiles(idea, "Liferay Öppna");
+                model.addAttribute("ideaFilesOpen", ideaFilesOpen);
             } catch (BariumException e) {
                 LOGGER.error(e.getMessage(), e);
             }
 
-            IdeaPermissionChecker ideaPermissionChecker = ideaPermissionCheckerService.getIdeaPermissionChecker(scopeGroupId, userId, idea.getId());
+            IdeaPermissionChecker ideaPermissionChecker = ideaPermissionCheckerService.getIdeaPermissionChecker(
+                    scopeGroupId, userId, idea.getId());
 
             model.addAttribute("idea", idea);
             model.addAttribute("commentsList", commentsList);
@@ -439,6 +446,17 @@ public class IdeaViewController {
         long userId = themeDisplay.getUserId();
 
         String urlTitle = request.getParameter("urlTitle");
+
+        String fileType = request.getParameter("fileType");
+        String folderName;
+        if (fileType.equals("liferayOpen")) {
+            folderName = "Liferay Öppna";
+        } else if (fileType.equals("liferayClosed")) {
+            folderName = "Liferay Stängda";
+        } else {
+            throw new IllegalArgumentException("Unknown filetype: " + fileType);
+        }
+
         // todo onödig slagning? Cacha?
         Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);// todo Kan det inte finnas flera med samma titel i olika communities?
 
@@ -463,7 +481,7 @@ public class IdeaViewController {
                     BufferedInputStream bis = new BufferedInputStream(is);
 
                     String fileName = fileItemStream.getName();
-                    ideaService.uploadFile(idea, fileName, bis);
+                    ideaService.uploadFile(idea, folderName, fileName, bis);
                 }
 
             }

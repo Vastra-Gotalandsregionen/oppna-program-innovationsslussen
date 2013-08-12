@@ -266,13 +266,16 @@ public interface IdeaService {
 
     void updateAllIdeasFromBarium();
 
+    @Deprecated // Probably not needed?
     void uploadFile(Idea idea, String fileName, InputStream bis) throws FileUploadException;
 
-    List<ObjectEntry> getIdeaFiles(Idea idea) throws BariumException;
+    void uploadFile(Idea idea, String folderName, String fileName, InputStream inputStream) throws FileUploadException;
 
     ObjectEntry getObject(String id);
 
     InputStream downloadFile(String id) throws BariumException;
 
     String generateNewUrlTitle(String title);
+
+    List<ObjectEntry> getIdeaFiles(Idea idea, String folderName) throws BariumException;
 }

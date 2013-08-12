@@ -175,18 +175,26 @@ public class BariumService {
         return bariumResponse;
     }
 
+    public void uploadFile(Idea idea, String folderName, String fileName, InputStream inputStream) throws BariumException {
+        bariumRestClient.uploadFile(idea.getId(), folderName, fileName, inputStream);
+    }
+
     public void uploadFile(Idea idea, String fileName, InputStream inputStream) throws BariumException {
         bariumRestClient.uploadFile(idea.getId(), fileName, inputStream);
     }
 
-    public List<ObjectEntry> getIdeaFiles(Idea idea) throws BariumException {
-        Objects instanceObjects = bariumRestClient.getInstanceObjects(idea.getId());
+    private List<ObjectEntry> getIdeaFiles(String objectId) throws BariumException {
+        Objects instanceObjects = bariumRestClient.getObjectObjects(objectId);
 
         SortedSet<ObjectEntry > objectEntries = new TreeSet<ObjectEntry>(new Comparator<ObjectEntry>() {
             @Override
             public int compare(ObjectEntry o1, ObjectEntry o2) {
                 try {
-                    return o1.getName().compareTo(o2.getName());
+                    if (!o1.getName().equals(o2.getName())) {
+                        return o1.getName().compareTo(o2.getName());
+                    } else {
+                        return o1.getId().compareTo(o2.getId());
+                    }
                 } catch (RuntimeException e) {
                     return o1.hashCode() > o2.hashCode() ? 1 : -1;
                 }
@@ -200,6 +208,12 @@ public class BariumService {
         }
 
         return new ArrayList<ObjectEntry>(objectEntries);
+    }
+
+    public List<ObjectEntry> getIdeaFiles(Idea idea, String folderName) throws BariumException {
+        String folderId = bariumRestClient.findFolder(idea.getId(), folderName);
+
+        return getIdeaFiles(folderId);
     }
 
     public ObjectEntry getObject(String id) {

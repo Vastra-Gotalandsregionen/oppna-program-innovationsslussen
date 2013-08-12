@@ -106,6 +106,11 @@ public class MockBariumRestClientImpl implements BariumRestClient {
         }
     }
 
+    @Override
+    public Objects getObjectObjects(String objectId) throws BariumException {
+        throw new UnsupportedOperationException();
+    }
+
     public List<ObjectField> getIdeaObjectFields(ApplicationInstance instance) {
         String objectJson = RESPONSE_GET_IDEA_OBJECTS_FIELDS;
         LOGGER.info(objectJson);
@@ -157,6 +162,16 @@ public class MockBariumRestClientImpl implements BariumRestClient {
 
     @Override
     public String updateField(String id, String field, String value) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String findFolder(String instanceId, String folderName) throws BariumException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void uploadFile(String instanceId, String folderName, String fileName, InputStream inputStream) throws BariumException {
         throw new UnsupportedOperationException();
     }
 

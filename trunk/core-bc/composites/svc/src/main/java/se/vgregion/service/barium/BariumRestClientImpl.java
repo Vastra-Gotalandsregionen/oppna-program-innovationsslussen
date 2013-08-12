@@ -74,9 +74,9 @@ public class BariumRestClientImpl implements BariumRestClient {
         return doRequest("DELETE", uri, null);
     }
 
-    public String doPost(String uri, String parameters) throws BariumException {
+    public String doPost(String uri, String requestBody) throws BariumException {
         try {
-            return doRequest("POST", uri, parameters.getBytes("UTF-8"));
+            return doRequest("POST", uri, requestBody.getBytes("UTF-8"));
         } catch (UnsupportedEncodingException e) {
             // won't happen
             throw new RuntimeException(e);
@@ -130,6 +130,58 @@ public class BariumRestClientImpl implements BariumRestClient {
 
     public void uploadFile(String instanceId, String fileName, InputStream inputStream) throws BariumException {
         doPostMultipart("/Instances/" + instanceId + "/Objects", fileName, inputStream);
+    }
+
+    /**
+     *
+     * @param instanceId
+     * @param folderName
+     * @return the id of the created folder
+     * @throws BariumException
+     */
+    public String createFolder(String instanceId, String folderName) throws BariumException {
+        String response = doPost("/Instances/" + instanceId + "/Objects",
+                "{objectclass: \"repository.folder\", name: \"" + folderName + "\"}");
+
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            return (String) ((JSONObject) jsonObject.getJSONArray("Items").get(0)).get("Id");
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public String findFolder(String instanceId, String folderName) throws BariumException {
+        String response = doGet("/Instances/" + instanceId + "/Objects");
+
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONArray data = jsonObject.getJSONArray("Data");
+            for (int i = 0; i < data.length(); i++) {
+                if (data.get(i) instanceof JSONObject) {
+                    JSONObject bariumObject = (JSONObject) data.get(i);
+                    if (bariumObject.get("ObjectClass").equals("repository.folder")) {
+                        if (folderName.equals(bariumObject.get("Name"))) {
+                            return (String) bariumObject.get("Id");
+                        }
+                    }
+                }
+            }
+            return null;
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void uploadFile(String instanceId, String folderName, String fileName, InputStream inputStream) throws BariumException {
+        String folderId = findFolder(instanceId, folderName);
+
+        if (folderId == null) {
+            folderId = createFolder(instanceId, folderName);
+        }
+        doPostMultipart("/Objects/" + folderId + "/Objects", fileName, inputStream);
     }
 
     @Override
@@ -286,7 +338,7 @@ public class BariumRestClientImpl implements BariumRestClient {
                 url = new URL(this.apiLocation + uri);
             }
 
-            //Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(8888));
+//            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(8888));
             conn = (HttpURLConnection) url.openConnection(/*proxy*/);
             if (ticket != null) {
                 conn.setRequestProperty("ticket", ticket);
@@ -499,6 +551,17 @@ public class BariumRestClientImpl implements BariumRestClient {
     public Objects getInstanceObjects(String instanceId) throws BariumException {
         String objectsJson = doGet("/Instances/" + instanceId + "/Objects");
 
+        return objectJsonToObjects(objectsJson);
+    }
+
+    @Override
+    public Objects getObjectObjects(String objectId) throws BariumException {
+        String objectsJson = doGet("/Objects/" + objectId + "/Objects");
+
+        return objectJsonToObjects(objectsJson);
+    }
+
+    private Objects objectJsonToObjects(String objectsJson) {
         ObjectMapper mapper = new ObjectMapper();
         try {
             return mapper.readValue(objectsJson, Objects.class);
