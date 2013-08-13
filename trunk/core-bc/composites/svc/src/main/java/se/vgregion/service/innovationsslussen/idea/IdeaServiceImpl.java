@@ -622,7 +622,7 @@ public class IdeaServiceImpl implements IdeaService {
         		ExpandoConstants.BARIUM_DETAILS_VIEW_URL_PREFIX, idea.getCompanyId(), idea.getGroupId());
 		
         if(!bariumDetailsViewUrlPrefix.equals("")) {
-        	bariumUrl = bariumDetailsViewUrlPrefix + idea.getBariumId();	
+        	bariumUrl = bariumDetailsViewUrlPrefix + idea.getId();	
         }
         */
 
