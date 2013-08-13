@@ -33,6 +33,7 @@ import se.vgregion.service.innovationsslussen.exception.FavoriteException;
 import se.vgregion.service.innovationsslussen.exception.LikeException;
 import se.vgregion.service.innovationsslussen.exception.FileUploadException;
 import se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsService;
+import se.vgregion.service.innovationsslussen.idea.settings.util.ExpandoConstants;
 import se.vgregion.service.innovationsslussen.repository.idea.IdeaRepository;
 import se.vgregion.service.innovationsslussen.repository.ideacontent.IdeaContentRepository;
 import se.vgregion.service.innovationsslussen.repository.ideaperson.IdeaPersonRepository;
@@ -617,14 +618,15 @@ public class IdeaServiceImpl implements IdeaService {
     protected String getBariumUrl(Idea idea) {
         String bariumUrl = "";
 		
-		/*
         String bariumDetailsViewUrlPrefix =ideaSettingsService.getSetting(
         		ExpandoConstants.BARIUM_DETAILS_VIEW_URL_PREFIX, idea.getCompanyId(), idea.getGroupId());
 		
-        if(!bariumDetailsViewUrlPrefix.equals("")) {
-        	bariumUrl = bariumDetailsViewUrlPrefix + idea.getId();	
+        if(bariumDetailsViewUrlPrefix != null) {
+	        if(!bariumDetailsViewUrlPrefix.equals("")) {
+	        		bariumUrl = bariumDetailsViewUrlPrefix + idea.getId();	
+	        }
         }
-        */
+        
 
         return bariumUrl;
     }

@@ -3,6 +3,7 @@ package se.vgregion.service.innovationsslussen.idea;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -16,10 +17,13 @@ import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.service.barium.BariumService;
+import se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsService;
 import se.vgregion.service.innovationsslussen.repository.idea.IdeaRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
+import java.lang.reflect.Field;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -53,7 +57,7 @@ public class IdeaServiceImplTest {
     private IdeaServiceImpl ideaService;
 
     @Before
-    public void setup() {
+    public void setup() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         // Persist two ideas. This is done once for all test methods
         Idea idea1 = entityManager.find(Idea.class, "bariumId1");
         if (idea1 == null) {
@@ -74,6 +78,16 @@ public class IdeaServiceImplTest {
             Idea idea2 = new Idea(1, 1, 1);
             idea2.setId("bariumId2");
             idea2.setTitle("Lilla titeln");
+            
+            // Mock seems not to work
+//            IdeaSettingsService ideaSettingsService = Mockito.mock(IdeaSettingsService.class);
+//            
+//            when(ideaSettingsService.getSetting(Mockito.anyString(), Mockito.anyLong(), Mockito.anyLong())).thenReturn("");
+//            
+//            Field ideaSettingsServiceField = IdeaServiceImpl.class.getDeclaredField("ideaSettingsService");
+//            
+//            ideaSettingsServiceField.setAccessible(true);
+//            ideaSettingsServiceField.set(ideaService, ideaSettingsService);
 
             TransactionStatus transaction = jpaTransactionManager.getTransaction(new DefaultTransactionAttribute());
             entityManager.persist(idea1);
