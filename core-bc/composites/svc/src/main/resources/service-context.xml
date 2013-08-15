@@ -53,6 +53,8 @@
   <bean id="expandoTableService" class="com.liferay.portlet.expando.service.ExpandoTableLocalServiceUtil" factory-method="getService" />
   <bean id="expandoValueService" class="com.liferay.portlet.expando.service.ExpandoValueLocalServiceUtil" factory-method="getService" />
 
+  <import resource="ldap-config.xml" />
+
 </beans>
 
 
