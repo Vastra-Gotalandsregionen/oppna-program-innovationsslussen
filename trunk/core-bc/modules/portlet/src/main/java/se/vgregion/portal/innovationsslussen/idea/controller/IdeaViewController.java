@@ -38,6 +38,7 @@ import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
 import se.vgregion.service.barium.BariumException;
 import se.vgregion.service.innovationsslussen.exception.UpdateIdeaException;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
+import se.vgregion.service.innovationsslussen.ldap.LdapService;
 import se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionChecker;
 import se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionCheckerService;
 import se.vgregion.util.Util;
@@ -58,6 +59,7 @@ public class IdeaViewController {
 
     IdeaService ideaService;
     IdeaPermissionCheckerService ideaPermissionCheckerService;
+    LdapService ldapService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IdeaViewController.class.getName());
 
@@ -80,6 +82,7 @@ public class IdeaViewController {
      */
     @RenderMapping()
     public String showIdea(RenderRequest request, RenderResponse response, final ModelMap model) {
+        System.out.println("ldapService " + ldapService);
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
         long scopeGroupId = themeDisplay.getScopeGroupId();
@@ -95,6 +98,7 @@ public class IdeaViewController {
             Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
             boolean isIdeaUserLiked = ideaService.getIsIdeaUserLiked(companyId, scopeGroupId, userId, urlTitle);
             boolean isIdeaUserFavorite = ideaService.getIsIdeaUserFavorite(companyId, scopeGroupId, userId, urlTitle);
+            IdeaContent visibility = idea.getIdeaContentPrivate();
 
             List<CommentItemVO> commentsList;
             if (ideaType.equals("private")) {

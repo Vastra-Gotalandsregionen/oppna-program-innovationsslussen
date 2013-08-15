@@ -20,6 +20,14 @@ Generation time : 2013-05-08 10:10:47 CEST
   <version>1.0-SNAPSHOT</version>
   <name>${project.artifactId}</name>
 
+    <dependencies>
+        <dependency>
+            <artifactId>mockito-all</artifactId>
+            <groupId>org.mockito</groupId>
+            <version>1.8.5</version>
+        </dependency>
+    </dependencies>
+
   <modules>
     <module>composites/types</module>
     <module>composites/svc</module>
