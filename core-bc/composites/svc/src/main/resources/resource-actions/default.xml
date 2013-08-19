@@ -58,6 +58,7 @@
 				<action-key>DELETE_COMMENT_PRIVATE</action-key>
 				<action-key>DELETE_FAVORITE</action-key>
 				<action-key>DELETE_LIKE</action-key>
+				<action-key>UPDATE_FROM_BARIUM</action-key>
 				<action-key>VIEW_IDEA_PUBLIC</action-key>
 				<action-key>VIEW_IDEA_PRIVATE</action-key>
 				<action-key>VIEW_COMMENT_PUBLIC</action-key>
@@ -86,6 +87,7 @@
 				<action-key>DELETE_COMMENT_PUBLIC</action-key>
 				<action-key>DELETE_COMMENT_PRIVATE</action-key>
 				<action-key>PERMISSIONS</action-key>
+				<action-key>UPDATE_FROM_BARIUM</action-key>
 				<action-key>VIEW_IDEA_PRIVATE</action-key>
 				<action-key>VIEW_COMMENT_PRIVATE</action-key>
 				<action-key>VIEW_IN_BARIUM</action-key>
