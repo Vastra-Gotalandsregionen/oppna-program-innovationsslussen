@@ -7,6 +7,9 @@ public class IdeaPermissionChecker {
 	private boolean hasPermissionAddLike;
 	private boolean hasPermissionAddFavorite;
 	
+	private boolean hasPermissionDeleteCommentPublic;
+	private boolean hasPermissionDeleteCommentPrivate;
+	
 	private boolean hasPermissionDeleteLike;
 	private boolean hasPermissionDeleteFavorite;
 
@@ -111,6 +114,24 @@ public class IdeaPermissionChecker {
 
 	public void setHasPermissionViewInBarium(boolean hasPermissionViewInBarium) {
 		this.hasPermissionViewInBarium = hasPermissionViewInBarium;
+	}
+
+	public boolean isHasPermissionDeleteCommentPublic() {
+		return hasPermissionDeleteCommentPublic;
+	}
+
+	public void setHasPermissionDeleteCommentPublic(
+			boolean hasPermissionDeleteCommentPublic) {
+		this.hasPermissionDeleteCommentPublic = hasPermissionDeleteCommentPublic;
+	}
+
+	public boolean isHasPermissionDeleteCommentPrivate() {
+		return hasPermissionDeleteCommentPrivate;
+	}
+
+	public void setHasPermissionDeleteCommentPrivate(
+			boolean hasPermissionDeleteCommentPrivate) {
+		this.hasPermissionDeleteCommentPrivate = hasPermissionDeleteCommentPrivate;
 	}
 
 	

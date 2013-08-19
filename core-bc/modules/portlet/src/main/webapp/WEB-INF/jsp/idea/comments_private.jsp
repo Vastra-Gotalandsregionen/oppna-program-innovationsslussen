@@ -74,8 +74,19 @@
 							%>
 						</div>
 						<div class="comment-entry-text">
-              ${vgrutil:escapeHtmlWithLineBreaks(comment.commentText)}
+              				${vgrutil:escapeHtmlWithLineBreaks(comment.commentText)}
 						</div>
+					</div>
+					<div class="comment-controls">
+           				<c:if test="${ideaPermissionChecker.hasPermissionDeleteCommentPublic}">
+							<portlet:actionURL name="deleteComment" var="deleteCommentUrl">
+								<portlet:param name="action" value="deleteComment" />
+								<portlet:param name="urlTitle" value="${idea.urlTitle}" />
+								<portlet:param name="ideaContentType" value="IDEA_CONTENT_TYPE_PUBLIC" />
+								<portlet:param name="commentId" value="${comment.id}" />
+							</portlet:actionURL>
+            				<a class="requires-confirmation comment-control comment-control-delete" href="${deleteCommentUrl}" title="Ta bort kommentar" data-confirm-msg="&Auml;r du s&auml;ker p&aring; att du vill ta bort kommentaren?">Ta bort kommentar</a>
+           				</c:if>
 					</div>
 				</div>
 			</c:forEach>
