@@ -526,14 +526,22 @@ public class IdeaServiceImpl implements IdeaService {
         idea.setTitle(ideaObjectFields.getInstanceName());
         idea.setUrlTitle(titleToUrlTitle(ideaObjectFields.getInstanceName()));
 
+        IdeaContent ideaContentPublic = idea.getIdeaContentPublic();
         IdeaContent ideaContentPrivate = idea.getIdeaContentPrivate(); // TODO Vet vi att det ska vara private?
+        
+        if(ideaContentPublic != null) {
+            ideaContentPublic.setIntro(ideaObjectFields.getPublikintrotext());
+            ideaContentPublic.setDescription(ideaObjectFields.getPublikbeskrivning());
+        }
 
-        ideaContentPrivate.setSolvesProblem(ideaObjectFields.getBehov());
-        ideaContentPrivate.setDescription(ideaObjectFields.getIde());
-        ideaContentPrivate.setIdeaTested(ideaObjectFields.getTestat());
-        ideaContentPrivate.setWantsHelpWith(ideaObjectFields.getKommavidare());
+        if(ideaContentPrivate != null) {
+            ideaContentPrivate.setSolvesProblem(ideaObjectFields.getBehov());
+            ideaContentPrivate.setDescription(ideaObjectFields.getIde());
+            ideaContentPrivate.setIdeaTested(ideaObjectFields.getTestat());
+            ideaContentPrivate.setWantsHelpWith(ideaObjectFields.getKommavidare());
 
-        ideaContentPrivate.setIdeaTransporterComment(ideaObjectFields.getIdetranportorensKommentar());
+            ideaContentPrivate.setIdeaTransporterComment(ideaObjectFields.getIdetranportorensKommentar());
+        }
     }
 
     @Override

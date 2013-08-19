@@ -34,6 +34,8 @@ public class IdeaObjectFields {
     private String prio1kommentar;
     private String prio2kommentar;
     private String prioriteringsradsmote;
+    private String publikintrotext;
+    private String publikbeskrivning;
     private String siteLank;
     private String telefonnummer; // VGR-ID.hsapublictelephonenumber
     private String telefonnummerMobil; // VGR-ID.mobiletelephonenumber
@@ -292,4 +294,20 @@ public class IdeaObjectFields {
     public String getVgrId() {
         return vgrId;
     }
+
+	public String getPublikintrotext() {
+		return publikintrotext;
+	}
+
+	public void setPublikintrotext(String publikintrotext) {
+		this.publikintrotext = publikintrotext;
+	}
+
+	public String getPublikbeskrivning() {
+		return publikbeskrivning;
+	}
+
+	public void setPublikbeskrivning(String publikbeskrivning) {
+		this.publikbeskrivning = publikbeskrivning;
+	}
 }

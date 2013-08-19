@@ -68,9 +68,9 @@ public class IdeaServiceImplTest {
             ideaContentPrivate1.setDescription("The description1");
             ideaContentPrivate1.setIdea(idea1);
             ideaContentPrivate1.setType(IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE);
-
+            
             idea1.getIdeaContents().add(ideaContentPrivate1);
-
+            
             idea1.setUrlTitle("stora-titeln");
             idea1.setTitle("Stora titeln");
             idea1.setIdeaSiteLink("http://example.com/asldkfj/url-title");
