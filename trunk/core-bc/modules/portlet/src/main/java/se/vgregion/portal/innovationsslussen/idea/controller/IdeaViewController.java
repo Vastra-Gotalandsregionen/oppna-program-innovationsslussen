@@ -341,6 +341,58 @@ public class IdeaViewController {
 
         response.setRenderParameter("urlTitle", urlTitle);
     }
+    
+    /**
+     * Method handling Action request.
+     *
+     * @param request  the request
+     * @param response the response
+     * @param model    the model
+     */
+    @ActionMapping(params = "action=deleteComment")
+    public final void deleteComment(ActionRequest request, ActionResponse response, final ModelMap model) {
+
+        System.out.println("deleteComment");
+
+        LOGGER.info("deleteComment");
+
+        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+        long companyId = themeDisplay.getCompanyId();
+        long groupId = themeDisplay.getScopeGroupId();
+        long userId = themeDisplay.getUserId();
+
+        IdeaContentType ideaContentType = IdeaContentType.valueOf(ParamUtil.getString(request, "ideaContentType"));
+        String urlTitle = ParamUtil.getString(request, "urlTitle", "");
+        
+        long commentId = ParamUtil.getLong(request, "commentId", 0);
+
+        if (commentId != 0) {
+
+            try {
+                Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
+                
+                // TODO: use permission checker to verify that user has delete permissions
+                IdeaPermissionChecker ideaPermissionChecker = ideaPermissionCheckerService.getIdeaPermissionChecker(
+                		groupId, userId, idea.getId());
+                
+
+                MBMessageLocalServiceUtil.deleteDiscussionMessage(commentId);
+
+            } catch (PortalException e) {
+                LOGGER.error(e.getMessage(), e);
+            } catch (SystemException e) {
+                LOGGER.error(e.getMessage(), e);
+            }
+
+        }
+
+        if (ideaContentType == IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE) {
+            response.setRenderParameter("type", "private");
+        }
+
+        response.setRenderParameter("urlTitle", urlTitle);
+
+    }    
 
     /**
      * Method handling Action request.

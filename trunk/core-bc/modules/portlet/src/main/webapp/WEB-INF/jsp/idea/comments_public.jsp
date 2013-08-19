@@ -88,9 +88,23 @@
 							%>
 						</div>
 						<div class="comment-entry-text">
-                ${vgrutil:escapeHtmlWithLineBreaks(comment.commentText)}
-            </div>
+                			${vgrutil:escapeHtmlWithLineBreaks(comment.commentText)}
+            			</div>
+            			
 					</div>
+					
+					<div class="comment-controls">
+           				<c:if test="${ideaPermissionChecker.hasPermissionDeleteCommentPublic}">
+							<portlet:actionURL name="deleteComment" var="deleteCommentUrl">
+								<portlet:param name="action" value="deleteComment" />
+								<portlet:param name="urlTitle" value="${idea.urlTitle}" />
+								<portlet:param name="ideaContentType" value="IDEA_CONTENT_TYPE_PUBLIC" />
+								<portlet:param name="commentId" value="${comment.id}" />
+							</portlet:actionURL>
+            				<a class="requires-confirmation comment-control comment-control-delete" href="${deleteCommentUrl}" title="Ta bort kommentar" data-confirm-msg="&Auml;r du s&auml;ker p&aring; att du vill ta bort kommentaren?">Ta bort kommentar</a>
+           				</c:if>
+					</div>
+					
 				</div>
 			</c:forEach>
 		</c:when>
@@ -99,113 +113,3 @@
 		</c:otherwise>
 	</c:choose>
 </div>	
-	
-	<%-- 
-	<div class="comment clearfix">
-		<div class="comment-author">
-			<div class="comment-author-name">
-				Anders Andersson
-			</div>
-			<div class="comment-author-title">
-				Id&eacute;givare
-			</div>
-		</div>
-		<div class="comment-entry">
-			<div class="comment-entry-date">
-				2013-04-23 kl. 12.15
-			</div>
-			<div class="comment-entry-text">
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas erat ante, mollis at feugiat nec, tempor ac massa. Nam sapien risus, pharetra hendrerit laoreet nec, semper vitae elit Maecenas erat ante, mollis at feugiat nec. 
-			</div>
-		</div>
-	</div>
-	
-	<div class="comment comment-alt clearfix">
-		<div class="comment-author">
-			<div class="comment-author-name">
-				Bengt Bengtsson
-			</div>
-			<div class="comment-author-title">
-				Medlem
-			</div>
-		</div>
-		<div class="comment-entry">
-			<div class="comment-entry-date">
-				2013-04-23 kl. 12.15
-			</div>
-			<div class="comment-entry-text">
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas erat ante, mollis at feugiat nec, tempor ac massa. Nam sapien risus, pharetra hendrerit laoreet nec, semper vitae elit Maecenas erat ante, mollis at feugiat nec. 
-			</div>
-		</div>
-	</div>
-	
-	<div class="comment clearfix">
-		<div class="comment-author">
-			<div class="comment-author-name">
-				Carl Carlsson
-			</div>
-			<div class="comment-author-title">
-				Medlem
-			</div>
-		</div>
-		<div class="comment-entry">
-			<div class="comment-entry-date">
-				2013-04-23 kl. 12.15
-			</div>
-			<div class="comment-entry-text">
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas erat ante, mollis at feugiat nec, tempor ac massa. Nam sapien risus, pharetra hendrerit laoreet nec, semper vitae elit Maecenas erat ante, mollis at feugiat nec. 
-			</div>
-		</div>
-	</div>
-	
-	<div class="comment comment-alt clearfix">
-		<div class="comment-author">
-			<div class="comment-author-name">
-				Anders Andersson
-			</div>
-			<div class="comment-author-title">
-				Id&eacute;givare
-			</div>
-		</div>
-		<div class="comment-entry">
-			<div class="comment-entry-date">
-				2013-04-23 kl. 12.15
-			</div>
-			<div class="comment-entry-text">
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas erat ante, mollis at feugiat nec, tempor ac massa. Nam sapien risus, pharetra hendrerit laoreet nec, semper vitae elit Maecenas erat ante, mollis at feugiat nec. 
-			</div>
-		</div>
-	</div>
-	
-	
-	
-</div>
---%>
-
-<%-- 
-<div class="rp-paging clearfix">
-	<ul>
-		<li class="previous">
-			<a class="arrowleft" href="" title="F&ouml;reg&aring;ende">F&ouml;reg&aring;ende</a>
-		</li>
-		<li>
-			<span class="current">1</span>
-		</li>
-		<li>
-			<a href="">2</a>
-		</li>
-		<li>
-			<a href="">3</a>
-		</li>
-		<li>
-			<a href="">4</a>
-		</li>
-		<li>
-			<a href="">5</a>
-		</li>
-		<li class="next">
-			<a class="arrowright" href="" title="N&auml;sta">N&auml;sta</a>
-		</li>
-	</ul>
-</div>			
---%>

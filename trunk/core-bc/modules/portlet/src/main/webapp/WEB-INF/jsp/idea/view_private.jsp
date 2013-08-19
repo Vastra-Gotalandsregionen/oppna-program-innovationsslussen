@@ -93,9 +93,11 @@
 								
 							</ul>
 							<ul class="rp-toolbar clearfix">
-								<li class="icon barium">
-									<a href="${idea.bariumUrl}" target="_BLANK">Visa i Barium</a>
-								</li>
+								<c:if test="${ideaPermissionChecker.hasPermissionViewInBarium}">
+									<li class="icon barium">
+										<a href="${idea.bariumUrl}" target="_BLANK">Visa i Barium</a>
+									</li>
+								</c:if>
 								<li class="icon reload">
 								
 									<portlet:actionURL name="updateFromBarium" var="updateFromBariumUrl">

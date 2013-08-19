@@ -35,6 +35,9 @@ public class IdeaPermissionCheckerServiceImpl implements IdeaPermissionCheckerSe
 			boolean hasPermissionAddLike = permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(), ideaId, IdeaActionKeys.ADD_LIKE);
 			
 			// Get delete permissions
+			boolean hasPermissionDeleteCommentPublic= permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(), ideaId, IdeaActionKeys.DELETE_COMMENT_PUBLIC);
+			boolean hasPermissionDeleteCommentPrivate= permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(), ideaId, IdeaActionKeys.DELETE_COMMENT_PRIVATE);
+			
 			boolean hasPermissionDeleteFavorite= permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(), ideaId, IdeaActionKeys.DELETE_FAVORITE);
 			boolean hasPermissionDeleteLike= permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(), ideaId, IdeaActionKeys.DELETE_LIKE);
 			
@@ -53,6 +56,8 @@ public class IdeaPermissionCheckerServiceImpl implements IdeaPermissionCheckerSe
             ideaPermissionChecker.setHasPermissionAddLike(hasPermissionAddLike);
             
             // Set delete permissions
+            ideaPermissionChecker.setHasPermissionDeleteCommentPrivate(hasPermissionDeleteCommentPrivate);
+            ideaPermissionChecker.setHasPermissionDeleteCommentPublic(hasPermissionDeleteCommentPublic);
             ideaPermissionChecker.setHasPermissionDeleteFavorite(hasPermissionDeleteFavorite);
             ideaPermissionChecker.setHasPermissionDeleteLike(hasPermissionDeleteLike);
             
