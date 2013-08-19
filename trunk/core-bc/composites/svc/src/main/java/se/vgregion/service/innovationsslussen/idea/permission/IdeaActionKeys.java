@@ -17,6 +17,8 @@ public class IdeaActionKeys {
 	public static final String DELETE_FAVORITE = "DELETE_FAVORITE";
 	
 	public static final String PERMISSIONS = "PERMISSIONS";
+	
+	public static final String UPDATE_FROM_BARIUM = "UPDATE_FROM_BARIUM";
 
 	public static final String VIEW_COMMENT_PUBLIC = "VIEW_COMMENT_PUBLIC";
 	public static final String VIEW_COMMENT_PRIVATE = "VIEW_COMMENT_PRIVATE";

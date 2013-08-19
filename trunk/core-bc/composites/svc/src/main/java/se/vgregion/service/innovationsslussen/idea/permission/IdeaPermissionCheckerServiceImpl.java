@@ -41,6 +41,9 @@ public class IdeaPermissionCheckerServiceImpl implements IdeaPermissionCheckerSe
 			boolean hasPermissionDeleteFavorite= permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(), ideaId, IdeaActionKeys.DELETE_FAVORITE);
 			boolean hasPermissionDeleteLike= permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(), ideaId, IdeaActionKeys.DELETE_LIKE);
 			
+			// Get update permissions
+			boolean hasPermissionUpdateFromBarium = permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(), ideaId, IdeaActionKeys.UPDATE_FROM_BARIUM);
+			
 			// Get view permissions
 			boolean hasPermissionViewCommentPublic = permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(), ideaId, IdeaActionKeys.VIEW_COMMENT_PUBLIC);
 			boolean hasPermissionViewCommentPrivate = permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(), ideaId, IdeaActionKeys.VIEW_COMMENT_PRIVATE);
@@ -60,6 +63,9 @@ public class IdeaPermissionCheckerServiceImpl implements IdeaPermissionCheckerSe
             ideaPermissionChecker.setHasPermissionDeleteCommentPublic(hasPermissionDeleteCommentPublic);
             ideaPermissionChecker.setHasPermissionDeleteFavorite(hasPermissionDeleteFavorite);
             ideaPermissionChecker.setHasPermissionDeleteLike(hasPermissionDeleteLike);
+            
+            // Set update permissions
+            ideaPermissionChecker.setHasPermissionUpdateFromBarium(hasPermissionUpdateFromBarium);
             
             // Set view permissions
             ideaPermissionChecker.setHasPermissionViewCommentPublic(hasPermissionViewCommentPublic);

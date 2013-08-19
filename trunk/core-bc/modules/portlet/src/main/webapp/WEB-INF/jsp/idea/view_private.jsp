@@ -98,19 +98,18 @@
 										<a href="${idea.bariumUrl}" target="_BLANK">Visa i Barium</a>
 									</li>
 								</c:if>
-								<li class="icon reload">
 								
-									<portlet:actionURL name="updateFromBarium" var="updateFromBariumUrl">
-										<portlet:param name="action" value="updateFromBarium" />
-										<portlet:param name="urlTitle" value="${idea.urlTitle}" />
-										<portlet:param name="id" value="${idea.id}" />
-										<portlet:param name="ideaContentType" value="IDEA_CONTENT_TYPE_PRIVATE" />
-									</portlet:actionURL>
-								
-								
-									<a href="${updateFromBariumUrl}">Uppdatera fr&aring;n Barium</a>
-								</li>
-								
+								<c:if test="${ideaPermissionChecker.hasPermissionUpdateFromBarium}">
+									<li class="icon reload">
+										<portlet:actionURL name="updateFromBarium" var="updateFromBariumUrl">
+											<portlet:param name="action" value="updateFromBarium" />
+											<portlet:param name="urlTitle" value="${idea.urlTitle}" />
+											<portlet:param name="id" value="${idea.id}" />
+											<portlet:param name="ideaContentType" value="IDEA_CONTENT_TYPE_PRIVATE" />
+										</portlet:actionURL>
+										<a href="${updateFromBariumUrl}">Uppdatera fr&aring;n Barium</a>
+									</li>
+								</c:if>
 							</ul>							
 						</div>
 						
