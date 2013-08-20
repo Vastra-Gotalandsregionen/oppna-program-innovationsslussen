@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
+import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
 
@@ -62,6 +63,7 @@ public class IdeaAdminViewController {
         long scopeGroupId = themeDisplay.getScopeGroupId();
         long companyId = themeDisplay.getCompanyId();
         
+        // Todo - admin view for both public and private ideas
         List<Idea> ideas = ideaService.findIdeasByGroupId(companyId, scopeGroupId);
 
         model.addAttribute("ideas", ideas);

@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
 import se.vgregion.portal.innovationsslussen.domain.BariumResponse;
 import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
+import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaPerson;
@@ -181,6 +182,8 @@ public class IdeaServiceImpl implements IdeaService {
 
             try {
                 idea.setId(bariumId);
+                
+                idea.setStatus(IdeaStatus.PRIVATE_IDEA);
 
                 // Persist idea
                 idea = ideaRepository.persist(idea); // Use persist to assure it doesn't exist already.
@@ -267,12 +270,11 @@ public class IdeaServiceImpl implements IdeaService {
     public List<Idea> findIdeasByCompanyId(long companyId, int start, int offset) {
         return ideaRepository.findIdeasByCompanyId(companyId, start, offset);
     }
-
+    
     @Override
     public int findIdeaCountByGroupId(long companyId, long groupId) {
         return ideaRepository.findIdeaCountByGroupId(companyId, groupId);
     }
-
 
     @Override
     public List<Idea> findIdeasByGroupId(long companyId, long groupId) {
@@ -283,7 +285,23 @@ public class IdeaServiceImpl implements IdeaService {
     public List<Idea> findIdeasByGroupId(long companyId, long groupId, int start, int offset) {
         return ideaRepository.findIdeasByGroupId(companyId, groupId, start, offset);
     }
+    
 
+    @Override
+    public int findIdeaCountByGroupId(long companyId, long groupId, IdeaStatus status) {
+        return ideaRepository.findIdeaCountByGroupId(companyId, groupId, status);
+    }
+
+    @Override
+    public List<Idea> findIdeasByGroupId(long companyId, long groupId, IdeaStatus status) {
+        return ideaRepository.findIdeasByGroupId(companyId, groupId, status);
+    }
+
+    @Override
+    public List<Idea> findIdeasByGroupId(long companyId, long groupId, IdeaStatus status, int start, int offset) {
+        return ideaRepository.findIdeasByGroupId(companyId, groupId, status, start, offset);
+    }
+    
     @Override
     public int findIdeasCountByGroupIdAndUserId(long companyId, long groupId, long userId) {
         return ideaRepository.findIdeasCountByGroupIdAndUserId(companyId, groupId, userId);
@@ -522,7 +540,18 @@ public class IdeaServiceImpl implements IdeaService {
     }
 
     private void populateIdea(IdeaObjectFields ideaObjectFields, Idea idea) {
-
+    	
+    	String publikStr = ideaObjectFields.getPublik();
+    	
+    	// Default set idea status to private, then change if conditions are met
+    	idea.setStatus(IdeaStatus.PRIVATE_IDEA);
+    	
+    	if(publikStr != null) {
+        	if(ideaObjectFields.getPublik().equals("on")) {
+        		idea.setStatus(IdeaStatus.PUBLIC_IDEA);
+        	}
+    	}
+    	
         idea.setTitle(ideaObjectFields.getInstanceName());
         idea.setUrlTitle(titleToUrlTitle(ideaObjectFields.getInstanceName()));
 

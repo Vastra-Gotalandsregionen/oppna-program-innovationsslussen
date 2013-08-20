@@ -1,5 +1,6 @@
 package se.vgregion.service.innovationsslussen.idea;
 
+import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.json.ObjectEntry;
 import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
@@ -79,7 +80,7 @@ public interface IdeaService {
      * @return a {@link List} of {@link Idea}s
      */
     List<Idea> findIdeasByCompanyId(long companyId, int start, int offset);
-
+    
     /**
      * Find the number of {@link Idea}s for a group in a company.
      *
@@ -106,6 +107,37 @@ public interface IdeaService {
      * @return a {@link List} of {@link Idea}s
      */
     List<Idea> findIdeasByGroupId(long companyId, long groupId, int start, int offset);
+    
+
+    /**
+     * Find the number of {@link Idea}s for a group in a company.
+     *
+     * @param companyId the companyid
+     * @param groupId   the groupId
+     * @param status   the status of the idea (i.e. whether the idea is public or private)
+     * @return an int with the number of Idea
+     */
+    int findIdeaCountByGroupId(long companyId, long groupId, IdeaStatus status);
+    
+    /**
+     * Find {@link Idea}s by company and group.
+     *
+     * @param companyId the companyId
+     * @param groupId   the groupId
+     * @param status   the status of the idea (i.e. whether the idea is public or private)
+     * @return a {@link List} of {@link Idea}s
+     */
+    List<Idea> findIdeasByGroupId(long companyId, long groupId, IdeaStatus status);
+    
+    /**
+     * Find {@link Idea}s for a group in a company.
+     *
+     * @param companyId the companyid
+     * @param groupId   the groupId
+     * @param status   the status of the idea (i.e. whether the idea is public or private)
+     * @return a {@link List} of {@link Idea}s
+     */
+    List<Idea> findIdeasByGroupId(long companyId, long groupId, IdeaStatus status, int start, int offset);
     
     /**
      * Find the number of {@link Idea}s for a user in a group in a company.

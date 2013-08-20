@@ -15,6 +15,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
+import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.pageiterator.PageIterator;
 import se.vgregion.portal.innovationsslussen.domain.pageiterator.PageIteratorConstants;
@@ -93,16 +94,17 @@ public class IdeaListViewController {
 	        
 			if(ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_OPEN_IDEAS)) {
 				
-				// TODO - change to only pull out OPEN ideas
-				ideaList = ideaService.findIdeasByGroupId(companyId, scopeGroupId, start, pageSize);
+				ideaList = ideaService.findIdeasByGroupId(companyId, scopeGroupId, IdeaStatus.PUBLIC_IDEA, start, pageSize);
 				
-				totalCount = ideaService.findIdeaCountByGroupId(companyId, scopeGroupId);
+				totalCount = ideaService.findIdeaCountByGroupId(companyId, scopeGroupId, IdeaStatus.PUBLIC_IDEA);
 			}
 			
 			else if(ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_USER_IDEAS)) {
 				
 				if(isSignedIn) {
-					ideaList = ideaService.findIdeasByGroupIdAndUserId(companyId, scopeGroupId, userId);	
+					ideaList = ideaService.findIdeasByGroupIdAndUserId(companyId, scopeGroupId, userId, start, pageSize);
+					
+					totalCount = ideaService.findIdeasCountByGroupIdAndUserId(companyId, scopeGroupId, userId);
 				}
 				
 				returnView = "view_user_ideas";
@@ -111,7 +113,9 @@ public class IdeaListViewController {
 			else if(ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_USER_FAVORITED_IDEAS)) {
 				
 				if(isSignedIn) {
-					ideaList = ideaService.findUserFavoritedIdeas(companyId, scopeGroupId, userId);
+					ideaList = ideaService.findUserFavoritedIdeas(companyId, scopeGroupId, userId, start, pageSize);
+					
+					totalCount = ideaService.findUserFavoritedIdeasCount(companyId, scopeGroupId, userId);
 				}
 				
 				returnView = "view_user_favorites";
@@ -120,8 +124,9 @@ public class IdeaListViewController {
 			else if(ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_CLOSED_IDEAS)) {
 				
 				if(isSignedIn) {
-					// TODO - change to only pull out CLOSED ideas
-					ideaList = ideaService.findIdeasByGroupId(companyId, scopeGroupId);	
+					ideaList = ideaService.findIdeasByGroupId(companyId, scopeGroupId, IdeaStatus.PRIVATE_IDEA, start, pageSize);
+					
+					totalCount = ideaService.findIdeaCountByGroupId(companyId, scopeGroupId, IdeaStatus.PRIVATE_IDEA);
 				}
 				
 				returnView = "view_closed_ideas";

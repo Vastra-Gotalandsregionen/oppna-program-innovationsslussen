@@ -14,6 +14,7 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
 import se.vgregion.portal.innovationsslussen.domain.IdeaContentType;
 import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
+import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.service.barium.BariumService;
@@ -63,6 +64,7 @@ public class IdeaServiceImplTest {
         if (idea1 == null) {
             idea1 = new Idea(1, 1, 1);
             idea1.setId("bariumId1");
+            idea1.setStatus(IdeaStatus.PUBLIC_IDEA);
 
             IdeaContent ideaContentPrivate1 = new IdeaContent(1, 1, 1);
             ideaContentPrivate1.setDescription("The description1");
@@ -78,6 +80,7 @@ public class IdeaServiceImplTest {
             Idea idea2 = new Idea(1, 1, 1);
             idea2.setId("bariumId2");
             idea2.setTitle("Lilla titeln");
+            idea2.setStatus(IdeaStatus.PUBLIC_IDEA);
             
             // Mock seems not to work
 //            IdeaSettingsService ideaSettingsService = Mockito.mock(IdeaSettingsService.class);
@@ -155,7 +158,7 @@ public class IdeaServiceImplTest {
     @Test
     @DirtiesContext
     public void testDateOnIdeas() throws Exception {
-        List<Idea> ideasByGroupId = ideaService.findIdeasByGroupId(1, 1);
+        List<Idea> ideasByGroupId = ideaService.findIdeasByGroupId(1, 1, IdeaStatus.PUBLIC_IDEA);
 
         for (Idea idea : ideasByGroupId) {
             System.out.println(idea.getTitle() + " - " + idea.getCreated());
