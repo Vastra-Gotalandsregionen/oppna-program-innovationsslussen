@@ -34,6 +34,7 @@ public class IdeaObjectFields {
     private String prio1kommentar;
     private String prio2kommentar;
     private String prioriteringsradsmote;
+    private String publik;
     private String publikintrotext;
     private String publikbeskrivning;
     private String siteLank;
@@ -310,4 +311,13 @@ public class IdeaObjectFields {
 	public void setPublikbeskrivning(String publikbeskrivning) {
 		this.publikbeskrivning = publikbeskrivning;
 	}
+
+	public String getPublik() {
+		return publik;
+	}
+
+	public void setPublik(String publik) {
+		this.publik = publik;
+	}
+
 }

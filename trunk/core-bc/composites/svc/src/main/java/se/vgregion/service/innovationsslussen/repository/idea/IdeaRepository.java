@@ -3,6 +3,7 @@ package se.vgregion.service.innovationsslussen.repository.idea;
 import java.util.List;
 
 import se.vgregion.dao.domain.patterns.repository.Repository;
+import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 
 /**
@@ -55,7 +56,6 @@ public interface IdeaRepository extends Repository<Idea, String> {
      */
     List<Idea> findIdeasByCompanyId(long companyId, int start, int offset);
     
-
     /**
      * Find the number of {@link Idea}s for a group in a company.
      *
@@ -81,9 +81,38 @@ public interface IdeaRepository extends Repository<Idea, String> {
      * @param groupId   the groupId
      * @return a {@link List} of {@link Idea}s
      */
-    List<Idea> findIdeasByGroupId(long companyId, long groupId, int start, int offset);
-    
+    List<Idea> findIdeasByGroupId(long companyId, long groupId, int start, int offset);    
 
+    /**
+     * Find the number of {@link Idea}s for a group in a company.
+     *
+     * @param companyId the companyid
+     * @param groupId   the groupId
+     * @param status   the status of the idea (i.e. whether the idea is public or private)
+     * @return an int with the number of Idea
+     */
+    int findIdeaCountByGroupId(long companyId, long groupId, IdeaStatus status);
+    
+    /**
+     * Find all {@link Idea}s for a group in a company.
+     *
+     * @param companyId the companyid
+     * @param groupId   the groupId
+     * @param status   the status of the idea (i.e. whether the idea is public or private)
+     * @return a {@link List} of {@link Idea}s
+     */
+    List<Idea> findIdeasByGroupId(long companyId, long groupId, IdeaStatus status);
+    
+    /**
+     * Find {@link Idea}s for a group in a company.
+     *
+     * @param companyId the companyid
+     * @param groupId   the groupId
+     * @param status   the status of the idea (i.e. whether the idea is public or private)
+     * @return a {@link List} of {@link Idea}s
+     */
+    List<Idea> findIdeasByGroupId(long companyId, long groupId, IdeaStatus status, int start, int offset);
+    
     /**
      * Find the number of {@link Idea}s for a user in a group in a company.
      *

@@ -8,6 +8,7 @@ import javax.persistence.*;
 
 import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
 import se.vgregion.portal.innovationsslussen.domain.IdeaContentType;
+import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
 
 /**
  * JPA entity class representing a Idea for Innovationsslussen
@@ -45,7 +46,11 @@ public class Idea extends AbstractEntity<String> {
 
     @Column(name = "idea_site_link")
     private String ideaSiteLink;
-
+    
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private IdeaStatus status;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idea")
     @JoinColumn(name = "idea_id")
     private Set<IdeaContent> ideaContents = new HashSet<IdeaContent>();
@@ -69,9 +74,12 @@ public class Idea extends AbstractEntity<String> {
 
     /*@Transient
     private IdeaPerson ideaPerson;*/
-
+    
     @Transient
     private String bariumUrl;
+    
+    @Transient
+    private boolean isPublic;
 
     /**
      * Constructor.
@@ -250,4 +258,24 @@ public class Idea extends AbstractEntity<String> {
     public Date getCreated() {
         return created;
     }
+
+	public IdeaStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(IdeaStatus status) {
+		this.status = status;
+	}
+
+	public boolean getIsPublic() {
+		
+		boolean isPublic = false;
+		
+		if(this.status.equals(IdeaStatus.PUBLIC_IDEA)) {
+			isPublic = true;
+		}
+		
+		return isPublic;
+	}
+
 }

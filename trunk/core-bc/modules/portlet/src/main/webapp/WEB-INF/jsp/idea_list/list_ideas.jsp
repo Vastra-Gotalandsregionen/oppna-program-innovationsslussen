@@ -39,7 +39,17 @@
 							<div class="idea-info">
 								<div class="description">
 									<a href="${ideaUrl}">
-										<a href="${ideaUrl}">${fn:substring(idea.ideaContentPrivate.description, 0, 150)}</a>
+										<a href="${ideaUrl}">
+										
+											<c:choose>
+												<c:when test="${idea.isPublic}">
+													${fn:substring(idea.ideaContentPublic.description, 0, 150)}
+												</c:when>
+												<c:otherwise>
+													${fn:substring(idea.ideaContentPrivate.description, 0, 150)}
+												</c:otherwise>
+											</c:choose>
+										</a>
 									</a>
 								</div>
 							</div>

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.Query;
 
 import se.vgregion.dao.domain.patterns.repository.db.jpa.DefaultJpaRepository;
+import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 
 /**
@@ -124,7 +125,8 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> im
         String queryString = "" 
         		+ " SELECT COUNT(DISTINCT n) FROM Idea n" 
         		+ " WHERE n.companyId = ?1"
-        		+ " AND n.groupId = ?2";
+        		+ " AND n.groupId = ?2"
+        		;
         
         Object[] queryObject = new Object[]{companyId, groupId};
     	
@@ -167,6 +169,66 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> im
         		+ " ORDER BY n.id ASC";
         
         Object[] queryObject = new Object[]{companyId, groupId};
+
+        List<Idea> ideas = findByPagedQuery(queryString, queryObject, start, offset);
+        
+
+        return ideas;
+    }    
+    
+    @Override
+    public int findIdeaCountByGroupId(long companyId, long groupId, IdeaStatus status) {
+    	
+        String queryString = "" 
+        		+ " SELECT COUNT(DISTINCT n) FROM Idea n" 
+        		+ " WHERE n.companyId = ?1"
+        		+ " AND n.groupId = ?2"
+        		+ " AND n.status = ?3"
+        		;
+        
+        Object[] queryObject = new Object[]{companyId, groupId, status};
+    	
+    	int count = findCountByQuery(queryString, queryObject);
+    	
+    	return count;
+    }
+    
+    @Override
+    public List<Idea> findIdeasByGroupId(long companyId, long groupId, IdeaStatus status) {
+        
+        String queryString = "" 
+        		+ " SELECT DISTINCT n FROM Idea n" 
+        		+ " LEFT JOIN FETCH n.ideaContents" 
+        		+ " LEFT JOIN FETCH n.ideaPersons"
+        		+ " LEFT JOIN FETCH n.likes"
+        		+ " LEFT JOIN FETCH n.favorites"
+        		+ " WHERE n.companyId = ?1"
+        		+ " AND n.groupId = ?2"
+        		+ " AND n.status = ?3"
+        		+ " ORDER BY n.created DESC";
+        
+        Object[] queryObject = new Object[]{companyId, groupId, status};
+
+        List<Idea> ideas = findByQuery(queryString, queryObject);
+
+        return ideas;
+    }
+    
+    @Override
+    public List<Idea> findIdeasByGroupId(long companyId, long groupId, IdeaStatus status, int start, int offset) {
+        
+        String queryString = "" 
+        		+ " SELECT DISTINCT n FROM Idea n" 
+        		+ " LEFT JOIN FETCH n.ideaContents" 
+        		+ " LEFT JOIN FETCH n.ideaPersons"
+        		+ " LEFT JOIN FETCH n.likes"
+        		+ " LEFT JOIN FETCH n.favorites"
+        		+ " WHERE n.companyId = ?1"
+        		+ " AND n.groupId = ?2"
+        		+ " AND n.status = ?3"
+        		+ " ORDER BY n.id ASC";
+        
+        Object[] queryObject = new Object[]{companyId, groupId, status};
 
         List<Idea> ideas = findByPagedQuery(queryString, queryObject, start, offset);
         
