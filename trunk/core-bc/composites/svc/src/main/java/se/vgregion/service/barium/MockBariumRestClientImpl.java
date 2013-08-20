@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import se.vgregion.portal.innovationsslussen.domain.BariumResponse;
 import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
 import se.vgregion.portal.innovationsslussen.domain.json.*;
 
@@ -144,6 +145,12 @@ public class MockBariumRestClientImpl implements BariumRestClient {
     	
     	return objectFields;
     }
+    
+    @Override
+    public String deleteBariumInstance(String id) {
+        throw new UnsupportedOperationException();
+    }
+    
 
     @Override
     public void uploadFile(String instanceId, String fileName, InputStream inputStream) throws BariumException {

@@ -59,6 +59,39 @@ public class BariumService {
             throw new RuntimeException(e);
         }
     }
+    
+    public BariumResponse deleteBariumIdea(String bariumId) {
+
+    	BariumResponse bariumResponse = new BariumResponse();
+    	
+//    	System.out.println("BariumService - deleteBariumIdea - bariumId is: " + bariumId + " and currently bariumResponse.getSuccess is: " + bariumResponse.getSuccess());
+    	
+        try {
+        	String replyJson = bariumRestClient.deleteBariumInstance(bariumId);
+        	
+        	
+            try {
+    			JSONObject jsonObject = new JSONObject(replyJson);
+    			
+    			System.out.println("BariumService - deleteBariumIdea - jsonObject: " + jsonObject.toString());
+    			
+    			boolean success = jsonObject.getBoolean("success");
+    			
+    			bariumResponse.setSuccess(success);
+    			bariumResponse.setJsonString(replyJson);
+    			
+    		} catch (JSONException e) {
+    			LOGGER.error(e.getMessage(), e);
+    		}
+
+        } catch (BariumException e) {
+            throw new RuntimeException(e);
+        }
+    	
+//    	System.out.println("BariumService - deleteBariumIdea - bariumResponse.getSuccess before return is: " + bariumResponse.getSuccess());
+
+        return bariumResponse;
+    }    
 
     public List<IdeaObjectFields> getAllIdeas() {
 

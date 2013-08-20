@@ -23,19 +23,19 @@
 <c:set var="curIdea" scope="page" value="<%= curEntry %>" />
 
 <liferay-ui:icon-menu cssClass="">
-	<%-- 
-	<c:if test="<%= true /* permissionChecker.hasPermission(groupId, name, primKey, ActionKeys.EDIT) */ %>">
-		<portlet:renderURL var="editEntryURL">
-			<portlet:param name="entryId" value="<%= String.valueOf(curEntry.getEntryId()) %>" />
-			<portlet:param name="jspPage" value="/labs_entry_admin/edit_entry.jsp" />
-			<portlet:param name="toolbarItem" value="edit" />
-		</portlet:renderURL>
-		<liferay-ui:icon image="edit" url="<%=editEntryURL.toString() %>" />
-	</c:if>
-	--%>
+
+	<portlet:actionURL name="syncIdeaFromBarium" var="syncIdeaFromBariumUrl">
+		<portlet:param name="action" value="syncIdeaFromBarium" />
+		<portlet:param name="entryId" value="${curIdea.id}" />
+	</portlet:actionURL>
+	<liferay-ui:icon image="install_more" url="${syncIdeaFromBariumUrl}" message="Uppdatera fr&aring;n Barium" />
+
+
 	<portlet:actionURL name="deleteEntry" var="deleteEntryURL">
 		<portlet:param name="action" value="deleteEntry" />
 		<portlet:param name="entryId" value="${curIdea.id}" />
 	</portlet:actionURL>
-	<liferay-ui:icon image="delete" url="${deleteEntryURL}" />
+	<liferay-ui:icon-delete url="${deleteEntryURL}" confirmation="Är du säker på att du vill ta bort denna idé?" />
+	
+	
 </liferay-ui:icon-menu>
