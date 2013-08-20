@@ -14,7 +14,6 @@
 
 <c:if test="${not empty ideaList}">
 	<ul class="idea-list">
-		
 		<c:forEach items="${ideaList}" var="idea" varStatus="index">
 		
 			<liferay-portlet:renderURL var="ideaUrl" plid="${ideaPlid}" portletName="${ideaPortletName}">
@@ -66,7 +65,7 @@
 					</div>
 				</div>
 			</li>
-		</c:forEach>	
-	
+		</c:forEach>
+		<liferay-util:include page="/WEB-INF/jsp/idea_list/tpl_paginator.jsp" servletContext="<%= application %>" />	
 	</ul>
 </c:if>
