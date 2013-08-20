@@ -166,7 +166,7 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> im
         		+ " LEFT JOIN FETCH n.favorites"
         		+ " WHERE n.companyId = ?1"
         		+ " AND n.groupId = ?2"
-        		+ " ORDER BY n.id ASC";
+        		+ " ORDER BY n.created DESC";
         
         Object[] queryObject = new Object[]{companyId, groupId};
 
@@ -226,7 +226,7 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> im
         		+ " WHERE n.companyId = ?1"
         		+ " AND n.groupId = ?2"
         		+ " AND n.status = ?3"
-        		+ " ORDER BY n.id ASC";
+        		+ " ORDER BY n.created DESC";
         
         Object[] queryObject = new Object[]{companyId, groupId, status};
 
@@ -265,7 +265,7 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> im
         		+ " WHERE n.companyId = ?1"
         		+ " AND n.groupId = ?2"
         		+ " AND n.userId = ?3"
-        		+ " ORDER BY n.id ASC";
+        		+ " ORDER BY n.created DESC";
         
         Object[] queryObject = new Object[]{companyId, groupId, userId};
 
@@ -286,7 +286,7 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> im
         		+ " WHERE n.companyId = ?1"
         		+ " AND n.groupId = ?2"
         		+ " AND n.userId = ?3"
-        		+ " ORDER BY n.id ASC";
+        		+ " ORDER BY n.created DESC";
         
         Object[] queryObject = new Object[]{companyId, groupId, userId};
 
@@ -326,7 +326,7 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> im
         		+ " AND n.groupId = ?2"
         		+ " AND f.userId = ?3" 
         		+ " AND f.idea.id = n.id"
-        		+ " ORDER BY n.id ASC";    	
+        		+ " ORDER BY n.created DESC";	
         
         Object[] queryObject = new Object[]{companyId, groupId, userId};
 
@@ -348,7 +348,7 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> im
         		+ " AND n.groupId = ?2"
         		+ " AND f.userId = ?3" 
         		+ " AND f.idea.id = n.id"
-        		+ " ORDER BY n.id ASC";    	
+        		+ " ORDER BY n.created DESC";
         
         Object[] queryObject = new Object[]{companyId, groupId, userId};
 
