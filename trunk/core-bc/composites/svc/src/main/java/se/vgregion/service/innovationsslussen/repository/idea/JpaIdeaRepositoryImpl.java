@@ -244,7 +244,7 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> im
         		+ " WHERE n.companyId = ?1"
         		+ " AND n.groupId = ?2"
         		+ " AND n.userId = ?3"
-        		+ " ORDER BY n.id ASC";
+        		;
         
         Object[] queryObject = new Object[]{companyId, groupId, userId};
     	
@@ -304,7 +304,7 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> im
         		+ " AND n.groupId = ?2"
         		+ " AND f.userId = ?3" 
         		+ " AND f.idea.id = n.id"
-        		+ " ORDER BY n.id ASC";    	
+        		;    	
         
         Object[] queryObject = new Object[]{companyId, groupId, userId};
     	
