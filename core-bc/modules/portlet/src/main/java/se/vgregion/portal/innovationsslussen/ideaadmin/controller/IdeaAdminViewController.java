@@ -18,10 +18,16 @@ import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
+import se.vgregion.portal.innovationsslussen.util.IdeaPortletsConstants;
+import se.vgregion.service.innovationsslussen.exception.UpdateIdeaException;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 
 /**
@@ -35,6 +41,7 @@ import com.liferay.portal.theme.ThemeDisplay;
 public class IdeaAdminViewController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IdeaAdminViewController.class.getName());
+    private static final int SEARCH_CONTAINER_DELTA_DEFAULT = 10;
     
     IdeaService ideaService;
 
@@ -63,9 +70,36 @@ public class IdeaAdminViewController {
         long scopeGroupId = themeDisplay.getScopeGroupId();
         long companyId = themeDisplay.getCompanyId();
         
-        // Todo - admin view for both public and private ideas
-        List<Idea> ideas = ideaService.findIdeasByGroupId(companyId, scopeGroupId);
+        Layout ideaLayout;
+		try {
+			ideaLayout = LayoutLocalServiceUtil.getFriendlyURLLayout(scopeGroupId, false, "/ide");
+			long ideaPlid = ideaLayout.getPlid();
+			
+			model.addAttribute("ideaPlid", ideaPlid);
+			model.addAttribute("ideaPortletName",IdeaPortletsConstants.PORTLET_NAME_IDEA_PORTLET);
+			
+		} catch (PortalException e) {
+			LOGGER.error(e.getMessage(), e);
+		} catch (SystemException e) {
+			LOGGER.error(e.getMessage(), e);
+		}
+        
+		// Search Container parameters
+		int searchCur = ParamUtil.getInteger(request, "cur", 1);
+		int searchDelta = ParamUtil.getInteger(
+				request, "delta", SEARCH_CONTAINER_DELTA_DEFAULT);
+		
+        int totalCount = 0;
+        
+        int start = (searchCur - 1) * searchDelta;
+        int offset = searchDelta;
+		
+        List<Idea> ideas = ideaService.findIdeasByGroupId(companyId, scopeGroupId, start, offset);
+        
+        totalCount = ideaService.findIdeaCountByGroupId(companyId, scopeGroupId);
 
+        model.addAttribute("delta", searchDelta);
+        model.addAttribute("totalCount", totalCount);
         model.addAttribute("ideas", ideas);
 
         return "view";
@@ -107,10 +141,23 @@ public class IdeaAdminViewController {
         response.setRenderParameter("view", "view");
     }
 
-    @ActionMapping(params = "action=syncFromBarium")
-    public void syncFromBarium() {
+    @ActionMapping(params = "action=syncAllFromBarium")
+    public void syncAllFromBarium() {
         ideaService.updateAllIdeasFromBarium();
     }
+    
+    @ActionMapping(params = "action=syncIdeaFromBarium")
+    public void syncIdeaFromBarium(ActionRequest request, ActionResponse response, final ModelMap model) {
+    	
+    	String ideaId = ParamUtil.getString(request, "entryId");
+    	
+    	try {
+			ideaService.updateFromBarium(ideaId);
+		} catch (UpdateIdeaException e) {
+			LOGGER.error(e.getMessage(), e);
+		}
+    }
+    
     
 
 }

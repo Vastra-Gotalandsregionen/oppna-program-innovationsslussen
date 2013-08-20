@@ -13,11 +13,11 @@
 <liferay-theme:defineObjects />	
 
 <liferay-ui:search-container
-	delta="${fn:length(ideas)}"
+	delta="${delta}"
  >
 	<liferay-ui:search-container-results
 		results="${ideas}"
-		total="${fn:length(ideas)}"
+		total="${totalCount}"
 	/>
 
    	<liferay-ui:search-container-row
@@ -25,6 +25,18 @@
        	keyProperty="id"
        	modelVar="idea"
        >
+       
+		<liferay-portlet:renderURL var="ideaUrl" plid="${ideaPlid}" portletName="${ideaPortletName}">
+			<liferay-portlet:param name="showView" value="showIdea" />
+			<liferay-portlet:param name="urlTitle" value="${idea.urlTitle}" />
+		</liferay-portlet:renderURL>       
+       
+		<liferay-ui:search-container-column-text
+           	name="title"
+           	href="${ideaUrl}"
+           	target="_BLANK"
+           	property="title"
+           />
 
 		<liferay-ui:search-container-column-text
            	name="id"
@@ -41,13 +53,13 @@
       	/>
 
    	</liferay-ui:search-container-row>
-   	<liferay-ui:search-iterator /> 
+   	<liferay-ui:search-iterator />
 </liferay-ui:search-container>
 
 <div>
   <h1>Synkronisering</h1>
-  <portlet:actionURL var="syncFromBarium">
-    <portlet:param name="action" value="syncFromBarium"/>
+  <portlet:actionURL var="syncAllFromBarium">
+    <portlet:param name="action" value="syncAllFromBarium"/>
   </portlet:actionURL>
 
   <form action="${syncFromBarium}" method="post">

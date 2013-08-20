@@ -406,8 +406,6 @@ public class IdeaServiceImpl implements IdeaService {
         Idea idea = ideaRepository.find(ideaId);
 
         remove(idea);
-
-        //ideaRepository.remove(idea);
     }
 
     @Override
@@ -415,9 +413,32 @@ public class IdeaServiceImpl implements IdeaService {
     public void remove(Idea idea) {
 
         System.out.println("IdeaServiceImpl - remove");
+        
+    	BariumResponse bariumResponse = bariumService.deleteBariumIdea(idea.getId());
+    	
+    	if(bariumResponse.getSuccess()) {
+    		removeFromLiferay(idea);
+    	} else {
+    		// TODO: Add message to user when this happens
+    	}
+    }
+    
+    @Override
+    @Transactional
+    public void removeFromLiferay(String ideaId) {
+        Idea idea = ideaRepository.find(ideaId);
 
+        removeFromLiferay(idea);
+    }    
+    
+    @Override
+    @Transactional
+    public void removeFromLiferay(Idea idea) {
+
+        System.out.println("IdeaServiceImpl - remove");
+        
         try {
-
+        	
             IdeaContent ideaContentPublic = idea.getIdeaContentPublic();
             IdeaContent ideaContentPrivate = idea.getIdeaContentPrivate();
             IdeaPerson ideaPerson = idea.getIdeaPerson();
@@ -439,7 +460,7 @@ public class IdeaServiceImpl implements IdeaService {
             LOGGER.error(e.getMessage(), e);
         }
 
-    }
+    }    
 
     @Override
     @Transactional
@@ -481,6 +502,17 @@ public class IdeaServiceImpl implements IdeaService {
 
         return idea;
     }
+    
+    @Override
+    @Transactional
+    public Idea updateFromBarium(String ideaId) {
+    	
+    	Idea idea = ideaRepository.find(ideaId);
+    	
+    	idea = updateFromBarium(idea);
+    	
+    	return idea;
+    }    
 
     @Override
     @Transactional

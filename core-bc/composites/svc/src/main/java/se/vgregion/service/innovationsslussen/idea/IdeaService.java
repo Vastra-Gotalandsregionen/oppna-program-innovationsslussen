@@ -251,19 +251,33 @@ public interface IdeaService {
     
 
     /**
-     * Remove a {@link Idea}.
+     * Remove an {@link Idea} from both Liferay and Barium
      *
      * @param idea the primaryKey (id) of the {@link Idea} to remove
      */
     void remove(String ideaId);
     
-    
     /**
-     * Remove a {@link Idea}.
+     * Remove an {@link Idea} from both Liferay and Barium
      *
      * @param idea the {@link Idea} to remove
      */
     void remove(Idea idea);
+    
+    /**
+     * Remove an {@link Idea} from Liferay.
+     *
+     * @param idea the primaryKey (id) of the {@link Idea} to remove
+     */
+    void removeFromLiferay(String ideaId);
+
+    /**
+     * Remove an {@link Idea} from Liferay.
+     *
+     * @param idea the {@link Idea} to remove
+     */
+    void removeFromLiferay(Idea idea);
+    
 
     /**
      * Remove all {@link Idea}s.
@@ -293,7 +307,16 @@ public interface IdeaService {
      * Updates an {@link Idea} from Barium
      *
      */
-    Idea updateFromBarium(Idea id) throws UpdateIdeaException;
+    Idea updateFromBarium(Idea idea) throws UpdateIdeaException;
+    
+    
+    /**
+     * Updates an {@link Idea} from Barium
+     *
+     */
+    Idea updateFromBarium(String ideaId) throws UpdateIdeaException;
+    
+    
 //    Idea updateFromBarium(long companyId, long groupId, String urlTitle) throws UpdateIdeaException;
 
     void updateAllIdeasFromBarium();

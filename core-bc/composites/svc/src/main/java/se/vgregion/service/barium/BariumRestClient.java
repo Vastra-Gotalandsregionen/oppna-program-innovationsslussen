@@ -9,6 +9,9 @@ import se.vgregion.portal.innovationsslussen.domain.json.*;
 public interface BariumRestClient {
 
 	boolean connect() throws BariumException;
+	
+	String deleteBariumInstance(String instanceId)
+			throws BariumException;
 
 	ApplicationInstances getApplicationInstances()
 			throws BariumException;

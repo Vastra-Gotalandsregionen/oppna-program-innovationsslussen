@@ -101,6 +101,22 @@ public class BariumRestClientImpl implements BariumRestClient {
             throw new RuntimeException(e);
         }
     }
+    
+    @Override
+    public String deleteBariumInstance(String instanceId) throws BariumException {
+
+    	boolean deleteWasSuccessful = false;
+    	
+        String parameterString = "/Instances" + "/" + instanceId;
+
+        System.out.println("BariumRestClientImpl - deleteBariumInstance - parameterString is: " + parameterString);
+
+        String repyJson = doDelete(parameterString);
+
+        System.out.println("BariumRestClientImpl - getBariumInstance - repyJson is: " + repyJson);
+
+        return repyJson;
+    }    
 
     /* (non-Javadoc)
 	 * @see se.vgregion.service.barium.BariumRestClient#getApplicationInstance(String instanceId)
