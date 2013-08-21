@@ -23,6 +23,8 @@ public class IdeaPermissionChecker {
 	
 	private boolean hasPermissionViewInBarium;
 	
+	private boolean isIdeaOwner;
+	
 	public IdeaPermissionChecker() {
 	}
 
@@ -143,6 +145,14 @@ public class IdeaPermissionChecker {
 	public void setHasPermissionUpdateFromBarium(
 			boolean hasPermissionUpdateFromBarium) {
 		this.hasPermissionUpdateFromBarium = hasPermissionUpdateFromBarium;
+	}
+
+	public boolean getIsIdeaOwner() {
+		return isIdeaOwner;
+	}
+
+	public void setIsIdeaOwner(boolean isIdeaOwner) {
+		this.isIdeaOwner = isIdeaOwner;
 	}
 
 	
