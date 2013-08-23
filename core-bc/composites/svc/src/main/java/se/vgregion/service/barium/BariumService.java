@@ -258,11 +258,11 @@ public class BariumService {
         });
     }
 
-    public Future<ObjectEntry> asyncGetObjectEntryFuture(final String ideaId) {
-        return executor.submit(new Callable<ObjectEntry>() {
+    public Future<String> asyncGetIdeaPhaseFuture(final String ideaId) {
+        return executor.submit(new Callable<String>() {
             @Override
-            public ObjectEntry call() throws Exception {
-                return getObject(ideaId);
+            public String call() throws Exception {
+                return bariumRestClient.getIdeaState(ideaId);
             }
         });
     }
