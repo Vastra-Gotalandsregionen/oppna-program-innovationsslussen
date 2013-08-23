@@ -1,48 +1,5 @@
 package se.vgregion.service.innovationsslussen.idea;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Transactional;
-
-import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
-import se.vgregion.portal.innovationsslussen.domain.BariumResponse;
-import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
-import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
-import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
-import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
-import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaPerson;
-import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserFavorite;
-import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserLike;
-import se.vgregion.portal.innovationsslussen.domain.json.ObjectEntry;
-import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
-import se.vgregion.service.barium.BariumException;
-import se.vgregion.service.barium.BariumService;
-import se.vgregion.service.innovationsslussen.exception.CreateIdeaException;
-import se.vgregion.service.innovationsslussen.exception.FavoriteException;
-import se.vgregion.service.innovationsslussen.exception.LikeException;
-import se.vgregion.service.innovationsslussen.exception.FileUploadException;
-import se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsService;
-import se.vgregion.service.innovationsslussen.idea.settings.util.ExpandoConstants;
-import se.vgregion.service.innovationsslussen.repository.idea.IdeaRepository;
-import se.vgregion.service.innovationsslussen.repository.ideacontent.IdeaContentRepository;
-import se.vgregion.service.innovationsslussen.repository.ideaperson.IdeaPersonRepository;
-import se.vgregion.service.innovationsslussen.repository.ideauserfavorite.IdeaUserFavoriteRepository;
-import se.vgregion.service.innovationsslussen.repository.ideauserlike.IdeaUserLikeRepository;
-import se.vgregion.service.innovationsslussen.util.FriendlyURLNormalizer;
-import se.vgregion.service.innovationsslussen.util.IdeaServiceConstants;
-
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.Validator;
@@ -57,8 +14,45 @@ import com.liferay.portlet.messageboards.model.MBMessageDisplay;
 import com.liferay.portlet.messageboards.model.MBThread;
 import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 import com.liferay.portlet.messageboards.util.comparator.MessageCreateDateComparator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
+import se.vgregion.portal.innovationsslussen.domain.BariumResponse;
+import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
+import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
+import se.vgregion.portal.innovationsslussen.domain.jpa.*;
+import se.vgregion.portal.innovationsslussen.domain.json.ObjectEntry;
+import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
+import se.vgregion.service.barium.BariumException;
+import se.vgregion.service.barium.BariumService;
+import se.vgregion.service.innovationsslussen.exception.CreateIdeaException;
+import se.vgregion.service.innovationsslussen.exception.FavoriteException;
+import se.vgregion.service.innovationsslussen.exception.FileUploadException;
+import se.vgregion.service.innovationsslussen.exception.LikeException;
+import se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsService;
+import se.vgregion.service.innovationsslussen.idea.settings.util.ExpandoConstants;
+import se.vgregion.service.innovationsslussen.repository.idea.IdeaRepository;
+import se.vgregion.service.innovationsslussen.repository.ideacontent.IdeaContentRepository;
+import se.vgregion.service.innovationsslussen.repository.ideaperson.IdeaPersonRepository;
+import se.vgregion.service.innovationsslussen.repository.ideauserfavorite.IdeaUserFavoriteRepository;
+import se.vgregion.service.innovationsslussen.repository.ideauserlike.IdeaUserLikeRepository;
+import se.vgregion.service.innovationsslussen.util.FriendlyURLNormalizer;
+import se.vgregion.service.innovationsslussen.util.IdeaServiceConstants;
 
 import javax.annotation.PostConstruct;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.*;
 
 /**
  * Implementation of {@link IdeaService}.
@@ -69,6 +63,9 @@ import javax.annotation.PostConstruct;
 @Service
 public class IdeaServiceImpl implements IdeaService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(IdeaServiceImpl.class);
+    private static final char[] URL_TITLE_REPLACE_CHARS = new char[]{'.', '/'};
+
     private IdeaRepository ideaRepository;
     private IdeaContentRepository ideaContentRepository;
     private IdeaPersonRepository ideaPersonRepository;
@@ -77,9 +74,7 @@ public class IdeaServiceImpl implements IdeaService {
     private BariumService bariumService;
     private IdeaSettingsService ideaSettingsService;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(IdeaServiceImpl.class);
-
-    private static final char[] URL_TITLE_REPLACE_CHARS = new char[]{'.', '/'};
+    private ExecutorService executor = Executors.newCachedThreadPool();
 
     @Autowired
     private JpaTransactionManager transactionManager;
@@ -180,9 +175,12 @@ public class IdeaServiceImpl implements IdeaService {
 
             String bariumId = bariumResponse.getInstanceId();
 
+            String phase = bariumService.getIdeaState(bariumId);
+            idea.setPhase(phase);
+
             try {
                 idea.setId(bariumId);
-                
+
                 idea.setStatus(IdeaStatus.PRIVATE_IDEA);
 
                 // Persist idea
@@ -270,7 +268,7 @@ public class IdeaServiceImpl implements IdeaService {
     public List<Idea> findIdeasByCompanyId(long companyId, int start, int offset) {
         return ideaRepository.findIdeasByCompanyId(companyId, start, offset);
     }
-    
+
     @Override
     public int findIdeaCountByGroupId(long companyId, long groupId) {
         return ideaRepository.findIdeaCountByGroupId(companyId, groupId);
@@ -285,7 +283,7 @@ public class IdeaServiceImpl implements IdeaService {
     public List<Idea> findIdeasByGroupId(long companyId, long groupId, int start, int offset) {
         return ideaRepository.findIdeasByGroupId(companyId, groupId, start, offset);
     }
-    
+
 
     @Override
     public int findIdeaCountByGroupId(long companyId, long groupId, IdeaStatus status) {
@@ -301,7 +299,7 @@ public class IdeaServiceImpl implements IdeaService {
     public List<Idea> findIdeasByGroupId(long companyId, long groupId, IdeaStatus status, int start, int offset) {
         return ideaRepository.findIdeasByGroupId(companyId, groupId, status, start, offset);
     }
-    
+
     @Override
     public int findIdeasCountByGroupIdAndUserId(long companyId, long groupId, long userId) {
         return ideaRepository.findIdeasCountByGroupIdAndUserId(companyId, groupId, userId);
@@ -413,32 +411,32 @@ public class IdeaServiceImpl implements IdeaService {
     public void remove(Idea idea) {
 
         System.out.println("IdeaServiceImpl - remove");
-        
-    	BariumResponse bariumResponse = bariumService.deleteBariumIdea(idea.getId());
-    	
-    	if(bariumResponse.getSuccess()) {
-    		removeFromLiferay(idea);
-    	} else {
-    		// TODO: Add message to user when this happens
-    	}
+
+        BariumResponse bariumResponse = bariumService.deleteBariumIdea(idea.getId());
+
+        if (bariumResponse.getSuccess()) {
+            removeFromLiferay(idea);
+        } else {
+            // TODO: Add message to user when this happens
+        }
     }
-    
+
     @Override
     @Transactional
     public void removeFromLiferay(String ideaId) {
         Idea idea = ideaRepository.find(ideaId);
 
         removeFromLiferay(idea);
-    }    
-    
+    }
+
     @Override
     @Transactional
     public void removeFromLiferay(Idea idea) {
 
         System.out.println("IdeaServiceImpl - remove");
-        
+
         try {
-        	
+
             IdeaContent ideaContentPublic = idea.getIdeaContentPublic();
             IdeaContent ideaContentPrivate = idea.getIdeaContentPrivate();
             IdeaPerson ideaPerson = idea.getIdeaPerson();
@@ -460,7 +458,7 @@ public class IdeaServiceImpl implements IdeaService {
             LOGGER.error(e.getMessage(), e);
         }
 
-    }    
+    }
 
     @Override
     @Transactional
@@ -495,49 +493,60 @@ public class IdeaServiceImpl implements IdeaService {
     }
 
     @Override
-    @Deprecated // För att se om den anropas. Den gör nämligen inget.
-    public Idea updateIdea(Idea idea) {
+    @Transactional
+    public Idea updateFromBarium(String ideaId) {
 
-//        idea = ideaRepository.merge(idea);
+        Idea idea = ideaRepository.find(ideaId);
+
+        idea = updateFromBarium(idea);
 
         return idea;
     }
-    
-    @Override
-    @Transactional
-    public Idea updateFromBarium(String ideaId) {
-    	
-    	Idea idea = ideaRepository.find(ideaId);
-    	
-    	idea = updateFromBarium(idea);
-    	
-    	return idea;
-    }    
 
     @Override
     @Transactional
     public Idea updateFromBarium(Idea idea) {
 
 //        Idea idea = findIdeaByBariumId(id);
+        final String ideaId = idea.getId();
 
         String oldTitle = idea.getTitle(); // To know whether it has changed, in case we need to update in Barium
 
-        IdeaObjectFields ideaObjectFields = bariumService.getBariumIdea(idea.getId());
+        // Make two calls asynchronously and simultaneously to speed up.
+        Future<IdeaObjectFields> ideaObjectFieldsFuture = bariumService.asyncGetIdeaObjectFields(ideaId);
+        Future<ObjectEntry> objectEntryFuture = bariumService.asyncGetObjectEntryFuture(ideaId);
 
-        populateIdea(ideaObjectFields, idea);
+        try {
+            populateIdea(ideaObjectFieldsFuture.get(), idea);
+            idea.setPhase(objectEntryFuture.get().getState());
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
 
         idea = ideaRepository.merge(idea);
 
         if (!oldTitle.equals(idea.getTitle())) {
-            // We need to update the ideaSiteLink in Barium.
-            String ideaSiteLink = idea.getIdeaSiteLink();
-            String newUrlTitle = generateNewUrlTitle(idea.getTitle());
-            String newIdeaSiteLink = replaceLastPart(ideaSiteLink, newUrlTitle);
-            try {
-                bariumService.updateIdea(idea.getId(), "siteLank", newIdeaSiteLink);
-            } catch (BariumException e) {
-                LOGGER.error("Failed to update idea " + idea.getId() + " with new site link: " + newIdeaSiteLink, e);
-            }
+            final Idea finalIdea = idea;
+
+            // We may just as well do this asynchronously since we don't throw anything and don't return anything from
+            // here.
+            executor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    // We need to update the ideaSiteLink in Barium.
+                    String ideaSiteLink = finalIdea.getIdeaSiteLink();
+                    String newUrlTitle = generateNewUrlTitle(finalIdea.getTitle());
+                    String newIdeaSiteLink = replaceLastPart(ideaSiteLink, newUrlTitle);
+                    try {
+                        bariumService.updateIdea(finalIdea.getId(), "siteLank", newIdeaSiteLink);
+                    } catch (BariumException e) {
+                        LOGGER.error("Failed to update idea " + finalIdea.getId() + " with new site link: "
+                                + newIdeaSiteLink, e);
+                    }
+                }
+            });
         }
 
         return idea;
@@ -572,30 +581,30 @@ public class IdeaServiceImpl implements IdeaService {
     }
 
     private void populateIdea(IdeaObjectFields ideaObjectFields, Idea idea) {
-    	
-    	String publikStr = ideaObjectFields.getPublik();
-    	
-    	// Default set idea status to private, then change if conditions are met
-    	idea.setStatus(IdeaStatus.PRIVATE_IDEA);
-    	
-    	if(publikStr != null) {
-        	if(ideaObjectFields.getPublik().equals("on")) {
-        		idea.setStatus(IdeaStatus.PUBLIC_IDEA);
-        	}
-    	}
-    	
+
+        String publikStr = ideaObjectFields.getPublik();
+
+        // Default set idea status to private, then change if conditions are met
+        idea.setStatus(IdeaStatus.PRIVATE_IDEA);
+
+        if (publikStr != null) {
+            if (ideaObjectFields.getPublik().equals("on")) {
+                idea.setStatus(IdeaStatus.PUBLIC_IDEA);
+            }
+        }
+
         idea.setTitle(ideaObjectFields.getInstanceName());
         idea.setUrlTitle(titleToUrlTitle(ideaObjectFields.getInstanceName()));
 
         IdeaContent ideaContentPublic = idea.getIdeaContentPublic();
         IdeaContent ideaContentPrivate = idea.getIdeaContentPrivate(); // TODO Vet vi att det ska vara private?
-        
-        if(ideaContentPublic != null) {
+
+        if (ideaContentPublic != null) {
             ideaContentPublic.setIntro(ideaObjectFields.getPublikintrotext());
             ideaContentPublic.setDescription(ideaObjectFields.getPublikbeskrivning());
         }
 
-        if(ideaContentPrivate != null) {
+        if (ideaContentPrivate != null) {
             ideaContentPrivate.setSolvesProblem(ideaObjectFields.getBehov());
             ideaContentPrivate.setDescription(ideaObjectFields.getIde());
             ideaContentPrivate.setIdeaTested(ideaObjectFields.getTestat());
@@ -686,16 +695,16 @@ public class IdeaServiceImpl implements IdeaService {
 
     protected String getBariumUrl(Idea idea) {
         String bariumUrl = "";
-		
-        String bariumDetailsViewUrlPrefix =ideaSettingsService.getSetting(
-        		ExpandoConstants.BARIUM_DETAILS_VIEW_URL_PREFIX, idea.getCompanyId(), idea.getGroupId());
-		
-        if(bariumDetailsViewUrlPrefix != null) {
-	        if(!bariumDetailsViewUrlPrefix.equals("")) {
-	        		bariumUrl = bariumDetailsViewUrlPrefix + idea.getId();	
-	        }
+
+        String bariumDetailsViewUrlPrefix = ideaSettingsService.getSetting(
+                ExpandoConstants.BARIUM_DETAILS_VIEW_URL_PREFIX, idea.getCompanyId(), idea.getGroupId());
+
+        if (bariumDetailsViewUrlPrefix != null) {
+            if (!bariumDetailsViewUrlPrefix.equals("")) {
+                bariumUrl = bariumDetailsViewUrlPrefix + idea.getId();
+            }
         }
-        
+
 
         return bariumUrl;
     }

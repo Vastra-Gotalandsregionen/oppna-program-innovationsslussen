@@ -116,23 +116,20 @@
 						
 						<div class="idea-flow-wrap">
 							<ul class="idea-flow-list">
-								<li class="done" title="This is step 1. Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
+								<li class="${idea.phase >= 1 ? 'done' : ''}" title="This is step 1. Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
 									<span>1</span>
 								</li>
-								<li class="done" title="This is step 2. Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
+								<li class="${idea.phase >= 2 ? 'done' : ''}" title="This is step 2. Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
 									<span>2</span>
 								</li>
-								<li title="This is step 3. Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
+								<li class="${idea.phase >= 3 ? 'done' : ''}" title="This is step 3. Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
 									<span>3</span>
 								</li>
-								<li title="This is step 4. Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
+								<li class="${idea.phase >= 4 ? 'done' : ''}" title="This is step 4. Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
 									<span>4</span>
 								</li>
-								<li title="This is step 5. Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
+								<li class="${idea.phase >= 5 ? 'done' : ''}" title="This is step 5. Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
 									<span>5</span>
-								</li>
-								<li title="This is step 6. Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
-									<span>6</span>
 								</li>
 							</ul>
 						</div>
