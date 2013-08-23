@@ -47,4 +47,14 @@ public class PersonTest {
         Assert.assertEquals(Person.Gender.FEMALE, person.getGender());
     }
 
+    @Test
+    public void getBirthYear() {
+        Person person = new Person();
+        Assert.assertNull(person.getBirthYear());
+        person.setHsaPersonIdentityNumber("1956MMDD");
+        Short result = person.getBirthYear();
+        Assert.assertNotNull(result);
+        Assert.assertEquals(new Short((short) 1956), result);
+    }
+
 }

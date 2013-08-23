@@ -1,5 +1,7 @@
 package se.vgregion.portal.innovationsslussen.domain.json;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 public class ObjectEntry {
@@ -19,7 +21,7 @@ public class ObjectEntry {
 	@JsonProperty("TypeNamespace") private Object TypeNamespace;
 	@JsonProperty("ReferenceId") private Object ReferenceId;
 	@JsonProperty("Container") private Boolean Container;
-	@JsonProperty("ParentId") private String ParentId;
+    @JsonProperty("ParentId") private String ParentId;
 
     public Boolean getReadOnly() {
         return ReadOnly;

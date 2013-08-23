@@ -109,24 +109,22 @@ public class CreateIdeaViewController {
                 String screenName = themeDisplay.getUser().getScreenName();
                 IdeaPerson ideaPerson = idea.getIdeaPerson();
                 Person criteria = new Person();
-                criteria.setVgrId(screenName);
+                criteria.setCn(screenName);
                 List<Person> findings = ldapService.find(criteria);
                 if (findings.size() == 1) {
                     Person person = findings.get(0);
                     ideaPerson.setEmail(person.getMail());
-                    //ideaPerson.setJobPosition(person.getVgrAnstform()); ???
+                    ideaPerson.setJobPosition(person.getTitle());
                     ideaPerson.setName(person.getFullName());
                     ideaPerson.setVgrId(person.getVgrId());
-                    //ideaPerson.setPhone(person.get);
-                    //ideaPerson.setPhoneMobile(...);
-                    //ideaPerson.setAdditionalPersonsInfo(person.get);
+                    ideaPerson.setBirthYear(person.getBirthYear());
+                    ideaPerson.setAdministrativeUnit(person.getVgrStrukturPersonDN());
+
+                    Person.Gender personGender = person.getGender();
+                    if (personGender != null) {
+                        ideaPerson.setGender(IdeaPerson.Gender.valueOf(personGender.name()));
+                    }
                 }
-                /*idea.getIdeaPerson().setEmail("erik.andersson@monator.com");
-                idea.getIdeaPerson().setJobPosition("Konsult");
-                idea.getIdeaPerson().setName("Erik Andersson");
-                idea.getIdeaPerson().setPhone("031123456");
-                idea.getIdeaPerson().setPhoneMobile("");
-                idea.getIdeaPerson().setAdditionalPersonsInfo("");*/
             }
         } else {
             // Copy binding error from save action

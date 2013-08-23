@@ -9,9 +9,13 @@ import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonMethod;
+import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.type.TypeFactory;
+import org.codehaus.jackson.type.TypeReference;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,6 +28,7 @@ import se.vgregion.util.Util;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -101,12 +106,12 @@ public class BariumRestClientImpl implements BariumRestClient {
             throw new RuntimeException(e);
         }
     }
-    
+
     @Override
     public String deleteBariumInstance(String instanceId) throws BariumException {
 
-    	boolean deleteWasSuccessful = false;
-    	
+        boolean deleteWasSuccessful = false;
+
         String parameterString = "/Instances" + "/" + instanceId;
 
         System.out.println("BariumRestClientImpl - deleteBariumInstance - parameterString is: " + parameterString);
@@ -116,10 +121,10 @@ public class BariumRestClientImpl implements BariumRestClient {
         System.out.println("BariumRestClientImpl - getBariumInstance - repyJson is: " + repyJson);
 
         return repyJson;
-    }    
+    }
 
     /* (non-Javadoc)
-	 * @see se.vgregion.service.barium.BariumRestClient#getApplicationInstance(String instanceId)
+     * @see se.vgregion.service.barium.BariumRestClient#getApplicationInstance(String instanceId)
 	 */
     @Override
     public BariumInstance getBariumInstance(String instanceId) throws BariumException {
@@ -149,7 +154,6 @@ public class BariumRestClientImpl implements BariumRestClient {
     }
 
     /**
-     *
      * @param instanceId
      * @param folderName
      * @return the id of the created folder
@@ -206,15 +210,29 @@ public class BariumRestClientImpl implements BariumRestClient {
         try {
             objectJson = doGet("/Objects/" + id);
             LOGGER.debug(objectJson);
+            Objects objects = toObjects(objectJson);
+            return getFormEntry(objects);
         } catch (BariumException e) {
             // TODO - we might want to check what kind of error we receive from Barium. (parse json string)
             //LOGGER.error(e.getMessage(), e);
             return null;
         }
+    }
 
-        ObjectMapper mapper = new ObjectMapper();
+    ObjectEntry getFormEntry(Objects objects) {
+        for (ObjectEntry oe : objects.getData()) {
+            if (oe.getState() != null) {
+                return oe;
+            }
+        }
+        return null;
+    }
+
+    Objects toObjects(String json) {
+        ObjectMapper mapper = new ObjectMapper().setVisibility(JsonMethod.FIELD, JsonAutoDetect.Visibility.ANY);
+        mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         try {
-            return mapper.readValue(objectJson, ObjectEntry.class);
+            return mapper.readValue(json, Objects.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
