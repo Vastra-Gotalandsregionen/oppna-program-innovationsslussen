@@ -2,6 +2,10 @@ package se.vgregion.service.barium;
 
 import java.io.InputStream;
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import javax.annotation.PostConstruct;
 
@@ -37,6 +41,8 @@ public class BariumService {
     private String password;
     @Value("${applicationId}")
     private String applicationId;
+
+    private ExecutorService executor = Executors.newCachedThreadPool();
 
     private BariumRestClient bariumRestClient;
 
@@ -241,6 +247,28 @@ public class BariumService {
         }
 
         return new ArrayList<ObjectEntry>(objectEntries);
+    }
+
+    public Future<IdeaObjectFields> asyncGetIdeaObjectFields(final String ideaId) {
+        return executor.submit(new Callable<IdeaObjectFields>() {
+            @Override
+            public IdeaObjectFields call() throws Exception {
+                return getBariumIdea(ideaId);
+            }
+        });
+    }
+
+    public Future<ObjectEntry> asyncGetObjectEntryFuture(final String ideaId) {
+        return executor.submit(new Callable<ObjectEntry>() {
+            @Override
+            public ObjectEntry call() throws Exception {
+                return getObject(ideaId);
+            }
+        });
+    }
+
+    public String getIdeaState(String ideaId) {
+        return getObject(ideaId).getState();
     }
 
     public List<ObjectEntry> getIdeaFiles(Idea idea, String folderName) throws BariumException {

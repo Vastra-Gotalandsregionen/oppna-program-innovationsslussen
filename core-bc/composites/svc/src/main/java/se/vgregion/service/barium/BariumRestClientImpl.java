@@ -608,6 +608,26 @@ public class BariumRestClientImpl implements BariumRestClient {
         }
     }
 
+    @Override
+    public String getIdeaState(String instanceId) {
+        String objectJson;
+        try {
+            objectJson = doGet("/instances/" + instanceId + "/Objects/IDE/");
+            LOGGER.info(objectJson);
+        } catch (BariumException e) {
+            LOGGER.error(e.getMessage(), e);
+            return null;
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            ObjectEntry objectEntry = mapper.readValue(objectJson, ObjectEntry.class);
+            return objectEntry.getState();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public List<ObjectField> getIdeaObjectFields(String instanceId) {
         String objectJson = null;
         try {
@@ -616,7 +636,7 @@ public class BariumRestClientImpl implements BariumRestClient {
         } catch (BariumException e) {
 
             // TODO - we might want to check what kind of error we receive from Barium. (parse json string)
-            //LOGGER.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
 
             return null;
         }

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
@@ -30,6 +31,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -162,27 +164,47 @@ public class CreateIdeaViewController {
         
         if(!result.hasErrors()) {
 
-        	try {
+            try {
                 String schemeServerNamePort = generateSchemeServerNamePort(request);
-        		idea = ideaService.addIdea(idea, schemeServerNamePort);
-        		
-        		response.setRenderParameter("view", "confirmation");
-        		
-        	} catch (CreateIdeaException e) {
-        		
-        		// Add error - create failed
-        		
-            	PortalUtil.copyRequestParameters(request, response);
-            	response.setRenderParameter("view", "view");	
-			}
-        	
+                idea = ideaService.addIdea(idea, schemeServerNamePort);
+
+                response.setRenderParameter("view", "confirmation");
+
+            } catch (CreateIdeaException e) {
+
+                // Add error - create failed
+
+                PortalUtil.copyRequestParameters(request, response);
+                response.setRenderParameter("view", "view");
+            } catch (RuntimeException e) {
+                Throwable lastCause = getLastCause(e);
+                if (lastCause instanceof SQLException) {
+                    SQLException nextException = ((SQLException) lastCause).getNextException();
+                    if (nextException != null) {
+                        LOGGER.error(nextException.getMessage(), nextException);
+                    }
+                }
+                result.addError(new ObjectError("", "Ett tekniskt fel inträffade."));
+                model.addAttribute("errors", result);
+
+                PortalUtil.copyRequestParameters(request, response);
+                response.setRenderParameter("view", "view");
+            }
+
         } else {
         	model.addAttribute("errors", result);
         	
         	PortalUtil.copyRequestParameters(request, response);
         	response.setRenderParameter("view", "view");	
         }
+    }
 
+    private Throwable getLastCause(Exception exception) {
+        Throwable cause = exception;
+        while (cause.getCause() != null) {
+            cause = cause.getCause();
+        }
+        return cause;
     }
 
     private String generateSchemeServerNamePort(ActionRequest request) {

@@ -41,8 +41,8 @@ public class Idea extends AbstractEntity<String> {
     @Column(name = "url_title")
     private String urlTitle;
 
-    @Column(name = "phase")
-    private int phase;
+    @Column(name = "phase", length = 12)
+    private String phase;
 
     @Column(name = "idea_site_link")
     private String ideaSiteLink;
@@ -50,7 +50,7 @@ public class Idea extends AbstractEntity<String> {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private IdeaStatus status;
-    
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idea")
     @JoinColumn(name = "idea_id")
     private Set<IdeaContent> ideaContents = new HashSet<IdeaContent>();
@@ -141,11 +141,11 @@ public class Idea extends AbstractEntity<String> {
         this.urlTitle = urlTitle;
     }
 
-    public int getPhase() {
+    public String getPhase() {
         return phase;
     }
 
-    public void setPhase(int phase) {
+    public void setPhase(String phase) {
         this.phase = phase;
     }
 
@@ -267,7 +267,7 @@ public class Idea extends AbstractEntity<String> {
 		this.status = status;
 	}
 
-	public boolean getIsPublic() {
+    public boolean getIsPublic() {
 		
 		boolean isPublic = false;
 		

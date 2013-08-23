@@ -298,12 +298,6 @@ public interface IdeaService {
     void removeLike(long companyId, long groupId, long userId, String urlTitle);
     
     /**
-     * Updates an {@link Idea}.
-     *
-     */
-    Idea updateIdea(Idea idea);
-    
-    /**
      * Updates an {@link Idea} from Barium
      *
      */

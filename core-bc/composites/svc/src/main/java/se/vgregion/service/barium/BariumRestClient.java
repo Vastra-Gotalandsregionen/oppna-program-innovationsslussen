@@ -47,4 +47,6 @@ public interface BariumRestClient {
     String findFolder(String instanceId, String folderName) throws BariumException;
 
     void uploadFile(String instanceId, String folderName, String fileName, InputStream inputStream) throws BariumException;
+
+    String getIdeaState(String instanceId);
 }

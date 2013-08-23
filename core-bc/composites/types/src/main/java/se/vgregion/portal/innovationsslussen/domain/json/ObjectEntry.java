@@ -10,7 +10,7 @@ public class ObjectEntry {
 	@JsonProperty("DataId") private String DataId;
 	@JsonProperty("TemplateId") private String TemplateId;
 	@JsonProperty("Name") private String Name;
-	@JsonProperty("State") private Object State;
+	@JsonProperty("State") private String State;
 	@JsonProperty("UpdatedDate") private String UpdatedDate;
 	@JsonProperty("FileType") private String FileType;
 	@JsonProperty("CreatedDate") private String CreatedDate;
@@ -77,11 +77,11 @@ public class ObjectEntry {
         Name = name;
     }
 
-    public Object getState() {
+    public String getState() {
         return State;
     }
 
-    public void setState(Object state) {
+    public void setState(String state) {
         State = state;
     }
 

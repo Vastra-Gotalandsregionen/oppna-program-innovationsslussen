@@ -104,7 +104,7 @@ public class IdeaViewController {
             if (ideaType.equals("private")) {
                 commentsList = ideaService.getPrivateComments(idea);
                 try {
-                    List<ObjectEntry> ideaFilesClosed = ideaService.getIdeaFiles(idea, "Liferay Stängda");
+                    List<ObjectEntry> ideaFilesClosed = ideaService.getIdeaFiles(idea, "Liferay stängda dokument");
                     model.addAttribute("ideaFilesClosed", ideaFilesClosed);
                 } catch (BariumException e) {
                     LOGGER.error(e.getMessage(), e);
@@ -115,7 +115,7 @@ public class IdeaViewController {
 
             // Add these independently of private/public view.
             try {
-                List<ObjectEntry> ideaFilesOpen = ideaService.getIdeaFiles(idea, "Liferay Öppna");
+                List<ObjectEntry> ideaFilesOpen = ideaService.getIdeaFiles(idea, "Liferay öppna dokument");
                 model.addAttribute("ideaFilesOpen", ideaFilesOpen);
             } catch (BariumException e) {
                 LOGGER.error(e.getMessage(), e);
@@ -506,9 +506,9 @@ public class IdeaViewController {
         String fileType = request.getParameter("fileType");
         String folderName;
         if (fileType.equals("liferayOpen")) {
-            folderName = "Liferay Öppna";
+            folderName = "Liferay öppna dokument";
         } else if (fileType.equals("liferayClosed")) {
-            folderName = "Liferay Stängda";
+            folderName = "Liferay stängda dokument";
         } else {
             throw new IllegalArgumentException("Unknown filetype: " + fileType);
         }

@@ -10,6 +10,7 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
 import se.vgregion.portal.innovationsslussen.domain.IdeaContentType;
@@ -24,11 +25,12 @@ import se.vgregion.service.innovationsslussen.repository.idea.IdeaRepository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import java.lang.reflect.Field;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 /**
@@ -103,6 +105,10 @@ public class IdeaServiceImplTest {
         ideaObjectFields.setInstanceName("Stora titeln");
 
         when(bariumService.getBariumIdea("bariumId1")).thenReturn(ideaObjectFields);
+        when(bariumService.asyncGetIdeaObjectFields(anyString())).thenCallRealMethod();
+        when(bariumService.asyncGetObjectEntryFuture(anyString())).thenCallRealMethod();
+
+        ReflectionTestUtils.setField(bariumService, "executor", Executors.newCachedThreadPool());
     }
 
     @Test

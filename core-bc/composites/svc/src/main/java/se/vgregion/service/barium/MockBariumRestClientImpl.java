@@ -1,12 +1,5 @@
 package se.vgregion.service.barium;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -15,10 +8,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import se.vgregion.portal.innovationsslussen.domain.BariumResponse;
 import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
 import se.vgregion.portal.innovationsslussen.domain.json.*;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MockBariumRestClientImpl implements BariumRestClient {
 	
@@ -179,6 +177,11 @@ public class MockBariumRestClientImpl implements BariumRestClient {
 
     @Override
     public void uploadFile(String instanceId, String folderName, String fileName, InputStream inputStream) throws BariumException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String getIdeaState(String instanceId) {
         throw new UnsupportedOperationException();
     }
 
