@@ -38,6 +38,7 @@ public class IdeaObjectFields {
     private String publikintrotext;
     private String publikbeskrivning;
     private String siteLank;
+    private String state;
     private String telefonnummer; // VGR-ID.hsapublictelephonenumber
     private String telefonnummerMobil; // VGR-ID.mobiletelephonenumber
     private String testat;
@@ -70,13 +71,15 @@ public class IdeaObjectFields {
                 // objectField.getId() contains characters not valid in Java variables we use the custom mappings to
                 // find the field.
                 declaredField = this.getClass().getDeclaredField(objectField.getId());
+
+
             } catch (NoSuchFieldException e) {
                 try {
                     declaredField = this.getClass().getDeclaredField(specialFieldMappings.get(objectField.getId()));
                 } catch (NoSuchFieldException e1) {
-
+                    System.out.println("NoSuchFieldException: " + objectField.getId());
                 } catch (NullPointerException e2) {
-
+                    System.out.println("npe: " + objectField.getId());
                 }
             }
 
@@ -84,6 +87,7 @@ public class IdeaObjectFields {
                 declaredField.setAccessible(true);
                 try {
                     declaredField.set(this, objectField.getValue());
+                    System.out.println("No problemas: " + objectField.getId() + " = " + objectField.getValue());
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException(e);
                 }
@@ -189,15 +193,15 @@ public class IdeaObjectFields {
     public void setKommavidare(String kommavidare) {
         this.kommavidare = kommavidare;
     }
-    
+
     public String getKomplnamn() {
-    	return komplnamn;
+        return komplnamn;
     }
-    
+
     public void setKomplnamn(String setKomplnamn) {
-    	this.komplnamn = setKomplnamn;
+        this.komplnamn = setKomplnamn;
     }
-    
+
 
     public String getKoordinatornsskommentar() {
         return koordinatornsskommentar;
@@ -230,13 +234,13 @@ public class IdeaObjectFields {
     public void setPrioriteringsradsmote(String prioriteringsradsmote) {
         this.prioriteringsradsmote = prioriteringsradsmote;
     }
-    
+
     public String getSiteLank() {
-    	return siteLank;
+        return siteLank;
     }
-    
+
     public void setSiteLank(String siteLank) {
-    	this.siteLank = siteLank;
+        this.siteLank = siteLank;
     }
 
     public String getTelefonnummer() {
@@ -246,7 +250,7 @@ public class IdeaObjectFields {
     public void setTelefonnummer(String telefonnummer) {
         this.telefonnummer = telefonnummer;
     }
-    
+
     public String getTelefonnummerMobil() {
         return telefonnummerMobil;
     }
@@ -254,14 +258,14 @@ public class IdeaObjectFields {
     public void setTelefonnummerMobil(String telefonnummerMobil) {
         this.telefonnummerMobil = telefonnummerMobil;
     }
-    
-    
+
+
     public String getTestat() {
-    	return testat;
+        return testat;
     }
-    
+
     public void setTestat(String testat) {
-    	this.testat = testat;
+        this.testat = testat;
     }
 
     public String getVgrIdFullname() {
@@ -296,28 +300,35 @@ public class IdeaObjectFields {
         return vgrId;
     }
 
-	public String getPublikintrotext() {
-		return publikintrotext;
-	}
+    public String getPublikintrotext() {
+        return publikintrotext;
+    }
 
-	public void setPublikintrotext(String publikintrotext) {
-		this.publikintrotext = publikintrotext;
-	}
+    public void setPublikintrotext(String publikintrotext) {
+        this.publikintrotext = publikintrotext;
+    }
 
-	public String getPublikbeskrivning() {
-		return publikbeskrivning;
-	}
+    public String getPublikbeskrivning() {
+        return publikbeskrivning;
+    }
 
-	public void setPublikbeskrivning(String publikbeskrivning) {
-		this.publikbeskrivning = publikbeskrivning;
-	}
+    public void setPublikbeskrivning(String publikbeskrivning) {
+        this.publikbeskrivning = publikbeskrivning;
+    }
 
-	public String getPublik() {
-		return publik;
-	}
+    public String getPublik() {
+        return publik;
+    }
 
-	public void setPublik(String publik) {
-		this.publik = publik;
-	}
+    public void setPublik(String publik) {
+        this.publik = publik;
+    }
 
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
 }

@@ -244,7 +244,7 @@
 						    			<span>F&ouml;rvaltning</span>
 						    		</label>
 						    		<%-- Todo - switch to use model context --%>
-						    		<aui:input cssClass="element-field" type="text" name="administrativeUnit" value="" label="" />			    		
+						    		<aui:input cssClass="element-field" type="text" name="ideaPerson.administrativeUnit" value="foo" label="" />
 						    	</aui:field-wrapper>
 								<span class="element-field-help">
 									Skriv in vilken f&ouml;rvaltning du arbetar p&aring;

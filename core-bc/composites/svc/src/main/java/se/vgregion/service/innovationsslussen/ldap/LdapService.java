@@ -75,12 +75,25 @@ public class LdapService {
                 Object result = type.newInstance();
                 BeanMap bm = new BeanMap(result);
                 NamingEnumeration<? extends Attribute> all = attributes.getAll();
+
+                NamingEnumeration<String> ids = attributes.getIDs();
+                List<String> names = new ArrayList<String>();
+                while (ids.hasMore()) {
+                    //System.out.println("id " + ids.next());
+                    String name = ids.next();
+                    System.out.println(" @ExplicitLdapName(\"" +name+ "\") private String " + toBeanPropertyName(name) + ";");
+                }
+                //System.out.println(names);
+
+
                 while (all.hasMore()) {
                     Attribute attribute = all.next();
 
                     String name = toBeanPropertyName(attribute.getID());
                     if (bm.containsKey(name) && bm.getWriteMethod(name) != null) {
                         bm.put(name, attribute.get());
+                    } else {
+                        System.out.println("Not in bean but in result " + attribute.getID());
                     }
                 }
                 return result;

@@ -54,10 +54,13 @@ public class IdeaContent extends AbstractEntity<Long> {
     @Lob
     @Column(name = "idea_tested")
     private String ideaTested;
-    
+
     @Column(name = "type")
     @Enumerated
     private IdeaContentType type;
+
+    @Column(name = "state")
+    private String state;
     
     // Foreign
     @ManyToOne
@@ -190,5 +193,13 @@ public class IdeaContent extends AbstractEntity<Long> {
 
     public String getIdeaTransporterComment() {
         return ideaTransporterComment;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }

@@ -6,6 +6,8 @@ import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ldap.core.AttributesMapper;
@@ -39,6 +41,12 @@ public class LdapServiceTest {
     @Before
     public void setUp() {
         service = new LdapService();
+    }
+
+    @Test
+    public void find() {
+        service.setLdapTemplate(Mockito.mock(LdapTemplate.class));
+        List<Individual> result = service.find(new Individual());
     }
 
     @Test

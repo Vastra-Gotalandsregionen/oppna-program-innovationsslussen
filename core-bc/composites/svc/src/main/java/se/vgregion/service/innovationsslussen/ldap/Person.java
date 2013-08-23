@@ -4,53 +4,129 @@
 package se.vgregion.service.innovationsslussen.ldap;
 
 
-
 /**
  * Value object for information stored in the user ldap database. The properties are supposed to match those in the
  * db. This enables the LdapService to use this as an structure for searching and packing results from queries from
  * this db.
+ *
  * @author claes.lundahl
  */
 public class Person {
 
-    private String vgrTilltalskod;
+    @ExplicitLdapName("displayName")
+    private String displayName;
+    @ExplicitLdapName("hsaPersonIdentityNumber")
     private String hsaPersonIdentityNumber;
+    @ExplicitLdapName("mailFile")
+    private String mailFile;
+    @ExplicitLdapName("givenName")
     private String givenName;
-    private String vgrObjectStatusTime;
+    @ExplicitLdapName("vgrAnstform")
     private String vgrAnstform;
+    @ExplicitLdapName("objectClass")
     private String objectClass;
-    @ExplicitLdapName("userCertificate;binary")
-    private String userCertificateBinary;
-    //private String userCertificate;binary;
+    @ExplicitLdapName("vgrFormansgrupp")
     private String vgrFormansgrupp;
-    private String hsaMifareSerialNumber;
-    private String vgrOrgRel;
-    private String mail;
-    private String vgrObjectSource;
+    @ExplicitLdapName("userPassword")
+    private String userPassword;
+    @ExplicitLdapName("ou")
+    private String ou;
+    @ExplicitLdapName("vgrStrukturPersonDN")
     private String vgrStrukturPersonDN;
+    @ExplicitLdapName("uid")
+    private String uid;
+    @ExplicitLdapName("mail")
+    private String mail;
+    @ExplicitLdapName("cn")
     private String cn;
-    private String initials;
-    private String vgrObjectStatus;
+    @ExplicitLdapName("mailServer")
+    private String mailServer;
+    @ExplicitLdapName("vgrStrukturPerson")
     private String vgrStrukturPerson;
-    private String userPrincipalName;
-    //private String vgr-id;
+    @ExplicitLdapName("labeledURI")
+    private String labeledURI;
+    @ExplicitLdapName("vgrTitleCode")
+    private String vgrTitleCode;
     @ExplicitLdapName("vgr-id")
     private String vgrId;
+    @ExplicitLdapName("vgrAnsvarsnummer")
     private String vgrAnsvarsnummer;
+    @ExplicitLdapName("vgrAO3kod")
     private String vgrAO3kod;
-    private String vgrModifyTimestamp;
+    @ExplicitLdapName("o")
+    private String o;
+    @ExplicitLdapName("hsaIdentity")
     private String hsaIdentity;
+    @ExplicitLdapName("sun-fm-saml2-nameid-info")
+    private String sunFmSaml2NameidInfo;
+    @ExplicitLdapName("sun-fm-saml2-nameid-infokey")
+    private String sunFmSaml2NameidInfokey;
+    @ExplicitLdapName("fullName")
     private String fullName;
+    @ExplicitLdapName("strukturGrupp")
+    private String strukturGrupp;
+    @ExplicitLdapName("sn")
     private String sn;
-    private String vgrModifyersName;
-    private String hsaStartDate;
+    @ExplicitLdapName("title")
+    private String title;
+    @ExplicitLdapName("vgrAdminType") private String vgrAdminType;
+    @ExplicitLdapName("vgrLabeledURI") private String vgrLabeledURI;
 
-    public String getVgrTilltalskod() {
-        return vgrTilltalskod;
+    public Gender getGender() {
+        if (hsaPersonIdentityNumber == null
+                || "".equals(hsaPersonIdentityNumber)
+                || hsaPersonIdentityNumber.length() != 12) {
+            return Gender.UNKNOWN;
+        }
+
+        char c = hsaPersonIdentityNumber.charAt(10);
+        if (!Character.isDigit(c)) {
+            return Gender.UNKNOWN;
+        }
+        int i = Integer.parseInt(Character.toString(c));
+        if (i % 2 == 0) {
+            return Gender.FEMALE;
+        }
+        return Gender.MALE;
     }
 
-    public void setVgrTilltalskod(String vgrTilltalskod) {
-        this.vgrTilltalskod = vgrTilltalskod;
+    public Short getBirthYear() {
+        if (hsaPersonIdentityNumber != null && hsaPersonIdentityNumber.length() > 3
+                && Character.isDigit(hsaPersonIdentityNumber.charAt(0))
+                && Character.isDigit(hsaPersonIdentityNumber.charAt(1))
+                && Character.isDigit(hsaPersonIdentityNumber.charAt(2))
+                && Character.isDigit(hsaPersonIdentityNumber.charAt(3))) {
+            return Short.parseShort(hsaPersonIdentityNumber.substring(0, 4));
+        }
+        return null;
+    }
+
+    public String getVgrAdminType() {
+        return vgrAdminType;
+    }
+
+    public void setVgrAdminType(String vgrAdminType) {
+        this.vgrAdminType = vgrAdminType;
+    }
+
+    public String getVgrLabeledURI() {
+        return vgrLabeledURI;
+    }
+
+    public void setVgrLabeledURI(String vgrLabeledURI) {
+        this.vgrLabeledURI = vgrLabeledURI;
+    }
+
+    public static enum Gender {
+        MALE, FEMALE, UNKNOWN
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public String getHsaPersonIdentityNumber() {
@@ -61,20 +137,20 @@ public class Person {
         this.hsaPersonIdentityNumber = hsaPersonIdentityNumber;
     }
 
+    public String getMailFile() {
+        return mailFile;
+    }
+
+    public void setMailFile(String mailFile) {
+        this.mailFile = mailFile;
+    }
+
     public String getGivenName() {
         return givenName;
     }
 
     public void setGivenName(String givenName) {
         this.givenName = givenName;
-    }
-
-    public String getVgrObjectStatusTime() {
-        return vgrObjectStatusTime;
-    }
-
-    public void setVgrObjectStatusTime(String vgrObjectStatusTime) {
-        this.vgrObjectStatusTime = vgrObjectStatusTime;
     }
 
     public String getVgrAnstform() {
@@ -93,14 +169,6 @@ public class Person {
         this.objectClass = objectClass;
     }
 
-    public String getUserCertificateBinary() {
-        return userCertificateBinary;
-    }
-
-    public void setUserCertificateBinary(String userCertificateBinary) {
-        this.userCertificateBinary = userCertificateBinary;
-    }
-
     public String getVgrFormansgrupp() {
         return vgrFormansgrupp;
     }
@@ -109,36 +177,20 @@ public class Person {
         this.vgrFormansgrupp = vgrFormansgrupp;
     }
 
-    public String getHsaMifareSerialNumber() {
-        return hsaMifareSerialNumber;
+    public String getUserPassword() {
+        return userPassword;
     }
 
-    public void setHsaMifareSerialNumber(String hsaMifareSerialNumber) {
-        this.hsaMifareSerialNumber = hsaMifareSerialNumber;
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
     }
 
-    public String getVgrOrgRel() {
-        return vgrOrgRel;
+    public String getOu() {
+        return ou;
     }
 
-    public void setVgrOrgRel(String vgrOrgRel) {
-        this.vgrOrgRel = vgrOrgRel;
-    }
-
-    public String getMail() {
-        return mail;
-    }
-
-    public void setMail(String mail) {
-        this.mail = mail;
-    }
-
-    public String getVgrObjectSource() {
-        return vgrObjectSource;
-    }
-
-    public void setVgrObjectSource(String vgrObjectSource) {
-        this.vgrObjectSource = vgrObjectSource;
+    public void setOu(String ou) {
+        this.ou = ou;
     }
 
     public String getVgrStrukturPersonDN() {
@@ -149,6 +201,22 @@ public class Person {
         this.vgrStrukturPersonDN = vgrStrukturPersonDN;
     }
 
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
     public String getCn() {
         return cn;
     }
@@ -157,20 +225,12 @@ public class Person {
         this.cn = cn;
     }
 
-    public String getInitials() {
-        return initials;
+    public String getMailServer() {
+        return mailServer;
     }
 
-    public void setInitials(String initials) {
-        this.initials = initials;
-    }
-
-    public String getVgrObjectStatus() {
-        return vgrObjectStatus;
-    }
-
-    public void setVgrObjectStatus(String vgrObjectStatus) {
-        this.vgrObjectStatus = vgrObjectStatus;
+    public void setMailServer(String mailServer) {
+        this.mailServer = mailServer;
     }
 
     public String getVgrStrukturPerson() {
@@ -181,12 +241,20 @@ public class Person {
         this.vgrStrukturPerson = vgrStrukturPerson;
     }
 
-    public String getUserPrincipalName() {
-        return userPrincipalName;
+    public String getLabeledURI() {
+        return labeledURI;
     }
 
-    public void setUserPrincipalName(String userPrincipalName) {
-        this.userPrincipalName = userPrincipalName;
+    public void setLabeledURI(String labeledURI) {
+        this.labeledURI = labeledURI;
+    }
+
+    public String getVgrTitleCode() {
+        return vgrTitleCode;
+    }
+
+    public void setVgrTitleCode(String vgrTitleCode) {
+        this.vgrTitleCode = vgrTitleCode;
     }
 
     public String getVgrId() {
@@ -213,12 +281,12 @@ public class Person {
         this.vgrAO3kod = vgrAO3kod;
     }
 
-    public String getVgrModifyTimestamp() {
-        return vgrModifyTimestamp;
+    public String getO() {
+        return o;
     }
 
-    public void setVgrModifyTimestamp(String vgrModifyTimestamp) {
-        this.vgrModifyTimestamp = vgrModifyTimestamp;
+    public void setO(String o) {
+        this.o = o;
     }
 
     public String getHsaIdentity() {
@@ -229,12 +297,36 @@ public class Person {
         this.hsaIdentity = hsaIdentity;
     }
 
+    public String getSunFmSaml2NameidInfo() {
+        return sunFmSaml2NameidInfo;
+    }
+
+    public void setSunFmSaml2NameidInfo(String sunFmSaml2NameidInfo) {
+        this.sunFmSaml2NameidInfo = sunFmSaml2NameidInfo;
+    }
+
+    public String getSunFmSaml2NameidInfokey() {
+        return sunFmSaml2NameidInfokey;
+    }
+
+    public void setSunFmSaml2NameidInfokey(String sunFmSaml2NameidInfokey) {
+        this.sunFmSaml2NameidInfokey = sunFmSaml2NameidInfokey;
+    }
+
     public String getFullName() {
         return fullName;
     }
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public String getStrukturGrupp() {
+        return strukturGrupp;
+    }
+
+    public void setStrukturGrupp(String strukturGrupp) {
+        this.strukturGrupp = strukturGrupp;
     }
 
     public String getSn() {
@@ -245,42 +337,11 @@ public class Person {
         this.sn = sn;
     }
 
-    public String getVgrModifyersName() {
-        return vgrModifyersName;
+    public String getTitle() {
+        return title;
     }
 
-    public void setVgrModifyersName(String vgrModifyersName) {
-        this.vgrModifyersName = vgrModifyersName;
+    public void setTitle(String title) {
+        this.title = title;
     }
-
-    public String getHsaStartDate() {
-        return hsaStartDate;
-    }
-
-    public void setHsaStartDate(String hsaStartDate) {
-        this.hsaStartDate = hsaStartDate;
-    }
-
-    public Gender getGender() {
-        if (hsaPersonIdentityNumber == null
-                || "".equals(hsaPersonIdentityNumber)
-                || hsaPersonIdentityNumber.length() != 12) {
-            return Gender.UNKNOWN;
-        }
-
-        char c = hsaPersonIdentityNumber.charAt(10);
-        if (!Character.isDigit(c)) {
-            return Gender.UNKNOWN;
-        }
-        int i = Integer.parseInt(Character.toString(c));
-        if (i % 2 == 0){
-            return Gender.FEMALE;
-        }
-        return Gender.MALE;
-    }
-
-    public static enum Gender {
-        MALE, FEMALE, UNKNOWN
-    }
-
 }

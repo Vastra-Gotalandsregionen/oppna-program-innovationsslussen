@@ -1,5 +1,6 @@
 package se.vgregion.service.innovationsslussen.ldap;
 
+import org.apache.commons.collections.BeanMap;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,6 +9,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -36,17 +39,30 @@ public class LdapServiceIT {
         Person person = new Person();
         person.setHsaIdentity(filter);
         List<Person> result = ldapService.find(person);
-        System.out.println("result " + result);
+        printFirstItem(result);
     }
 
 
     @Test
     public void findByVgrId() {
-        String filter = "clalu4";
+        String filter = "susro3";
         Person person = new Person();
-        person.setVgrId(filter);
+        //person.setVgrId(filter);
+        person.setCn(filter);
         List<Person> result = ldapService.find(person);
-        System.out.println("result " + result);
+        printFirstItem(result);
+    }
+
+    private void printFirstItem(Collection collection) {
+        if (collection.isEmpty()) {
+            System.out.println("\nNo result!\n");
+            return;
+        }
+        HashMap map = new HashMap(new BeanMap(collection.iterator().next()));
+        System.out.println("\n\nSample item: \n");
+        for (Object key: map.keySet()) {
+            System.out.println(key + " = " + map.get(key));
+        }
     }
 
 }
