@@ -3,7 +3,6 @@ package se.vgregion.service.innovationsslussen.idea;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -19,7 +18,6 @@ import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.service.barium.BariumService;
-import se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsService;
 import se.vgregion.service.innovationsslussen.repository.idea.IdeaRepository;
 
 import javax.persistence.EntityManager;
@@ -106,7 +104,7 @@ public class IdeaServiceImplTest {
 
         when(bariumService.getBariumIdea("bariumId1")).thenReturn(ideaObjectFields);
         when(bariumService.asyncGetIdeaObjectFields(anyString())).thenCallRealMethod();
-        when(bariumService.asyncGetObjectEntryFuture(anyString())).thenCallRealMethod();
+        when(bariumService.asyncGetIdeaPhaseFuture(anyString())).thenCallRealMethod();
 
         ReflectionTestUtils.setField(bariumService, "executor", Executors.newCachedThreadPool());
     }

@@ -514,11 +514,11 @@ public class IdeaServiceImpl implements IdeaService {
 
         // Make two calls asynchronously and simultaneously to speed up.
         Future<IdeaObjectFields> ideaObjectFieldsFuture = bariumService.asyncGetIdeaObjectFields(ideaId);
-        Future<ObjectEntry> objectEntryFuture = bariumService.asyncGetObjectEntryFuture(ideaId);
+        Future<String> ideaPhase = bariumService.asyncGetIdeaPhaseFuture(ideaId);
 
         try {
             populateIdea(ideaObjectFieldsFuture.get(), idea);
-            idea.setPhase(objectEntryFuture.get().getState());
+            idea.setPhase(ideaPhase.get());
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         } catch (ExecutionException e) {
