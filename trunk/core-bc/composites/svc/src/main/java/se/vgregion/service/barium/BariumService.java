@@ -262,13 +262,13 @@ public class BariumService {
         return executor.submit(new Callable<String>() {
             @Override
             public String call() throws Exception {
-                return bariumRestClient.getIdeaState(ideaId);
+                return getIdeaState(ideaId);
             }
         });
     }
 
     public String getIdeaState(String ideaId) {
-        return getObject(ideaId).getState();
+        return bariumRestClient.getIdeaState(ideaId);
     }
 
     public List<ObjectEntry> getIdeaFiles(Idea idea, String folderName) throws BariumException {

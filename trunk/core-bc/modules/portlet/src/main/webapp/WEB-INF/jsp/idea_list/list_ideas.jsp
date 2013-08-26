@@ -53,15 +53,6 @@
 								</div>
 							</div>
 						</div>
-						
-						<ul class="idea-flow-list">
-							<li class="done"><span>1</span></li>
-							<li class="done"><span>2</span></li>
-							<li><span>3</span></li>
-							<li><span>4</span></li>
-							<li><span>5</span></li>
-							<li><span>6</span></li>
-						</ul>
 					</div>
 				</div>
 			</li>
