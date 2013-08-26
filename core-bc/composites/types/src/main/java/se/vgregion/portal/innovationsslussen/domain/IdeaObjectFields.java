@@ -18,7 +18,8 @@ public class IdeaObjectFields {
     private static final Logger LOGGER = LoggerFactory.getLogger(IdeaObjectFields.class);
 
     private String behov;
-    private String beslutsforslagsskommentar;
+    private String beslutsforslagskommentar;
+    private String beslutsforslagsmotivering;
     private String bilaga;
     private String epost; // e-post
     private String fodelsear;
@@ -27,10 +28,11 @@ public class IdeaObjectFields {
     private String hsaIdKivEnhet; // HSA-ID.KIVenhet - Förvaltning
     private String ide;
     private String idetranportorensKommentar;
+    private String Idetranportorenskommentarintern;
     private String instanceName; // instance.name
     private String kommavidare;
     private String komplnamn;
-    private String koordinatornsskommentar;
+    private String koordinatornskommentar;
     private String prio1kommentar;
     private String prio2kommentar;
     private String prioriteringsradsmote;
@@ -94,7 +96,19 @@ public class IdeaObjectFields {
             } else {
                 LOGGER.warn("Couldn't find a class field for Barium field with id=" + objectField.getId());
             }
+        }
 
+        // Check whether any fields have not been set to inform the developers which can be cleaned up
+        Field[] declaredFields = this.getClass().getDeclaredFields();
+        for (Field df : declaredFields) {
+            df.setAccessible(true);
+            try {
+                if (df.get(this) == null) {
+                    LOGGER.info("Field \"" + df.getName() + "\" wasn't set. May it be removed from the class?");
+                }
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -106,12 +120,20 @@ public class IdeaObjectFields {
         this.behov = behov;
     }
 
-    public String getBeslutsforslagsskommentar() {
-        return beslutsforslagsskommentar;
+    public String getBeslutsforslagskommentar() {
+        return beslutsforslagskommentar;
     }
 
-    public void setBeslutsforslagsskommentar(String beslutsforslagsskommentar) {
-        this.beslutsforslagsskommentar = beslutsforslagsskommentar;
+    public void setBeslutsforslagskommentar(String beslutsforslagskommentar) {
+        this.beslutsforslagskommentar = beslutsforslagskommentar;
+    }
+
+    public String getBeslutsforslagsmotivering() {
+        return beslutsforslagsmotivering;
+    }
+
+    public void setBeslutsforslagssmotivering(String beslutsforslagsmotivering) {
+        this.beslutsforslagsmotivering = beslutsforslagsmotivering;
     }
 
     public String getBilaga() {
@@ -178,6 +200,14 @@ public class IdeaObjectFields {
         this.idetranportorensKommentar = idetranportorensKommentar;
     }
 
+    public String getIdetranportorenskommentarintern() {
+        return Idetranportorenskommentarintern;
+    }
+
+    public void setIdetranportorenskommentarintern(String idetranportorenskommentarintern) {
+        Idetranportorenskommentarintern = idetranportorenskommentarintern;
+    }
+
     public String getInstanceName() {
         return instanceName;
     }
@@ -203,12 +233,12 @@ public class IdeaObjectFields {
     }
 
 
-    public String getKoordinatornsskommentar() {
-        return koordinatornsskommentar;
+    public String getKoordinatornskommentar() {
+        return koordinatornskommentar;
     }
 
-    public void setKoordinatornsskommentar(String koordinatornsskommentar) {
-        this.koordinatornsskommentar = koordinatornsskommentar;
+    public void setKoordinatornskommentar(String koordinatornskommentar) {
+        this.koordinatornskommentar = koordinatornskommentar;
     }
 
     public String getPrio1kommentar() {
