@@ -195,7 +195,8 @@ public class BariumRestClientImpl implements BariumRestClient {
     }
 
     @Override
-    public void uploadFile(String instanceId, String folderName, String fileName, InputStream inputStream) throws BariumException {
+    public void uploadFile(String instanceId, String folderName, String fileName, InputStream inputStream)
+            throws BariumException {
         String folderId = findFolder(instanceId, folderName);
 
         if (folderId == null) {
@@ -205,34 +206,14 @@ public class BariumRestClientImpl implements BariumRestClient {
     }
 
     @Override
-    public ObjectEntry getObject(String id) {
+    public ObjectEntry getObject(String id) throws BariumException {
         String objectJson = null;
-        try {
             objectJson = doGet("/Objects/" + id);
             LOGGER.debug(objectJson);
-            Objects objects = toObjects(objectJson);
-            return getFormEntry(objects);
-        } catch (BariumException e) {
-            // TODO - we might want to check what kind of error we receive from Barium. (parse json string)
-            //LOGGER.error(e.getMessage(), e);
-            return null;
-        }
-    }
 
-    ObjectEntry getFormEntry(Objects objects) {
-        for (ObjectEntry oe : objects.getData()) {
-            if (oe.getState() != null) {
-                return oe;
-            }
-        }
-        return null;
-    }
-
-    Objects toObjects(String json) {
-        ObjectMapper mapper = new ObjectMapper().setVisibility(JsonMethod.FIELD, JsonAutoDetect.Visibility.ANY);
-        mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        ObjectMapper mapper = new ObjectMapper();
         try {
-            return mapper.readValue(json, Objects.class);
+            return mapper.readValue(objectJson, ObjectEntry.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

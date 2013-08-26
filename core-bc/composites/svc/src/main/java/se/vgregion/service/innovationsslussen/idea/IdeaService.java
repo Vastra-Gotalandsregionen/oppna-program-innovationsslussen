@@ -320,7 +320,7 @@ public interface IdeaService {
 
     void uploadFile(Idea idea, String folderName, String fileName, InputStream inputStream) throws FileUploadException;
 
-    ObjectEntry getObject(String id);
+    ObjectEntry getObject(String id) throws BariumException;
 
     InputStream downloadFile(String id) throws BariumException;
 

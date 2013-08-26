@@ -563,7 +563,8 @@ public class IdeaViewController {
     }
 
     @ResourceMapping("downloadFile")
-    public void downloadFile(@RequestParam("id") String id, ResourceResponse response) throws BariumException, IOException {
+    public void downloadFile(@RequestParam("id") String id, ResourceResponse response) throws BariumException,
+            IOException {
         ObjectEntry objectEntry = ideaService.getObject(id);
         String name = objectEntry.getName();
 
