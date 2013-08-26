@@ -45,7 +45,7 @@ public class LdapServiceIT {
 
     @Test
     public void findByVgrId() {
-        String filter = "susro3";
+        String filter = "marsc9";
         Person person = new Person();
         //person.setVgrId(filter);
         person.setCn(filter);
