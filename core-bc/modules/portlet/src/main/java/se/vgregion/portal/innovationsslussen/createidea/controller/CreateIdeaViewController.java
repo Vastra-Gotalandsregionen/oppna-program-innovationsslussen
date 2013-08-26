@@ -115,7 +115,7 @@ public class CreateIdeaViewController {
                     Person person = findings.get(0);
                     ideaPerson.setEmail(person.getMail());
                     ideaPerson.setJobPosition(person.getTitle());
-                    ideaPerson.setName(person.getFullName());
+                    ideaPerson.setName(person.getDisplayName());
                     ideaPerson.setVgrId(person.getVgrId());
                     ideaPerson.setBirthYear(person.getBirthYear());
                     ideaPerson.setAdministrativeUnit(person.getVgrStrukturPersonDN());
