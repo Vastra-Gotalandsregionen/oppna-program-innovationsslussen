@@ -55,6 +55,8 @@ public class Person {
     private String vgrAO3kod;
     @ExplicitLdapName("o")
     private String o;
+    @ExplicitLdapName("l")
+    private String l;
     @ExplicitLdapName("hsaIdentity")
     private String hsaIdentity;
     @ExplicitLdapName("sun-fm-saml2-nameid-info")
@@ -115,6 +117,14 @@ public class Person {
 
     public void setVgrLabeledURI(String vgrLabeledURI) {
         this.vgrLabeledURI = vgrLabeledURI;
+    }
+
+    public String getL() {
+        return l;
+    }
+
+    public void setL(String l) {
+        this.l = l;
     }
 
     public static enum Gender {

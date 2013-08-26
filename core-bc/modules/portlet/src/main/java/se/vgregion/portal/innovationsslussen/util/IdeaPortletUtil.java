@@ -33,22 +33,23 @@ public class IdeaPortletUtil {
         String phoneMobile = ParamUtil.getString(request, "ideaPerson.phoneMobile", "");
         String administrativeUnit = ParamUtil.getString(request, "administrativeUnit", "");
         String jobPosition = ParamUtil.getString(request, "ideaPerson.jobPosition", "");
-        
+        String gender = ParamUtil.getString(request, "ideaPerson.gender");
+
         String vgrId = "none";
         
         Idea idea = new Idea(companyId, groupId, userId);
         IdeaContent ideaContentPublic = new IdeaContent(companyId, groupId, userId);
         IdeaContent ideaContentPrivate = new IdeaContent(companyId, groupId, userId);
         IdeaPerson ideaPerson = new IdeaPerson(companyId, groupId, userId);
-        
+
         ideaContentPublic.setType(IdeaContentType.IDEA_CONTENT_TYPE_PUBLIC);
-        
+
         ideaContentPrivate.setType(IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE);
         ideaContentPrivate.setDescription(description);
         ideaContentPrivate.setIdeaTested(ideaTested);
         ideaContentPrivate.setSolvesProblem(solvesProblem);
         ideaContentPrivate.setWantsHelpWith(wantsHelpWith);
-        
+
         ideaPerson.setName(name);
         ideaPerson.setEmail(email);
         ideaPerson.setPhone(phone);
@@ -56,8 +57,9 @@ public class IdeaPortletUtil {
         ideaPerson.setJobPosition(jobPosition);
         ideaPerson.setVgrId(vgrId);
         ideaPerson.setAdditionalPersonsInfo(additionalPersonInfo);
-        //ideaPerson.setAdministrativeUnit(administrativeUnit);
-        
+        ideaPerson.setAdministrativeUnit(administrativeUnit);
+        ideaPerson.setGender((gender == null || "".equals(gender) ? IdeaPerson.Gender.UNKNOWN : IdeaPerson.Gender.valueOf(gender)));
+
         idea.setTitle(title);
 
         idea.addIdeaContent(ideaContentPublic);

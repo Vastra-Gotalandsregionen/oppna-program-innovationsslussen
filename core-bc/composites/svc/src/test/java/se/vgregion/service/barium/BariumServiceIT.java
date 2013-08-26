@@ -41,6 +41,7 @@ public class BariumServiceIT {
     @Test
     public void getObject() throws Exception {
         ObjectEntry result = bariumService.getObject("4563a84a-b19c-4c75-90d8-1ef18c2bebcc");
+        Assert.assertNotNull(result);
         System.out.println(result.getState());
     }
 
