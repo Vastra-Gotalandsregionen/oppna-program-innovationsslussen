@@ -18,11 +18,12 @@ public class IdeaObjectFields {
     private static final Logger LOGGER = LoggerFactory.getLogger(IdeaObjectFields.class);
 
     private String behov;
-    private String beslutsforslagskommentar;
+    private String beslutsforslag;
     private String beslutsforslagsmotivering;
     private String bilaga;
     private String epost; // e-post
     private String fodelsear;
+    private String forvaltning;
     private String godkprio1;
     private String godkprio2;
     private String hsaIdKivEnhet; // HSA-ID.KIVenhet - Förvaltning
@@ -32,7 +33,9 @@ public class IdeaObjectFields {
     private String instanceName; // instance.name
     private String kommavidare;
     private String komplnamn;
+    private String kon;
     private String koordinatornskommentar;
+    private String mobiletelephonenumber; // VGR-ID.mobiletelephonenumber
     private String prio1kommentar;
     private String prio2kommentar;
     private String prioriteringsradsmote;
@@ -42,7 +45,6 @@ public class IdeaObjectFields {
     private String siteLank;
     private String state;
     private String telefonnummer; // VGR-ID.hsapublictelephonenumber
-    private String telefonnummerMobil; // VGR-ID.mobiletelephonenumber
     private String testat;
     private String vgrIdFullname; // VGR-ID.fullname
     private String vgrIdHsaPostalAdress; // VGR-ID.hsapostaladress
@@ -53,10 +55,12 @@ public class IdeaObjectFields {
     private Map<String, String> specialFieldMappings = new HashMap<String, String>();
 
     {
-        specialFieldMappings.put("e-post", "epost");
+//        specialFieldMappings.put("e-post", "epost");
         specialFieldMappings.put("instance.name", "instanceName");
         specialFieldMappings.put("Idetranportorenskommentar", "idetranportorensKommentar");
-        specialFieldMappings.put("HSA-ID.KIVenhet", "hsaIdKivEnhet");
+        specialFieldMappings.put("VGR-ID.email", "epost");
+        specialFieldMappings.put("VGR-ID.forvaltning", "forvaltning");
+        specialFieldMappings.put("VGR-ID.KIVenhet", "hsaIdKivEnhet");
         specialFieldMappings.put("VGR-ID.fullname", "vgrIdFullname");
         specialFieldMappings.put("VGR-ID.hsapostaladress", "vgrIdHsaPostalAdress");
         specialFieldMappings.put("VGR-ID.hsapublictelephonenumber", "telefonnummer");
@@ -120,19 +124,19 @@ public class IdeaObjectFields {
         this.behov = behov;
     }
 
-    public String getBeslutsforslagskommentar() {
-        return beslutsforslagskommentar;
+    public String getBeslutsforslag() {
+        return beslutsforslag;
     }
 
-    public void setBeslutsforslagskommentar(String beslutsforslagskommentar) {
-        this.beslutsforslagskommentar = beslutsforslagskommentar;
+    public void setBeslutsforslag(String beslutsforslag) {
+        this.beslutsforslag = beslutsforslag;
     }
 
     public String getBeslutsforslagsmotivering() {
         return beslutsforslagsmotivering;
     }
 
-    public void setBeslutsforslagssmotivering(String beslutsforslagsmotivering) {
+    public void setBeslutsforslagsmotivering(String beslutsforslagsmotivering) {
         this.beslutsforslagsmotivering = beslutsforslagsmotivering;
     }
 
@@ -154,6 +158,14 @@ public class IdeaObjectFields {
 
     public String getFodelsear() {
         return fodelsear;
+    }
+
+    public String getForvaltning() {
+        return forvaltning;
+    }
+
+    public void setForvaltning(String forvaltning) {
+        this.forvaltning = forvaltning;
     }
 
     public void setFodelsear(String fodelsear) {
@@ -232,6 +244,13 @@ public class IdeaObjectFields {
         this.komplnamn = setKomplnamn;
     }
 
+    public String getKon() {
+        return kon;
+    }
+
+    public void setKon(String kon) {
+        this.kon = kon;
+    }
 
     public String getKoordinatornskommentar() {
         return koordinatornskommentar;
@@ -281,12 +300,12 @@ public class IdeaObjectFields {
         this.telefonnummer = telefonnummer;
     }
 
-    public String getTelefonnummerMobil() {
-        return telefonnummerMobil;
+    public String getMobiletelephonenumber() {
+        return mobiletelephonenumber;
     }
 
-    public void setTelefonnummerMobil(String telefonnummerMobil) {
-        this.telefonnummerMobil = telefonnummerMobil;
+    public void setMobiletelephonenumber(String mobiletelephonenumber) {
+        this.mobiletelephonenumber = mobiletelephonenumber;
     }
 
 
