@@ -9,13 +9,9 @@ import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonMethod;
-import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.type.TypeFactory;
-import org.codehaus.jackson.type.TypeReference;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,7 +24,6 @@ import se.vgregion.util.Util;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -663,9 +658,6 @@ public class BariumRestClientImpl implements BariumRestClient {
         if (ideaObjectFields.getBehov() != null) {
             sb.append("&behov=").append(ideaObjectFields.getBehov());
         }
-        if (ideaObjectFields.getEpost() != null) {
-            sb.append("&e-post=").append(ideaObjectFields.getEpost());
-        }
         if (ideaObjectFields.getFodelsear() != null) {
             sb.append("&fodelsear=").append(ideaObjectFields.getFodelsear());
         }
@@ -702,8 +694,8 @@ public class BariumRestClientImpl implements BariumRestClient {
         if (ideaObjectFields.getTelefonnummer() != null) {
             sb.append("&VGR-ID.hsapublictelephonenumber=").append(ideaObjectFields.getTelefonnummer());
         }
-        if (ideaObjectFields.getTelefonnummerMobil() != null) {
-            sb.append("&VGR-ID.mobiletelephonenumber=").append(ideaObjectFields.getTelefonnummerMobil());
+        if (ideaObjectFields.getMobiletelephonenumber() != null) {
+            sb.append("&VGR-ID.mobiletelephonenumber=").append(ideaObjectFields.getMobiletelephonenumber());
         }
         if (ideaObjectFields.getVgrId() != null) {
             sb.append("&VGR-ID=").append(ideaObjectFields.getVgrId());

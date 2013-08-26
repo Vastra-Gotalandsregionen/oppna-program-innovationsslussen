@@ -181,9 +181,9 @@ public class BariumService {
         ideaObjectFields.setInstanceName(title);
         ideaObjectFields.setKomplnamn(additonalPersonsInfo);
         ideaObjectFields.setKommavidare(wantsHelpWith);
+        ideaObjectFields.setMobiletelephonenumber(phoneMobile);
         ideaObjectFields.setSiteLank(ideaSiteLink);
         ideaObjectFields.setTelefonnummer(phone);
-        ideaObjectFields.setTelefonnummerMobil(phoneMobile);
         ideaObjectFields.setTestat(ideaTested);
         
         
