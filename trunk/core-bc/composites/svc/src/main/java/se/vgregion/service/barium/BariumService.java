@@ -277,7 +277,7 @@ public class BariumService {
         return getIdeaFiles(folderId);
     }
 
-    public ObjectEntry getObject(String id) {
+    public ObjectEntry getObject(String id) throws BariumException {
         return bariumRestClient.getObject(id);
     }
 

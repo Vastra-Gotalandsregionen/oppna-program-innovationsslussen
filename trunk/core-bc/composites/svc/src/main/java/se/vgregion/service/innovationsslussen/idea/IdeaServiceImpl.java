@@ -639,7 +639,7 @@ public class IdeaServiceImpl implements IdeaService {
     }
 
     @Override
-    public ObjectEntry getObject(String id) {
+    public ObjectEntry getObject(String id) throws BariumException {
         return bariumService.getObject(id);
     }
 

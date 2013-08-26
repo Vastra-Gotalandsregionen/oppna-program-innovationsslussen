@@ -38,7 +38,7 @@ public interface BariumRestClient {
 
     void uploadFile(String instanceId, String fileName, InputStream inputStream) throws BariumException;
 
-    ObjectEntry getObject(String id);
+    ObjectEntry getObject(String id) throws BariumException;
 
     InputStream doGetFileStream(String objectId) throws BariumException;
 

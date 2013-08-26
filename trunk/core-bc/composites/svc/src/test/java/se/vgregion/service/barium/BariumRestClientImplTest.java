@@ -32,18 +32,5 @@ public class BariumRestClientImplTest {
             "\"TemplateId\":null,\"FileType\":\"\",\"SortIndex\":null,\"State\":null,\"CreatedDate\":\"2013-08-22T09:14:57Z\"," +
             "\"UpdatedDate\":null,\"DataId\":null}]}\n";
 
-    @Test
-    public void toObjectsAndGetFormEntry() {
-        BariumRestClientImpl instance = new BariumRestClientImpl();
-        Objects objects = instance.toObjects(json);
-        for (ObjectEntry oe: objects.getData()) {
-            System.out.println(oe.getState());
-        }
-        Assert.assertNotNull(objects);
-
-        ObjectEntry oe = instance.getFormEntry(objects);
-        Assert.assertNotNull(oe);
-        Assert.assertNotNull(oe.getState());
-    }
 
 }
