@@ -95,15 +95,15 @@
 									<c:when test="${idea.isPublic}">
 										<c:choose>
 											<c:when test="${not empty idea.ideaContentPublic.intro}">
-												${fn:substring(idea.ideaContentPublic.intro, 0, 150)}
+												${fn:substring(idea.ideaContentPublic.intro, 0, 175)}
 											</c:when>
 											<c:otherwise>
-												${fn:substring(idea.ideaContentPublic.description, 0, 150)}
+												${fn:substring(idea.ideaContentPublic.description, 0, 175)}
 											</c:otherwise>
 										</c:choose>
 									</c:when>
 									<c:otherwise>
-										${fn:substring(idea.ideaContentPrivate.description, 0, 150)}
+										${fn:substring(idea.ideaContentPrivate.description, 0, 175)}
 									</c:otherwise>
 								</c:choose>
 							</div>
