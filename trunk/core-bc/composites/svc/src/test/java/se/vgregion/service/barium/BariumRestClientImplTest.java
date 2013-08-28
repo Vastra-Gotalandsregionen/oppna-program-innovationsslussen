@@ -32,5 +32,8 @@ public class BariumRestClientImplTest {
             "\"TemplateId\":null,\"FileType\":\"\",\"SortIndex\":null,\"State\":null,\"CreatedDate\":\"2013-08-22T09:14:57Z\"," +
             "\"UpdatedDate\":null,\"DataId\":null}]}\n";
 
+    @Test
+    public void toUrl() {
 
+    }
 }
