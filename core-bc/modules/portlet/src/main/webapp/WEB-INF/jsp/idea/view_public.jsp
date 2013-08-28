@@ -25,7 +25,7 @@
 						<div class="idea-toolbar-wrap">
 							<ul class="rp-toolbar clearfix">
 							
-								<c:if test="${ideaPermissionChecker.hasPermissionViewIdeaPrivate}">
+								<c:if test="${ideaPermissionChecker.hasPermissionViewIdeaPrivate or ideaPermissionChecker.isIdeaOwner}">
 									<li class="icon closed">
 									
 										<liferay-portlet:renderURL var="ideaPrivateUrl">
