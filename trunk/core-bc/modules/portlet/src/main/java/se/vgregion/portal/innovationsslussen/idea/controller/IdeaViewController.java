@@ -122,7 +122,7 @@ public class IdeaViewController {
             }
 
             IdeaPermissionChecker ideaPermissionChecker = ideaPermissionCheckerService.getIdeaPermissionChecker(
-                    scopeGroupId, userId, idea.getId());
+                    scopeGroupId, userId, idea);
 
             model.addAttribute("idea", idea);
             model.addAttribute("commentsList", commentsList);
@@ -373,7 +373,7 @@ public class IdeaViewController {
                 
                 // TODO: use permission checker to verify that user has delete permissions
                 IdeaPermissionChecker ideaPermissionChecker = ideaPermissionCheckerService.getIdeaPermissionChecker(
-                		groupId, userId, idea.getId());
+                		groupId, userId, idea);
                 
 
                 MBMessageLocalServiceUtil.deleteDiscussionMessage(commentId);

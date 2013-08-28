@@ -18,14 +18,15 @@ public class IdeaPermissionCheckerServiceImpl implements IdeaPermissionCheckerSe
 	private static final Logger LOGGER = LoggerFactory.getLogger(IdeaPermissionCheckerServiceImpl.class);
 	
 	@Override
-	public IdeaPermissionChecker getIdeaPermissionChecker(long scopeGroupId, long userId, String ideaId) {
+	public IdeaPermissionChecker getIdeaPermissionChecker(long scopeGroupId, long userId, Idea idea) {
 		
 		
 		IdeaPermissionChecker ideaPermissionChecker = new IdeaPermissionChecker();
 		
 		try {
-			User user = UserLocalServiceUtil.getUser(userId);
+			String ideaId = idea.getId();
 			
+			User user = UserLocalServiceUtil.getUser(userId);
 			
 			PermissionChecker permissionChecker = getPermissionChecker(user);
 			
@@ -51,6 +52,9 @@ public class IdeaPermissionCheckerServiceImpl implements IdeaPermissionCheckerSe
             boolean hasPermissionViewIdeaPublic = permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(), ideaId, IdeaActionKeys.VIEW_IDEA_PUBLIC);
             boolean hasPermissionViewIdeaPrivate = permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(), ideaId, IdeaActionKeys.VIEW_IDEA_PRIVATE);
             boolean hasPermissionViewInBarium = permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(), ideaId, IdeaActionKeys.VIEW_IN_BARIUM);
+            
+            // Get owner permissions
+            boolean isIdeaOwner = (userId == idea.getUserId());
 
             // Set add permissions
             ideaPermissionChecker.setHasPermissionAddCommentPrivate(hasPermissionAddCommentPrivate);
@@ -73,6 +77,9 @@ public class IdeaPermissionCheckerServiceImpl implements IdeaPermissionCheckerSe
             ideaPermissionChecker.setHasPermissionViewIdeaPublic(hasPermissionViewIdeaPublic);
             ideaPermissionChecker.setHasPermissionViewIdeaPrivate(hasPermissionViewIdeaPrivate);
             ideaPermissionChecker.setHasPermissionViewInBarium(hasPermissionViewInBarium);
+            
+            // Set owner permissions
+            ideaPermissionChecker.setIsIdeaOwner(isIdeaOwner);
             
 			
 		} catch (PortalException e) {
