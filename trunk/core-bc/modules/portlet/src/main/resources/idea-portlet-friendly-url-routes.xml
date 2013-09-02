@@ -7,8 +7,14 @@
 		<pattern>/stangd/{urlTitle}</pattern>
 		<implicit-parameter name="showView">showIdea</implicit-parameter>
 		<implicit-parameter name="type">private</implicit-parameter>
-	</route>	
-    
+	</route>
+
+	<route>
+		<pattern>/{urlTitle}</pattern>
+		<implicit-parameter name="showView">showIdea</implicit-parameter>
+		<implicit-parameter name="type">public</implicit-parameter>
+	</route>
+
 	<route>
 		<pattern>/{urlTitle}</pattern>
 		<implicit-parameter name="showView">showIdea</implicit-parameter>
