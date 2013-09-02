@@ -23,6 +23,7 @@ import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:ldap-config.xml"})
+@SuppressWarnings("unchecked")
 public class LdapServiceIT {
 
     LdapService ldapService;

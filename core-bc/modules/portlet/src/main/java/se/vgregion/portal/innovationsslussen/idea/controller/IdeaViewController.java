@@ -100,23 +100,17 @@ public class IdeaViewController {
             boolean isIdeaUserFavorite = ideaService.getIsIdeaUserFavorite(companyId, scopeGroupId, userId, urlTitle);
             IdeaContent visibility = idea.getIdeaContentPrivate();
 
-            List<CommentItemVO> commentsList;
-            if (ideaType.equals("private")) {
-                commentsList = ideaService.getPrivateComments(idea);
-                try {
-                    List<ObjectEntry> ideaFilesClosed = ideaService.getIdeaFiles(idea, "Liferay stängda dokument");
-                    model.addAttribute("ideaFilesClosed", ideaFilesClosed);
-                } catch (BariumException e) {
-                    LOGGER.error(e.getMessage(), e);
-                }
-            } else {
-                commentsList = ideaService.getPublicComments(idea);
-            }
-
-            // Add these independently of private/public view.
+            List<CommentItemVO> commentsList = null;
             try {
-                List<ObjectEntry> ideaFilesOpen = ideaService.getIdeaFiles(idea, "Liferay öppna dokument");
-                model.addAttribute("ideaFilesOpen", ideaFilesOpen);
+                if (ideaType.equals("private")) {
+                    commentsList = ideaService.getPrivateComments(idea);
+                    List<ObjectEntry> ideaFilesClosed = ideaService.getIdeaFiles(idea, "Liferay stängda dokument");
+                    model.addAttribute("ideaFiles", ideaFilesClosed);
+                } else {
+                    commentsList = ideaService.getPublicComments(idea);
+                    List<ObjectEntry> ideaFilesOpen = ideaService.getIdeaFiles(idea, "Liferay öppna dokument");
+                    model.addAttribute("ideaFiles", ideaFilesOpen);
+                }
             } catch (BariumException e) {
                 LOGGER.error(e.getMessage(), e);
             }
@@ -134,6 +128,7 @@ public class IdeaViewController {
             model.addAttribute("ideaPermissionChecker", ideaPermissionChecker);
 
             model.addAttribute("isIdeaOwner", idea.getUserId() == userId);
+            model.addAttribute("ideaType", ideaType);
 
             if (ideaType.equals("private") && ideaPermissionChecker.getHasPermissionViewIdeaPrivate()) {
                 returnView = "view_private";
@@ -146,6 +141,7 @@ public class IdeaViewController {
     @RenderMapping(params = "showView=showUploadFile")
     public String uploadFile(RenderRequest request, RenderResponse response, Model model) {
         model.addAttribute("urlTitle", request.getParameter("urlTitle"));
+        model.addAttribute("ideaType", request.getParameter("ideaType"));
         return "upload_file";
     }
 
@@ -341,7 +337,7 @@ public class IdeaViewController {
 
         response.setRenderParameter("urlTitle", urlTitle);
     }
-    
+
     /**
      * Method handling Action request.
      *
@@ -363,18 +359,18 @@ public class IdeaViewController {
 
         IdeaContentType ideaContentType = IdeaContentType.valueOf(ParamUtil.getString(request, "ideaContentType"));
         String urlTitle = ParamUtil.getString(request, "urlTitle", "");
-        
+
         long commentId = ParamUtil.getLong(request, "commentId", 0);
 
         if (commentId != 0) {
 
             try {
                 Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
-                
+
                 // TODO: use permission checker to verify that user has delete permissions
                 IdeaPermissionChecker ideaPermissionChecker = ideaPermissionCheckerService.getIdeaPermissionChecker(
-                		groupId, userId, idea);
-                
+                        groupId, userId, idea);
+
 
                 MBMessageLocalServiceUtil.deleteDiscussionMessage(commentId);
 
@@ -392,7 +388,7 @@ public class IdeaViewController {
 
         response.setRenderParameter("urlTitle", urlTitle);
 
-    }    
+    }
 
     /**
      * Method handling Action request.
@@ -505,9 +501,9 @@ public class IdeaViewController {
 
         String fileType = request.getParameter("fileType");
         String folderName;
-        if (fileType.equals("liferayOpen")) {
+        if (fileType.equals("public")) {
             folderName = "Liferay öppna dokument";
-        } else if (fileType.equals("liferayClosed")) {
+        } else if (fileType.equals("private")) {
             folderName = "Liferay stängda dokument";
         } else {
             throw new IllegalArgumentException("Unknown filetype: " + fileType);
@@ -553,9 +549,10 @@ public class IdeaViewController {
         }
 
         response.setRenderParameter("urlTitle", urlTitle);
+        response.setRenderParameter("type", fileType);
         response.setRenderParameter("showView", "showIdea");
     }
-    
+
     private void doExceptionStuff(Exception e, ActionResponse response, Model model) {
         LOGGER.error(e.getMessage(), e);
         response.setRenderParameter("showView", "showUploadFile");

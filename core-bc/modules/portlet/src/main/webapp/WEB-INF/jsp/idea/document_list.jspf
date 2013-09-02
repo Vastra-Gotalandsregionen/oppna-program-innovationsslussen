@@ -6,12 +6,13 @@
       <portlet:renderURL var="uploadFile">
         <portlet:param name="urlTitle" value="${param.urlTitle}"/>
         <portlet:param name="showView" value="showUploadFile"/>
+        <portlet:param name="ideaType" value="${ideaType}"/>
       </portlet:renderURL>
-      <a href="${uploadFile}">Lägg till dokument</a>
+      <b><a href="${uploadFile}">Lägg till dokument</a></b>
     </li>
   </c:if>
-  <p>Stängda</p>
-  <c:forEach items="${ideaFilesClosed}" var="file" varStatus="counter">
+
+  <c:forEach items="${ideaFiles}" var="file" varStatus="counter">
     <c:choose>
       <c:when test="${file.fileType eq 'pdf'}">
         <c:set var="fileType" value="pdf"/>
@@ -36,87 +37,4 @@
     </li>
   </c:forEach>
 
-  <p>Öppna</p>
-
-  <c:forEach items="${ideaFilesOpen}" var="file">
-    <c:choose>
-      <c:when test="${file.fileType eq 'pdf'}">
-        <c:set var="fileType" value="pdf"/>
-      </c:when>
-      <c:when test="${file.fileType eq 'doc' or file.fileType eq 'docx'}">
-        <c:set var="fileType" value="doc"/>
-      </c:when>
-      <c:when test="${file.fileType eq 'png' or file.fileType eq 'jpg' or file.fileType eq 'gif'}">
-        <c:set var="fileType" value="img"/>
-      </c:when>
-      <c:otherwise>
-        <c:set var="fileType" value="${file.fileType}"/>
-      </c:otherwise>
-    </c:choose>
-
-    <portlet:resourceURL id="<portlet:namespace/>downloadFile" var="downloadFileUrl">
-      <portlet:param name="id" value="${file.id}"/>
-    </portlet:resourceURL>
-
-    <li class="${fileType}">
-      <a href="${downloadFileUrl}" target="_blank">${file.name}</a>
-    </li>
-  </c:forEach>
-
-<%--  <div id="treeView">
-    <p id="paragraph"></p>
-  </div>--%>
-
 </ul>
-
-<%--
-<liferay-util:html-bottom>
-  <script type="text/javascript">
-    AUI().use('aui-tree-view', function (A) {
-      var children = [
-        {
-          expanded: true,
-          label: 'Dokument',
-          children: [
-            {
-              label: 'Öppna',
-              expanded: true,
-              children: [
-                &lt;%&ndash;<c:forEach items="${ideaFilesOpen}" var="file">
-                  <c:choose>
-                    <c:when test="${file.fileType eq 'pdf'}">
-                      <c:set var="fileType" value="pdf"/>
-                    </c:when>
-                    <c:when test="${file.fileType eq 'doc' or file.fileType eq 'docx'}">
-                      <c:set var="fileType" value="doc"/>
-                    </c:when>
-                    <c:when test="${file.fileType eq 'png' or file.fileType eq 'jpg' or file.fileType eq 'gif'}">
-                      <c:set var="fileType" value="img"/>
-                    </c:when>
-                    <c:otherwise>
-                      <c:set var="fileType" value="${file.fileType}"/>
-                    </c:otherwise>
-                  </c:choose>&ndash;%&gt;
-                {
-                  contentBox: '#documentListItem-1'
-                  //cssClasses: 'pdf'
-                  //label: 'En fil.pdf'
-                }
-                &lt;%&ndash;</c:forEach>&ndash;%&gt;
-
-              ]
-            },
-            {
-              label: 'Stängda',
-              expanded: true
-            }
-          ]
-        }
-      ];
-      new A.TreeView({
-        boundingBox: '#treeView',
-        children: children
-      }).render();
-    });
-  </script>
-</liferay-util:html-bottom>--%>
