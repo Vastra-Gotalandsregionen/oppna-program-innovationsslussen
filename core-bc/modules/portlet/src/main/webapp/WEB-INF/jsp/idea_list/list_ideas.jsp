@@ -19,8 +19,13 @@
 				<liferay-portlet:param name="showView" value="showIdea" />
 				<liferay-portlet:param name="urlTitle" value="${idea.urlTitle}" />
 			</liferay-portlet:renderURL>
+			
+			<c:set var="ideaItemCssClass" scope="page" value="" />
+			<c:if test="${not idea.isPublic}">
+				<c:set var="ideaItemCssClass" scope="page" value="private" />
+			</c:if>
 		
-			<li class="">
+			<li class="${ideaItemCssClass}">
 				<div class="idea-item">
 					<a href="${ideaUrl}">
 						<div class="idea-content">
@@ -31,12 +36,11 @@
 									<li class="likes">
 										${fn:length(idea.likes)}
 									</li>
+									<%-- 
 									<li class="comments">
-										<%-- 
 										(${fn:length(idea.likes)})
-										--%>
-										0
 									</li>
+									--%>
 								</ul>
 							</div>
 							<div class="idea-content-2">
