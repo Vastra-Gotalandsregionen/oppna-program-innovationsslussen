@@ -68,6 +68,6 @@
 				</div>
 			</li>
 		</c:forEach>
-		<liferay-util:include page="/WEB-INF/jsp/idea_list/tpl_paginator.jsp" servletContext="<%= application %>" />	
 	</ul>
+	<liferay-util:include page="/WEB-INF/jsp/idea_list/tpl_paginator.jsp" servletContext="<%= application %>" />
 </c:if>
