@@ -62,7 +62,15 @@
 							</div>
 						</div>
 						<div class="idea-label">
-							Under utveckling
+						
+							<c:choose>
+								<c:when test="${not idea.isPublic}">
+									Privat
+								</c:when>
+								<c:otherwise>
+									Under utveckling		
+								</c:otherwise>
+							</c:choose>
 						</div>				
 					</a>
 				</div>
