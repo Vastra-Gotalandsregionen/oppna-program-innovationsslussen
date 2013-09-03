@@ -16,7 +16,6 @@
 	<c:choose>
 		<c:when test="${not empty ideaList}">
 			<%@ include file="list_ideas.jsp" %>
-			<liferay-util:include page="/WEB-INF/jsp/idea_list/tpl_paginator.jsp" servletContext="<%= application %>" />
 		</c:when>
 		<c:otherwise>
 			Det finns inga &ouml;ppna id&eacute;er &auml;nnu.
