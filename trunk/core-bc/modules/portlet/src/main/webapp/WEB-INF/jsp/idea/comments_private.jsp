@@ -12,6 +12,8 @@
 
 <div class="idea-comments">
 
+	<h2>Kommentarer</h2>
+
 	<portlet:actionURL name="addComment" var="addCommentUrl">
 		<portlet:param name="action" value="addComment" />
 		<portlet:param name="urlTitle" value="${idea.urlTitle}" />

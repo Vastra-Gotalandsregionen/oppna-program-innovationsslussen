@@ -11,7 +11,8 @@
 <%@ taglib uri="http://portalen.vgregion.se/util" prefix="vgrutil" %>
 
 <div class="idea-comments">
-
+	
+	<h2>Kommentarer</h2>
 	
 	<div class="add-comment">
 	
