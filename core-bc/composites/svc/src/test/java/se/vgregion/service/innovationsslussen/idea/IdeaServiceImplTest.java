@@ -124,6 +124,7 @@ public class IdeaServiceImplTest {
 
         // When
         ideaService.init();
+        Thread.sleep(500);
 
         // Then (see that the description has been updated compared to what the setup() method would result in)
         Idea idea = ideaService.findIdeaByUrlTitle("stora-titeln");

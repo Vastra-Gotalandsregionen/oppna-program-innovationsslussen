@@ -74,7 +74,7 @@ public class IdeaServiceImpl implements IdeaService {
     private BariumService bariumService;
     private IdeaSettingsService ideaSettingsService;
 
-    private ExecutorService executor = Executors.newCachedThreadPool();
+    private ExecutorService executor = Executors.newCachedThreadPool(new DaemonThreadFactory());
 
     @Autowired
     private JpaTransactionManager transactionManager;
@@ -107,12 +107,7 @@ public class IdeaServiceImpl implements IdeaService {
     @PostConstruct
     public void init() {
         try {
-            // Do the transaction manually since the postprocessing isn't done here yet, and thus an
-            // @Transactional annotation won't have have effect.
-            TransactionStatus transaction = transactionManager.getTransaction(new DefaultTransactionAttribute(
-                    TransactionDefinition.PROPAGATION_REQUIRED));
-            updateAllIdeasFromBarium();
-            transactionManager.commit(transaction);
+            asyncUpdateAllIdeasFromBarium();
         } catch (RuntimeException e) {
             LOGGER.error(e.getMessage(), e);
         }
@@ -563,9 +558,12 @@ public class IdeaServiceImpl implements IdeaService {
     // 06.15 every morning
     @Override
     @Scheduled(cron = "* 15 6 * * ?")
-    @Transactional
     public void updateAllIdeasFromBarium() {
         LOGGER.info("Updating all ideas from Barium...");
+
+        // Do the transaction manually since we may run this in a separate thread.
+        TransactionStatus transaction = transactionManager.getTransaction(new DefaultTransactionAttribute(
+                TransactionDefinition.PROPAGATION_REQUIRED));
 
         Collection<Idea> allIdeas = findAll();
 
@@ -577,7 +575,18 @@ public class IdeaServiceImpl implements IdeaService {
             }
         }
 
+        transactionManager.commit(transaction);
+
         LOGGER.info("Finished updating all ideas from Barium.");
+    }
+
+    public void asyncUpdateAllIdeasFromBarium() {
+        executor.submit(new Runnable() {
+            @Override
+            public void run() {
+                updateAllIdeasFromBarium();
+            }
+        });
     }
 
     private void populateIdea(IdeaObjectFields ideaObjectFields, Idea idea) {
@@ -840,5 +849,17 @@ public class IdeaServiceImpl implements IdeaService {
 
     private String generateIdeaSiteLink(String schemeServerNamePort, String urlTitle) {
         return schemeServerNamePort + "/web/innovationsslussen/ide/-/idea/" + urlTitle;
+    }
+
+    private static class DaemonThreadFactory implements ThreadFactory {
+        private final ThreadFactory defaultThreadFactory = Executors.defaultThreadFactory();
+
+        @Override
+        public Thread newThread(Runnable r) {
+            Thread thread = defaultThreadFactory.newThread(r);
+            thread.setName("IdeaServiceExecutor-" + thread.getName());
+            thread.setDaemon(true); // We don't want these threads to block a shutdown of the JVM
+            return thread;
+        }
     }
 }
