@@ -23,7 +23,7 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> im
     	
         String queryString = "" 
         		+ " SELECT DISTINCT n FROM Idea n" 
-        		+ " LEFT JOIN FETCH n.ideaContents" 
+        		+ " LEFT JOIN FETCH n.ideaContents"
         		+ " LEFT JOIN FETCH n.ideaPersons"
         		+ " LEFT JOIN FETCH n.likes"
         		+ " LEFT JOIN FETCH n.favorites"
