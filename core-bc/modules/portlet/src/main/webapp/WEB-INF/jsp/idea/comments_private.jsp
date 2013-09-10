@@ -94,7 +94,9 @@
 			</c:forEach>
 		</c:when>
 		<c:otherwise>
-			<p>Det finns inga kommentarer p&aring; denna id&eacute; &auml;nnu. Posta din kommentar och bli f&ouml;rst!</p>
+			<div class="comment">
+				<p>Det finns inga kommentarer p&aring; denna id&eacute; &auml;nnu. Posta din kommentar och bli f&ouml;rst!</p>
+			</div>
 		</c:otherwise>
 	</c:choose>
 	

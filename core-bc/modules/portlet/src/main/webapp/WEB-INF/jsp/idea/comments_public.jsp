@@ -110,7 +110,9 @@
 			</c:forEach>
 		</c:when>
 		<c:otherwise>
+			<div class="comment">
 			<p>Det finns inga kommentarer p&aring; denna id&eacute; &auml;nnu. <c:if test="${isSignedIn}">Posta din kommentar och bli f&ouml;rst!</c:if></p>
+			</div>
 		</c:otherwise>
 	</c:choose>
 </div>	
