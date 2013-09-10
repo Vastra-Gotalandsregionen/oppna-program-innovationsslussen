@@ -12,7 +12,7 @@
 <liferay-theme:defineObjects />	
 
 <c:if test="${not empty ideaList}">
-	<ul class="idea-list-new">
+	<ul class="idea-list">
 		<c:forEach items="${ideaList}" var="idea" varStatus="index">
 		
 			<liferay-portlet:renderURL var="ideaUrl" plid="${ideaPlid}" portletName="${ideaPortletName}">
