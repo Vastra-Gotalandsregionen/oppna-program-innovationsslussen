@@ -21,6 +21,28 @@
 			</liferay-portlet:renderURL>
 			
 			<c:set var="ideaItemCssClass" scope="page" value="" />
+			<c:set var="ideaPhaseLabel" scope="page" value="Id&eacute;" />
+			
+			<c:choose>
+				<c:when test="${idea.isPublic}">
+					<c:choose>
+						<c:when test="${idea.phase eq '3' or idea.phase eq '4'}">
+							<c:set var="ideaItemCssClass" scope="page" value="active-innovationsslussen" />
+							<c:set var="ideaPhaseLabel" scope="page" value="Aktiv hos Innovationsslussen" />
+						</c:when>
+						<c:when test="${idea.phase eq '5'}">
+							<c:set var="ideaItemCssClass" scope="page" value="done" />
+							<c:set var="ideaPhaseLabel" scope="page" value="Genomf&ouml;rd" />
+						</c:when>
+					</c:choose>
+				</c:when>
+				<c:otherwise>
+					<c:set var="ideaItemCssClass" scope="page" value="private" />
+					<c:set var="ideaPhaseLabel" scope="page" value="Privat" />
+				</c:otherwise>
+			</c:choose>
+			
+			
 			<c:if test="${not idea.isPublic}">
 				<c:set var="ideaItemCssClass" scope="page" value="private" />
 			</c:if>
@@ -62,15 +84,7 @@
 							</div>
 						</div>
 						<div class="idea-label">
-						
-							<c:choose>
-								<c:when test="${not idea.isPublic}">
-									Privat
-								</c:when>
-								<c:otherwise>
-									Under utveckling		
-								</c:otherwise>
-							</c:choose>
+							${ideaPhaseLabel}
 						</div>				
 					</a>
 				</div>

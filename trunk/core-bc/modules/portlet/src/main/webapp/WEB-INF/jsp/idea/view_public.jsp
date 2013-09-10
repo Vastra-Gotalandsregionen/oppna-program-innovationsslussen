@@ -11,10 +11,22 @@
 <%@ taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 
 <portlet:defineObjects />
-<liferay-theme:defineObjects />	
+<liferay-theme:defineObjects />
 
-<div class="idea-outer">
-	<div class="idea">
+<c:set var="ideaItemCssClass" scope="page" value="" />
+
+<c:choose>
+	<c:when test="${idea.phase eq '3' or idea.phase eq '4'}">
+		<c:set var="ideaItemCssClass" scope="page" value="active-innovationsslussen" />
+	</c:when>
+	<c:when test="${idea.phase eq '5'}">
+		<c:set var="ideaItemCssClass" scope="page" value="done" />
+	</c:when>
+</c:choose>
+
+
+<div class="idea-outer ${ideaItemCssClass}">
+	<div class="idea ">
 		<div class="idea-inner">
 		
 			<c:choose>
