@@ -1,6 +1,7 @@
 package se.vgregion.service.barium;
 
 import junit.framework.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,6 +11,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
 import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
 import se.vgregion.portal.innovationsslussen.domain.json.ObjectEntry;
 
@@ -34,7 +36,7 @@ public class BariumServiceIT {
     public void getBariumIdea() throws Exception {
         IdeaObjectFields result = bariumService.getBariumIdea("4563a84a-b19c-4c75-90d8-1ef18c2bebcc");
         Assert.assertNotNull(result);
-        Assert.assertNotNull(result.getState());
+        Assert.assertNotNull(result.getIde());
     }
 
 

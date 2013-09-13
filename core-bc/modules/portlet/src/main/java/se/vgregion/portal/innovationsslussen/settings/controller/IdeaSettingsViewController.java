@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
+import se.vgregion.portal.innovationsslussen.BaseController;
 import se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsService;
 import se.vgregion.service.innovationsslussen.idea.settings.util.ExpandoConstants;
 
@@ -29,7 +30,7 @@ import com.liferay.portal.theme.ThemeDisplay;
  */
 @Controller
 @RequestMapping(value = "VIEW")
-public class IdeaSettingsViewController {
+public class IdeaSettingsViewController extends BaseController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IdeaSettingsViewController.class.getName());
     

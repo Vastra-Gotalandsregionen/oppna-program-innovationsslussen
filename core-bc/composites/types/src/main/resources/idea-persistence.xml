@@ -6,6 +6,7 @@
 	<persistence-unit name="innovationsslussen">
 		<class>se.vgregion.portal.innovationsslussen.domain.jpa.Idea</class>
 		<class>se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent</class>
+		<class>se.vgregion.portal.innovationsslussen.domain.jpa.IdeaFile</class>
 		<class>se.vgregion.portal.innovationsslussen.domain.jpa.IdeaPerson</class>
 		<class>se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserLike</class>
 		<class>se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserFavorite</class>

@@ -11,6 +11,14 @@
       <b><a href="${uploadFile}">Lägg till dokument</a></b>
     </li>
   </c:if>
+  <c:choose>
+    <c:when test="${ideaType eq 'public'}">
+      <c:set var="ideaFiles" value="${idea.ideaContentPublic.ideaFiles}"/>
+    </c:when>
+    <c:otherwise>
+      <c:set var="ideaFiles" value="${idea.ideaContentPrivate.ideaFiles}"/>
+    </c:otherwise>
+  </c:choose>
 
   <c:forEach items="${ideaFiles}" var="file" varStatus="counter">
     <c:choose>

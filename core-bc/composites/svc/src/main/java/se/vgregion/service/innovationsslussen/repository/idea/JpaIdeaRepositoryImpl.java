@@ -16,9 +16,10 @@ import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
  */
 public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> implements JpaIdeaRepository {
 
-	
+
     @Override
     public Idea find(String id) {
+<<<<<<< HEAD
     	Idea idea = null;
     	
         String queryString = "" 
@@ -30,33 +31,64 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> im
         		+ " WHERE n.id = ?1" 
         		+ " ORDER BY n.id ASC";
         
+=======
+        Idea idea = null;
+
+        String queryString = ""
+                + " SELECT DISTINCT n FROM Idea n"
+                + " LEFT JOIN FETCH n.ideaContents"
+                + " LEFT JOIN FETCH n.ideaContents.ideaFiles"
+                + " LEFT JOIN FETCH n.ideaPersons"
+                + " LEFT JOIN FETCH n.likes"
+                + " LEFT JOIN FETCH n.favorites"
+                + " WHERE n.id = ?1"
+                + " ORDER BY n.id ASC";
+
+>>>>>>> Added IdeaFile functionality. Changed so that the idea view do not collect files from Barium, uses the Liferay database instead. Added a BaseController that all other controllers extends.
         Object[] queryObject = new Object[]{id};
 
         List<Idea> ideas = findByQuery(queryString, queryObject);
-        
+
         if(ideas.size() > 0) {
-        	idea = ideas.get(0);
+            idea = ideas.get(0);
         }
 
         return idea;
     }
-	
-	
+
+
     @Override
     public Idea findIdeaByUrlTitle(String urlTitle) {
         String queryString = ""
-        		+ " SELECT DISTINCT n FROM Idea n" 
-        		+ " LEFT JOIN FETCH n.ideaContents" 
-        		+ " LEFT JOIN FETCH n.ideaPersons"
-        		+ " LEFT JOIN FETCH n.likes"
-        		+ " LEFT JOIN FETCH n.favorites"
-        		+ " WHERE n.urlTitle = ?1" 
-        		+ " ORDER BY n.id ASC";
-        
+                + " SELECT DISTINCT n FROM Idea n"
+                + " LEFT JOIN FETCH n.ideaContents"
+                + " LEFT JOIN FETCH n.ideaContents ic"
+                + " LEFT JOIN FETCH ic.ideaFiles"
+                + " LEFT JOIN FETCH n.ideaPersons"
+                + " LEFT JOIN FETCH n.likes"
+                + " LEFT JOIN FETCH n.favorites"
+                + " WHERE n.urlTitle = ?1"
+                + " ORDER BY n.id ASC";
+
         Object[] queryObject = new Object[]{urlTitle};
 
         List<Idea> ideas = findByQuery(queryString, queryObject);
-        
+
+
+        //        System.out.println("monator ideas - " + ideas.size());
+        //
+        //        for (Idea idea : ideas) {
+        //            System.out.println("monator - ideas " + idea.getTitle());
+        //            for (IdeaContent ideaContent : idea.getIdeaContents()) {
+        //                System.out.println("monator - ideasCo " + ideaContent.getIdeaFiles().size());
+        //                for (IdeaFile ideaFile : ideaContent.getIdeaFiles()) {
+        //                    System.out.println("monator - ideasCo " + ideaFile.getName());
+        //
+        //                }
+        //            }
+        //        }
+
+
         if(ideas.size() > 1) {
             throw new IllegalStateException("There shouldn't be more than one idea with the same title."); // TODO Erik, vi får diskutera detta. /Patrik
         } else if (ideas.size() == 1) {
@@ -66,333 +98,333 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> im
         }
 
     }
-    
+
     @Override
     public int findIdeasCountByCompanyId(long companyId) {
-    	
-        String queryString = "" 
-        		+ " SELECT COUNT(DISTINCT n) FROM Idea n" 
-        		+ " WHERE n.companyId = ?1";
-        
+
+        String queryString = ""
+                + " SELECT COUNT(DISTINCT n) FROM Idea n"
+                + " WHERE n.companyId = ?1";
+
         Object[] queryObject = new Object[]{companyId};
-    	
+
         int count = findCountByQuery(queryString, queryObject);
-        
+
         return count;
     }
-	
+
     @Override
     public List<Idea> findIdeasByCompanyId(long companyId) {
-        
-        String queryString = "" 
-        		+ " SELECT DISTINCT n FROM Idea n" 
-        		+ " LEFT JOIN FETCH n.ideaContents" 
-        		+ " LEFT JOIN FETCH n.ideaPersons"
-        		+ " LEFT JOIN FETCH n.likes"
-        		+ " LEFT JOIN FETCH n.favorites"
-        		+ " WHERE n.companyId = ?1" 
-        		+ " ORDER BY n.id ASC";
-        
+
+        String queryString = ""
+                + " SELECT DISTINCT n FROM Idea n"
+                + " LEFT JOIN FETCH n.ideaContents"
+                + " LEFT JOIN FETCH n.ideaPersons"
+                + " LEFT JOIN FETCH n.likes"
+                + " LEFT JOIN FETCH n.favorites"
+                + " WHERE n.companyId = ?1"
+                + " ORDER BY n.id ASC";
+
         Object[] queryObject = new Object[]{companyId};
 
         List<Idea> ideas = findByQuery(queryString, queryObject);
 
         return ideas;
     }
-    
+
     @Override
     public List<Idea> findIdeasByCompanyId(long companyId, int start, int offset) {
-         
-        String queryString = "" 
-        		+ " SELECT DISTINCT n FROM Idea n" 
-        		+ " LEFT JOIN FETCH n.ideaContents" 
-        		+ " LEFT JOIN FETCH n.ideaPersons"
-        		+ " LEFT JOIN FETCH n.likes"
-        		+ " LEFT JOIN FETCH n.favorites"
-        		+ " WHERE n.companyId = ?1" 
-        		+ " ORDER BY n.id ASC";
-        
+
+        String queryString = ""
+                + " SELECT DISTINCT n FROM Idea n"
+                + " LEFT JOIN FETCH n.ideaContents"
+                + " LEFT JOIN FETCH n.ideaPersons"
+                + " LEFT JOIN FETCH n.likes"
+                + " LEFT JOIN FETCH n.favorites"
+                + " WHERE n.companyId = ?1"
+                + " ORDER BY n.id ASC";
+
         Object[] queryObject = new Object[]{companyId};
 
         List<Idea> ideas = findByPagedQuery(queryString, queryObject, start, offset);
 
         return ideas;
     }
-    
+
     @Override
     public int findIdeaCountByGroupId(long companyId, long groupId) {
-    	
-        String queryString = "" 
-        		+ " SELECT COUNT(DISTINCT n) FROM Idea n" 
-        		+ " WHERE n.companyId = ?1"
-        		+ " AND n.groupId = ?2"
-        		;
-        
+
+        String queryString = ""
+                + " SELECT COUNT(DISTINCT n) FROM Idea n"
+                + " WHERE n.companyId = ?1"
+                + " AND n.groupId = ?2"
+                ;
+
         Object[] queryObject = new Object[]{companyId, groupId};
-    	
-    	int count = findCountByQuery(queryString, queryObject);
-    	
-    	return count;
+
+        int count = findCountByQuery(queryString, queryObject);
+
+        return count;
     }
-    
+
     @Override
     public List<Idea> findIdeasByGroupId(long companyId, long groupId) {
-        
-        String queryString = "" 
-        		+ " SELECT DISTINCT n FROM Idea n" 
-        		+ " LEFT JOIN FETCH n.ideaContents" 
-        		+ " LEFT JOIN FETCH n.ideaPersons"
-        		+ " LEFT JOIN FETCH n.likes"
-        		+ " LEFT JOIN FETCH n.favorites"
-        		+ " WHERE n.companyId = ?1"
-        		+ " AND n.groupId = ?2"
-        		+ " ORDER BY n.created DESC";
-        
+
+        String queryString = ""
+                + " SELECT DISTINCT n FROM Idea n"
+                + " LEFT JOIN FETCH n.ideaContents"
+                + " LEFT JOIN FETCH n.ideaPersons"
+                + " LEFT JOIN FETCH n.likes"
+                + " LEFT JOIN FETCH n.favorites"
+                + " WHERE n.companyId = ?1"
+                + " AND n.groupId = ?2"
+                + " ORDER BY n.created DESC";
+
         Object[] queryObject = new Object[]{companyId, groupId};
 
         List<Idea> ideas = findByQuery(queryString, queryObject);
 
         return ideas;
     }
-    
+
     @Override
     public List<Idea> findIdeasByGroupId(long companyId, long groupId, int start, int offset) {
-        
-        String queryString = "" 
-        		+ " SELECT DISTINCT n FROM Idea n" 
-        		+ " LEFT JOIN FETCH n.ideaContents" 
-        		+ " LEFT JOIN FETCH n.ideaPersons"
-        		+ " LEFT JOIN FETCH n.likes"
-        		+ " LEFT JOIN FETCH n.favorites"
-        		+ " WHERE n.companyId = ?1"
-        		+ " AND n.groupId = ?2"
-        		+ " ORDER BY n.created DESC";
-        
+
+        String queryString = ""
+                + " SELECT DISTINCT n FROM Idea n"
+                + " LEFT JOIN FETCH n.ideaContents"
+                + " LEFT JOIN FETCH n.ideaPersons"
+                + " LEFT JOIN FETCH n.likes"
+                + " LEFT JOIN FETCH n.favorites"
+                + " WHERE n.companyId = ?1"
+                + " AND n.groupId = ?2"
+                + " ORDER BY n.created DESC";
+
         Object[] queryObject = new Object[]{companyId, groupId};
 
         List<Idea> ideas = findByPagedQuery(queryString, queryObject, start, offset);
-        
+
 
         return ideas;
-    }    
-    
+    }
+
     @Override
     public int findIdeaCountByGroupId(long companyId, long groupId, IdeaStatus status) {
-    	
-        String queryString = "" 
-        		+ " SELECT COUNT(DISTINCT n) FROM Idea n" 
-        		+ " WHERE n.companyId = ?1"
-        		+ " AND n.groupId = ?2"
-        		+ " AND n.status = ?3"
-        		;
-        
+
+        String queryString = ""
+                + " SELECT COUNT(DISTINCT n) FROM Idea n"
+                + " WHERE n.companyId = ?1"
+                + " AND n.groupId = ?2"
+                + " AND n.status = ?3"
+                ;
+
         Object[] queryObject = new Object[]{companyId, groupId, status};
-    	
-    	int count = findCountByQuery(queryString, queryObject);
-    	
-    	return count;
+
+        int count = findCountByQuery(queryString, queryObject);
+
+        return count;
     }
-    
+
     @Override
     public List<Idea> findIdeasByGroupId(long companyId, long groupId, IdeaStatus status) {
-        
-        String queryString = "" 
-        		+ " SELECT DISTINCT n FROM Idea n" 
-        		+ " LEFT JOIN FETCH n.ideaContents" 
-        		+ " LEFT JOIN FETCH n.ideaPersons"
-        		+ " LEFT JOIN FETCH n.likes"
-        		+ " LEFT JOIN FETCH n.favorites"
-        		+ " WHERE n.companyId = ?1"
-        		+ " AND n.groupId = ?2"
-        		+ " AND n.status = ?3"
-        		+ " ORDER BY n.created DESC";
-        
+
+        String queryString = ""
+                + " SELECT DISTINCT n FROM Idea n"
+                + " LEFT JOIN FETCH n.ideaContents"
+                + " LEFT JOIN FETCH n.ideaPersons"
+                + " LEFT JOIN FETCH n.likes"
+                + " LEFT JOIN FETCH n.favorites"
+                + " WHERE n.companyId = ?1"
+                + " AND n.groupId = ?2"
+                + " AND n.status = ?3"
+                + " ORDER BY n.created DESC";
+
         Object[] queryObject = new Object[]{companyId, groupId, status};
 
         List<Idea> ideas = findByQuery(queryString, queryObject);
 
         return ideas;
     }
-    
+
     @Override
     public List<Idea> findIdeasByGroupId(long companyId, long groupId, IdeaStatus status, int start, int offset) {
-        
-        String queryString = "" 
-        		+ " SELECT DISTINCT n FROM Idea n" 
-        		+ " LEFT JOIN FETCH n.ideaContents" 
-        		+ " LEFT JOIN FETCH n.ideaPersons"
-        		+ " LEFT JOIN FETCH n.likes"
-        		+ " LEFT JOIN FETCH n.favorites"
-        		+ " WHERE n.companyId = ?1"
-        		+ " AND n.groupId = ?2"
-        		+ " AND n.status = ?3"
-        		+ " ORDER BY n.created DESC";
-        
+
+        String queryString = ""
+                + " SELECT DISTINCT n FROM Idea n"
+                + " LEFT JOIN FETCH n.ideaContents"
+                + " LEFT JOIN FETCH n.ideaPersons"
+                + " LEFT JOIN FETCH n.likes"
+                + " LEFT JOIN FETCH n.favorites"
+                + " WHERE n.companyId = ?1"
+                + " AND n.groupId = ?2"
+                + " AND n.status = ?3"
+                + " ORDER BY n.created DESC";
+
         Object[] queryObject = new Object[]{companyId, groupId, status};
 
         List<Idea> ideas = findByPagedQuery(queryString, queryObject, start, offset);
-        
+
 
         return ideas;
     }
-    
+
     @Override
     public int findIdeasCountByGroupIdAndUserId(long companyId, long groupId, long userId) {
-    	
-        String queryString = "" 
-        		+ " SELECT COUNT(DISTINCT n) FROM Idea n" 
-        		+ " WHERE n.companyId = ?1"
-        		+ " AND n.groupId = ?2"
-        		+ " AND n.userId = ?3"
-        		;
-        
+
+        String queryString = ""
+                + " SELECT COUNT(DISTINCT n) FROM Idea n"
+                + " WHERE n.companyId = ?1"
+                + " AND n.groupId = ?2"
+                + " AND n.userId = ?3"
+                ;
+
         Object[] queryObject = new Object[]{companyId, groupId, userId};
-    	
-    	int count = findCountByQuery(queryString, queryObject);
-    	
-    	return count;
+
+        int count = findCountByQuery(queryString, queryObject);
+
+        return count;
     }
-    
+
     @Override
     public List<Idea> findIdeasByGroupIdAndUserId(long companyId, long groupId, long userId) {
-        
-        String queryString = "" 
-        		+ " SELECT DISTINCT n FROM Idea n" 
-        		+ " LEFT JOIN FETCH n.ideaContents" 
-        		+ " LEFT JOIN FETCH n.ideaPersons"
-        		+ " LEFT JOIN FETCH n.likes"
-        		+ " LEFT JOIN FETCH n.favorites"
-        		+ " WHERE n.companyId = ?1"
-        		+ " AND n.groupId = ?2"
-        		+ " AND n.userId = ?3"
-        		+ " ORDER BY n.created DESC";
-        
+
+        String queryString = ""
+                + " SELECT DISTINCT n FROM Idea n"
+                + " LEFT JOIN FETCH n.ideaContents"
+                + " LEFT JOIN FETCH n.ideaPersons"
+                + " LEFT JOIN FETCH n.likes"
+                + " LEFT JOIN FETCH n.favorites"
+                + " WHERE n.companyId = ?1"
+                + " AND n.groupId = ?2"
+                + " AND n.userId = ?3"
+                + " ORDER BY n.created DESC";
+
         Object[] queryObject = new Object[]{companyId, groupId, userId};
 
         List<Idea> ideas = findByQuery(queryString, queryObject);
 
         return ideas;
     }
-    
+
     @Override
     public List<Idea> findIdeasByGroupIdAndUserId(long companyId, long groupId, long userId, int start, int offset) {
-        
-        String queryString = "" 
-        		+ " SELECT DISTINCT n FROM Idea n" 
-        		+ " LEFT JOIN FETCH n.ideaContents" 
-        		+ " LEFT JOIN FETCH n.ideaPersons"
-        		+ " LEFT JOIN FETCH n.likes"
-        		+ " LEFT JOIN FETCH n.favorites"
-        		+ " WHERE n.companyId = ?1"
-        		+ " AND n.groupId = ?2"
-        		+ " AND n.userId = ?3"
-        		+ " ORDER BY n.created DESC";
-        
+
+        String queryString = ""
+                + " SELECT DISTINCT n FROM Idea n"
+                + " LEFT JOIN FETCH n.ideaContents"
+                + " LEFT JOIN FETCH n.ideaPersons"
+                + " LEFT JOIN FETCH n.likes"
+                + " LEFT JOIN FETCH n.favorites"
+                + " WHERE n.companyId = ?1"
+                + " AND n.groupId = ?2"
+                + " AND n.userId = ?3"
+                + " ORDER BY n.created DESC";
+
         Object[] queryObject = new Object[]{companyId, groupId, userId};
 
         List<Idea> ideas = findByPagedQuery(queryString, queryObject, start, offset);
 
         return ideas;
     }
-    
+
     @Override
     public int findUserFavoritedIdeasCount(long companyId, long groupId, long userId) {
 
-        String queryString = "" 
-        		+ " SELECT COUNT(DISTINCT n) FROM Idea n, IdeaUserFavorite f"  
-        		+ " WHERE n.companyId = ?1"
-        		+ " AND n.groupId = ?2"
-        		+ " AND f.userId = ?3" 
-        		+ " AND f.idea.id = n.id"
-        		;    	
-        
+        String queryString = ""
+                + " SELECT COUNT(DISTINCT n) FROM Idea n, IdeaUserFavorite f"
+                + " WHERE n.companyId = ?1"
+                + " AND n.groupId = ?2"
+                + " AND f.userId = ?3"
+                + " AND f.idea.id = n.id"
+                ;
+
         Object[] queryObject = new Object[]{companyId, groupId, userId};
-    	
-    	int count = findCountByQuery(queryString, queryObject);
-    	
-    	return count;
+
+        int count = findCountByQuery(queryString, queryObject);
+
+        return count;
     }
-    
+
     @Override
     public List<Idea> findUserFavoritedIdeas(long companyId, long groupId, long userId) {
-        
-        String queryString = "" 
-        		+ " SELECT DISTINCT n FROM Idea n, IdeaUserFavorite f"  
-        		+ " LEFT JOIN FETCH n.ideaContents" 
-        		+ " LEFT JOIN FETCH n.ideaPersons"
-        		+ " LEFT JOIN FETCH n.likes"
-        		+ " LEFT JOIN FETCH n.favorites"
-        		+ " WHERE n.companyId = ?1"
-        		+ " AND n.groupId = ?2"
-        		+ " AND f.userId = ?3" 
-        		+ " AND f.idea.id = n.id"
-        		+ " ORDER BY n.created DESC";	
-        
+
+        String queryString = ""
+                + " SELECT DISTINCT n FROM Idea n, IdeaUserFavorite f"
+                + " LEFT JOIN FETCH n.ideaContents"
+                + " LEFT JOIN FETCH n.ideaPersons"
+                + " LEFT JOIN FETCH n.likes"
+                + " LEFT JOIN FETCH n.favorites"
+                + " WHERE n.companyId = ?1"
+                + " AND n.groupId = ?2"
+                + " AND f.userId = ?3"
+                + " AND f.idea.id = n.id"
+                + " ORDER BY n.created DESC";
+
         Object[] queryObject = new Object[]{companyId, groupId, userId};
 
         List<Idea> ideas = findByQuery(queryString, queryObject);
 
         return ideas;
     }
-    
+
     @Override
     public List<Idea> findUserFavoritedIdeas(long companyId, long groupId, long userId, int start, int offset) {
-        
-        String queryString = "" 
-        		+ " SELECT DISTINCT n FROM Idea n, IdeaUserFavorite f"  
-        		+ " LEFT JOIN FETCH n.ideaContents" 
-        		+ " LEFT JOIN FETCH n.ideaPersons"
-        		+ " LEFT JOIN FETCH n.likes"
-        		+ " LEFT JOIN FETCH n.favorites"
-        		+ " WHERE n.companyId = ?1"
-        		+ " AND n.groupId = ?2"
-        		+ " AND f.userId = ?3" 
-        		+ " AND f.idea.id = n.id"
-        		+ " ORDER BY n.created DESC";
-        
+
+        String queryString = ""
+                + " SELECT DISTINCT n FROM Idea n, IdeaUserFavorite f"
+                + " LEFT JOIN FETCH n.ideaContents"
+                + " LEFT JOIN FETCH n.ideaPersons"
+                + " LEFT JOIN FETCH n.likes"
+                + " LEFT JOIN FETCH n.favorites"
+                + " WHERE n.companyId = ?1"
+                + " AND n.groupId = ?2"
+                + " AND f.userId = ?3"
+                + " AND f.idea.id = n.id"
+                + " ORDER BY n.created DESC";
+
         Object[] queryObject = new Object[]{companyId, groupId, userId};
 
         List<Idea> ideas = findByPagedQuery(queryString, queryObject, start, offset);
 
         return ideas;
     }
-    
-    
+
+
     @Override
     public void remove(String ideaId) {
-    	
-    	Idea idea = find(ideaId);
-    	
-    	remove(idea);
+
+        Idea idea = find(ideaId);
+
+        remove(idea);
     }
-    
+
     private List<Idea> findByPagedQuery(String queryString, Object[] queryObject, int firstResult, int maxResult) {
 
-    	Query query = createQuery(queryString, queryObject);
-        
+        Query query = createQuery(queryString, queryObject);
+
         query.setFirstResult(firstResult);
         query.setMaxResults(maxResult);
-        
+
         return query.getResultList();
     }
-    
+
     private int findCountByQuery(String queryString, Object[] queryObject) {
         Query query = createQuery(queryString, queryObject);
-        
+
         Number result = (Number) query.getSingleResult();
-        
+
         return result.intValue();
     }
-    
+
     private Query createQuery(String queryString, Object[] queryObject) {
-    	
+
         Query query = entityManager.createQuery(queryString);
         if (queryObject != null) {
             for (int i = 0; i < queryObject.length; i++) {
                 query.setParameter(i + 1, queryObject[i]);
             }
         }
-        
+
         return query;
     }
 }

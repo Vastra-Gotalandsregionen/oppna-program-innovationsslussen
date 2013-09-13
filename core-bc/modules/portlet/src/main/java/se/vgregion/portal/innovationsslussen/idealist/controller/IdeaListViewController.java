@@ -15,6 +15,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
+import se.vgregion.portal.innovationsslussen.BaseController;
 import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.pageiterator.PageIterator;
@@ -38,7 +39,7 @@ import com.liferay.portal.theme.ThemeDisplay;
  */
 @Controller
 @RequestMapping(value = "VIEW")
-public class IdeaListViewController {
+public class IdeaListViewController extends BaseController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IdeaListViewController.class.getName());
 

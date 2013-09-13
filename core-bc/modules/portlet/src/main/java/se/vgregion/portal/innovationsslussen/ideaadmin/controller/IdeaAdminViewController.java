@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
+import se.vgregion.portal.innovationsslussen.BaseController;
 import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.util.IdeaPortletsConstants;
@@ -38,7 +39,7 @@ import com.liferay.portal.theme.ThemeDisplay;
  */
 @Controller
 @RequestMapping(value = "VIEW")
-public class IdeaAdminViewController {
+public class IdeaAdminViewController extends BaseController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IdeaAdminViewController.class.getName());
     private static final int SEARCH_CONTAINER_DELTA_DEFAULT = 10;
