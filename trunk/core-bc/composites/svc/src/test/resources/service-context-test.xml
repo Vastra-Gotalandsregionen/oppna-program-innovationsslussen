@@ -31,11 +31,12 @@
   <bean class="se.vgregion.service.innovationsslussen.idea.IdeaServiceImpl" >
     <constructor-arg index="0" ref="ideaRepository" />
     <constructor-arg index="1" ref="ideaContentRepository" />
-    <constructor-arg index="2" ref="ideaPersonRepository" />
-    <constructor-arg index="3" ref="ideaUserLikeRepository" />
-    <constructor-arg index="4" ref="ideaUserFavoriteRepository" />
-    <constructor-arg index="5" ref="bariumService" />
-    <constructor-arg index="6" ref="ideaSettingsService" />
+    <constructor-arg index="2" ref="ideaFileRepository" />
+    <constructor-arg index="3" ref="ideaPersonRepository" />
+    <constructor-arg index="4" ref="ideaUserLikeRepository" />
+    <constructor-arg index="5" ref="ideaUserFavoriteRepository" />
+    <constructor-arg index="6" ref="bariumService" />
+    <constructor-arg index="7" ref="ideaSettingsService" />
   </bean>
 
   <bean id="ideaContentRepository" class="org.mockito.Mockito" factory-method="mock">
@@ -56,6 +57,8 @@
   <bean id="ideaSettingsService" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsService" />
   </bean>
+
+  <bean id="ideaFileRepository" class="se.vgregion.service.innovationsslussen.repository.ideafile.JpaIdeaFileRepositoryImpl"/>
 
   <bean id="ideaRepository" class="se.vgregion.service.innovationsslussen.repository.idea.JpaIdeaRepositoryImpl"/>
 

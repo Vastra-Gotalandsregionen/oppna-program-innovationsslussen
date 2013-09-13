@@ -1,5 +1,18 @@
 package se.vgregion.service.innovationsslussen.idea;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
+
+import java.io.InputStream;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.Executors;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,31 +25,25 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
+
 import se.vgregion.portal.innovationsslussen.domain.IdeaContentType;
 import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
 import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
+import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaFile;
 import se.vgregion.service.barium.BariumService;
+import se.vgregion.service.innovationsslussen.exception.FileUploadException;
 import se.vgregion.service.innovationsslussen.repository.idea.IdeaRepository;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import java.util.List;
-import java.util.concurrent.Executors;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
 
 /**
  * @author Patrik Bergström
+ * @author Simon Göransson - simon.goransson@monator.com - vgrid: simgo3
+ * 
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:test-jpa-infrastructure-configuration.xml", "classpath:task-context.xml",
-        "classpath:service-context-test.xml"})
+"classpath:service-context-test.xml"})
 public class IdeaServiceImplTest {
 
     @PersistenceContext
@@ -70,9 +77,9 @@ public class IdeaServiceImplTest {
             ideaContentPrivate1.setDescription("The description1");
             ideaContentPrivate1.setIdea(idea1);
             ideaContentPrivate1.setType(IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE);
-            
+
             idea1.getIdeaContents().add(ideaContentPrivate1);
-            
+
             idea1.setUrlTitle("stora-titeln");
             idea1.setTitle("Stora titeln");
             idea1.setIdeaSiteLink("http://example.com/asldkfj/url-title");
@@ -81,16 +88,16 @@ public class IdeaServiceImplTest {
             idea2.setId("bariumId2");
             idea2.setTitle("Lilla titeln");
             idea2.setStatus(IdeaStatus.PUBLIC_IDEA);
-            
+
             // Mock seems not to work
-//            IdeaSettingsService ideaSettingsService = Mockito.mock(IdeaSettingsService.class);
-//            
-//            when(ideaSettingsService.getSetting(Mockito.anyString(), Mockito.anyLong(), Mockito.anyLong())).thenReturn("");
-//            
-//            Field ideaSettingsServiceField = IdeaServiceImpl.class.getDeclaredField("ideaSettingsService");
-//            
-//            ideaSettingsServiceField.setAccessible(true);
-//            ideaSettingsServiceField.set(ideaService, ideaSettingsService);
+            //            IdeaSettingsService ideaSettingsService = Mockito.mock(IdeaSettingsService.class);
+            //
+            //            when(ideaSettingsService.getSetting(Mockito.anyString(), Mockito.anyLong(), Mockito.anyLong())).thenReturn("");
+            //
+            //            Field ideaSettingsServiceField = IdeaServiceImpl.class.getDeclaredField("ideaSettingsService");
+            //
+            //            ideaSettingsServiceField.setAccessible(true);
+            //            ideaSettingsServiceField.set(ideaService, ideaSettingsService);
 
             TransactionStatus transaction = jpaTransactionManager.getTransaction(new DefaultTransactionAttribute());
             entityManager.persist(idea1);
@@ -175,6 +182,29 @@ public class IdeaServiceImplTest {
         Idea ideaByUrlTitle = ideaService.findIdeaByUrlTitle("stora-titeln");
 
         assertNotNull(ideaByUrlTitle);
+    }
+
+    @Test
+    public void testuploadFile() {
+
+        Idea idea = ideaService.findIdeaByUrlTitle("stora-titeln");
+        String ideaFileName = null;
+
+        try {
+
+            InputStream inputStream = getClass().getResourceAsStream("/text.txt");
+            IdeaFile ideaFile = ideaService.uploadFile(idea, false, "text.txt", "txt", inputStream);
+
+            Idea idea2 = ideaRepository.findIdeaByUrlTitle("stora-titeln");
+
+            Set<IdeaFile> ideaFiles = idea2.getIdeaContentPrivate().getIdeaFiles();
+            ideaFileName = ideaFiles.iterator().next().getName();
+
+
+        } catch (FileUploadException e) {
+            e.printStackTrace();
+        }
+        assertEquals("text.txt", ideaFileName);
     }
 
 }

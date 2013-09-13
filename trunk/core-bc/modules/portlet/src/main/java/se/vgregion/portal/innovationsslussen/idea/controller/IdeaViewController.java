@@ -1,20 +1,19 @@
 package se.vgregion.portal.innovationsslussen.idea.controller;
 
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.PropsKeys;
-import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portal.model.User;
-import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.service.ServiceContextFactory;
-import com.liferay.portal.service.UserLocalServiceUtil;
-import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portlet.messageboards.model.MBMessageDisplay;
-import com.liferay.portlet.messageboards.model.MBThread;
-import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.sql.SQLException;
+import java.util.List;
+
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+import javax.portlet.ResourceResponse;
+
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
@@ -30,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
+
+import se.vgregion.portal.innovationsslussen.BaseController;
 import se.vgregion.portal.innovationsslussen.domain.IdeaContentType;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
@@ -38,14 +39,26 @@ import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
 import se.vgregion.service.barium.BariumException;
 import se.vgregion.service.innovationsslussen.exception.UpdateIdeaException;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
-import se.vgregion.service.innovationsslussen.ldap.LdapService;
 import se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionChecker;
 import se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionCheckerService;
+import se.vgregion.service.innovationsslussen.ldap.LdapService;
 import se.vgregion.util.Util;
 
-import javax.portlet.*;
-import java.io.*;
-import java.util.List;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.model.User;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextFactory;
+import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portlet.messageboards.model.MBMessageDisplay;
+import com.liferay.portlet.messageboards.model.MBThread;
+import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 
 /**
  * Controller class for the view mode in idea portlet.
@@ -55,7 +68,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping(value = "VIEW")
-public class IdeaViewController {
+public class IdeaViewController extends BaseController {
 
     IdeaService ideaService;
     IdeaPermissionCheckerService ideaPermissionCheckerService;
@@ -101,18 +114,11 @@ public class IdeaViewController {
             IdeaContent visibility = idea.getIdeaContentPrivate();
 
             List<CommentItemVO> commentsList = null;
-            try {
-                if (ideaType.equals("private")) {
-                    commentsList = ideaService.getPrivateComments(idea);
-                    List<ObjectEntry> ideaFilesClosed = ideaService.getIdeaFiles(idea, "Liferay stängda dokument");
-                    model.addAttribute("ideaFiles", ideaFilesClosed);
-                } else {
-                    commentsList = ideaService.getPublicComments(idea);
-                    List<ObjectEntry> ideaFilesOpen = ideaService.getIdeaFiles(idea, "Liferay öppna dokument");
-                    model.addAttribute("ideaFiles", ideaFilesOpen);
-                }
-            } catch (BariumException e) {
-                LOGGER.error(e.getMessage(), e);
+
+            if (ideaType.equals("private")) {
+                commentsList = ideaService.getPrivateComments(idea);
+            } else {
+                commentsList = ideaService.getPublicComments(idea);
             }
 
             IdeaPermissionChecker ideaPermissionChecker = ideaPermissionCheckerService.getIdeaPermissionChecker(
@@ -162,14 +168,14 @@ public class IdeaViewController {
         long companyId = themeDisplay.getCompanyId();
         long userId = themeDisplay.getUserId();
         boolean isSignedIn = themeDisplay.isSignedIn();
-        
+
         String urlTitle = ParamUtil.getString(request, "urlTitle", "");
-        
+
         if(!urlTitle.equals("") && isSignedIn) {
             Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
             boolean isIdeaUserFavorite = ideaService.getIsIdeaUserFavorite(companyId, scopeGroupId, userId, urlTitle);
             boolean isIdeaUserLiked = ideaService.getIsIdeaUserLiked(companyId, scopeGroupId, userId, urlTitle);
-            
+
             model.addAttribute("idea", idea);
             model.addAttribute("isIdeaUserFavorite", isIdeaUserFavorite);
             model.addAttribute("isIdeaUserLiked", isIdeaUserLiked);
@@ -177,7 +183,7 @@ public class IdeaViewController {
 
         return "view_private";
     }
-    */
+     */
 
     /**
      * Method handling Action request.
@@ -500,12 +506,13 @@ public class IdeaViewController {
         String urlTitle = request.getParameter("urlTitle");
 
         String fileType = request.getParameter("fileType");
-        String folderName;
+        boolean publicIdea;
         if (fileType.equals("public")) {
-            folderName = "Liferay öppna dokument";
+            publicIdea = true;
         } else if (fileType.equals("private")) {
-            folderName = "Liferay stängda dokument";
+            publicIdea = false;
         } else {
+
             throw new IllegalArgumentException("Unknown filetype: " + fileType);
         }
 
@@ -529,13 +536,15 @@ public class IdeaViewController {
                 FileItemStream fileItemStream = itemIterator.next();
 
                 if (fileItemStream.getFieldName().equals("file")) {
+
                     InputStream is = fileItemStream.openStream();
                     BufferedInputStream bis = new BufferedInputStream(is);
 
                     String fileName = fileItemStream.getName();
-                    ideaService.uploadFile(idea, folderName, fileName, bis);
-                }
+                    String contentType = fileItemStream.getContentType();
 
+                    ideaService.uploadFile(idea, publicIdea, fileName, contentType, bis);
+                }
             }
         } catch (FileUploadException e) {
             doExceptionStuff(e, response, model);
@@ -546,6 +555,16 @@ public class IdeaViewController {
         } catch (se.vgregion.service.innovationsslussen.exception.FileUploadException e) {
             doExceptionStuff(e, response, model);
             return;
+        } catch (RuntimeException e) {
+            Throwable lastCause = getLastCause(e);
+            if (lastCause instanceof SQLException) {
+                SQLException nextException = ((SQLException) lastCause).getNextException();
+                if (nextException != null) {
+                    LOGGER.error(nextException.getMessage(), nextException);
+                }
+            }
+        } finally {
+            response.setRenderParameter("ideaType", fileType);
         }
 
         response.setRenderParameter("urlTitle", urlTitle);
@@ -561,7 +580,7 @@ public class IdeaViewController {
 
     @ResourceMapping("downloadFile")
     public void downloadFile(@RequestParam("id") String id, ResourceResponse response) throws BariumException,
-            IOException {
+    IOException {
         ObjectEntry objectEntry = ideaService.getObject(id);
         String name = objectEntry.getName();
 

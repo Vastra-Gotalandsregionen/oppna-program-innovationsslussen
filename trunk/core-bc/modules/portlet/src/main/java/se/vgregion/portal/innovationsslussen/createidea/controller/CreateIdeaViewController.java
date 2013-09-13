@@ -1,5 +1,8 @@
 package se.vgregion.portal.innovationsslussen.createidea.controller;
 
+import java.sql.SQLException;
+import java.util.List;
+
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.RenderRequest;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
+import se.vgregion.portal.innovationsslussen.BaseController;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaPerson;
 import se.vgregion.portal.innovationsslussen.util.IdeaPortletUtil;
@@ -31,9 +35,6 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 
-import java.sql.SQLException;
-import java.util.List;
-
 /**
  * Controller class for the view mode in the create idea portlet.
  *
@@ -42,16 +43,16 @@ import java.util.List;
  */
 @Controller
 @RequestMapping(value = "VIEW")
-public class CreateIdeaViewController {
+public class CreateIdeaViewController extends BaseController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CreateIdeaViewController.class.getName());
-    
-    private IdeaService ideaService;
-    
-    //@Autowired
-    private IdeaValidator ideaValidator;
 
-    private LdapService ldapService;
+    private final IdeaService ideaService;
+
+    //@Autowired
+    private final IdeaValidator ideaValidator;
+
+    private final LdapService ldapService;
 
     /**
      * Constructor.
@@ -82,7 +83,7 @@ public class CreateIdeaViewController {
 
         return "confirmation";
     }
-    
+
     /**
      * The default render method.
      *
@@ -96,11 +97,11 @@ public class CreateIdeaViewController {
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
         boolean isSignedIn = themeDisplay.isSignedIn();
-        
+
         if (model.get("errors") == null) {
 
-        	// No idea exists
-        	idea = IdeaPortletUtil.getIdeaFromRequest(request);
+            // No idea exists
+            idea = IdeaPortletUtil.getIdeaFromRequest(request);
 
 
 
@@ -137,8 +138,8 @@ public class CreateIdeaViewController {
 
         return "view";
     }
-    
-    
+
+
     /**
      * Method handling Action request.
      *
@@ -148,7 +149,7 @@ public class CreateIdeaViewController {
      */
     @ActionMapping("submitIdea")
     public final void submitIdea(ActionRequest request, ActionResponse response, final ModelMap model,
-                                 @ModelAttribute Idea idea, BindingResult result) {
+            @ModelAttribute Idea idea, BindingResult result) {
 
         // todo auktoriseringskontroll?
 
@@ -157,9 +158,9 @@ public class CreateIdeaViewController {
         idea = IdeaPortletUtil.getIdeaFromRequest(request);
 
         System.out.println("CreateIdeaViewController - submitIdea - idea title is: " + idea.getTitle() );
-        
+
         ideaValidator.validate(idea, result);
-        
+
         if(!result.hasErrors()) {
 
             try {
@@ -190,19 +191,11 @@ public class CreateIdeaViewController {
             }
 
         } else {
-        	model.addAttribute("errors", result);
-        	
-        	PortalUtil.copyRequestParameters(request, response);
-        	response.setRenderParameter("view", "view");	
-        }
-    }
+            model.addAttribute("errors", result);
 
-    private Throwable getLastCause(Exception exception) {
-        Throwable cause = exception;
-        while (cause.getCause() != null) {
-            cause = cause.getCause();
+            PortalUtil.copyRequestParameters(request, response);
+            response.setRenderParameter("view", "view");
         }
-        return cause;
     }
 
     private String generateSchemeServerNamePort(ActionRequest request) {

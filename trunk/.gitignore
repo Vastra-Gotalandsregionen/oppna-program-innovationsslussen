@@ -22,3 +22,8 @@ core-bc/modules/portlet/.settings/*
 
 core-bc/modules/portlet/src/main/resources/barium.properties
 
+core-bc/.settings
+innovationsslussen-core-bc-composite-svc.iml
+.idea
+innovationsslussen-system.iml
+*.iml

@@ -4,7 +4,19 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 
 import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
 import se.vgregion.portal.innovationsslussen.domain.IdeaContentType;
@@ -12,13 +24,13 @@ import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
 
 /**
  * JPA entity class representing a Idea for Innovationsslussen
- *
+ * 
  * @author Erik Andersson
  * @company Monator Technologies AB
  */
 @Entity
-@Table(name = "vgr_innovationsslussen_idea", uniqueConstraints = @UniqueConstraint(columnNames = {"url_title"})
-)
+@Table(name = "vgr_innovationsslussen_idea", uniqueConstraints = @UniqueConstraint(
+        columnNames = {"url_title"}))
 public class Idea extends AbstractEntity<String> {
 
     // Primary Key
@@ -46,38 +58,39 @@ public class Idea extends AbstractEntity<String> {
 
     @Column(name = "idea_site_link")
     private String ideaSiteLink;
-    
+
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private IdeaStatus status;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idea")
     @JoinColumn(name = "idea_id")
-    private Set<IdeaContent> ideaContents = new HashSet<IdeaContent>();
+    private final Set<IdeaContent> ideaContents = new HashSet<IdeaContent>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idea")
     @JoinColumn(name = "idea_id")
-    private Set<IdeaPerson> ideaPersons = new HashSet<IdeaPerson>();
+    private final Set<IdeaPerson> ideaPersons = new HashSet<IdeaPerson>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idea")
     @JoinColumn(name = "idea_id")
-    private Set<IdeaUserLike> likes = new HashSet<IdeaUserLike>();
+    private final Set<IdeaUserLike> likes = new HashSet<IdeaUserLike>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idea")
     @JoinColumn(name = "idea_id")
-    private Set<IdeaUserFavorite> favorites = new HashSet<IdeaUserFavorite>();
+    private final Set<IdeaUserFavorite> favorites = new HashSet<IdeaUserFavorite>();
 
     @Column(name = "created", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", insertable = false,
             updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
-    /*@Transient
-    private IdeaPerson ideaPerson;*/
-    
+    /*
+     * @Transient private IdeaPerson ideaPerson;
+     */
+
     @Transient
     private String bariumUrl;
-    
+
     @Transient
     private boolean isPublic;
 
@@ -93,6 +106,7 @@ public class Idea extends AbstractEntity<String> {
         this.userId = userId;
     }
 
+    @Override
     public String getId() {
         return id;
     }
@@ -259,23 +273,23 @@ public class Idea extends AbstractEntity<String> {
         return created;
     }
 
-	public IdeaStatus getStatus() {
-		return status;
-	}
+    public IdeaStatus getStatus() {
+        return status;
+    }
 
-	public void setStatus(IdeaStatus status) {
-		this.status = status;
-	}
+    public void setStatus(IdeaStatus status) {
+        this.status = status;
+    }
 
     public boolean getIsPublic() {
-		
-		boolean isPublic = false;
-		
-		if(this.status.equals(IdeaStatus.PUBLIC_IDEA)) {
-			isPublic = true;
-		}
-		
-		return isPublic;
-	}
+
+        boolean isPublic = false;
+
+        if (this.status.equals(IdeaStatus.PUBLIC_IDEA)) {
+            isPublic = true;
+        }
+
+        return isPublic;
+    }
 
 }

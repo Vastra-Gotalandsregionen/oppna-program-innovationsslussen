@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
+import se.vgregion.portal.innovationsslussen.BaseController;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
 
 import com.liferay.portal.kernel.util.WebKeys;
@@ -32,7 +33,7 @@ import com.liferay.portal.theme.ThemeDisplay;
  */
 @Controller
 @RequestMapping(value = "EDIT")
-public class IdeaListEditController {
+public class IdeaListEditController extends BaseController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IdeaListEditController.class.getName());
 
