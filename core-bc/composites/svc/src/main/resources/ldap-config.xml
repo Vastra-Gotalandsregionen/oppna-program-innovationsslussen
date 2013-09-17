@@ -6,7 +6,7 @@
 
 
     <context:property-placeholder
-            location="file:${user.home}/.innovationsslussen/barium.properties"
+            location="file:${user.home}/.innovationsslussen/application.properties"
             ignore-resource-not-found="true" ignore-unresolvable="true" />
 
   <bean id="vgr.org.contextSource" class="org.springframework.ldap.pool.factory.PoolingContextSource">

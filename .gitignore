@@ -20,7 +20,7 @@ core-bc/composites/types/.settings/*
 core-bc/modules/intsvc/.settings/*
 core-bc/modules/portlet/.settings/*
 
-core-bc/modules/portlet/src/main/resources/barium.properties
+core-bc/modules/portlet/src/main/resources/application.properties
 
 core-bc/.settings
 innovationsslussen-core-bc-composite-svc.iml

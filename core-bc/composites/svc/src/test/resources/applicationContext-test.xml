@@ -8,7 +8,7 @@
   <bean id="propertyPlaceholderConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
     <property name="locations">
       <list>
-        <value>file:${user.home}/.innovationsslussen/barium.properties</value>
+        <value>file:${user.home}/.innovationsslussen/application.properties</value>
       </list>
     </property>
     <property name="ignoreResourceNotFound" value="false" />

@@ -13,9 +13,12 @@ import java.util.concurrent.ThreadFactory;
 
 import javax.annotation.PostConstruct;
 
+import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -52,24 +55,22 @@ import se.vgregion.service.innovationsslussen.repository.ideauserlike.IdeaUserLi
 import se.vgregion.service.innovationsslussen.util.FriendlyURLNormalizer;
 import se.vgregion.service.innovationsslussen.util.IdeaServiceConstants;
 
+import com.liferay.counter.service.CounterLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.User;
-import com.liferay.portal.service.ResourceLocalServiceUtil;
-import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
-import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portlet.messageboards.service.MBMessageLocalService;
 import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.messageboards.model.MBMessageDisplay;
 import com.liferay.portlet.messageboards.model.MBThread;
-import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 import com.liferay.portlet.messageboards.util.comparator.MessageCreateDateComparator;
 
 /**
  * Implementation of {@link IdeaService}.
- * 
+ *
  * @author Erik Andersson
  * @author Simon Göransson
  * @company Monator Technologies AB
@@ -81,6 +82,16 @@ public class IdeaServiceImpl implements IdeaService {
     private static final char[] URL_TITLE_REPLACE_CHARS = new char[]{'.', '/'};
     private static final String LIFERAY_OPEN_DOCUMENTS = "Liferay öppna dokument";
     private static final String LIFERAY_CLOSED_DOCUMENTS = "Liferay stängda dokument";
+
+
+    @Value("${auto.comment.default.user.id}")
+    private String autoCommentDefaultUserId;
+
+    @Value("${auto.comment.default.message}")
+    private String autoCommentDefaultMessage;
+
+    @Value("${auto.comment.default.subject}")
+    private String autoCommentDefaultSubject;
 
     private IdeaRepository ideaRepository;
     private IdeaContentRepository ideaContentRepository;
@@ -96,12 +107,24 @@ public class IdeaServiceImpl implements IdeaService {
     @Autowired
     private JpaTransactionManager transactionManager;
 
+    @Autowired
+    private MBMessageLocalService mbMessageLocalService;
+
+    @Autowired
+    private UserLocalService userLocalService;
+
+    @Autowired
+    private UserGroupRoleLocalService userGroupRoleLocalService;
+
+    @Autowired
+    private ResourceLocalService resourceLocalService;
+
     public IdeaServiceImpl() {
     }
 
     /**
      * Constructor.
-     * 
+     *
      * @param ideaRepository
      *            the {@link IdeaRepository}
      * @param ideaContentRepository
@@ -115,7 +138,9 @@ public class IdeaServiceImpl implements IdeaService {
     public IdeaServiceImpl(IdeaRepository ideaRepository, IdeaContentRepository ideaContentRepository,
             IdeaFileRepository ideaFileRepository, IdeaPersonRepository ideaPersonRepository,
             IdeaUserLikeRepository ideaUserLikeRepository, IdeaUserFavoriteRepository ideaUserFavoriteRepository,
-            BariumService bariumService, IdeaSettingsService ideaSettingsService) {
+            BariumService bariumService, IdeaSettingsService ideaSettingsService,
+            MBMessageLocalService mbMessageLocalService, UserLocalService userLocalService,
+            UserGroupRoleLocalService userGroupRoleLocalService, ResourceLocalService resourceLocalService) {
         this.ideaRepository = ideaRepository;
         this.ideaContentRepository = ideaContentRepository;
         this.ideaFileRepository = ideaFileRepository;
@@ -124,6 +149,11 @@ public class IdeaServiceImpl implements IdeaService {
         this.ideaUserFavoriteRepository = ideaUserFavoriteRepository;
         this.bariumService = bariumService;
         this.ideaSettingsService = ideaSettingsService;
+        this.mbMessageLocalService = mbMessageLocalService;
+        this.userLocalService = userLocalService;
+        this.userGroupRoleLocalService = userGroupRoleLocalService;
+        this.resourceLocalService = resourceLocalService;
+
     }
 
     @PostConstruct
@@ -213,18 +243,18 @@ public class IdeaServiceImpl implements IdeaService {
                 boolean addGuestPermissions = true;
 
                 // Add resource for Idea
-                ResourceLocalServiceUtil.addResources(idea.getCompanyId(), idea.getGroupId(),
+                resourceLocalService.addResources(idea.getCompanyId(), idea.getGroupId(),
                         idea.getUserId(), Idea.class.getName(), idea.getId(), false, addCommunityPermissions,
                         addGuestPermissions);
 
                 // Add public discussion
-                MBMessageLocalServiceUtil.addDiscussionMessage(idea.getUserId(),
+                mbMessageLocalService.addDiscussionMessage(idea.getUserId(),
                         String.valueOf(ideaContentPublic.getUserId()), ideaContentPublic.getGroupId(),
                         IdeaContent.class.getName(), ideaContentPublic.getId(),
                         WorkflowConstants.ACTION_PUBLISH);
 
                 // Add private discussion
-                MBMessageLocalServiceUtil.addDiscussionMessage(idea.getUserId(),
+                mbMessageLocalService.addDiscussionMessage(idea.getUserId(),
                         String.valueOf(ideaContentPrivate.getUserId()), ideaContentPrivate.getGroupId(),
                         IdeaContent.class.getName(), ideaContentPrivate.getId(),
                         WorkflowConstants.ACTION_PUBLISH);
@@ -267,7 +297,6 @@ public class IdeaServiceImpl implements IdeaService {
 
     @Override
     public Collection<Idea> findAll() {
-
         return ideaRepository.findAll();
     }
 
@@ -458,13 +487,13 @@ public class IdeaServiceImpl implements IdeaService {
             IdeaPerson ideaPerson = idea.getIdeaPerson();
 
             // Delete resource for Idea
-            ResourceLocalServiceUtil.deleteResource(idea.getCompanyId(), Idea.class.getName(),
+            resourceLocalService.deleteResource(idea.getCompanyId(), Idea.class.getName(),
                     ResourceConstants.SCOPE_INDIVIDUAL, idea.getId());
 
             // Delete message board entries
-            MBMessageLocalServiceUtil.deleteDiscussionMessages(IdeaContent.class.getName(), idea
+            mbMessageLocalService.deleteDiscussionMessages(IdeaContent.class.getName(), idea
                     .getIdeaContentPublic().getId());
-            MBMessageLocalServiceUtil.deleteDiscussionMessages(IdeaContent.class.getName(), idea
+            mbMessageLocalService.deleteDiscussionMessages(IdeaContent.class.getName(), idea
                     .getIdeaContentPrivate().getId());
 
             // Delete idea
@@ -525,6 +554,8 @@ public class IdeaServiceImpl implements IdeaService {
     @Transactional
     public Idea updateFromBarium(Idea idea) {
 
+        LOGGER.info(" Update from Barium, idea: " + idea.getTitle());
+
         // Idea idea = findIdeaByBariumId(id);
         final String ideaId = idea.getId();
 
@@ -534,13 +565,46 @@ public class IdeaServiceImpl implements IdeaService {
         Future<IdeaObjectFields> ideaObjectFieldsFuture = bariumService.asyncGetIdeaObjectFields(ideaId);
         Future<String> ideaPhase = bariumService.asyncGetIdeaPhaseFuture(ideaId);
 
+        boolean newPhase = false;
+
         try {
             populateIdea(ideaObjectFieldsFuture.get(), idea);
-            idea.setPhase(ideaPhase.get());
+            String bariumIdeaPhase = ideaPhase.get();
+            if (!bariumIdeaPhase.equals(idea.getPhase())){
+                idea.setPhase(bariumIdeaPhase);
+                newPhase = true;
+            }
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
+        }
+
+       if (newPhase){
+            try {
+                String threadView = PropsKeys.DISCUSSION_THREAD_VIEW;
+                MBMessageDisplay messageDisplay = mbMessageLocalService.getDiscussionMessageDisplay(
+                        idea.getUserId(), idea.getGroupId(), IdeaContent.class.getName(), idea.getIdeaContentPrivate().getId(),
+                        WorkflowConstants.STATUS_ANY, threadView);
+                MBThread thread = messageDisplay.getThread();
+
+                long threadId = thread.getThreadId();
+                long rootThreadId = thread.getRootMessageId();
+                ServiceContext serviceContext =  new ServiceContext();
+
+                long userId  = Long.valueOf(autoCommentDefaultUserId);
+
+                mbMessageLocalService.addDiscussionMessage( userId,
+                        autoCommentDefaultUserId, idea.getGroupId(),
+                        IdeaContent.class.getName(), idea.getIdeaContentPrivate().getId(),
+                        threadId, rootThreadId, autoCommentDefaultSubject , autoCommentDefaultMessage,
+                        serviceContext);
+
+            } catch (PortalException e) {
+                e.printStackTrace();
+            } catch (SystemException e) {
+                e.printStackTrace();
+            }
         }
 
         idea = ideaRepository.merge(idea);
@@ -705,7 +769,7 @@ public class IdeaServiceImpl implements IdeaService {
 
     /**
      * When a new url title should be generated for a new idea.
-     * 
+     *
      * @param title
      *            the title
      * @return the generated url title
@@ -771,7 +835,7 @@ public class IdeaServiceImpl implements IdeaService {
 
             try {
                 messageDisplay =
-                        MBMessageLocalServiceUtil.getDiscussionMessageDisplay(ideaContent.getUserId(),
+                        mbMessageLocalService.getDiscussionMessageDisplay(ideaContent.getUserId(),
                                 ideaContent.getGroupId(), IdeaContent.class.getName(), ideaContent.getId(),
                                 WorkflowConstants.STATUS_ANY);
             } catch (NullPointerException e) {
@@ -788,7 +852,7 @@ public class IdeaServiceImpl implements IdeaService {
             MessageCreateDateComparator messageComparator = new MessageCreateDateComparator(false);
 
             List<MBMessage> mbMessages =
-                    MBMessageLocalServiceUtil.getThreadMessages(threadId, WorkflowConstants.STATUS_ANY,
+                    mbMessageLocalService.getThreadMessages(threadId, WorkflowConstants.STATUS_ANY,
                             messageComparator);
 
             for (MBMessage mbMessage : mbMessages) {
@@ -800,7 +864,7 @@ public class IdeaServiceImpl implements IdeaService {
                 if (commentId != rootMessageId) {
                     long curCommentUserId = mbMessage.getUserId();
                     long scopeGroupId = mbMessage.getGroupId();
-                    User curCommentUser = UserLocalServiceUtil.getUser(curCommentUserId);
+                    User curCommentUser = userLocalService.getUser(curCommentUserId);
                     String curCommentUserFullName = curCommentUser.getFullName();
 
                     boolean isUserIdeaCreator = isUserIdeaCreator(curCommentUserId, idea);
@@ -860,7 +924,7 @@ public class IdeaServiceImpl implements IdeaService {
 
         try {
             isUserInnovationsslussenEmployee =
-                    UserGroupRoleLocalServiceUtil.hasUserGroupRole(userId, groupId,
+                    userGroupRoleLocalService.hasUserGroupRole(userId, groupId,
                             IdeaServiceConstants.ROLE_NAME_COMMUNITY_INNOVATIONSSLUSSEN, checkInheritedRoles);
         } catch (PortalException e) {
             LOGGER.error(e.getMessage(), e);
@@ -880,7 +944,7 @@ public class IdeaServiceImpl implements IdeaService {
 
         try {
             isUserPrioCouncilMember =
-                    UserGroupRoleLocalServiceUtil.hasUserGroupRole(userId, groupId,
+                    userGroupRoleLocalService.hasUserGroupRole(userId, groupId,
                             IdeaServiceConstants.ROLE_NAME_COMMUNITY_PRIO_COUNCIL, checkInheritedRoles);
         } catch (PortalException e) {
             LOGGER.error(e.getMessage(), e);
@@ -911,4 +975,5 @@ public class IdeaServiceImpl implements IdeaService {
             return thread;
         }
     }
+
 }

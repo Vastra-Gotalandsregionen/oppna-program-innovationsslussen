@@ -19,32 +19,20 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> im
 
     @Override
     public Idea find(String id) {
-<<<<<<< HEAD
-    	Idea idea = null;
-    	
-        String queryString = "" 
-        		+ " SELECT DISTINCT n FROM Idea n" 
-        		+ " LEFT JOIN FETCH n.ideaContents"
-        		+ " LEFT JOIN FETCH n.ideaPersons"
-        		+ " LEFT JOIN FETCH n.likes"
-        		+ " LEFT JOIN FETCH n.favorites"
-        		+ " WHERE n.id = ?1" 
-        		+ " ORDER BY n.id ASC";
-        
-=======
+
         Idea idea = null;
 
         String queryString = ""
                 + " SELECT DISTINCT n FROM Idea n"
                 + " LEFT JOIN FETCH n.ideaContents"
-                + " LEFT JOIN FETCH n.ideaContents.ideaFiles"
+                + " LEFT JOIN FETCH n.ideaContents ic"
+                + " LEFT JOIN FETCH ic.ideaFiles"
                 + " LEFT JOIN FETCH n.ideaPersons"
                 + " LEFT JOIN FETCH n.likes"
                 + " LEFT JOIN FETCH n.favorites"
                 + " WHERE n.id = ?1"
                 + " ORDER BY n.id ASC";
 
->>>>>>> Added IdeaFile functionality. Changed so that the idea view do not collect files from Barium, uses the Liferay database instead. Added a BaseController that all other controllers extends.
         Object[] queryObject = new Object[]{id};
 
         List<Idea> ideas = findByQuery(queryString, queryObject);

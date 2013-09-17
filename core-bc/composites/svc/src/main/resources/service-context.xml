@@ -13,6 +13,10 @@
     -->
     
 	<context:annotation-config />
+
+    <context:property-placeholder
+            location="file:${user.home}/.innovationsslussen/application.properties"
+            ignore-resource-not-found="true" ignore-unresolvable="true" />
 	
 	<!--  Mock Client -->
 	<!-- -->   
@@ -47,6 +51,10 @@
 	    <constructor-arg index="5" ref="ideaUserFavoriteRepository" />
 	    <constructor-arg index="6" ref="bariumService" />
 	    <constructor-arg index="7" ref="ideaSettingsService" />
+	    <constructor-arg index="8" ref="mbMessageLocalService" />
+	    <constructor-arg index="9" ref="userLocalService" />
+	    <constructor-arg index="10" ref="userGroupRoleLocalService" />
+	    <constructor-arg index="11" ref="resourceLocalService" />
 	</bean>
 	
 	<bean id="ideaPermissionCheckerService" class="se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionCheckerServiceImpl" />
@@ -54,6 +62,11 @@
   <bean id="expandoColumnService" class="com.liferay.portlet.expando.service.ExpandoColumnLocalServiceUtil" factory-method="getService" />
   <bean id="expandoTableService" class="com.liferay.portlet.expando.service.ExpandoTableLocalServiceUtil" factory-method="getService" />
   <bean id="expandoValueService" class="com.liferay.portlet.expando.service.ExpandoValueLocalServiceUtil" factory-method="getService" />
+
+  <bean id="mbMessageLocalService" class="com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil" factory-method="getService" />
+  <bean id="userLocalService" class="com.liferay.portal.service.UserLocalServiceUtil" factory-method="getService" />
+  <bean id="userGroupRoleLocalService" class="com.liferay.portal.service.UserGroupRoleLocalServiceUtil" factory-method="getService" />
+  <bean id="resourceLocalService" class="com.liferay.portal.service.ResourceLocalServiceUtil" factory-method="getService" />
 
   <import resource="ldap-config.xml" />
 
