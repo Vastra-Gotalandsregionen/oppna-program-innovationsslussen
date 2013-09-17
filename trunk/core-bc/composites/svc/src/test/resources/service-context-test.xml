@@ -26,40 +26,63 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
-  <context:annotation-config />
+    <context:annotation-config />
 
-  <bean class="se.vgregion.service.innovationsslussen.idea.IdeaServiceImpl" >
-    <constructor-arg index="0" ref="ideaRepository" />
-    <constructor-arg index="1" ref="ideaContentRepository" />
-    <constructor-arg index="2" ref="ideaFileRepository" />
-    <constructor-arg index="3" ref="ideaPersonRepository" />
-    <constructor-arg index="4" ref="ideaUserLikeRepository" />
-    <constructor-arg index="5" ref="ideaUserFavoriteRepository" />
-    <constructor-arg index="6" ref="bariumService" />
-    <constructor-arg index="7" ref="ideaSettingsService" />
-  </bean>
+    <context:property-placeholder
+            location="file:${user.home}/.innovationsslussen/application.properties"
+            ignore-resource-not-found="true" ignore-unresolvable="true"/>
 
-  <bean id="ideaContentRepository" class="org.mockito.Mockito" factory-method="mock">
+    <bean class="se.vgregion.service.innovationsslussen.idea.IdeaServiceImpl" >
+        <constructor-arg index="0" ref="ideaRepository" />
+        <constructor-arg index="1" ref="ideaContentRepository" />
+        <constructor-arg index="2" ref="ideaFileRepository" />
+        <constructor-arg index="3" ref="ideaPersonRepository" />
+        <constructor-arg index="4" ref="ideaUserLikeRepository" />
+        <constructor-arg index="5" ref="ideaUserFavoriteRepository" />
+        <constructor-arg index="6" ref="bariumService" />
+        <constructor-arg index="7" ref="ideaSettingsService" />
+        <constructor-arg index="8" ref="mbMessageLocalService" />
+        <constructor-arg index="9" ref="userLocalService" />
+        <constructor-arg index="10" ref="userGroupRoleLocalService" />
+        <constructor-arg index="11" ref="resourceLocalService" />
+    </bean>
+
+    <bean id="ideaContentRepository" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="se.vgregion.service.innovationsslussen.repository.ideacontent.IdeaContentRepository" />
-  </bean>
-  <bean id="ideaPersonRepository" class="org.mockito.Mockito" factory-method="mock">
+    </bean>
+    <bean id="ideaPersonRepository" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="se.vgregion.service.innovationsslussen.repository.ideaperson.IdeaPersonRepository" />
-  </bean>
-  <bean id="ideaUserLikeRepository" class="org.mockito.Mockito" factory-method="mock">
+    </bean>
+    <bean id="ideaUserLikeRepository" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="se.vgregion.service.innovationsslussen.repository.ideauserlike.IdeaUserLikeRepository" />
-  </bean>
-  <bean id="ideaUserFavoriteRepository" class="org.mockito.Mockito" factory-method="mock">
+    </bean>
+    <bean id="ideaUserFavoriteRepository" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="se.vgregion.service.innovationsslussen.repository.ideauserfavorite.IdeaUserFavoriteRepository" />
-  </bean>
-  <bean id="bariumService" class="org.mockito.Mockito" factory-method="mock">
+    </bean>
+    <bean id="bariumService" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="se.vgregion.service.barium.BariumService" />
-  </bean>
-  <bean id="ideaSettingsService" class="org.mockito.Mockito" factory-method="mock">
+    </bean>
+    <bean id="ideaSettingsService" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsService" />
-  </bean>
+    </bean>
+    <bean id="mbMessageLocalService" class="org.mockito.Mockito" factory-method="mock" >
+        <constructor-arg value="com.liferay.portlet.messageboards.service.MBMessageLocalService" />
+    </bean>
+    <bean id="userLocalService" class="org.mockito.Mockito" factory-method="mock" >
+        <constructor-arg value="com.liferay.portal.service.UserLocalService" />
+    </bean>
+    <bean id="userGroupRoleLocalService" class="org.mockito.Mockito" factory-method="mock" >
+        <constructor-arg value="com.liferay.portal.service.UserGroupRoleLocalService" />
+    </bean>
+    <bean id="resourceLocalService" class="org.mockito.Mockito" factory-method="mock" >
+        <constructor-arg value="com.liferay.portal.service.ResourceLocalService" />
+    </bean>
 
-  <bean id="ideaFileRepository" class="se.vgregion.service.innovationsslussen.repository.ideafile.JpaIdeaFileRepositoryImpl"/>
 
-  <bean id="ideaRepository" class="se.vgregion.service.innovationsslussen.repository.idea.JpaIdeaRepositoryImpl"/>
+    <bean id="ideaFileRepository" class="se.vgregion.service.innovationsslussen.repository.ideafile.JpaIdeaFileRepositoryImpl"/>
+
+    <bean id="ideaRepository" class="se.vgregion.service.innovationsslussen.repository.idea.JpaIdeaRepositoryImpl"/>
+
+
 
 </beans>

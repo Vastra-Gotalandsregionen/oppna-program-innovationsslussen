@@ -1,0 +1,17 @@
+## Place this file with property values in ${user.home}/.innovationsslussen/ with name application.properties
+apiLocation=
+apiKey=
+username=
+password=
+applicationId=
+
+# Ldap for user information
+ldap.org.authentication.java.naming.provider.url=
+ldap.org.synchronization.java.naming.security.principal=
+ldap.org.synchronization.java.naming.security.credentials=
+ldap.org.synchronization.userSearchBase=
+
+# Auto comments
+auto.comment.default.user.id=
+auto.comment.default.subject=
+auto.comment.default.message=

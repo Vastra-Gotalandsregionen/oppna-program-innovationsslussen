@@ -30,7 +30,7 @@
 		<property name="locations">
 		    <list>
 		    	<value>classpath:datasource.properties</value>
-		    	<value>file:${user.home}/.innovationsslussen/barium.properties</value>
+		    	<value>file:${user.home}/.innovationsslussen/application.properties</value>
 		    </list>
 		</property>
 		<property name="ignoreResourceNotFound" value="false" />
