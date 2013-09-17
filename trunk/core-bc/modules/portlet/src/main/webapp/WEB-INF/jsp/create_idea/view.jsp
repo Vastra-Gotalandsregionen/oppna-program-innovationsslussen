@@ -251,27 +251,6 @@
 								</span>
 							</div>
 
-                            <%-- Todo - add spring:bind --%>
-                            <div class="element-wrap">
-                                <aui:field-wrapper cssClass="element-field-wrap">
-                                    <label for="<portlet:namespace />gender">
-                                        <span>K&ouml;n</span>
-                                    </label>
-                                    <%-- Todo - switch to use model context
-                                    <aui:input cssClass="element-field" type="text" name="ideaPerson.gender" label="" />
-                                    --%>
-
-                                    <aui:select name="ideaPerson.gender">
-                                        <aui:option value="MALE" label="Man" />
-                                        <aui:option value="FEMALE" label="Kvinna" />
-                                    </aui:select>
-
-                                </aui:field-wrapper>
-                                <span class="element-field-help">
-                                    Skriv in ditt kouml;n.
-                                </span>
-                            </div>
-
 							<spring:bind path="idea.ideaPerson.jobPosition">
 								<c:set var="elementWrapCssClass" scope="page" value="element-wrap" />
 								<c:if test="${status.error}">

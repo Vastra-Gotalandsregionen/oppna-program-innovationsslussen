@@ -119,7 +119,7 @@ public class CreateIdeaViewController extends BaseController {
                     ideaPerson.setName(person.getDisplayName());
                     ideaPerson.setVgrId(person.getVgrId());
                     ideaPerson.setBirthYear(person.getBirthYear());
-                    ideaPerson.setAdministrativeUnit(person.getVgrStrukturPersonDN());
+                    ideaPerson.setAdministrativeUnit(person.getO());
 
                     Person.Gender personGender = person.getGender();
                     if (personGender != null) {
@@ -165,6 +165,26 @@ public class CreateIdeaViewController extends BaseController {
 
             try {
                 String schemeServerNamePort = generateSchemeServerNamePort(request);
+
+                //Populate with extra information about the user (from the ldap if at all).
+                Person criteria = new Person();
+                ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+                criteria.setCn(themeDisplay.getUser().getScreenName());
+                List<Person> findings = ldapService.find(criteria);
+                if (findings.size() == 1) {
+                    Person person = findings.get(0);
+                    IdeaPerson ip = idea.getIdeaPerson();
+                    ip.setVgrId(person.getVgrId());
+                    ip.setAdministrativeUnit(person.getO());
+                    ip.setBirthYear(person.getBirthYear());
+                    ip.setVgrStrukturPerson(person.getVgrStrukturPerson());
+
+                    Person.Gender gender = person.getGender();
+                    if (gender != null && !Person.Gender.UNKNOWN.equals(gender)) {
+                        ip.setGender(Person.Gender.MALE.name().equals(gender.name()) ? IdeaPerson.Gender.MALE : IdeaPerson.Gender.FEMALE);
+                    }
+                }
+
                 idea = ideaService.addIdea(idea, schemeServerNamePort);
 
                 response.setRenderParameter("view", "confirmation");
@@ -214,5 +234,8 @@ public class CreateIdeaViewController extends BaseController {
 
         return scheme + "://" + serverName + serverPortString;
     }
+
+
+
 }
 

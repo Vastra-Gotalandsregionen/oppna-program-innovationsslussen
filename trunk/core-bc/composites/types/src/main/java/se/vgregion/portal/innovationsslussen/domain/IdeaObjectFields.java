@@ -50,11 +50,14 @@ public class IdeaObjectFields {
     private String vgrIdHsaPostalAdress; // VGR-ID.hsapostaladress
     private String vgrIdTitel; // VGR-ID.titel
     private String vgrId;
+    private String vgrStrukturPerson;
 
     // specialFieldMappings are needed to automate population of an instance, see the populate() method
-    private Map<String, String> specialFieldMappings = new HashMap<String, String>();
+    public static final Map<String, String> specialFieldMappings = new HashMap<String, String>();
 
-    {
+    public static final Map<String, String> specialFieldMappingsReverse = new HashMap<String, String>();
+
+    static {
 //        specialFieldMappings.put("e-post", "epost");
         specialFieldMappings.put("instance.name", "instanceName");
         specialFieldMappings.put("Idetranportorenskommentar", "idetranportorensKommentar");
@@ -66,6 +69,12 @@ public class IdeaObjectFields {
         specialFieldMappings.put("VGR-ID.hsapublictelephonenumber", "telefonnummer");
         specialFieldMappings.put("VGR-ID.mobiletelephonenumber", "mobiletelephonenumber");
         specialFieldMappings.put("VGR-ID.titel", "vgrIdTitel");
+        specialFieldMappings.put("VGR-ID", "vgrId");
+
+        for (String key: specialFieldMappings.keySet()) {
+            String value = specialFieldMappings.get(key);
+            specialFieldMappingsReverse.put(value, key);
+        }
     }
 
 
@@ -83,9 +92,9 @@ public class IdeaObjectFields {
                 try {
                     declaredField = this.getClass().getDeclaredField(specialFieldMappings.get(objectField.getId()));
                 } catch (NoSuchFieldException e1) {
-                    System.out.println("NoSuchFieldException: " + objectField.getId());
+
                 } catch (NullPointerException e2) {
-                    System.out.println("npe: " + objectField.getId());
+
                 }
             }
 
@@ -93,7 +102,6 @@ public class IdeaObjectFields {
                 declaredField.setAccessible(true);
                 try {
                     declaredField.set(this, objectField.getValue());
-                    System.out.println("No problemas: " + objectField.getId() + " = " + objectField.getValue());
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException(e);
                 }
@@ -379,5 +387,13 @@ public class IdeaObjectFields {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getVgrStrukturPerson() {
+        return vgrStrukturPerson;
+    }
+
+    public void setVgrStrukturPerson(String vgrStrukturPerson) {
+        this.vgrStrukturPerson = vgrStrukturPerson;
     }
 }

@@ -37,6 +37,9 @@
 		</aui:form>
 	</div>
 
+
+    <aui:input name="commentsDelta" type="hidden" value="${commentsDelta}" />
+
 	<c:choose>
 		<c:when test="${not empty commentsList}">
 			<c:forEach items="${commentsList}" var="comment" varStatus="status">

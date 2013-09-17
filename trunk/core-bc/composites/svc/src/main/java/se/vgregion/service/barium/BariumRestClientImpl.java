@@ -1,5 +1,6 @@
 package se.vgregion.service.barium;
 
+import org.apache.commons.collections.BeanMap;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
@@ -203,8 +204,8 @@ public class BariumRestClientImpl implements BariumRestClient {
     @Override
     public ObjectEntry getObject(String id) throws BariumException {
         String objectJson = null;
-            objectJson = doGet("/Objects/" + id);
-            LOGGER.debug(objectJson);
+        objectJson = doGet("/Objects/" + id);
+        LOGGER.debug(objectJson);
 
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -472,7 +473,7 @@ public class BariumRestClientImpl implements BariumRestClient {
     }
 
     /* (non-Javadoc)
-	 * @see se.vgregion.service.barium.BariumRestClient#updateInstance(java.lang.String, java.lang.String)
+     * @see se.vgregion.service.barium.BariumRestClient#updateInstance(java.lang.String, java.lang.String)
 	 */
     @Override
     public boolean updateInstance(String values, String objectId) {
@@ -644,76 +645,39 @@ public class BariumRestClientImpl implements BariumRestClient {
         }
     }
 
+    String toUrl(IdeaObjectFields ideaObjectFields) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("message=START");
+        sb.append("&template=565d4c81-4baa-451b-aacc-5f7ae295bfaf");
+
+        BeanMap bm = new BeanMap(ideaObjectFields);
+        for (Object key : bm.keySet()) {
+            if ("class".equals(key)) {
+                continue;
+            }
+            Object value = bm.get(key);
+            if (value != null) {
+                String name = IdeaObjectFields.specialFieldMappingsReverse.get(key);
+                if (name == null) {
+                    name = (String) key;
+                }
+                sb.append("&");
+                sb.append(name);
+                sb.append("=");
+                sb.append(value);
+            }
+        }
+        return sb.toString();
+    }
 
     /* (non-Javadoc)
 	 * @see se.vgregion.service.barium.BariumRestClient#createIdeaInstance(se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields)
 	 */
     @Override
     public String createIdeaInstance(IdeaObjectFields ideaObjectFields) {
-
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("message=START");
-        sb.append("&template=565d4c81-4baa-451b-aacc-5f7ae295bfaf");
-        if (ideaObjectFields.getBehov() != null) {
-            sb.append("&behov=").append(ideaObjectFields.getBehov());
-        }
-        if (ideaObjectFields.getFodelsear() != null) {
-            sb.append("&fodelsear=").append(ideaObjectFields.getFodelsear());
-        }
-        if (ideaObjectFields.getHsaIdKivEnhet() != null) {
-            sb.append("&HSA-ID.KIVenhet=").append(ideaObjectFields.getHsaIdKivEnhet());
-        }
-        if (ideaObjectFields.getIde() != null) {
-            sb.append("&ide=").append(ideaObjectFields.getIde());
-        }
-        if (ideaObjectFields.getKommavidare() != null) {
-            sb.append("&kommavidare=").append(ideaObjectFields.getKommavidare());
-        }
-        if (ideaObjectFields.getKomplnamn() != null) {
-            sb.append("&komplnamn=").append(ideaObjectFields.getKomplnamn());
-        }
-        if (ideaObjectFields.getEpost() != null) {
-            sb.append("&VGR-ID.email=").append(ideaObjectFields.getEpost());
-        }
-        if (ideaObjectFields.getInstanceName() != null) {
-            sb.append("&instance.name=").append(ideaObjectFields.getInstanceName());
-        }
-        if (ideaObjectFields.getPrio1kommentar() != null) {
-            sb.append("&prio1kommentar=").append(ideaObjectFields.getPrio1kommentar());
-        }
-        if (ideaObjectFields.getPrio2kommentar() != null) {
-            sb.append("&prio2kommentar=").append(ideaObjectFields.getPrio2kommentar());
-        }
-        if (ideaObjectFields.getSiteLank() != null) {
-            sb.append("&siteLank=").append(ideaObjectFields.getSiteLank());
-        }
-        if (ideaObjectFields.getTestat() != null) {
-            sb.append("&testat=").append(ideaObjectFields.getTestat());
-        }
-        if (ideaObjectFields.getTelefonnummer() != null) {
-            sb.append("&VGR-ID.hsapublictelephonenumber=").append(ideaObjectFields.getTelefonnummer());
-        }
-        if (ideaObjectFields.getMobiletelephonenumber() != null) {
-            sb.append("&VGR-ID.mobiletelephonenumber=").append(ideaObjectFields.getMobiletelephonenumber());
-        }
-        if (ideaObjectFields.getVgrId() != null) {
-            sb.append("&VGR-ID=").append(ideaObjectFields.getVgrId());
-        }
-        if (ideaObjectFields.getVgrIdFullname() != null) {
-            sb.append("&VGR-ID.fullname=").append(ideaObjectFields.getVgrIdFullname());
-        }
-        if (ideaObjectFields.getVgrIdHsaPostalAdress() != null) {
-            sb.append("&VGR-ID.hsapostaladress=").append(ideaObjectFields.getVgrIdHsaPostalAdress());
-        }
-        if (ideaObjectFields.getVgrIdTitel() != null) {
-            sb.append("&VGR-ID.titel=").append(ideaObjectFields.getVgrIdTitel());
-        }
-
-        String replyJson = createInstance(sb.toString());
-
+        String replyJson = createInstance(toUrl(ideaObjectFields));
         LOGGER.info("createIdeaInstance - replyJson is: " + replyJson);
-
         return replyJson;
     }
 }
