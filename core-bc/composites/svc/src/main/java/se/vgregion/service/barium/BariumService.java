@@ -28,8 +28,8 @@ import se.vgregion.portal.innovationsslussen.domain.json.*;
  */
 @Service
 public class BariumService {
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(BariumService.class.getName());
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BariumService.class.getName());
 
     @Value("${apiLocation}")
     private String apiLocation;
@@ -57,47 +57,47 @@ public class BariumService {
     @PostConstruct
     public void init() {
         try {
-        	
-        	System.out.println("BariumService - init - apiLocation has value: " + apiLocation);
-        	
+
+            System.out.println("BariumService - init - apiLocation has value: " + apiLocation);
+
             bariumRestClient.connect(apiLocation, apiKey, username, password, applicationId);
         } catch (BariumException e) {
             throw new RuntimeException(e);
         }
     }
-    
+
     public BariumResponse deleteBariumIdea(String bariumId) {
 
-    	BariumResponse bariumResponse = new BariumResponse();
-    	
+        BariumResponse bariumResponse = new BariumResponse();
+
 //    	System.out.println("BariumService - deleteBariumIdea - bariumId is: " + bariumId + " and currently bariumResponse.getSuccess is: " + bariumResponse.getSuccess());
-    	
+
         try {
-        	String replyJson = bariumRestClient.deleteBariumInstance(bariumId);
-        	
-        	
+            String replyJson = bariumRestClient.deleteBariumInstance(bariumId);
+
+
             try {
-    			JSONObject jsonObject = new JSONObject(replyJson);
-    			
-    			System.out.println("BariumService - deleteBariumIdea - jsonObject: " + jsonObject.toString());
-    			
-    			boolean success = jsonObject.getBoolean("success");
-    			
-    			bariumResponse.setSuccess(success);
-    			bariumResponse.setJsonString(replyJson);
-    			
-    		} catch (JSONException e) {
-    			LOGGER.error(e.getMessage(), e);
-    		}
+                JSONObject jsonObject = new JSONObject(replyJson);
+
+                System.out.println("BariumService - deleteBariumIdea - jsonObject: " + jsonObject.toString());
+
+                boolean success = jsonObject.getBoolean("success");
+
+                bariumResponse.setSuccess(success);
+                bariumResponse.setJsonString(replyJson);
+
+            } catch (JSONException e) {
+                LOGGER.error(e.getMessage(), e);
+            }
 
         } catch (BariumException e) {
             throw new RuntimeException(e);
         }
-    	
+
 //    	System.out.println("BariumService - deleteBariumIdea - bariumResponse.getSuccess before return is: " + bariumResponse.getSuccess());
 
         return bariumResponse;
-    }    
+    }
 
     public List<IdeaObjectFields> getAllIdeas() {
 
@@ -108,8 +108,8 @@ public class BariumService {
 
             for (ApplicationInstance applicationInstance : data) {
                 List<ObjectField> ideaObjectFieldsList = bariumRestClient.getIdeaObjectFields(applicationInstance);
-                
-                if(ideaObjectFieldsList != null) {
+
+                if (ideaObjectFieldsList != null) {
                     IdeaObjectFields ideaObjectFields = new IdeaObjectFields();
                     ideaObjectFields.populate(ideaObjectFieldsList);
 
@@ -123,7 +123,7 @@ public class BariumService {
 
         return ideas;
     }
-    
+
     public IdeaObjectFields getBariumIdea(String bariumId) {
 
         IdeaObjectFields bariumIdea = null;
@@ -149,34 +149,45 @@ public class BariumService {
     }
 
     public BariumResponse createIdea(Idea idea) {
-    	BariumResponse bariumResponse = new BariumResponse();
-    	
+        BariumResponse bariumResponse = new BariumResponse();
+
         IdeaObjectFields ideaObjectFields = new IdeaObjectFields();
-        
+
         IdeaContent ideaContentPublic = idea.getIdeaContentPublic();
         IdeaContent ideaContentPrivate = idea.getIdeaContentPrivate();
         IdeaPerson ideaPerson = idea.getIdeaPerson();
-        
+
         String ideaSiteLink = idea.getIdeaSiteLink();
-        
+
         String solvesProblem = ideaContentPrivate.getSolvesProblem();
         String email = ideaPerson.getEmail();
         String description = ideaContentPrivate.getDescription();
         String ideaTested = ideaContentPrivate.getIdeaTested();
         String title = idea.getTitle();
         String wantsHelpWith = ideaContentPrivate.getWantsHelpWith();
-        
+
+        String administrativeUnit = ideaPerson.getAdministrativeUnit();
         String additonalPersonsInfo = ideaPerson.getAdditionalPersonsInfo();
         String phone = ideaPerson.getPhone();
         String phoneMobile = ideaPerson.getPhoneMobile();
         String vgrId = ideaPerson.getVgrId();
         String name = ideaPerson.getName();
         String jobPosition = ideaPerson.getJobPosition();
-        
+        String vgrStrukturPerson = ideaPerson.getVgrStrukturPerson();
+
         System.out.println("BariumService - createIdea - ideaTested has value: " + ideaTested);
-        
-        ideaObjectFields.setBehov(solvesProblem);     
+
+        ideaObjectFields.setBehov(solvesProblem);
         ideaObjectFields.setEpost(email);
+        ideaObjectFields.setFodelsear(ideaPerson.getBirthYear() + "");
+        IdeaPerson.Gender gender = ideaPerson.getGender();
+        if (gender != null && !gender.equals(IdeaPerson.Gender.UNKNOWN)) {
+            ideaObjectFields.setKon((gender.equals(IdeaPerson.Gender.MALE) ? "Man" : "Kvinna"));
+        }
+        ideaObjectFields.setForvaltning(administrativeUnit);
+        //ideaObjectFields.setHsaIdKivEnhet(ideaPerson.get);
+        ideaObjectFields.setVgrStrukturPerson(vgrStrukturPerson);
+
         ideaObjectFields.setIde(description);
         ideaObjectFields.setInstanceName(title);
         ideaObjectFields.setKomplnamn(additonalPersonsInfo);
@@ -185,31 +196,31 @@ public class BariumService {
         ideaObjectFields.setSiteLank(ideaSiteLink);
         ideaObjectFields.setTelefonnummer(phone);
         ideaObjectFields.setTestat(ideaTested);
-        
-        
+
+
         ideaObjectFields.setVgrId(vgrId);
         ideaObjectFields.setVgrIdFullname(name);
         ideaObjectFields.setVgrIdTitel(jobPosition);
-        
+
         String replyJson = bariumRestClient.createIdeaInstance(ideaObjectFields);
-        
+
         try {
-			JSONObject jsonObject = new JSONObject(replyJson);
-			
-			System.out.println("BariumService - createIdea - jsonObject: " + jsonObject.toString());
-			
-			String instanceId = jsonObject.getString("InstanceId");
-			boolean success = jsonObject.getBoolean("success");
-			
-			bariumResponse.setInstanceId(instanceId);
-			bariumResponse.setSuccess(success);
-			bariumResponse.setJsonString(replyJson);
-			
-			System.out.println("BariumService - createIdea - InstanceId: " + instanceId);
-			
-		} catch (JSONException e) {
-			LOGGER.error(e.getMessage(), e);
-		}
+            JSONObject jsonObject = new JSONObject(replyJson);
+
+            System.out.println("BariumService - createIdea - jsonObject: " + jsonObject.toString());
+
+            String instanceId = jsonObject.getString("InstanceId");
+            boolean success = jsonObject.getBoolean("success");
+
+            bariumResponse.setInstanceId(instanceId);
+            bariumResponse.setSuccess(success);
+            bariumResponse.setJsonString(replyJson);
+
+            System.out.println("BariumService - createIdea - InstanceId: " + instanceId);
+
+        } catch (JSONException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
 
         return bariumResponse;
     }
@@ -225,7 +236,7 @@ public class BariumService {
     private List<ObjectEntry> getIdeaFiles(String objectId) throws BariumException {
         Objects instanceObjects = bariumRestClient.getObjectObjects(objectId);
 
-        SortedSet<ObjectEntry > objectEntries = new TreeSet<ObjectEntry>(new Comparator<ObjectEntry>() {
+        SortedSet<ObjectEntry> objectEntries = new TreeSet<ObjectEntry>(new Comparator<ObjectEntry>() {
             @Override
             public int compare(ObjectEntry o1, ObjectEntry o2) {
                 try {
