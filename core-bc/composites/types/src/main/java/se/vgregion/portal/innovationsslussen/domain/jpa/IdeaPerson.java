@@ -55,7 +55,8 @@ public class IdeaPerson extends AbstractEntity<Long> {
     @Column(name = "phone_mobile")
     private String phoneMobile;
 
-    @Column(name = "birth_year")
+    //@Column(name = "birth_year")
+    @Transient
     private Short birthYear;
 
     @Column(name = "gender")
@@ -64,6 +65,10 @@ public class IdeaPerson extends AbstractEntity<Long> {
 
     @Column(name = "administrative_unit")
     private String administrativeUnit;
+
+    @Transient
+    @Column(name = "vgr_struktur_person")
+    private String vgrStrukturPerson;
 
     // Foreign
     @ManyToOne
@@ -200,6 +205,14 @@ public class IdeaPerson extends AbstractEntity<Long> {
 
     public void setAdministrativeUnit(String administrativeUnit) {
         this.administrativeUnit = administrativeUnit;
+    }
+
+    public String getVgrStrukturPerson() {
+        return vgrStrukturPerson;
+    }
+
+    public void setVgrStrukturPerson(String vgrStrukturPerson) {
+        this.vgrStrukturPerson = vgrStrukturPerson;
     }
 
     public static enum Gender {

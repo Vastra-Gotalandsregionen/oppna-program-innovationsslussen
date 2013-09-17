@@ -1,9 +1,12 @@
 package se.vgregion.service.barium;
 
-import junit.framework.Assert;
+import org.apache.commons.collections.BeanMap;
+import org.junit.Ignore;
 import org.junit.Test;
-import se.vgregion.portal.innovationsslussen.domain.json.ObjectEntry;
-import se.vgregion.portal.innovationsslussen.domain.json.Objects;
+import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
+
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Created with IntelliJ IDEA.
@@ -32,8 +35,4 @@ public class BariumRestClientImplTest {
             "\"TemplateId\":null,\"FileType\":\"\",\"SortIndex\":null,\"State\":null,\"CreatedDate\":\"2013-08-22T09:14:57Z\"," +
             "\"UpdatedDate\":null,\"DataId\":null}]}\n";
 
-    @Test
-    public void toUrl() {
-
-    }
 }

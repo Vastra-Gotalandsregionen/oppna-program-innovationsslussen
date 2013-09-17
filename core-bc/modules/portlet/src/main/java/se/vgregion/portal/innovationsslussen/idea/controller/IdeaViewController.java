@@ -126,6 +126,7 @@ public class IdeaViewController extends BaseController {
 
             model.addAttribute("idea", idea);
             model.addAttribute("commentsList", commentsList);
+            model.addAttribute("commentsDelta", 1);
             model.addAttribute("isIdeaUserFavorite", isIdeaUserFavorite);
             model.addAttribute("isIdeaUserLiked", isIdeaUserLiked);
             model.addAttribute("urlTitle", urlTitle);
