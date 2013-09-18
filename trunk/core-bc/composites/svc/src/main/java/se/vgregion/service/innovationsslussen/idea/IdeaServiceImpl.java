@@ -1,10 +1,7 @@
 package se.vgregion.service.innovationsslussen.idea;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -87,11 +84,16 @@ public class IdeaServiceImpl implements IdeaService {
     @Value("${auto.comment.default.user.id}")
     private String autoCommentDefaultUserId;
 
-    @Value("${auto.comment.default.message}")
-    private String autoCommentDefaultMessage;
+    @Value("${auto.comment.default.message.newphase}")
+    private String autoCommentDefaultMessageNewPhase;
+
+    @Value("${auto.comment.default.message.become.public}")
+    private String autoCommentDefaultMessageBecomePublic;
 
     @Value("${auto.comment.default.subject}")
     private String autoCommentDefaultSubject;
+
+
 
     private IdeaRepository ideaRepository;
     private IdeaContentRepository ideaContentRepository;
@@ -563,48 +565,30 @@ public class IdeaServiceImpl implements IdeaService {
 
         // Make two calls asynchronously and simultaneously to speed up.
         Future<IdeaObjectFields> ideaObjectFieldsFuture = bariumService.asyncGetIdeaObjectFields(ideaId);
-        Future<String> ideaPhase = bariumService.asyncGetIdeaPhaseFuture(ideaId);
+        Future<String> bariumIdeaPhase = bariumService.asyncGetIdeaPhaseFuture(ideaId);
 
-        boolean newPhase = false;
 
         try {
+
+            IdeaStatus oldStatus = idea.getStatus();
             populateIdea(ideaObjectFieldsFuture.get(), idea);
-            String bariumIdeaPhase = ideaPhase.get();
-            if (!bariumIdeaPhase.equals(idea.getPhase())){
-                idea.setPhase(bariumIdeaPhase);
-                newPhase = true;
+
+            int currentPhase = Integer.parseInt(idea.getPhase());
+            int bariumPhase = Integer.parseInt(bariumIdeaPhase.get());
+
+            for (int i = currentPhase; i < bariumPhase ; i++) {
+                addAutoComment(idea, autoCommentDefaultMessageNewPhase + " " + getIdeaPhaseString(i));
+                idea.setPhase(""+ (i + 1));
             }
+
+            if (oldStatus.equals(IdeaStatus.PRIVATE_IDEA) && idea.getStatus().equals(IdeaStatus.PUBLIC_IDEA) ){
+                addAutoComment(idea, autoCommentDefaultMessageBecomePublic);
+            }
+
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        }
-
-       if (newPhase){
-            try {
-                String threadView = PropsKeys.DISCUSSION_THREAD_VIEW;
-                MBMessageDisplay messageDisplay = mbMessageLocalService.getDiscussionMessageDisplay(
-                        idea.getUserId(), idea.getGroupId(), IdeaContent.class.getName(), idea.getIdeaContentPrivate().getId(),
-                        WorkflowConstants.STATUS_ANY, threadView);
-                MBThread thread = messageDisplay.getThread();
-
-                long threadId = thread.getThreadId();
-                long rootThreadId = thread.getRootMessageId();
-                ServiceContext serviceContext =  new ServiceContext();
-
-                long userId  = Long.valueOf(autoCommentDefaultUserId);
-
-                mbMessageLocalService.addDiscussionMessage( userId,
-                        autoCommentDefaultUserId, idea.getGroupId(),
-                        IdeaContent.class.getName(), idea.getIdeaContentPrivate().getId(),
-                        threadId, rootThreadId, autoCommentDefaultSubject , autoCommentDefaultMessage,
-                        serviceContext);
-
-            } catch (PortalException e) {
-                e.printStackTrace();
-            } catch (SystemException e) {
-                e.printStackTrace();
-            }
+            e.printStackTrace();
         }
 
         idea = ideaRepository.merge(idea);
@@ -633,6 +617,60 @@ public class IdeaServiceImpl implements IdeaService {
         }
 
         return idea;
+    }
+
+    private String getIdeaPhaseString(int i) {
+
+        List<String> list = new ArrayList<String>();
+
+        list.add("Gemensam utveckling");
+        list.add("Idé");
+        list.add("Värdering/Utredning");
+        list.add("Koncept");
+        list.add("Prövning");
+        list.add("Kommersialisering");
+
+        return list.get(i);
+
+    }
+
+
+    private void addAutoComment(Idea idea, String message) {
+        try {
+            String threadView = PropsKeys.DISCUSSION_THREAD_VIEW;
+            MBMessageDisplay messageDisplay = mbMessageLocalService.getDiscussionMessageDisplay(
+                    idea.getUserId(), idea.getGroupId(), IdeaContent.class.getName(), idea.getIdeaContentPrivate().getId(),
+                    WorkflowConstants.STATUS_ANY, threadView);
+            MBThread thread = messageDisplay.getThread();
+
+            long threadId = thread.getThreadId();
+            long rootThreadId = thread.getRootMessageId();
+            ServiceContext serviceContext =  new ServiceContext();
+
+            long userId  = Long.valueOf(autoCommentDefaultUserId);
+
+            mbMessageLocalService.addDiscussionMessage( userId,
+                    autoCommentDefaultUserId, idea.getGroupId(),
+                    IdeaContent.class.getName(), idea.getIdeaContentPrivate().getId(),
+                    threadId, rootThreadId, autoCommentDefaultSubject , message,
+                    serviceContext);
+
+        } catch (PortalException e) {
+            e.printStackTrace();
+        } catch (SystemException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean hasBeenSetToPublic(Idea idea, Future<String> bariulmIsPublicFtr) throws ExecutionException, InterruptedException{
+
+        String bariulmIsPublic = bariulmIsPublicFtr.get();
+        if (!bariulmIsPublic.equals(idea.getIsPublic())){
+            idea.setPhase(bariulmIsPublic);
+            return true;
+        }
+
+        return false;
     }
 
     String replaceLastPart(String ideaSiteLink, String newUrlTitle) {
@@ -680,22 +718,19 @@ public class IdeaServiceImpl implements IdeaService {
 
     private void populateIdea(IdeaObjectFields ideaObjectFields, Idea idea) {
 
-        String publikStr = ideaObjectFields.getPublik();
-
-        // Default set idea status to private, then change if conditions are met
-        idea.setStatus(IdeaStatus.PRIVATE_IDEA);
-
-        if (publikStr != null) {
-            if (ideaObjectFields.getPublik().equals("on")) {
-                idea.setStatus(IdeaStatus.PUBLIC_IDEA);
-            }
-        }
-
         idea.setTitle(ideaObjectFields.getInstanceName());
         idea.setUrlTitle(titleToUrlTitle(ideaObjectFields.getInstanceName()));
 
         IdeaContent ideaContentPublic = idea.getIdeaContentPublic();
         IdeaContent ideaContentPrivate = idea.getIdeaContentPrivate(); // TODO Vet vi att det ska vara private?
+
+        // Default set idea status to private, then change if conditions are met
+        String publik = ideaObjectFields.getPublik();
+        if (publik != null && publik.equals("on")) {
+            idea.setStatus(IdeaStatus.PUBLIC_IDEA);
+        } else {
+            idea.setStatus(IdeaStatus.PRIVATE_IDEA);
+        }
 
         if (ideaContentPublic != null) {
             ideaContentPublic.setIntro(ideaObjectFields.getPublikintrotext());
