@@ -137,7 +137,7 @@ public class IdeaViewController extends BaseController {
             model.addAttribute("isIdeaOwner", idea.getUserId() == userId);
             model.addAttribute("ideaType", ideaType);
 
-            if (ideaType.equals("private") && ideaPermissionChecker.getHasPermissionViewIdeaPrivate()) {
+            if ((ideaType.equals("private") || !idea.getIsPublic()) && (ideaPermissionChecker.getHasPermissionViewIdeaPrivate() || idea.getUserId() == userId)) {
                 returnView = "view_private";
             }
         }
