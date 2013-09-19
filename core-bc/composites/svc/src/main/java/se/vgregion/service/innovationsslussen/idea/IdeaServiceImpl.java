@@ -384,7 +384,9 @@ public class IdeaServiceImpl implements IdeaService {
 
         Idea idea = ideaRepository.findIdeaByUrlTitle(urlTitle);
 
+        if (idea != null) {
         idea.setBariumUrl(getBariumUrl(idea));
+        }
 
         return idea;
     }

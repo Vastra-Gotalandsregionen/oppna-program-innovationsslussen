@@ -9,6 +9,10 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.service.LayoutLocalServiceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +29,7 @@ import se.vgregion.portal.innovationsslussen.BaseController;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaPerson;
 import se.vgregion.portal.innovationsslussen.util.IdeaPortletUtil;
+import se.vgregion.portal.innovationsslussen.util.IdeaPortletsConstants;
 import se.vgregion.service.innovationsslussen.exception.CreateIdeaException;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
 import se.vgregion.service.innovationsslussen.ldap.LdapService;
@@ -79,7 +84,27 @@ public class CreateIdeaViewController extends BaseController {
 
         //ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
 
-        model.addAttribute("foo", "bar");
+        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+        long scopeGroupId = themeDisplay.getScopeGroupId();
+
+        Layout ideaLayout = null;
+        try {
+            ideaLayout = LayoutLocalServiceUtil.getFriendlyURLLayout(scopeGroupId,
+                    themeDisplay.getLayout().isPrivateLayout(), "/ide");
+
+            long ideaPlid = ideaLayout.getPlid();
+            String ideaLink = request.getParameter("ideaLink");
+
+            model.addAttribute("urlTitle", ideaLink);
+            model.addAttribute("ideaPlid", ideaPlid);
+            model.addAttribute("ideaPortletName", IdeaPortletsConstants.PORTLET_NAME_IDEA_PORTLET);
+
+        } catch (PortalException e) {
+            e.printStackTrace();
+        } catch (SystemException e) {
+            e.printStackTrace();
+        }
+
 
         return "confirmation";
     }
@@ -187,6 +212,7 @@ public class CreateIdeaViewController extends BaseController {
 
                 idea = ideaService.addIdea(idea, schemeServerNamePort);
 
+                response.setRenderParameter("ideaLink", idea.getUrlTitle());
                 response.setRenderParameter("view", "confirmation");
 
             } catch (CreateIdeaException e) {

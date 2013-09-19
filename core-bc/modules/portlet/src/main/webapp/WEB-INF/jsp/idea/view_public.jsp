@@ -39,8 +39,7 @@
 							Denna id&eacute; &auml;r inte publik &auml;nnu. Detta inneb&auml;r att id&eacute;en inte kan ses av andra sajtmedlemmar.
 						</div>
 					</c:if>
-					
-					
+
 						<div class="idea-toolbar-wrap">
 							<ul class="rp-toolbar clearfix">
 							
@@ -199,8 +198,18 @@
               <%@ include file="document_list.jspf" %>
 						</aui:column>
 					</aui:layout>
-		
-					<%@ include file="comments_public.jsp" %>
+
+
+		            <c:choose>
+                    	<c:when test="${idea.isPublic}">
+					        <%@ include file="comments_public.jsp" %>
+					    </c:when>
+                        <c:otherwise>
+                            <div class="portlet-msg-info">
+                                Det går inte att kommentera här förens denna idé blivit publik.
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
 				
 				</c:when>
 				<c:otherwise>

@@ -17,6 +17,9 @@
 		
 			<liferay-portlet:renderURL var="ideaUrl" plid="${ideaPlid}" portletName="${ideaPortletName}">
 				<liferay-portlet:param name="showView" value="showIdea" />
+				<c:if test="${not idea.isPublic}">
+				    <liferay-portlet:param name="type" value="private" />
+				</c:if>
 				<liferay-portlet:param name="urlTitle" value="${idea.urlTitle}" />
 			</liferay-portlet:renderURL>
 			
