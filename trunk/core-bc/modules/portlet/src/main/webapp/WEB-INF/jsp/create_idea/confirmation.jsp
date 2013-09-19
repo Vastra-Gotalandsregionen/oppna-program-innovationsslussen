@@ -1,3 +1,5 @@
+<%@page contentType="text/html" pageEncoding="UTF-8" %>
+
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/portlet" prefix="portlet" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -21,8 +23,24 @@
 				<p>
 					Din id&eacute, har nu skickats in till Innovationssluss V&auml;stra G&ouml;taland. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget nisl erat, sed convallis urna. Integer id nibh quis quam semper rhoncus in vel erat. In risus enim, pretium ut pretium ut, viverra ac nunc.
 				</p>
+
+                <liferay-portlet:renderURL var="ideaPrivateUrl"plid="${ideaPlid}" portletName="${ideaPortletName}" >
+                    <liferay-portlet:param name="showView" value="showIdea" />
+                    <liferay-portlet:param name="type" value="private" />
+                    <liferay-portlet:param name="urlTitle" value="${urlTitle}" />
+                </liferay-portlet:renderURL>
+
+                <p>
+                    <a href="${ideaPrivateUrl}">
+                        <span>Visa din idé</span>
+                    </a>
+                </p>
+
+
+
+
 			</div>
-			
+
 			<div class="info-section">
 				<h2 class="info-section-hd">
 					Vad h&auml;nder nu?
