@@ -142,14 +142,14 @@ public class CreateIdeaViewController extends BaseController {
                     ideaPerson.setEmail(person.getMail());
                     ideaPerson.setJobPosition(person.getTitle());
                     ideaPerson.setName(person.getDisplayName());
-                    ideaPerson.setVgrId(person.getVgrId());
-                    ideaPerson.setBirthYear(person.getBirthYear());
+                  //  ideaPerson.setVgrId(person.getVgrId());
+                  //  ideaPerson.setBirthYear(person.getBirthYear());
                     ideaPerson.setAdministrativeUnit(person.getO());
 
-                    Person.Gender personGender = person.getGender();
-                    if (personGender != null) {
-                        ideaPerson.setGender(IdeaPerson.Gender.valueOf(personGender.name()));
-                    }
+                //   Person.Gender personGender = person.getGender();
+                //    if (personGender != null) {
+                //        ideaPerson.setGender(IdeaPerson.Gender.valueOf(personGender.name()));
+                //    }
                 }
             }
         } else {

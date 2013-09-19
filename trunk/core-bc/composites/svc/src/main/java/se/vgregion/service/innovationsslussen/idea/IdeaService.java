@@ -14,6 +14,7 @@ import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
 import se.vgregion.service.barium.BariumException;
 import se.vgregion.service.innovationsslussen.exception.CreateIdeaException;
 import se.vgregion.service.innovationsslussen.exception.FileUploadException;
+import se.vgregion.service.innovationsslussen.exception.RemoveIdeaException;
 import se.vgregion.service.innovationsslussen.exception.UpdateIdeaException;
 
 /**
@@ -258,14 +259,14 @@ public interface IdeaService {
      *
      * @param idea the primaryKey (id) of the {@link Idea} to remove
      */
-    void remove(String ideaId);
+    void remove(String ideaId) throws RemoveIdeaException;
 
     /**
      * Remove an {@link Idea} from both Liferay and Barium
      *
      * @param idea the {@link Idea} to remove
      */
-    void remove(Idea idea);
+    void remove(Idea idea) throws RemoveIdeaException;
 
     /**
      * Remove an {@link Idea} from Liferay.

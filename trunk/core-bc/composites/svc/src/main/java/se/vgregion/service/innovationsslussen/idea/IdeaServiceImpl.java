@@ -37,10 +37,7 @@ import se.vgregion.portal.innovationsslussen.domain.json.ObjectEntry;
 import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
 import se.vgregion.service.barium.BariumException;
 import se.vgregion.service.barium.BariumService;
-import se.vgregion.service.innovationsslussen.exception.CreateIdeaException;
-import se.vgregion.service.innovationsslussen.exception.FavoriteException;
-import se.vgregion.service.innovationsslussen.exception.FileUploadException;
-import se.vgregion.service.innovationsslussen.exception.LikeException;
+import se.vgregion.service.innovationsslussen.exception.*;
 import se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsService;
 import se.vgregion.service.innovationsslussen.idea.settings.util.ExpandoConstants;
 import se.vgregion.service.innovationsslussen.repository.idea.IdeaRepository;
@@ -94,7 +91,6 @@ public class IdeaServiceImpl implements IdeaService {
     private String autoCommentDefaultSubject;
 
 
-
     private IdeaRepository ideaRepository;
     private IdeaContentRepository ideaContentRepository;
     private IdeaFileRepository ideaFileRepository;
@@ -127,22 +123,18 @@ public class IdeaServiceImpl implements IdeaService {
     /**
      * Constructor.
      *
-     * @param ideaRepository
-     *            the {@link IdeaRepository}
-     * @param ideaContentRepository
-     *            the {@link IdeaContentRepository}
-     * @param ideaPersonRepository
-     *            the {@link IdeaPersonRepository}
-     * @param bariumService
-     *            the {@link BariumService}
+     * @param ideaRepository        the {@link IdeaRepository}
+     * @param ideaContentRepository the {@link IdeaContentRepository}
+     * @param ideaPersonRepository  the {@link IdeaPersonRepository}
+     * @param bariumService         the {@link BariumService}
      */
     @Autowired
     public IdeaServiceImpl(IdeaRepository ideaRepository, IdeaContentRepository ideaContentRepository,
-            IdeaFileRepository ideaFileRepository, IdeaPersonRepository ideaPersonRepository,
-            IdeaUserLikeRepository ideaUserLikeRepository, IdeaUserFavoriteRepository ideaUserFavoriteRepository,
-            BariumService bariumService, IdeaSettingsService ideaSettingsService,
-            MBMessageLocalService mbMessageLocalService, UserLocalService userLocalService,
-            UserGroupRoleLocalService userGroupRoleLocalService, ResourceLocalService resourceLocalService) {
+                           IdeaFileRepository ideaFileRepository, IdeaPersonRepository ideaPersonRepository,
+                           IdeaUserLikeRepository ideaUserLikeRepository, IdeaUserFavoriteRepository ideaUserFavoriteRepository,
+                           BariumService bariumService, IdeaSettingsService ideaSettingsService,
+                           MBMessageLocalService mbMessageLocalService, UserLocalService userLocalService,
+                           UserGroupRoleLocalService userGroupRoleLocalService, ResourceLocalService resourceLocalService) {
         this.ideaRepository = ideaRepository;
         this.ideaContentRepository = ideaContentRepository;
         this.ideaFileRepository = ideaFileRepository;
@@ -344,7 +336,7 @@ public class IdeaServiceImpl implements IdeaService {
 
     @Override
     public List<Idea> findIdeasByGroupId(long companyId, long groupId, IdeaStatus status, int start,
-            int offset) {
+                                         int offset) {
         return ideaRepository.findIdeasByGroupId(companyId, groupId, status, start, offset);
     }
 
@@ -360,7 +352,7 @@ public class IdeaServiceImpl implements IdeaService {
 
     @Override
     public List<Idea> findIdeasByGroupIdAndUserId(long companyId, long groupId, long userId, int start,
-            int offset) {
+                                                  int offset) {
         return ideaRepository.findIdeasByGroupIdAndUserId(companyId, groupId, userId, start, offset);
     }
 
@@ -385,7 +377,7 @@ public class IdeaServiceImpl implements IdeaService {
         Idea idea = ideaRepository.findIdeaByUrlTitle(urlTitle);
 
         if (idea != null) {
-        idea.setBariumUrl(getBariumUrl(idea));
+            idea.setBariumUrl(getBariumUrl(idea));
         }
 
         return idea;
@@ -449,7 +441,7 @@ public class IdeaServiceImpl implements IdeaService {
 
     @Override
     @Transactional
-    public void remove(String ideaId) {
+    public void remove(String ideaId) throws RemoveIdeaException {
         Idea idea = ideaRepository.find(ideaId);
 
         remove(idea);
@@ -457,17 +449,30 @@ public class IdeaServiceImpl implements IdeaService {
 
     @Override
     @Transactional
-    public void remove(Idea idea) {
+    public void remove(Idea idea) throws RemoveIdeaException {
 
         System.out.println("IdeaServiceImpl - remove");
 
-        BariumResponse bariumResponse = bariumService.deleteBariumIdea(idea.getId());
+        if (idea != null) {
+            try {
+                IdeaObjectFields bariumIdea = bariumService.getBariumIdea(idea.getId());
+            } catch (RuntimeException e){
+                removeFromLiferay(idea);
+                throw new RemoveIdeaException("Can not find idea with id " + idea.getId() + " in Barium. Have deleted idea in Liferay. ");
+            }
 
-        if (bariumResponse.getSuccess()) {
-            removeFromLiferay(idea);
+            BariumResponse bariumResponse = bariumService.deleteBariumIdea(idea.getId());
+
+            if (bariumResponse.getSuccess()) {
+                removeFromLiferay(idea);
+            } else {
+                throw new RemoveIdeaException("Removing the idea " + idea.getTitle() + " from Barium failed.");
+            }
+
         } else {
-            // TODO: Add message to user when this happens
+            throw new RemoveIdeaException("Can not find an idea with id " + idea.getId());
         }
+
     }
 
     @Override
@@ -578,12 +583,12 @@ public class IdeaServiceImpl implements IdeaService {
             int currentPhase = Integer.parseInt(idea.getPhase());
             int bariumPhase = Integer.parseInt(bariumIdeaPhase.get());
 
-            for (int i = currentPhase; i < bariumPhase ; i++) {
+            for (int i = currentPhase; i < bariumPhase; i++) {
                 addAutoComment(idea, autoCommentDefaultMessageNewPhase + " " + getIdeaPhaseString(i));
-                idea.setPhase(""+ (i + 1));
+                idea.setPhase("" + (i + 1));
             }
 
-            if (oldStatus.equals(IdeaStatus.PRIVATE_IDEA) && idea.getStatus().equals(IdeaStatus.PUBLIC_IDEA) ){
+            if (oldStatus.equals(IdeaStatus.PRIVATE_IDEA) && idea.getStatus().equals(IdeaStatus.PUBLIC_IDEA)) {
                 addAutoComment(idea, autoCommentDefaultMessageBecomePublic);
             }
 
@@ -647,14 +652,14 @@ public class IdeaServiceImpl implements IdeaService {
 
             long threadId = thread.getThreadId();
             long rootThreadId = thread.getRootMessageId();
-            ServiceContext serviceContext =  new ServiceContext();
+            ServiceContext serviceContext = new ServiceContext();
 
-            long userId  = Long.valueOf(autoCommentDefaultUserId);
+            long userId = Long.valueOf(autoCommentDefaultUserId);
 
-            mbMessageLocalService.addDiscussionMessage( userId,
+            mbMessageLocalService.addDiscussionMessage(userId,
                     autoCommentDefaultUserId, idea.getGroupId(),
                     IdeaContent.class.getName(), idea.getIdeaContentPrivate().getId(),
-                    threadId, rootThreadId, autoCommentDefaultSubject , message,
+                    threadId, rootThreadId, autoCommentDefaultSubject, message,
                     serviceContext);
 
         } catch (PortalException e) {
@@ -664,10 +669,10 @@ public class IdeaServiceImpl implements IdeaService {
         }
     }
 
-    private boolean hasBeenSetToPublic(Idea idea, Future<String> bariulmIsPublicFtr) throws ExecutionException, InterruptedException{
+    private boolean hasBeenSetToPublic(Idea idea, Future<String> bariulmIsPublicFtr) throws ExecutionException, InterruptedException {
 
         String bariulmIsPublic = bariulmIsPublicFtr.get();
-        if (!bariulmIsPublic.equals(idea.getIsPublic())){
+        if (!bariulmIsPublic.equals(idea.getIsPublic())) {
             idea.setPhase(bariulmIsPublic);
             return true;
         }
@@ -762,7 +767,7 @@ public class IdeaServiceImpl implements IdeaService {
 
     @Override
     @Transactional
-    public IdeaFile uploadFile(Idea idea,  boolean publicIdea, String fileName, String contentType, InputStream inputStream)
+    public IdeaFile uploadFile(Idea idea, boolean publicIdea, String fileName, String contentType, InputStream inputStream)
             throws FileUploadException {
 
         String folderName;
@@ -785,7 +790,7 @@ public class IdeaServiceImpl implements IdeaService {
 
             return ideaFile;
 
-        }catch (BariumException e) {
+        } catch (BariumException e) {
             throw new FileUploadException(e);
         }
     }
@@ -807,8 +812,7 @@ public class IdeaServiceImpl implements IdeaService {
     /**
      * When a new url title should be generated for a new idea.
      *
-     * @param title
-     *            the title
+     * @param title the title
      * @return the generated url title
      */
     @Override

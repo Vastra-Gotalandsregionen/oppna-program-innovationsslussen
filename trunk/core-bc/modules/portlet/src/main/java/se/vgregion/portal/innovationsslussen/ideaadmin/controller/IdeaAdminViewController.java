@@ -20,6 +20,7 @@ import se.vgregion.portal.innovationsslussen.BaseController;
 import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.util.IdeaPortletsConstants;
+import se.vgregion.service.innovationsslussen.exception.RemoveIdeaException;
 import se.vgregion.service.innovationsslussen.exception.UpdateIdeaException;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
 
@@ -136,9 +137,15 @@ public class IdeaAdminViewController extends BaseController {
     public final void deleteEntry(ActionRequest request, ActionResponse response, final ModelMap model) {
     	
         String ideaId = ParamUtil.getString(request, "entryId");
-        
-        ideaService.remove(ideaId);
-        
+
+        model.addAttribute("hasErrorMessage",  false);
+
+        try {
+            ideaService.remove(ideaId);
+        } catch (RemoveIdeaException e) {
+           model.addAttribute("errorMessage",  e.getMessage());
+        }
+
         response.setRenderParameter("view", "view");
     }
 

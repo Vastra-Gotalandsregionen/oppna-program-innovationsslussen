@@ -185,7 +185,7 @@ public class BariumService {
             ideaObjectFields.setKon((gender.equals(IdeaPerson.Gender.MALE) ? "Man" : "Kvinna"));
         }
         ideaObjectFields.setForvaltning(administrativeUnit);
-        //ideaObjectFields.setHsaIdKivEnhet(ideaPerson.get);
+        ideaObjectFields.setHsaIdKivEnhet(ideaPerson.getVgrStrukturPerson());
         ideaObjectFields.setVgrStrukturPerson(vgrStrukturPerson);
 
         ideaObjectFields.setIde(description);
