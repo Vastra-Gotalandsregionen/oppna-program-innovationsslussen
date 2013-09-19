@@ -10,7 +10,16 @@
 <%@ taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 
 <portlet:defineObjects />
-<liferay-theme:defineObjects />	
+<liferay-theme:defineObjects />
+
+
+
+
+<c:if test="${not empty errorMessage}">
+    <div class="portlet-msg-error">
+             ${errorMessage}
+    </div>
+</c:if>
 
 <liferay-ui:search-container
 	delta="${delta}"

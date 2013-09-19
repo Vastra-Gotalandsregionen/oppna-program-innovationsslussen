@@ -206,7 +206,7 @@
 					    </c:when>
                         <c:otherwise>
                             <div class="portlet-msg-info">
-                                Det går inte att kommentera här förens denna idé blivit publik.
+                                Det går inte att kommentera här innan denna idé blivit publik.
                             </div>
                         </c:otherwise>
                     </c:choose>
