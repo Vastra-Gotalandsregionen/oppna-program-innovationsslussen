@@ -1,22 +1,34 @@
 package se.vgregion.service.innovationsslussen.ldap;
 
-import org.apache.commons.collections.BeanMap;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-@SuppressWarnings("serial")
+import org.apache.commons.collections.BeanMap;
+
+/**
+ * The Class TextFrag.
+ */
 public class TextFrag {
 
     private final List<TextFrag> frags = new ArrayList<TextFrag>();
+
+    /** The text. */
     private String text;
 
 
+    /**
+     * Instantiates a new text frag.
+     */
     public TextFrag() {
         super();
     }
 
+    /**
+     * Instantiates a new text frag.
+     *
+     * @param text the text
+     */
     public TextFrag(String text) {
         super();
         setText(text);
@@ -31,6 +43,15 @@ public class TextFrag {
     }
 
 
+    /**
+     * To frag.
+     *
+     * @param text the text
+     * @param start the start
+     * @param end the end
+     * @param splitExp the split exp
+     * @return the text frag
+     */
     public static TextFrag toFrag(String text, char start, char end, String splitExp) {
         Parser parser = new Parser();
         parser.text = text;
@@ -38,17 +59,21 @@ public class TextFrag {
         parser.end = end;
 
         TextFrag frag = new TextFrag();
-        ;
         parser.toFrag(frag);
         return frag;
     }
 
+    /**
+     * To frag.
+     *
+     * @param text the text
+     * @return the text frag
+     */
     public static TextFrag toFrag(String text) {
         Parser parser = new Parser();
         parser.text = text;
 
         TextFrag frag = new TextFrag();
-        ;
         parser.toFrag(frag);
         return frag;
     }
@@ -57,13 +82,30 @@ public class TextFrag {
         return frags;
     }
 
+    /**
+     * The Class Parser.
+     */
     public static class Parser {
-        int cursor = 0;
-        StringBuilder sb = new StringBuilder();
-        //public String text, splitExp = Pattern.quote(",");
-        public String text, splitExp = "[,]";
-        public char start = '(', end = ')';
 
+        /** The cursor. */
+        private int cursor = 0;
+
+        /** The sb. */
+        private final StringBuilder sb = new StringBuilder();
+        //public String text, splitExp = Pattern.quote(",");
+        /** The split exp. */
+        private String text;
+
+        private final String splitExp = "[,]";
+
+        /** The end. */
+        private char start = '(', end = ')';
+
+        /**
+         * To frag.
+         *
+         * @param parent the parent
+         */
         public void toFrag(TextFrag parent) {
             while (text.length() > cursor) {
                 char c = text.charAt(cursor++);
@@ -85,6 +127,12 @@ public class TextFrag {
             mkAndAddFrags(parent);
         }
 
+        /**
+         * Mk and add frags.
+         *
+         * @param parent the parent
+         * @return the text frag
+         */
         TextFrag mkAndAddFrags(TextFrag parent) {
             String newText = sb.toString().trim();
             if (isBlanc(newText)) {
@@ -101,6 +149,13 @@ public class TextFrag {
             return frags.get(frags.size() - 1);
         }
 
+        /**
+         * Mk and add frag.
+         *
+         * @param parent the parent
+         * @param newText the new text
+         * @return the text frag
+         */
         TextFrag mkAndAddFrag(TextFrag parent, String newText) {
             TextFrag tf = new TextFrag(newText.trim());
             sb.delete(0, sb.length());
@@ -108,6 +163,12 @@ public class TextFrag {
             return tf;
         }
 
+        /**
+         * Checks if is blanc.
+         *
+         * @param s the s
+         * @return true, if is blanc
+         */
         boolean isBlanc(String s) {
             if (s == null) {
                 return false;
@@ -117,6 +178,12 @@ public class TextFrag {
 
     }
 
+    /**
+     * Find.
+     *
+     * @param match the match
+     * @return the text frag
+     */
     public TextFrag find(String match) {
         if (match.equals(getText())) {
             return this;
@@ -132,6 +199,10 @@ public class TextFrag {
 
     private boolean toStringRunning = false;
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @SuppressWarnings("unchecked")
     @Override
     public String toString() {
         try {
@@ -145,6 +216,11 @@ public class TextFrag {
         }
     }
 
+    /**
+     * The main method.
+     *
+     * @param args the arguments
+     */
     public static void main(String[] args) {
         String s = "CREATE TABLE address\n" + "(\n" + "  addressid bigint NOT NULL,\n" + "  companyid bigint,\n"
                 + "  userid bigint,\n" + "  username character varying(75),\n"

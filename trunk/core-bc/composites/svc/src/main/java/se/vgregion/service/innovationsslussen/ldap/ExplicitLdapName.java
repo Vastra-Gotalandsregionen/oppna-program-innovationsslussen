@@ -14,6 +14,12 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ExplicitLdapName {
 
-    public String value();
+    /**
+     * Used to give information about what field (name) in a ldap database the one in a class represents. Used in beans
+     * that are passed to the LdapService.find method.
+     *
+     * @return the string
+     */
+    String value();
 
 }

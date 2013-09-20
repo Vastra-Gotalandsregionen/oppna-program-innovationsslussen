@@ -4,8 +4,14 @@ import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 
 public interface IdeaPermissionCheckerService {
 
-	//IdeaPermissionChecker getIdeaPermissionChecker(long scopeGroupId, long userId, String ideaId);
-	
-	IdeaPermissionChecker getIdeaPermissionChecker(long scopeGroupId, long userId, Idea idea);
-	
+    /**
+     * Gets the idea permission checker.
+     *
+     * @param scopeGroupId the scope group id
+     * @param userId the user id
+     * @param idea the idea
+     * @return the idea permission checker
+     */
+    IdeaPermissionChecker getIdeaPermissionChecker(long scopeGroupId, long userId, Idea idea);
+
 }

@@ -74,14 +74,23 @@ public class Person {
     @ExplicitLdapName("vgrAdminType") private String vgrAdminType;
     @ExplicitLdapName("vgrLabeledURI") private String vgrLabeledURI;
 
+    /**
+     * Gets the gender.
+     *
+     * @return the gender
+     */
     public Gender getGender() {
+
+        final int hsaPersonIdentityNumberMaxLength = 12;
+
         if (hsaPersonIdentityNumber == null
                 || "".equals(hsaPersonIdentityNumber)
-                || hsaPersonIdentityNumber.length() != 12) {
+                || hsaPersonIdentityNumber.length() != hsaPersonIdentityNumberMaxLength) {
             return Gender.UNKNOWN;
         }
 
-        char c = hsaPersonIdentityNumber.charAt(10);
+        final int hsaPersonIdentityNumberLength = 10;
+        char c = hsaPersonIdentityNumber.charAt(hsaPersonIdentityNumberLength);
         if (!Character.isDigit(c)) {
             return Gender.UNKNOWN;
         }
@@ -92,6 +101,11 @@ public class Person {
         return Gender.MALE;
     }
 
+    /**
+     * Gets the birth year.
+     *
+     * @return the birth year
+     */
     public Short getBirthYear() {
         if (hsaPersonIdentityNumber != null && hsaPersonIdentityNumber.length() > 3
                 && Character.isDigit(hsaPersonIdentityNumber.charAt(0))

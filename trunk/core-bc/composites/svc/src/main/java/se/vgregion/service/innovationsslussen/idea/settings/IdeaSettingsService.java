@@ -1,11 +1,6 @@
 package se.vgregion.service.innovationsslussen.idea.settings;
 
-import java.util.Collection;
-import java.util.List;
-
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
-import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
-import se.vgregion.service.innovationsslussen.exception.CreateIdeaException;
 
 /**
  * Service interface for managing {@link Idea}s.
@@ -20,8 +15,8 @@ public interface IdeaSettingsService {
      *
      */
     //void addFavorite(long companyId, long groupId, long userId, String urlTitle);
-	
-	
+
+
     /**
      * Sets the setting.
      * 
@@ -75,8 +70,8 @@ public interface IdeaSettingsService {
      * @return the setting
      */
     boolean getSettingBoolean(String columnName, long companyId, long groupId);
-	
 
-    
-    
+
+
+
 }

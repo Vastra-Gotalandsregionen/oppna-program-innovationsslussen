@@ -25,23 +25,39 @@ import se.vgregion.service.innovationsslussen.exception.UpdateIdeaException;
  */
 public interface IdeaService {
 
+
+
+
     /**
-     * 
      * Add an {@link IdeaUserFavorite}.
      *
+     * @param companyId the company id
+     * @param groupId the group id
+     * @param userId the user id
+     * @param urlTitle the url title
      */
     void addFavorite(long companyId, long groupId, long userId, String urlTitle);
+
 
     /**
      * Add an {@link IdeaUserLike}.
      *
+     * @param companyId the company id
+     * @param groupId the group id
+     * @param userId the user id
+     * @param urlTitle the url title
      */
     void addLike(long companyId, long groupId, long userId, String urlTitle);
+
 
 
     /**
      * Add a {@link Idea}.
      *
+     * @param idea the idea
+     * @param schemeServerNamePort the scheme server name port
+     * @return the idea
+     * @throws CreateIdeaException the create idea exception
      */
     Idea addIdea(Idea idea, String schemeServerNamePort) throws CreateIdeaException;
 
@@ -77,10 +93,13 @@ public interface IdeaService {
      */
     List<Idea> findIdeasByCompanyId(long companyId);
 
+
     /**
      * Find {@link Idea}s for a company.
-     *
-     * @param companyId the companyid
+     * 
+     * @param companyId the company id
+     * @param start the start
+     * @param offset the offset
      * @return a {@link List} of {@link Idea}s
      */
     List<Idea> findIdeasByCompanyId(long companyId, int start, int offset);
@@ -108,6 +127,8 @@ public interface IdeaService {
      *
      * @param companyId the companyid
      * @param groupId   the groupId
+     * @param start the start
+     * @param offset the offset
      * @return a {@link List} of {@link Idea}s
      */
     List<Idea> findIdeasByGroupId(long companyId, long groupId, int start, int offset);
@@ -138,6 +159,8 @@ public interface IdeaService {
      *
      * @param companyId the companyid
      * @param groupId   the groupId
+     * @param start the start
+     * @param offset the offset
      * @param status   the status of the idea (i.e. whether the idea is public or private)
      * @return a {@link List} of {@link Idea}s
      */
@@ -169,6 +192,8 @@ public interface IdeaService {
      * @param companyId the companyid
      * @param groupId   the groupId
      * @param userId   the userId
+     * @param start the start
+     * @param offset the offset
      * @return a {@link List} of {@link Idea}s
      */
     List<Idea> findIdeasByGroupIdAndUserId(long companyId, long groupId, long userId, int start, int offset);
@@ -199,12 +224,14 @@ public interface IdeaService {
      * @param companyId the companyid
      * @param groupId   the groupId
      * @param userId   the userId
+     * @param start the start
+     * @param offset the offset
      * @return a {@link List} of {@link Idea}s
      */
     List<Idea> findUserFavoritedIdeas(long companyId, long groupId, long userId, int start, int offset);
 
     /**
-     * Find {@link Idea} by urlTitle
+     * Find {@link Idea} by urlTitle.
      *
      * @param urlTitle the urlTitle
      * @return a {@link List} of {@link Idea}s
@@ -212,7 +239,7 @@ public interface IdeaService {
     Idea findIdeaByUrlTitle(String urlTitle);
 
     /**
-     * Find {@link Idea} by urlTitle
+     * Find {@link Idea} by urlTitle.
      *
      * @param urlTitle the urlTitle
      * @param getBariumUrl   whether or not to get barium url for idea
@@ -222,56 +249,70 @@ public interface IdeaService {
 
 
     /**
-     * Get all public comments for an {@link Idea} {@link CommentItemVO}
+     * Get all public comments for an {@link Idea} {@link CommentItemVO}.
      *
-     * @param {@link Idea} the idea
+     * @param idea {@link Idea} the idea
      * @return a {@link Idea} of {@link Idea}s
      */
 
     List<CommentItemVO> getPublicComments(Idea idea);
 
     /**
-     * Get all private comments for an {@link Idea} {@link CommentItemVO}
+     * Get all private comments for an {@link Idea} {@link CommentItemVO}.
      *
-     * @param {@link Idea} the idea
+     * @param idea {@link Idea} the idea
      * @return a {@link Idea} of {@link Idea}s
      */
 
     List<CommentItemVO> getPrivateComments(Idea idea);
 
 
+
     /**
-     * Get whether user has added an idea as a favorite
+     * Get whether user has added an idea as a favorite.
      *
+     * @param companyId the company id
+     * @param groupId the group id
+     * @param userId the user id
+     * @param urlTitle the url title
+     * @return the checks if is idea user favorite
      */
     boolean getIsIdeaUserFavorite(long companyId, long groupId, long userId, String urlTitle);
 
 
+
     /**
-     * Get whether user has liked a certain idea or not
+     * Get whether user has liked a certain idea or not.
      *
+     * @param companyId the company id
+     * @param groupId the group id
+     * @param userId the user id
+     * @param urlTitle the url title
+     * @return the checks if is idea user liked
      */
     boolean getIsIdeaUserLiked(long companyId, long groupId, long userId, String urlTitle);
 
 
     /**
-     * Remove an {@link Idea} from both Liferay and Barium
+     * Remove an {@link Idea} from both Liferay and Barium.
      *
-     * @param idea the primaryKey (id) of the {@link Idea} to remove
+     * @param ideaId the primaryKey (id) of the {@link Idea} to remove
+     * @throws RemoveIdeaException the remove idea exception
      */
     void remove(String ideaId) throws RemoveIdeaException;
 
     /**
-     * Remove an {@link Idea} from both Liferay and Barium
+     * Remove an {@link Idea} from both Liferay and Barium.
      *
      * @param idea the {@link Idea} to remove
+     * @throws RemoveIdeaException the remove idea exception
      */
     void remove(Idea idea) throws RemoveIdeaException;
 
     /**
      * Remove an {@link Idea} from Liferay.
      *
-     * @param idea the primaryKey (id) of the {@link Idea} to remove
+     * @param ideaId the primaryKey (id) of the {@link Idea} to remove
      */
     void removeFromLiferay(String ideaId);
 
@@ -288,46 +329,107 @@ public interface IdeaService {
      */
     void removeAll();
 
+
     /**
      * Remove an {@link IdeaUserFavorite}.
      *
+     * @param companyId the company id
+     * @param groupId the group id
+     * @param userId the user id
+     * @param urlTitle the url title
      */
     void removeFavorite(long companyId, long groupId, long userId, String urlTitle);
+
 
 
     /**
      * Remove an {@link IdeaUserLike}.
      *
+     * @param companyId the company id
+     * @param groupId the group id
+     * @param userId the user id
+     * @param urlTitle the url title
      */
     void removeLike(long companyId, long groupId, long userId, String urlTitle);
 
+
     /**
-     * Updates an {@link Idea} from Barium
+     * Updates an {@link Idea} from Barium.
      *
+     * @param idea the idea
+     * @return the idea
+     * @throws UpdateIdeaException the update idea exception
      */
     Idea updateFromBarium(Idea idea) throws UpdateIdeaException;
 
 
+
     /**
-     * Updates an {@link Idea} from Barium
+     * Updates an {@link Idea} from Barium.
      *
+     * @param ideaId the idea id
+     * @return the idea
+     * @throws UpdateIdeaException the update idea exception
      */
     Idea updateFromBarium(String ideaId) throws UpdateIdeaException;
 
 
     //    Idea updateFromBarium(long companyId, long groupId, String urlTitle) throws UpdateIdeaException;
 
+    /**
+     * Update all ideas from barium.
+     */
     void updateAllIdeasFromBarium();
 
+    /**
+     * Upload file.
+     *
+     * @param idea the idea
+     * @param fileName the file name
+     * @param bis the bis
+     * @throws FileUploadException the file upload exception
+     */
     @Deprecated // Probably not needed?
     void uploadFile(Idea idea, String fileName, InputStream bis) throws FileUploadException;
 
-    IdeaFile uploadFile(Idea idea,  boolean publicIdea, String fileName, String contentType, InputStream inputStream) throws FileUploadException;
+    /**
+     * Upload file.
+     *
+     * @param idea the idea
+     * @param publicIdea the public idea
+     * @param fileName the file name
+     * @param contentType the content type
+     * @param inputStream the input stream
+     * @return the idea file
+     * @throws FileUploadException the file upload exception
+     */
+    IdeaFile uploadFile(Idea idea,  boolean publicIdea, String fileName, String contentType, InputStream inputStream)
+            throws FileUploadException;
 
+    /**
+     * Gets the object.
+     *
+     * @param id the id
+     * @return the object
+     * @throws BariumException the barium exception
+     */
     ObjectEntry getObject(String id) throws BariumException;
 
+    /**
+     * Download file.
+     *
+     * @param id the id
+     * @return the input stream
+     * @throws BariumException the barium exception
+     */
     InputStream downloadFile(String id) throws BariumException;
 
+    /**
+     * Generate new url title.
+     *
+     * @param title the title
+     * @return the string
+     */
     String generateNewUrlTitle(String title);
 
 }

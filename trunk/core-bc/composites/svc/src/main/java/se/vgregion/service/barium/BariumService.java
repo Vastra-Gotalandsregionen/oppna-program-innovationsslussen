@@ -1,7 +1,11 @@
 package se.vgregion.service.barium;
 
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -21,7 +25,12 @@ import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaPerson;
-import se.vgregion.portal.innovationsslussen.domain.json.*;
+import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstance;
+import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstances;
+import se.vgregion.portal.innovationsslussen.domain.json.BariumInstance;
+import se.vgregion.portal.innovationsslussen.domain.json.ObjectEntry;
+import se.vgregion.portal.innovationsslussen.domain.json.ObjectField;
+import se.vgregion.portal.innovationsslussen.domain.json.Objects;
 
 /**
  * @author Patrik Bergström
@@ -42,12 +51,16 @@ public class BariumService {
     @Value("${applicationId}")
     private String applicationId;
 
-    private ExecutorService executor = Executors.newCachedThreadPool();
+    private final ExecutorService executor = Executors.newCachedThreadPool();
 
     private BariumRestClient bariumRestClient;
 
     public BariumService() {
-        bariumRestClient = new BariumRestClientImpl();
+        try {
+            bariumRestClient = new BariumRestClientImpl(apiLocation, apiKey, username, password, applicationId);
+        } catch (BariumException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public BariumService(BariumRestClient bariumRestClient) {
@@ -58,9 +71,7 @@ public class BariumService {
     public void init() {
         try {
 
-            System.out.println("BariumService - init - apiLocation has value: " + apiLocation);
-
-            bariumRestClient.connect(apiLocation, apiKey, username, password, applicationId);
+            bariumRestClient.connect();
         } catch (BariumException e) {
             throw new RuntimeException(e);
         }
@@ -70,7 +81,7 @@ public class BariumService {
 
         BariumResponse bariumResponse = new BariumResponse();
 
-//    	System.out.println("BariumService - deleteBariumIdea - bariumId is: " + bariumId + " and currently bariumResponse.getSuccess is: " + bariumResponse.getSuccess());
+        //    	System.out.println("BariumService - deleteBariumIdea - bariumId is: " + bariumId + " and currently bariumResponse.getSuccess is: " + bariumResponse.getSuccess());
 
         try {
             String replyJson = bariumRestClient.deleteBariumInstance(bariumId);
@@ -94,7 +105,7 @@ public class BariumService {
             throw new RuntimeException(e);
         }
 
-//    	System.out.println("BariumService - deleteBariumIdea - bariumResponse.getSuccess before return is: " + bariumResponse.getSuccess());
+        //    	System.out.println("BariumService - deleteBariumIdea - bariumResponse.getSuccess before return is: " + bariumResponse.getSuccess());
 
         return bariumResponse;
     }

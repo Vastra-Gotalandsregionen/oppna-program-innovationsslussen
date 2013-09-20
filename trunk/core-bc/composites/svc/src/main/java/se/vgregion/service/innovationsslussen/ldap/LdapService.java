@@ -1,5 +1,17 @@
 package se.vgregion.service.innovationsslussen.ldap;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
+
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.SearchControls;
+
 import org.apache.commons.collections.BeanMap;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.ldap.core.AttributesMapper;
@@ -8,16 +20,6 @@ import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.filter.Filter;
 import org.springframework.ldap.filter.LikeFilter;
-
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.directory.Attribute;
-import javax.naming.directory.Attributes;
-import javax.naming.directory.SearchControls;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.util.*;
-import java.util.regex.Pattern;
 
 /**
  * Created with IntelliJ IDEA.
@@ -54,6 +56,7 @@ public class LdapService {
         searchControls.setReturningAttributes(new String[]{"*"});
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
+        @SuppressWarnings("unchecked")
         List<T> result = ldapTemplate.search(StringUtils.EMPTY, searchFilter.encode(), searchControls,
                 mapper);
 
@@ -71,7 +74,8 @@ public class LdapService {
                 }
             }
 
-            public Object mapFromAttributesImpl(Attributes attributes) throws NamingException, IllegalAccessException, InstantiationException {
+            public Object mapFromAttributesImpl(Attributes attributes) throws NamingException,
+            IllegalAccessException, InstantiationException {
                 Object result = type.newInstance();
                 BeanMap bm = new BeanMap(result);
                 NamingEnumeration<? extends Attribute> all = attributes.getAll();
@@ -81,7 +85,6 @@ public class LdapService {
                 while (ids.hasMore()) {
                     //System.out.println("id " + ids.next());
                     String name = ids.next();
-                    System.out.println(" @ExplicitLdapName(\"" +name+ "\") private String " + toBeanPropertyName(name) + ";");
                 }
                 //System.out.println(names);
 
