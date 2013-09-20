@@ -15,6 +15,8 @@ import java.util.regex.Pattern;
  * Time: 14:35
  * To change this template use File | Settings | File Templates.
  */
+
+@Ignore
 public class BariumRestClientImplTest {
 
     String json = "{\"TotalCount\":4,\"Data\":[{\"Id\":\"092fe5af-c168-4419-8e00-80f93ead573b\",\"ReferenceId\":null," +
