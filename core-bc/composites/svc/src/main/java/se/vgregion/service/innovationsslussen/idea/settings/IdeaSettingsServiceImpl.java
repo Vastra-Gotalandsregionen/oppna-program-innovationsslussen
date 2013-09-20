@@ -21,11 +21,11 @@ import com.liferay.portlet.expando.service.ExpandoValueLocalService;
  */
 public class IdeaSettingsServiceImpl implements IdeaSettingsService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(IdeaSettingsServiceImpl.class);
-	
-	private static final String GROUP_CLASSNAME = Group.class.getName();
-	
-	
+    private static final Logger LOGGER = LoggerFactory.getLogger(IdeaSettingsServiceImpl.class);
+
+    private static final String GROUP_CLASSNAME = Group.class.getName();
+
+
     @Autowired
     private ExpandoColumnLocalService expandoColumnService;
 
@@ -41,7 +41,8 @@ public class IdeaSettingsServiceImpl implements IdeaSettingsService {
             expandoValueService.addValue(companyId, GROUP_CLASSNAME, ExpandoTableConstants.DEFAULT_TABLE_NAME,
                     columnName, groupId, data);
         } catch (PortalException e) {
-            if (e instanceof com.liferay.portlet.expando.NoSuchTableException) { // If table don't exists we try to create it.
+            if (e instanceof com.liferay.portlet.expando.NoSuchTableException) {
+                // If table don't exists we try to create it.
 
                 try {
                     expandoTableService.addDefaultTable(companyId, GROUP_CLASSNAME);
@@ -51,7 +52,8 @@ public class IdeaSettingsServiceImpl implements IdeaSettingsService {
                 } catch (SystemException e1) {
                     e1.printStackTrace();
                 }
-            } else if (e instanceof com.liferay.portlet.expando.NoSuchColumnException) { // If column don't exists we try to create it.
+            } else if (e instanceof com.liferay.portlet.expando.NoSuchColumnException) {
+                // If column don't exists we try to create it.
 
                 try {
                     long tableId = expandoTableService.getDefaultTable(companyId, GROUP_CLASSNAME).getTableId();
@@ -69,18 +71,19 @@ public class IdeaSettingsServiceImpl implements IdeaSettingsService {
             e.printStackTrace();
         }
     }
-    
+
     @Override
     public void setSettingBoolean(boolean data, String columnName, long companyId, long groupId) {
-    	
-       try {
+
+        try {
             expandoValueService.addValue(companyId, GROUP_CLASSNAME, ExpandoTableConstants.DEFAULT_TABLE_NAME,
                     columnName, groupId, data);
-            
-        } catch (PortalException e) {
-            if (e instanceof com.liferay.portlet.expando.NoSuchTableException) { // If table don't exists we try to create it
 
-            	try {
+        } catch (PortalException e) {
+            if (e instanceof com.liferay.portlet.expando.NoSuchTableException) {
+                // If table don't exists we try to create it
+
+                try {
                     expandoTableService.addDefaultTable(companyId, GROUP_CLASSNAME);
                     setSettingBoolean(data, columnName, companyId, groupId);
                 } catch (PortalException e1) {
@@ -88,10 +91,11 @@ public class IdeaSettingsServiceImpl implements IdeaSettingsService {
                 } catch (SystemException e1) {
                     e1.printStackTrace();
                 }
-                
-            } else if (e instanceof com.liferay.portlet.expando.NoSuchColumnException) { // If column don't exists we try to create it
 
-            	try {
+            } else if (e instanceof com.liferay.portlet.expando.NoSuchColumnException) {
+                // If column don't exists we try to create it
+
+                try {
                     long tableId = expandoTableService.getDefaultTable(companyId, GROUP_CLASSNAME).getTableId();
                     expandoColumnService.addColumn(tableId, columnName, ExpandoColumnConstants.BOOLEAN);
                     setSettingBoolean(data, columnName, companyId, groupId);
@@ -101,14 +105,14 @@ public class IdeaSettingsServiceImpl implements IdeaSettingsService {
                     e2.printStackTrace();
                 }
             } else {
-            	e.printStackTrace();
+                e.printStackTrace();
             }
         } catch (SystemException e) {
             e.printStackTrace();
         }
-        
+
     }
-    
+
 
     @Override
     public String getSetting(String columnName, long companyId, long groupId) {
@@ -129,7 +133,7 @@ public class IdeaSettingsServiceImpl implements IdeaSettingsService {
                     e1.printStackTrace();
                 }
             } else if (e instanceof com.liferay.portlet.expando.NoSuchColumnException) { // If column don't exists
-                                                                                         // we try to create it.
+                // we try to create it.
                 try {
 
                     long tableId = expandoTableService.getDefaultTable(companyId, GROUP_CLASSNAME).getTableId();
@@ -154,15 +158,16 @@ public class IdeaSettingsServiceImpl implements IdeaSettingsService {
     public boolean getSettingBoolean(String columnName, long companyId, long groupId) {
 
         boolean value = false;
-        
-       try {
+
+        try {
 
             value = expandoValueService.getData(companyId, GROUP_CLASSNAME,
                     ExpandoTableConstants.DEFAULT_TABLE_NAME, columnName, groupId, false);
         } catch (PortalException e) {
-            if (e instanceof com.liferay.portlet.expando.NoSuchTableException) { // If table don't exists we try to create it
- 
-               try {
+            if (e instanceof com.liferay.portlet.expando.NoSuchTableException) {
+                // If table don't exists we try to create it
+
+                try {
                     expandoTableService.addDefaultTable(companyId, GROUP_CLASSNAME);
                     getSettingBoolean(columnName, companyId, groupId);
                 } catch (PortalException e1) {
@@ -171,7 +176,8 @@ public class IdeaSettingsServiceImpl implements IdeaSettingsService {
                     e1.printStackTrace();
                 }
 
-            } else if (e instanceof com.liferay.portlet.expando.NoSuchColumnException) { // If column don't exist we try to create it.
+            } else if (e instanceof com.liferay.portlet.expando.NoSuchColumnException) {
+                // If column don't exist we try to create it.
 
                 try {
 
@@ -192,9 +198,9 @@ public class IdeaSettingsServiceImpl implements IdeaSettingsService {
         }
 
         return value;
-    }    
-    
-    	
-	
+    }
+
+
+
 
 }

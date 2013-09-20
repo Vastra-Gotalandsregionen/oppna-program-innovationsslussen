@@ -1,7 +1,10 @@
 package se.vgregion.service.innovationsslussen.idea;
 
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -10,8 +13,6 @@ import java.util.concurrent.ThreadFactory;
 
 import javax.annotation.PostConstruct;
 
-import com.liferay.portal.kernel.util.PropsKeys;
-import com.liferay.portal.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,11 @@ import se.vgregion.portal.innovationsslussen.domain.json.ObjectEntry;
 import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
 import se.vgregion.service.barium.BariumException;
 import se.vgregion.service.barium.BariumService;
-import se.vgregion.service.innovationsslussen.exception.*;
+import se.vgregion.service.innovationsslussen.exception.CreateIdeaException;
+import se.vgregion.service.innovationsslussen.exception.FavoriteException;
+import se.vgregion.service.innovationsslussen.exception.FileUploadException;
+import se.vgregion.service.innovationsslussen.exception.LikeException;
+import se.vgregion.service.innovationsslussen.exception.RemoveIdeaException;
 import se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsService;
 import se.vgregion.service.innovationsslussen.idea.settings.util.ExpandoConstants;
 import se.vgregion.service.innovationsslussen.repository.idea.IdeaRepository;
@@ -49,17 +54,21 @@ import se.vgregion.service.innovationsslussen.repository.ideauserlike.IdeaUserLi
 import se.vgregion.service.innovationsslussen.util.FriendlyURLNormalizer;
 import se.vgregion.service.innovationsslussen.util.IdeaServiceConstants;
 
-import com.liferay.counter.service.CounterLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.User;
-import com.liferay.portlet.messageboards.service.MBMessageLocalService;
+import com.liferay.portal.service.ResourceLocalService;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.UserGroupRoleLocalService;
+import com.liferay.portal.service.UserLocalService;
 import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.messageboards.model.MBMessageDisplay;
 import com.liferay.portlet.messageboards.model.MBThread;
+import com.liferay.portlet.messageboards.service.MBMessageLocalService;
 import com.liferay.portlet.messageboards.util.comparator.MessageCreateDateComparator;
 
 /**
@@ -92,9 +101,7 @@ public class IdeaServiceImpl implements IdeaService {
 
 
     private IdeaRepository ideaRepository;
-    private IdeaContentRepository ideaContentRepository;
     private IdeaFileRepository ideaFileRepository;
-    private IdeaPersonRepository ideaPersonRepository;
     private IdeaUserLikeRepository ideaUserLikeRepository;
     private IdeaUserFavoriteRepository ideaUserFavoriteRepository;
     private BariumService bariumService;
@@ -116,7 +123,13 @@ public class IdeaServiceImpl implements IdeaService {
 
     @Autowired
     private ResourceLocalService resourceLocalService;
+    private MessageCreateDateComparator messageComparator;
 
+
+
+    /**
+     * Instantiates a new idea service impl.
+     */
     public IdeaServiceImpl() {
     }
 
@@ -129,16 +142,13 @@ public class IdeaServiceImpl implements IdeaService {
      * @param bariumService         the {@link BariumService}
      */
     @Autowired
-    public IdeaServiceImpl(IdeaRepository ideaRepository, IdeaContentRepository ideaContentRepository,
-                           IdeaFileRepository ideaFileRepository, IdeaPersonRepository ideaPersonRepository,
-                           IdeaUserLikeRepository ideaUserLikeRepository, IdeaUserFavoriteRepository ideaUserFavoriteRepository,
-                           BariumService bariumService, IdeaSettingsService ideaSettingsService,
-                           MBMessageLocalService mbMessageLocalService, UserLocalService userLocalService,
-                           UserGroupRoleLocalService userGroupRoleLocalService, ResourceLocalService resourceLocalService) {
+    public IdeaServiceImpl(IdeaRepository ideaRepository,IdeaFileRepository ideaFileRepository,
+            IdeaUserLikeRepository ideaUserLikeRepository, IdeaUserFavoriteRepository ideaUserFavoriteRepository,
+            BariumService bariumService, IdeaSettingsService ideaSettingsService,
+            MBMessageLocalService mbMessageLocalService, UserLocalService userLocalService,
+            UserGroupRoleLocalService userGroupRoleLocalService, ResourceLocalService resourceLocalService) {
         this.ideaRepository = ideaRepository;
-        this.ideaContentRepository = ideaContentRepository;
         this.ideaFileRepository = ideaFileRepository;
-        this.ideaPersonRepository = ideaPersonRepository;
         this.ideaUserLikeRepository = ideaUserLikeRepository;
         this.ideaUserFavoriteRepository = ideaUserFavoriteRepository;
         this.bariumService = bariumService;
@@ -150,6 +160,9 @@ public class IdeaServiceImpl implements IdeaService {
 
     }
 
+    /**
+     * Initiations methode.
+     */
     @PostConstruct
     public void init() {
         try {
@@ -159,6 +172,9 @@ public class IdeaServiceImpl implements IdeaService {
         }
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#addFavorite(long, long, long, java.lang.String)
+     */
     @Override
     @Transactional(rollbackFor = FavoriteException.class)
     public void addFavorite(long companyId, long groupId, long userId, String urlTitle) {
@@ -178,6 +194,9 @@ public class IdeaServiceImpl implements IdeaService {
         ideaUserFavorite = ideaUserFavoriteRepository.merge(ideaUserFavorite);
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#addLike(long, long, long, java.lang.String)
+     */
     @Override
     @Transactional(rollbackFor = LikeException.class)
     public void addLike(long companyId, long groupId, long userId, String urlTitle) {
@@ -197,6 +216,10 @@ public class IdeaServiceImpl implements IdeaService {
         ideaUserLike = ideaUserLikeRepository.merge(ideaUserLike);
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#addIdea(se.vgregion.portal
+     * .innovationsslussen.domain.jpa.Idea, java.lang.String)
+     */
     @Override
     @Transactional(rollbackFor = CreateIdeaException.class)
     public Idea addIdea(Idea idea, String schemeServerNamePort) throws CreateIdeaException {
@@ -284,93 +307,151 @@ public class IdeaServiceImpl implements IdeaService {
         return idea;
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#find(java.lang.String)
+     */
     @Override
     public Idea find(String ideaId) {
         return ideaRepository.find(ideaId);
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#findAll()
+     */
     @Override
     public Collection<Idea> findAll() {
         return ideaRepository.findAll();
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#findIdeasCountByCompanyId(long)
+     */
     @Override
     public int findIdeasCountByCompanyId(long companyId) {
         return ideaRepository.findIdeasCountByCompanyId(companyId);
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#findIdeasByCompanyId(long)
+     */
     @Override
     public List<Idea> findIdeasByCompanyId(long companyId) {
         return ideaRepository.findIdeasByCompanyId(companyId);
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#findIdeasByCompanyId(long, int, int)
+     */
     @Override
     public List<Idea> findIdeasByCompanyId(long companyId, int start, int offset) {
         return ideaRepository.findIdeasByCompanyId(companyId, start, offset);
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#findIdeaCountByGroupId(long, long)
+     */
     @Override
     public int findIdeaCountByGroupId(long companyId, long groupId) {
         return ideaRepository.findIdeaCountByGroupId(companyId, groupId);
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#findIdeasByGroupId(long, long)
+     */
     @Override
     public List<Idea> findIdeasByGroupId(long companyId, long groupId) {
         return ideaRepository.findIdeasByGroupId(companyId, groupId);
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#findIdeasByGroupId(long, long, int, int)
+     */
     @Override
     public List<Idea> findIdeasByGroupId(long companyId, long groupId, int start, int offset) {
         return ideaRepository.findIdeasByGroupId(companyId, groupId, start, offset);
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea
+     * .IdeaService#findIdeaCountByGroupId(long, long, se.vgregion.portal.innovationsslussen.domain.IdeaStatus)
+     */
     @Override
     public int findIdeaCountByGroupId(long companyId, long groupId, IdeaStatus status) {
         return ideaRepository.findIdeaCountByGroupId(companyId, groupId, status);
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea
+     * .IdeaService#findIdeasByGroupId(long, long, se.vgregion.portal.innovationsslussen.domain.IdeaStatus)
+     */
     @Override
     public List<Idea> findIdeasByGroupId(long companyId, long groupId, IdeaStatus status) {
         return ideaRepository.findIdeasByGroupId(companyId, groupId, status);
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea
+     * .IdeaService#findIdeasByGroupId(long, long, se.vgregion.portal.innovationsslussen.domain.IdeaStatus, int, int)
+     */
     @Override
     public List<Idea> findIdeasByGroupId(long companyId, long groupId, IdeaStatus status, int start,
-                                         int offset) {
+            int offset) {
         return ideaRepository.findIdeasByGroupId(companyId, groupId, status, start, offset);
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#findIdeasCountByGroupIdAndUserId(long, long, long)
+     */
     @Override
     public int findIdeasCountByGroupIdAndUserId(long companyId, long groupId, long userId) {
         return ideaRepository.findIdeasCountByGroupIdAndUserId(companyId, groupId, userId);
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#findIdeasByGroupIdAndUserId(long, long, long)
+     */
     @Override
     public List<Idea> findIdeasByGroupIdAndUserId(long companyId, long groupId, long userId) {
         return ideaRepository.findIdeasByGroupIdAndUserId(companyId, groupId, userId);
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea
+     * .IdeaService#findIdeasByGroupIdAndUserId(long, long, long, int, int)
+     */
     @Override
     public List<Idea> findIdeasByGroupIdAndUserId(long companyId, long groupId, long userId, int start,
-                                                  int offset) {
+            int offset) {
         return ideaRepository.findIdeasByGroupIdAndUserId(companyId, groupId, userId, start, offset);
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#findUserFavoritedIdeasCount(long, long, long)
+     */
     @Override
     public int findUserFavoritedIdeasCount(long companyId, long groupId, long userId) {
         return ideaRepository.findUserFavoritedIdeasCount(companyId, groupId, userId);
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#findUserFavoritedIdeas(long, long, long)
+     */
     @Override
     public List<Idea> findUserFavoritedIdeas(long companyId, long groupId, long userId) {
         return ideaRepository.findUserFavoritedIdeas(companyId, groupId, userId);
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#findUserFavoritedIdeas(long, long, long, int, int)
+     */
     @Override
     public List<Idea> findUserFavoritedIdeas(long companyId, long groupId, long userId, int start, int offset) {
         return ideaRepository.findUserFavoritedIdeas(companyId, groupId, userId, start, offset);
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#findIdeaByUrlTitle(java.lang.String)
+     */
     @Override
     public Idea findIdeaByUrlTitle(String urlTitle) {
 
@@ -383,6 +464,9 @@ public class IdeaServiceImpl implements IdeaService {
         return idea;
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#findIdeaByUrlTitle(java.lang.String, boolean)
+     */
     @Override
     public Idea findIdeaByUrlTitle(String urlTitle, boolean getBariumUrl) {
 
@@ -395,16 +479,28 @@ public class IdeaServiceImpl implements IdeaService {
         return idea;
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea
+     * .IdeaService#getPublicComments(se.vgregion.portal.innovationsslussen.domain.jpa.Idea)
+     */
     @Override
     public List<CommentItemVO> getPublicComments(Idea idea) {
         return getComments(idea.getIdeaContentPublic());
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea
+     * .IdeaService#getPrivateComments(se.vgregion.portal.innovationsslussen.domain.jpa.Idea)
+     */
     @Override
     public List<CommentItemVO> getPrivateComments(Idea idea) {
         return getComments(idea.getIdeaContentPrivate());
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea
+     * .IdeaService#getIsIdeaUserFavorite(long, long, long, java.lang.String)
+     */
     @Override
     public boolean getIsIdeaUserFavorite(long companyId, long groupId, long userId, String urlTitle) {
         boolean isIdeaUserFavorite = false;
@@ -422,6 +518,10 @@ public class IdeaServiceImpl implements IdeaService {
         return isIdeaUserFavorite;
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea
+     * .IdeaService#getIsIdeaUserLiked(long, long, long, java.lang.String)
+     */
     @Override
     public boolean getIsIdeaUserLiked(long companyId, long groupId, long userId, String urlTitle) {
         boolean isIdeaUserLiked = false;
@@ -439,6 +539,9 @@ public class IdeaServiceImpl implements IdeaService {
         return isIdeaUserLiked;
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#remove(java.lang.String)
+     */
     @Override
     @Transactional
     public void remove(String ideaId) throws RemoveIdeaException {
@@ -447,6 +550,10 @@ public class IdeaServiceImpl implements IdeaService {
         remove(idea);
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#remove(se.vgregion.portal
+     * .innovationsslussen.domain.jpa.Idea)
+     */
     @Override
     @Transactional
     public void remove(Idea idea) throws RemoveIdeaException {
@@ -458,7 +565,8 @@ public class IdeaServiceImpl implements IdeaService {
                 IdeaObjectFields bariumIdea = bariumService.getBariumIdea(idea.getId());
             } catch (RuntimeException e){
                 removeFromLiferay(idea);
-                throw new RemoveIdeaException("Can not find idea with id " + idea.getId() + " in Barium. Have deleted idea in Liferay. ");
+                throw new RemoveIdeaException("Can not find idea with id " + idea.getId() +
+                        " in Barium. Have deleted idea in Liferay. ");
             }
 
             BariumResponse bariumResponse = bariumService.deleteBariumIdea(idea.getId());
@@ -475,6 +583,9 @@ public class IdeaServiceImpl implements IdeaService {
 
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#removeFromLiferay(java.lang.String)
+     */
     @Override
     @Transactional
     public void removeFromLiferay(String ideaId) {
@@ -483,6 +594,10 @@ public class IdeaServiceImpl implements IdeaService {
         removeFromLiferay(idea);
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#removeFromLiferay(se.vgregion.portal
+     * .innovationsslussen.domain.jpa.Idea)
+     */
     @Override
     @Transactional
     public void removeFromLiferay(Idea idea) {
@@ -516,6 +631,9 @@ public class IdeaServiceImpl implements IdeaService {
 
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#removeAll()
+     */
     @Override
     @Transactional
     public void removeAll() {
@@ -525,6 +643,9 @@ public class IdeaServiceImpl implements IdeaService {
         // }
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#removeFavorite(long, long, long, java.lang.String)
+     */
     @Override
     @Transactional
     public void removeFavorite(long companyId, long groupId, long userId, String urlTitle) {
@@ -537,6 +658,9 @@ public class IdeaServiceImpl implements IdeaService {
         }
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#removeLike(long, long, long, java.lang.String)
+     */
     @Override
     @Transactional
     public void removeLike(long companyId, long groupId, long userId, String urlTitle) {
@@ -548,6 +672,9 @@ public class IdeaServiceImpl implements IdeaService {
         }
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#updateFromBarium(java.lang.String)
+     */
     @Override
     @Transactional
     public Idea updateFromBarium(String ideaId) {
@@ -559,6 +686,10 @@ public class IdeaServiceImpl implements IdeaService {
         return idea;
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#updateFromBarium(se.vgregion.portal
+     * .innovationsslussen.domain.jpa.Idea)
+     */
     @Override
     @Transactional
     public Idea updateFromBarium(Idea idea) {
@@ -646,8 +777,8 @@ public class IdeaServiceImpl implements IdeaService {
         try {
             String threadView = PropsKeys.DISCUSSION_THREAD_VIEW;
             MBMessageDisplay messageDisplay = mbMessageLocalService.getDiscussionMessageDisplay(
-                    idea.getUserId(), idea.getGroupId(), IdeaContent.class.getName(), idea.getIdeaContentPrivate().getId(),
-                    WorkflowConstants.STATUS_ANY, threadView);
+                    idea.getUserId(), idea.getGroupId(), IdeaContent.class.getName(),
+                    idea.getIdeaContentPrivate().getId(), WorkflowConstants.STATUS_ANY, threadView);
             MBThread thread = messageDisplay.getThread();
 
             long threadId = thread.getThreadId();
@@ -669,7 +800,8 @@ public class IdeaServiceImpl implements IdeaService {
         }
     }
 
-    private boolean hasBeenSetToPublic(Idea idea, Future<String> bariulmIsPublicFtr) throws ExecutionException, InterruptedException {
+    private boolean hasBeenSetToPublic(Idea idea, Future<String> bariulmIsPublicFtr)
+            throws ExecutionException, InterruptedException {
 
         String bariulmIsPublic = bariulmIsPublicFtr.get();
         if (!bariulmIsPublic.equals(idea.getIsPublic())) {
@@ -680,6 +812,13 @@ public class IdeaServiceImpl implements IdeaService {
         return false;
     }
 
+    /**
+     * Replace last part.
+     *
+     * @param ideaSiteLink the idea site link
+     * @param newUrlTitle the new url title
+     * @return the string
+     */
     String replaceLastPart(String ideaSiteLink, String newUrlTitle) {
         return ideaSiteLink.substring(0, ideaSiteLink.lastIndexOf("/") + 1) + newUrlTitle;
     }
@@ -689,6 +828,9 @@ public class IdeaServiceImpl implements IdeaService {
     }
 
     // 06.15 every morning
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#updateAllIdeasFromBarium()
+     */
     @Override
     @Scheduled(cron = "* 15 6 * * ?")
     public void updateAllIdeasFromBarium() {
@@ -714,6 +856,10 @@ public class IdeaServiceImpl implements IdeaService {
         LOGGER.info("Finished updating all ideas from Barium.");
     }
 
+
+    /**
+     * Asynchronous update of all ideas in barium.
+     */
     public void asyncUpdateAllIdeasFromBarium() {
         executor.submit(new Runnable() {
             @Override
@@ -754,6 +900,10 @@ public class IdeaServiceImpl implements IdeaService {
         }
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#uploadFile(se.vgregion.portal
+     * .innovationsslussen.domain.jpa.Idea, java.lang.String, java.io.InputStream)
+     */
     @Override
     @Deprecated
     // Probably not needed?
@@ -765,10 +915,15 @@ public class IdeaServiceImpl implements IdeaService {
         }
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#uploadFile(se.vgregion.portal
+     * .innovationsslussen.domain.jpa.Idea, boolean, java.lang.String, java.lang.String, java.io.InputStream)
+     */
     @Override
     @Transactional
-    public IdeaFile uploadFile(Idea idea, boolean publicIdea, String fileName, String contentType, InputStream inputStream)
-            throws FileUploadException {
+    public IdeaFile uploadFile(Idea idea, boolean publicIdea, String fileName, String contentType,
+            InputStream inputStream)
+                    throws FileUploadException {
 
         String folderName;
         IdeaContent ideaContent;
@@ -783,7 +938,8 @@ public class IdeaServiceImpl implements IdeaService {
 
         try {
             bariumService.uploadFile(idea, folderName, fileName, inputStream);
-            IdeaFile ideaFile = new IdeaFile(idea.getCompanyId(), idea.getCompanyId(), idea.getUserId(), fileName, contentType);
+            IdeaFile ideaFile = new IdeaFile(idea.getCompanyId(), idea.getCompanyId(), idea.getUserId(),
+                    fileName, contentType);
 
             ideaFile.setIdeaContent(ideaContent);
             ideaFileRepository.merge(ideaFile);
@@ -799,11 +955,17 @@ public class IdeaServiceImpl implements IdeaService {
         return bariumService.getIdeaFiles(idea, folderName);
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#getObject(java.lang.String)
+     */
     @Override
     public ObjectEntry getObject(String id) throws BariumException {
         return bariumService.getObject(id);
     }
 
+    /* (non-Javadoc)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#downloadFile(java.lang.String)
+     */
     @Override
     public InputStream downloadFile(String id) throws BariumException {
         return bariumService.downloadFile(id);
@@ -890,7 +1052,7 @@ public class IdeaServiceImpl implements IdeaService {
             long threadId = thread.getThreadId();
             long rootMessageId = thread.getRootMessageId();
 
-            MessageCreateDateComparator messageComparator = new MessageCreateDateComparator(false);
+            messageComparator = new MessageCreateDateComparator(false);
 
             List<MBMessage> mbMessages =
                     mbMessageLocalService.getThreadMessages(threadId, WorkflowConstants.STATUS_ANY,

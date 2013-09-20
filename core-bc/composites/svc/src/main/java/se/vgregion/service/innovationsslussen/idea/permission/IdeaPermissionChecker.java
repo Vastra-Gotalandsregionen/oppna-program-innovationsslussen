@@ -2,160 +2,163 @@ package se.vgregion.service.innovationsslussen.idea.permission;
 
 public class IdeaPermissionChecker {
 
-	private boolean hasPermissionAddCommentPublic;
-	private boolean hasPermissionAddCommentPrivate;
-	private boolean hasPermissionAddLike;
-	private boolean hasPermissionAddFavorite;
-	
-	private boolean hasPermissionDeleteCommentPublic;
-	private boolean hasPermissionDeleteCommentPrivate;
-	
-	private boolean hasPermissionDeleteLike;
-	private boolean hasPermissionDeleteFavorite;
-	
-	private boolean hasPermissionUpdateFromBarium;
+    private boolean hasPermissionAddCommentPublic;
+    private boolean hasPermissionAddCommentPrivate;
+    private boolean hasPermissionAddLike;
+    private boolean hasPermissionAddFavorite;
 
-	private boolean hasPermissionViewCommentPublic;
-	private boolean hasPermissionViewCommentPrivate;
-	
-	private boolean hasPermissionViewIdeaPublic;
-	private boolean hasPermissionViewIdeaPrivate;
-	
-	private boolean hasPermissionViewInBarium;
-	
-	private boolean isIdeaOwner;
-	
-	public IdeaPermissionChecker() {
-	}
+    private boolean hasPermissionDeleteCommentPublic;
+    private boolean hasPermissionDeleteCommentPrivate;
 
-	public boolean getHasPermissionViewIdeaPublic() {
-		return hasPermissionViewIdeaPublic;
-	}
+    private boolean hasPermissionDeleteLike;
+    private boolean hasPermissionDeleteFavorite;
 
-	public void setHasPermissionViewIdeaPublic(boolean hasPermissionViewIdeaPublic) {
-		this.hasPermissionViewIdeaPublic = hasPermissionViewIdeaPublic;
-	}
+    private boolean hasPermissionUpdateFromBarium;
 
-	public boolean getHasPermissionViewIdeaPrivate() {
-		return hasPermissionViewIdeaPrivate;
-	}
+    private boolean hasPermissionViewCommentPublic;
+    private boolean hasPermissionViewCommentPrivate;
 
-	public void setHasPermissionViewIdeaPrivate(boolean hasPermissionViewIdeaPrivate) {
-		this.hasPermissionViewIdeaPrivate = hasPermissionViewIdeaPrivate;
-	}
+    private boolean hasPermissionViewIdeaPublic;
+    private boolean hasPermissionViewIdeaPrivate;
 
-	public boolean getHasPermissionAddLike() {
-		return hasPermissionAddLike;
-	}
+    private boolean hasPermissionViewInBarium;
 
-	public void setHasPermissionAddLike(boolean hasPermissionAddLike) {
-		this.hasPermissionAddLike = hasPermissionAddLike;
-	}
+    private boolean isIdeaOwner;
 
-	public boolean getHasPermissionAddFavorite() {
-		return hasPermissionAddFavorite;
-	}
+    /**
+     * Instantiates a new idea permission checker.
+     */
+    public IdeaPermissionChecker() {
+    }
 
-	public void setHasPermissionAddFavorite(boolean hasPermissionAddFavorite) {
-		this.hasPermissionAddFavorite = hasPermissionAddFavorite;
-	}
+    public boolean getHasPermissionViewIdeaPublic() {
+        return hasPermissionViewIdeaPublic;
+    }
 
-	public boolean getHasPermissionDeleteLike() {
-		return hasPermissionDeleteLike;
-	}
+    public void setHasPermissionViewIdeaPublic(boolean hasPermissionViewIdeaPublic) {
+        this.hasPermissionViewIdeaPublic = hasPermissionViewIdeaPublic;
+    }
 
-	public void setHasPermissionDeleteLike(boolean hasPermissionDeleteLike) {
-		this.hasPermissionDeleteLike = hasPermissionDeleteLike;
-	}
+    public boolean getHasPermissionViewIdeaPrivate() {
+        return hasPermissionViewIdeaPrivate;
+    }
 
-	public boolean getHasPermissionDeleteFavorite() {
-		return hasPermissionDeleteFavorite;
-	}
+    public void setHasPermissionViewIdeaPrivate(boolean hasPermissionViewIdeaPrivate) {
+        this.hasPermissionViewIdeaPrivate = hasPermissionViewIdeaPrivate;
+    }
 
-	public void setHasPermissionDeleteFavorite(boolean hasPermissionDeleteFavorite) {
-		this.hasPermissionDeleteFavorite = hasPermissionDeleteFavorite;
-	}
+    public boolean getHasPermissionAddLike() {
+        return hasPermissionAddLike;
+    }
 
-	public boolean getHasPermissionAddCommentPublic() {
-		return hasPermissionAddCommentPublic;
-	}
+    public void setHasPermissionAddLike(boolean hasPermissionAddLike) {
+        this.hasPermissionAddLike = hasPermissionAddLike;
+    }
 
-	public void setHasPermissionAddCommentPublic(
-			boolean hasPermissionAddCommentPublic) {
-		this.hasPermissionAddCommentPublic = hasPermissionAddCommentPublic;
-	}
+    public boolean getHasPermissionAddFavorite() {
+        return hasPermissionAddFavorite;
+    }
 
-	public boolean getHasPermissionAddCommentPrivate() {
-		return hasPermissionAddCommentPrivate;
-	}
+    public void setHasPermissionAddFavorite(boolean hasPermissionAddFavorite) {
+        this.hasPermissionAddFavorite = hasPermissionAddFavorite;
+    }
 
-	public void setHasPermissionAddCommentPrivate(
-			boolean hasPermissionAddCommentPrivate) {
-		this.hasPermissionAddCommentPrivate = hasPermissionAddCommentPrivate;
-	}
+    public boolean getHasPermissionDeleteLike() {
+        return hasPermissionDeleteLike;
+    }
 
-	public boolean getHasPermissionViewCommentPublic() {
-		return hasPermissionViewCommentPublic;
-	}
+    public void setHasPermissionDeleteLike(boolean hasPermissionDeleteLike) {
+        this.hasPermissionDeleteLike = hasPermissionDeleteLike;
+    }
 
-	public void setHasPermissionViewCommentPublic(
-			boolean hasPermissionViewCommentPublic) {
-		this.hasPermissionViewCommentPublic = hasPermissionViewCommentPublic;
-	}
+    public boolean getHasPermissionDeleteFavorite() {
+        return hasPermissionDeleteFavorite;
+    }
 
-	public boolean getHasPermissionViewCommentPrivate() {
-		return hasPermissionViewCommentPrivate;
-	}
+    public void setHasPermissionDeleteFavorite(boolean hasPermissionDeleteFavorite) {
+        this.hasPermissionDeleteFavorite = hasPermissionDeleteFavorite;
+    }
 
-	public void setHasPermissionViewCommentPrivate(
-			boolean hasPermissionViewCommentPrivate) {
-		this.hasPermissionViewCommentPrivate = hasPermissionViewCommentPrivate;
-	}
+    public boolean getHasPermissionAddCommentPublic() {
+        return hasPermissionAddCommentPublic;
+    }
 
-	public boolean isHasPermissionViewInBarium() {
-		return hasPermissionViewInBarium;
-	}
+    public void setHasPermissionAddCommentPublic(
+            boolean hasPermissionAddCommentPublic) {
+        this.hasPermissionAddCommentPublic = hasPermissionAddCommentPublic;
+    }
 
-	public void setHasPermissionViewInBarium(boolean hasPermissionViewInBarium) {
-		this.hasPermissionViewInBarium = hasPermissionViewInBarium;
-	}
+    public boolean getHasPermissionAddCommentPrivate() {
+        return hasPermissionAddCommentPrivate;
+    }
 
-	public boolean isHasPermissionDeleteCommentPublic() {
-		return hasPermissionDeleteCommentPublic;
-	}
+    public void setHasPermissionAddCommentPrivate(
+            boolean hasPermissionAddCommentPrivate) {
+        this.hasPermissionAddCommentPrivate = hasPermissionAddCommentPrivate;
+    }
 
-	public void setHasPermissionDeleteCommentPublic(
-			boolean hasPermissionDeleteCommentPublic) {
-		this.hasPermissionDeleteCommentPublic = hasPermissionDeleteCommentPublic;
-	}
+    public boolean getHasPermissionViewCommentPublic() {
+        return hasPermissionViewCommentPublic;
+    }
 
-	public boolean isHasPermissionDeleteCommentPrivate() {
-		return hasPermissionDeleteCommentPrivate;
-	}
+    public void setHasPermissionViewCommentPublic(
+            boolean hasPermissionViewCommentPublic) {
+        this.hasPermissionViewCommentPublic = hasPermissionViewCommentPublic;
+    }
 
-	public void setHasPermissionDeleteCommentPrivate(
-			boolean hasPermissionDeleteCommentPrivate) {
-		this.hasPermissionDeleteCommentPrivate = hasPermissionDeleteCommentPrivate;
-	}
+    public boolean getHasPermissionViewCommentPrivate() {
+        return hasPermissionViewCommentPrivate;
+    }
 
-	public boolean getHasPermissionUpdateFromBarium() {
-		return hasPermissionUpdateFromBarium;
-	}
+    public void setHasPermissionViewCommentPrivate(
+            boolean hasPermissionViewCommentPrivate) {
+        this.hasPermissionViewCommentPrivate = hasPermissionViewCommentPrivate;
+    }
 
-	public void setHasPermissionUpdateFromBarium(
-			boolean hasPermissionUpdateFromBarium) {
-		this.hasPermissionUpdateFromBarium = hasPermissionUpdateFromBarium;
-	}
+    public boolean isHasPermissionViewInBarium() {
+        return hasPermissionViewInBarium;
+    }
 
-	public boolean getIsIdeaOwner() {
-		return isIdeaOwner;
-	}
+    public void setHasPermissionViewInBarium(boolean hasPermissionViewInBarium) {
+        this.hasPermissionViewInBarium = hasPermissionViewInBarium;
+    }
 
-	public void setIsIdeaOwner(boolean isIdeaOwner) {
-		this.isIdeaOwner = isIdeaOwner;
-	}
+    public boolean isHasPermissionDeleteCommentPublic() {
+        return hasPermissionDeleteCommentPublic;
+    }
 
-	
+    public void setHasPermissionDeleteCommentPublic(
+            boolean hasPermissionDeleteCommentPublic) {
+        this.hasPermissionDeleteCommentPublic = hasPermissionDeleteCommentPublic;
+    }
+
+    public boolean isHasPermissionDeleteCommentPrivate() {
+        return hasPermissionDeleteCommentPrivate;
+    }
+
+    public void setHasPermissionDeleteCommentPrivate(
+            boolean hasPermissionDeleteCommentPrivate) {
+        this.hasPermissionDeleteCommentPrivate = hasPermissionDeleteCommentPrivate;
+    }
+
+    public boolean getHasPermissionUpdateFromBarium() {
+        return hasPermissionUpdateFromBarium;
+    }
+
+    public void setHasPermissionUpdateFromBarium(
+            boolean hasPermissionUpdateFromBarium) {
+        this.hasPermissionUpdateFromBarium = hasPermissionUpdateFromBarium;
+    }
+
+    public boolean getIsIdeaOwner() {
+        return isIdeaOwner;
+    }
+
+    public void setIsIdeaOwner(boolean isIdeaOwner) {
+        this.isIdeaOwner = isIdeaOwner;
+    }
+
+
 
 
 }

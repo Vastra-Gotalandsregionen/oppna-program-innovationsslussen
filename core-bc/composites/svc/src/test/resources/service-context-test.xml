@@ -34,17 +34,15 @@
 
     <bean class="se.vgregion.service.innovationsslussen.idea.IdeaServiceImpl" >
         <constructor-arg index="0" ref="ideaRepository" />
-        <constructor-arg index="1" ref="ideaContentRepository" />
-        <constructor-arg index="2" ref="ideaFileRepository" />
-        <constructor-arg index="3" ref="ideaPersonRepository" />
-        <constructor-arg index="4" ref="ideaUserLikeRepository" />
-        <constructor-arg index="5" ref="ideaUserFavoriteRepository" />
-        <constructor-arg index="6" ref="bariumService" />
-        <constructor-arg index="7" ref="ideaSettingsService" />
-        <constructor-arg index="8" ref="mbMessageLocalService" />
-        <constructor-arg index="9" ref="userLocalService" />
-        <constructor-arg index="10" ref="userGroupRoleLocalService" />
-        <constructor-arg index="11" ref="resourceLocalService" />
+        <constructor-arg index="1" ref="ideaFileRepository" />
+        <constructor-arg index="2" ref="ideaUserLikeRepository" />
+        <constructor-arg index="3" ref="ideaUserFavoriteRepository" />
+        <constructor-arg index="4" ref="bariumService" />
+        <constructor-arg index="5" ref="ideaSettingsService" />
+        <constructor-arg index="6" ref="mbMessageLocalService" />
+        <constructor-arg index="7" ref="userLocalService" />
+        <constructor-arg index="8" ref="userGroupRoleLocalService" />
+        <constructor-arg index="9" ref="resourceLocalService" />
     </bean>
 
     <bean id="ideaContentRepository" class="org.mockito.Mockito" factory-method="mock">

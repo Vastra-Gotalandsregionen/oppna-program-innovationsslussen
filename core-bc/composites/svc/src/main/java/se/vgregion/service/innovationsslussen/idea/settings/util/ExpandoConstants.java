@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
  * @company Monator Technologies AB
  */
 public final class ExpandoConstants {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ExpandoConstants.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExpandoConstants.class.getName());
 
     private ExpandoConstants() {
         throw new UnsupportedOperationException();
@@ -19,5 +19,5 @@ public final class ExpandoConstants {
 
     // Barium
     public static final String BARIUM_DETAILS_VIEW_URL_PREFIX = "innovationsslussenBariumDetailsViewUrlPrefix";
-    
+
 }
