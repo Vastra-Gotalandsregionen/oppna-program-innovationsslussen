@@ -56,6 +56,13 @@ public class PageIterator {
     private List<PageIteratorPage> pages;
 
     /**
+     * Default constructor for class.
+     */
+    public PageIterator() {
+
+    }
+
+    /**
      * Instantiates a new page iterator.
      * 
      * @param totalHits

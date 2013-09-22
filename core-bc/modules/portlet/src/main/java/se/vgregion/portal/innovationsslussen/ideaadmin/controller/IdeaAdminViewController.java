@@ -44,18 +44,27 @@ public class IdeaAdminViewController extends BaseController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IdeaAdminViewController.class.getName());
     private static final int SEARCH_CONTAINER_DELTA_DEFAULT = 10;
-    
+
     IdeaService ideaService;
 
     /**
      * Constructor.
-     *
      */
     @Autowired
     public IdeaAdminViewController(IdeaService ideaService) {
         this.ideaService = ideaService;
     }
 
+    protected Layout getFriendlyURLLayout(long scopeGroupId) {
+        try {
+            return LayoutLocalServiceUtil.getFriendlyURLLayout(scopeGroupId, false, "/ide");
+        } catch (PortalException e) {
+            LOGGER.error(e.getMessage(), e);
+        } catch (SystemException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+        return null;
+    }
 
     /**
      * The default render method.
@@ -71,33 +80,27 @@ public class IdeaAdminViewController extends BaseController {
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
         long scopeGroupId = themeDisplay.getScopeGroupId();
         long companyId = themeDisplay.getCompanyId();
-        
+
         Layout ideaLayout;
-		try {
-			ideaLayout = LayoutLocalServiceUtil.getFriendlyURLLayout(scopeGroupId, false, "/ide");
-			long ideaPlid = ideaLayout.getPlid();
-			
-			model.addAttribute("ideaPlid", ideaPlid);
-			model.addAttribute("ideaPortletName",IdeaPortletsConstants.PORTLET_NAME_IDEA_PORTLET);
-			
-		} catch (PortalException e) {
-			LOGGER.error(e.getMessage(), e);
-		} catch (SystemException e) {
-			LOGGER.error(e.getMessage(), e);
-		}
-        
-		// Search Container parameters
-		int searchCur = ParamUtil.getInteger(request, "cur", 1);
-		int searchDelta = ParamUtil.getInteger(
-				request, "delta", SEARCH_CONTAINER_DELTA_DEFAULT);
-		
+
+        ideaLayout = getFriendlyURLLayout(scopeGroupId);
+        long ideaPlid = ideaLayout.getPlid();
+
+        model.addAttribute("ideaPlid", ideaPlid);
+        model.addAttribute("ideaPortletName", IdeaPortletsConstants.PORTLET_NAME_IDEA_PORTLET);
+
+        // Search Container parameters
+        int searchCur = ParamUtil.getInteger(request, "cur", 1);
+        int searchDelta = ParamUtil.getInteger(
+                request, "delta", SEARCH_CONTAINER_DELTA_DEFAULT);
+
         int totalCount = 0;
-        
+
         int start = (searchCur - 1) * searchDelta;
         int offset = searchDelta;
-		
+
         List<Idea> ideas = ideaService.findIdeasByGroupId(companyId, scopeGroupId, start, offset);
-        
+
         totalCount = ideaService.findIdeaCountByGroupId(companyId, scopeGroupId);
 
         model.addAttribute("delta", searchDelta);
@@ -106,8 +109,8 @@ public class IdeaAdminViewController extends BaseController {
 
         return "view";
     }
-    
-    
+
+
     /**
      * Method handling Action request.
      *
@@ -117,15 +120,15 @@ public class IdeaAdminViewController extends BaseController {
      */
     @ActionMapping("someAction")
     public final void someAction(ActionRequest request, ActionResponse response, final ModelMap model) {
-    	
+
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-        long companyId = themeDisplay.getCompanyId();
+        /*long companyId = themeDisplay.getCompanyId();
         long groupId = themeDisplay.getScopeGroupId();
-        long userId = themeDisplay.getUserId();
-        
+        long userId = themeDisplay.getUserId();*/
+
         response.setRenderParameter("view", "view");
     }
-    
+
     /**
      * Method handling Action request.
      *
@@ -135,15 +138,15 @@ public class IdeaAdminViewController extends BaseController {
      */
     @ActionMapping(params = "action=deleteEntry")
     public final void deleteEntry(ActionRequest request, ActionResponse response, final ModelMap model) {
-    	
+
         String ideaId = ParamUtil.getString(request, "entryId");
 
-        model.addAttribute("hasErrorMessage",  false);
+        model.addAttribute("hasErrorMessage", false);
 
         try {
             ideaService.remove(ideaId);
         } catch (RemoveIdeaException e) {
-           model.addAttribute("errorMessage",  e.getMessage());
+            model.addAttribute("errorMessage", e.getMessage());
         }
 
         response.setRenderParameter("view", "view");
@@ -153,20 +156,19 @@ public class IdeaAdminViewController extends BaseController {
     public void syncAllFromBarium() {
         ideaService.updateAllIdeasFromBarium();
     }
-    
+
     @ActionMapping(params = "action=syncIdeaFromBarium")
     public void syncIdeaFromBarium(ActionRequest request, ActionResponse response, final ModelMap model) {
-    	
-    	String ideaId = ParamUtil.getString(request, "entryId");
-    	
-    	try {
-			ideaService.updateFromBarium(ideaId);
-		} catch (UpdateIdeaException e) {
-			LOGGER.error(e.getMessage(), e);
-		}
+
+        String ideaId = ParamUtil.getString(request, "entryId");
+
+        try {
+            ideaService.updateFromBarium(ideaId);
+        } catch (UpdateIdeaException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
     }
-    
-    
+
 
 }
 
