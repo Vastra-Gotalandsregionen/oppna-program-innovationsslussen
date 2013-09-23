@@ -12,7 +12,7 @@ import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaPerson;
  * @company Monator Technologies AB
  */
 public interface IdeaPersonRepository extends Repository<IdeaPerson, Long> {
-	
+
     /**
      * Find all {@link IdeaPerson}s for a company.
      *

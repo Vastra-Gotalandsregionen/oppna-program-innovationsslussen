@@ -3,7 +3,6 @@ package se.vgregion.service.innovationsslussen.repository.ideauserlike;
 import java.util.List;
 
 import se.vgregion.dao.domain.patterns.repository.Repository;
-import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserLike;
 
 /**
@@ -13,7 +12,7 @@ import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserLike;
  * @company Monator Technologies AB
  */
 public interface IdeaUserLikeRepository extends Repository<IdeaUserLike, Long> {
-	
+
     /**
      * Find all {@link IdeaUserLike}s for a company.
      *
@@ -30,7 +29,7 @@ public interface IdeaUserLikeRepository extends Repository<IdeaUserLike, Long> {
      * @return a {@link List} of {@link IdeaUserLike}s
      */
     List<IdeaUserLike> findLikesByGroupId(long companyId, long groupId);
-    
+
     /**
      * Find all {@link IdeaUserLike}s for certain idea (in a group in a company).
      *
@@ -40,7 +39,7 @@ public interface IdeaUserLikeRepository extends Repository<IdeaUserLike, Long> {
      * @return a {@link List} of {@link IdeaUserLike}s
      */
     List<IdeaUserLike> findLikesByIdeaId(long companyId, long groupId, long ideaId);
-    
+
     /**
      * Find all {@link IdeaUserLike}s for certain user (in a group in a company).
      *
@@ -50,7 +49,7 @@ public interface IdeaUserLikeRepository extends Repository<IdeaUserLike, Long> {
      * @return a {@link List} of {@link IdeaUserLike}s
      */
     List<IdeaUserLike> findLikesByUserId(long companyId, long groupId, long userId);
-    
+
     /**
      * Find all {@link IdeaUserLike}s for certain user and a certain idea (in a group in a company).
      *
@@ -63,19 +62,21 @@ public interface IdeaUserLikeRepository extends Repository<IdeaUserLike, Long> {
     List<IdeaUserLike> findLikesByUserAndIdea(long companyId, long groupId, long userId, String ideaId);
 
     /**
-     * Remove the {@link IdeaUserLike} with the id
+     * Remove the {@link IdeaUserLike} with the id.
      *
      * @param ideaUserLikeId the id of the IdeaUserLike to remove
-     * @return void
      */
     void remove(long ideaUserLikeId);
-    
+
+
     /**
-     * Remove the {@link IdeaUserLike} with the id
+     * Remove the {@link IdeaUserLike} with the id.
      *
-     * @param ideaUserLikeId the id of the IdeaUserLike to remove
-     * @return void
+     * @param companyId the company id
+     * @param groupId the group id
+     * @param userId the user id
+     * @param ideaId the idea id
      */
     void removeByUserAndIdea(long companyId, long groupId, long userId, String ideaId);
-    
+
 }

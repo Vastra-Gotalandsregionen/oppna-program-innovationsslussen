@@ -13,7 +13,7 @@ import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
  * @company Monator Technologies AB
  */
 public interface IdeaContentRepository extends Repository<IdeaContent, Long> {
-	
+
     /**
      * Find all {@link IdeaContent}s for a company.
      *

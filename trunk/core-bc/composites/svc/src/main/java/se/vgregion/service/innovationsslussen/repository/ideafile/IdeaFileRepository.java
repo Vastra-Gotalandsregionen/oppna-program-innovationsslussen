@@ -13,7 +13,7 @@ import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaFile;
 public interface IdeaFileRepository extends Repository<IdeaFile, Long> {
 
     /**
-     * Find an {@link Idea} with urlTitle specified
+     * Find an {@link Idea} with urlTitle specified.
      * 
      * @param id
      *            the id
