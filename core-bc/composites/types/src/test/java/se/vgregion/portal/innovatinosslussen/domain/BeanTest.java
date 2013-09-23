@@ -9,6 +9,8 @@ import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstance;
 import se.vgregion.portal.innovationsslussen.domain.pageiterator.PageIterator;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.*;
 
@@ -21,18 +23,21 @@ import java.util.*;
  */
 public class BeanTest {
 
-    Map<Class, Class> interfaceImps = new HashMap<Class, Class>() {
+    Map<Class, Object> defaultPrim = new HashMap<Class, Object>() {
         @Override
-        public Class get(Object key) {
-            Class r = super.get(key);
-            if (r == null) {
-                return (Class) key;
+        public Object get(Object key) {
+            Object result = super.get(key);
+            if (result == null) {
+                try {
+                    result = ((Class)key).newInstance();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
-            return r;
+            return result;
         }
     };
 
-    Map<Class, Object> defaultPrim = new HashMap<Class, Object>();
 
     {
         defaultPrim.put(Long.TYPE, 1l);
@@ -45,11 +50,48 @@ public class BeanTest {
         defaultPrim.put(Short.class, (short) 1);
         defaultPrim.put(Boolean.class, true);
         defaultPrim.put(Boolean.TYPE, true);
-
-        interfaceImps.put(Set.class, HashSet.class);
-        interfaceImps.put(Collection.class, ArrayList.class);
-        interfaceImps.put(List.class, ArrayList.class);
+        defaultPrim.put(Set.class, new HashSet());
+        defaultPrim.put(Collection.class, new ArrayList());
+        defaultPrim.put(List.class, new ArrayList());
     }
+
+    @Test
+    public void constructors() throws ClassNotFoundException, IllegalAccessException, InstantiationException, InvocationTargetException {
+        for (Class type : getTypes(Idea.class)) {
+            if (!type.isEnum())
+                callConstructors(type);
+        }
+        for (Class type : getTypes(ApplicationInstance.class)) {
+            if (!type.isEnum())
+                callConstructors(type);
+        }
+        for (Class type : getTypes(PageIterator.class)) {
+            if (!type.isEnum())
+                callConstructors(type);
+        }
+        for (Class type : getTypes(Idea.class)) {
+            if (!type.isEnum())
+                callConstructors(type);
+        }
+        for (Class type : getTypes(BariumResponse.class)) {
+            if (!type.isEnum())
+                callConstructors(type);
+        }
+    }
+
+
+    public void callConstructors(Class type) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+        Constructor[] constructors = type.getDeclaredConstructors();
+        for (Constructor constructor: constructors) {
+            Class[] types = constructor.getParameterTypes();
+            Object[] arguments = new Object[types.length];
+            for (int i = 0; i < arguments.length; i++) {
+                arguments[i] = defaultPrim.get(types[i]);
+            }
+            constructor.newInstance(arguments);
+        }
+    }
+
 
     @Test
     public void gettersAndSetters() throws ClassNotFoundException, IllegalAccessException, InstantiationException {
@@ -115,7 +157,6 @@ public class BeanTest {
                     Assert.assertTrue(name == bm.get(name));
                 } else {
                     Class clazz = bm.getType(name);
-                    clazz = interfaceImps.get(clazz);
 
                     if (!clazz.getName().startsWith(javaLangPackageName) && !clazz.isEnum()) {
                         Object value = defaultPrim.get(clazz);
