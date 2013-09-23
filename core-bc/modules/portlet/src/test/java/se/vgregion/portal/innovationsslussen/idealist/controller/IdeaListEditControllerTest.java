@@ -60,7 +60,6 @@ public class IdeaListEditControllerTest {
 
     @Test
     public void testSavePreferences() throws Exception {
-        ThemeDisplay themeDisplay = Mockito.mock(ThemeDisplay.class);
         PortletPreferences prefs = Mockito.mock(PortletPreferences.class);
         Mockito.when((actionReq.getPreferences())).thenReturn(prefs);
 

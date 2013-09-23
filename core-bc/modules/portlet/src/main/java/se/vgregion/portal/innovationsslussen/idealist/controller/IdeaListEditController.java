@@ -79,7 +79,6 @@ public class IdeaListEditController extends BaseController {
      * 
      * @param request
      *            the request
-     * @param tagsEntries
      *            the tags entries
      */
     @ActionMapping(params = "action=save")
