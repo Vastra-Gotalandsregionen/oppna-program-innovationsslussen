@@ -37,7 +37,7 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> im
 
         List<Idea> ideas = findByQuery(queryString, queryObject);
 
-        if(ideas.size() > 0) {
+        if (ideas.size() > 0) {
             idea = ideas.get(0);
         }
 
@@ -77,8 +77,9 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> im
         //        }
 
 
-        if(ideas.size() > 1) {
-            throw new IllegalStateException("There shouldn't be more than one idea with the same title."); // TODO Erik, vi får diskutera detta. /Patrik
+        if (ideas.size() > 1) {
+            throw new IllegalStateException("There shouldn't be more than one idea with the same title.");
+            // TODO Erik, vi får diskutera detta. /Patrik
         } else if (ideas.size() == 1) {
             return ideas.get(0);
         } else {
@@ -145,8 +146,7 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> im
         String queryString = ""
                 + " SELECT COUNT(DISTINCT n) FROM Idea n"
                 + " WHERE n.companyId = ?1"
-                + " AND n.groupId = ?2"
-                ;
+                + " AND n.groupId = ?2";
 
         Object[] queryObject = new Object[]{companyId, groupId};
 
@@ -203,8 +203,7 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> im
                 + " SELECT COUNT(DISTINCT n) FROM Idea n"
                 + " WHERE n.companyId = ?1"
                 + " AND n.groupId = ?2"
-                + " AND n.status = ?3"
-                ;
+                + " AND n.status = ?3";
 
         Object[] queryObject = new Object[]{companyId, groupId, status};
 
@@ -263,8 +262,7 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> im
                 + " SELECT COUNT(DISTINCT n) FROM Idea n"
                 + " WHERE n.companyId = ?1"
                 + " AND n.groupId = ?2"
-                + " AND n.userId = ?3"
-                ;
+                + " AND n.userId = ?3";
 
         Object[] queryObject = new Object[]{companyId, groupId, userId};
 
@@ -323,8 +321,7 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> im
                 + " WHERE n.companyId = ?1"
                 + " AND n.groupId = ?2"
                 + " AND f.userId = ?3"
-                + " AND f.idea.id = n.id"
-                ;
+                + " AND f.idea.id = n.id";
 
         Object[] queryObject = new Object[]{companyId, groupId, userId};
 

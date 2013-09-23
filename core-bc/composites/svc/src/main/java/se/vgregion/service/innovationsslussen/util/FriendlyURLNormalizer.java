@@ -7,60 +7,82 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
-public class FriendlyURLNormalizer {
+/**
+ * The Class FriendlyURLNormalizer.
+ */
+public final class FriendlyURLNormalizer {
 
-	public static String normalize(String friendlyURL) {
-		return normalize(friendlyURL, null);
-	}
 
-	public static String normalize(String friendlyURL, char[] replaceChars) {
-		if (Validator.isNull(friendlyURL)) {
-			return friendlyURL;
-		}
+    private FriendlyURLNormalizer() {
+    }
 
-		friendlyURL = GetterUtil.getString(friendlyURL);
-		friendlyURL = friendlyURL.toLowerCase();
-		friendlyURL = Normalizer.normalizeToAscii(friendlyURL);
 
-		char[] charArray = friendlyURL.toCharArray();
+    /**
+     * Normalize.
+     *
+     * @param friendlyURL the friendly url
+     * @return the string
+     */
+    public static String normalize(String friendlyURL) {
+        return normalize(friendlyURL, null);
+    }
 
-		for (int i = 0; i < charArray.length; i++) {
-			char oldChar = charArray[i];
+    /**
+     * Normalize.
+     *
+     * @param friendlyURL the friendly url
+     * @param replaceChars the replace chars
+     * @return the string
+     */
+    public static String normalize(String friendlyURL, char[] replaceChars) {
+        if (Validator.isNull(friendlyURL)) {
+            return friendlyURL;
+        }
 
-			char newChar = oldChar;
+        friendlyURL = GetterUtil.getString(friendlyURL);
+        friendlyURL = friendlyURL.toLowerCase();
+        friendlyURL = Normalizer.normalizeToAscii(friendlyURL);
 
-			if (ArrayUtil.contains(_REPLACE_CHARS, oldChar) || ((replaceChars != null) && ArrayUtil.contains(replaceChars, oldChar))) {
+        char[] charArray = friendlyURL.toCharArray();
 
-				newChar = CharPool.DASH;
-			}
+        for (int i = 0; i < charArray.length; i++) {
+            char oldChar = charArray[i];
 
-			if (oldChar != newChar) {
-				charArray[i] = newChar;
-			}
-		}
+            char newChar = oldChar;
 
-		friendlyURL = new String(charArray);
+            if (ArrayUtil.contains(REPLACE_CHARS, oldChar) || ((replaceChars != null)
+                    && ArrayUtil.contains(replaceChars, oldChar))) {
 
-		while (friendlyURL.contains(StringPool.DASH + StringPool.DASH)) {
-			friendlyURL = StringUtil.replace(
-				friendlyURL, StringPool.DASH + StringPool.DASH,
-				StringPool.DASH);
-		}
+                newChar = CharPool.DASH;
+            }
 
-		if (friendlyURL.startsWith(StringPool.DASH)) {
-			friendlyURL = friendlyURL.substring(1, friendlyURL.length());
-		}
+            if (oldChar != newChar) {
+                charArray[i] = newChar;
+            }
+        }
 
-		if (friendlyURL.endsWith(StringPool.DASH)) {
-			friendlyURL = friendlyURL.substring(0, friendlyURL.length() - 1);
-		}
+        friendlyURL = new String(charArray);
 
-		return friendlyURL;
-	}
+        while (friendlyURL.contains(StringPool.DASH + StringPool.DASH)) {
+            friendlyURL = StringUtil.replace(
+                    friendlyURL, StringPool.DASH + StringPool.DASH,
+                    StringPool.DASH);
+        }
 
-	private static final char[] _REPLACE_CHARS = new char[] {
-		' ', ',', '\\', '\'', '\"', '(', ')', '{', '}', '?', '#', '@', '+',
-		'!', '~', ';', '$', '%'
-	};
+        if (friendlyURL.startsWith(StringPool.DASH)) {
+            friendlyURL = friendlyURL.substring(1, friendlyURL.length());
+        }
+
+        if (friendlyURL.endsWith(StringPool.DASH)) {
+            friendlyURL = friendlyURL.substring(0, friendlyURL.length() - 1);
+        }
+
+        return friendlyURL;
+    }
+
+    private static final char[] REPLACE_CHARS = new char[] {
+        ' ', ',', '\\', '\'', '\"', '(', ')', '{', '}', '?', '#', '@', '+',
+        '!', '~', ';', '$', '%'
+    };
 
 }

@@ -107,8 +107,6 @@ public class IdeaPermissionCheckerServiceImpl implements IdeaPermissionCheckerSe
         return ideaPermissionChecker;
     }
 
-
-
     private PermissionChecker getPermissionChecker(User user) throws PermissionCheckerException {
 
         boolean checkGuest = false;

@@ -253,9 +253,6 @@ public class IdeaServiceImpl implements IdeaService {
                 IdeaContent ideaContentPublic = idea.getIdeaContentPublic();
                 IdeaContent ideaContentPrivate = idea.getIdeaContentPrivate();
 
-                // Get references to persisted IdeaPerson
-                IdeaPerson ideaPerson = idea.getIdeaPerson();
-
                 boolean addCommunityPermissions = true;
                 boolean addGuestPermissions = true;
 
@@ -578,7 +575,7 @@ public class IdeaServiceImpl implements IdeaService {
             }
 
         } else {
-            throw new RemoveIdeaException("Can not find an idea with id " + idea.getId());
+            throw new RemoveIdeaException("Can not find an idea");
         }
 
     }
