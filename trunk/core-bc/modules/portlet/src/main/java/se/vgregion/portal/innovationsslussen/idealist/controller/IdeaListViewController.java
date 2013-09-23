@@ -1,12 +1,12 @@
 package se.vgregion.portal.innovationsslussen.idealist.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.portlet.PortletPreferences;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.service.LayoutLocalServiceUtil;
+import com.liferay.portal.theme.ThemeDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
-
 import se.vgregion.portal.innovationsslussen.BaseController;
 import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
@@ -23,13 +22,11 @@ import se.vgregion.portal.innovationsslussen.domain.pageiterator.PageIteratorCon
 import se.vgregion.portal.innovationsslussen.util.IdeaPortletsConstants;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
 
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.model.Layout;
-import com.liferay.portal.service.LayoutLocalServiceUtil;
-import com.liferay.portal.theme.ThemeDisplay;
+import javax.portlet.PortletPreferences;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Controller class for the view mode in idealist portlet.
@@ -47,13 +44,17 @@ public class IdeaListViewController extends BaseController {
 
     /**
      * Constructor.
-     *
      */
     @Autowired
     public IdeaListViewController(IdeaService ideaService) {
         this.ideaService = ideaService;
     }
-    
+
+
+    protected Layout getFriendlyURLLayout(long scopeGroupId, boolean priv) throws SystemException, PortalException {
+        return LayoutLocalServiceUtil.getFriendlyURLLayout(scopeGroupId,
+                priv, "/ide");
+    }
 
     /**
      * The default render method.
@@ -71,86 +72,80 @@ public class IdeaListViewController extends BaseController {
         long companyId = themeDisplay.getCompanyId();
         long userId = themeDisplay.getUserId();
         boolean isSignedIn = themeDisplay.isSignedIn();
-        
+
         String returnView = "view_open_ideas";
-        
-		try {
-			
-	        PortletPreferences prefs = request.getPreferences();
-	        String ideaListType = prefs.getValue("ideaListType", "0");
-	        
-			Layout ideaLayout = LayoutLocalServiceUtil.getFriendlyURLLayout(scopeGroupId,
-					themeDisplay.getLayout().isPrivateLayout(), "/ide");
-			
-			long ideaPlid = ideaLayout.getPlid();
-			
-			List<Idea> ideaList = new ArrayList<Idea>();
-			
-	        int currentPage = ParamUtil.getInteger(request, "pageNumber", PageIteratorConstants.PAGINATOR_START_DEFAULT);
-	        int pageSize = PageIteratorConstants.PAGE_SIZE_DEFAULT;
-	        int maxPages = PageIteratorConstants.MAX_PAGES_DEFAULT;
-	        int totalCount = 0;
-	        
-	        int start = (currentPage - 1)*pageSize;
-	        
-			if(ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_OPEN_IDEAS)) {
-				
-				ideaList = ideaService.findIdeasByGroupId(companyId, scopeGroupId, IdeaStatus.PUBLIC_IDEA, start, pageSize);
-				
-				totalCount = ideaService.findIdeaCountByGroupId(companyId, scopeGroupId, IdeaStatus.PUBLIC_IDEA);
-			}
-			
-			else if(ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_USER_IDEAS)) {
-				
-				if(isSignedIn) {
-					ideaList = ideaService.findIdeasByGroupIdAndUserId(companyId, scopeGroupId, userId, start, pageSize);
-					
-					totalCount = ideaService.findIdeasCountByGroupIdAndUserId(companyId, scopeGroupId, userId);
-				}
-				
-				returnView = "view_user_ideas";
-			}
-			
-			else if(ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_USER_FAVORITED_IDEAS)) {
-				
-				if(isSignedIn) {
-					ideaList = ideaService.findUserFavoritedIdeas(companyId, scopeGroupId, userId, start, pageSize);
-					
-					totalCount = ideaService.findUserFavoritedIdeasCount(companyId, scopeGroupId, userId);
-				}
-				
-				returnView = "view_user_favorites";
-			}
-			
-			else if(ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_CLOSED_IDEAS)) {
-				
-				if(isSignedIn) {
-					ideaList = ideaService.findIdeasByGroupId(companyId, scopeGroupId, IdeaStatus.PRIVATE_IDEA, start, pageSize);
-					
-					totalCount = ideaService.findIdeaCountByGroupId(companyId, scopeGroupId, IdeaStatus.PRIVATE_IDEA);
-				}
-				
-				returnView = "view_closed_ideas";
-			}
-			
-	        PageIterator pageIterator = new PageIterator(totalCount, currentPage, pageSize, maxPages);
-	        pageIterator.setShowFirst(false);
-	        pageIterator.setShowLast(false);
-			
-			
-			model.addAttribute("ideaPlid", ideaPlid);
-			model.addAttribute("ideaPortletName",IdeaPortletsConstants.PORTLET_NAME_IDEA_PORTLET);
-			model.addAttribute("ideaList", ideaList);
-			model.addAttribute("ideaListType", ideaListType);
-			model.addAttribute("isSignedIn", isSignedIn);
-			model.addAttribute("pageIterator", pageIterator);
-			
-		} catch (PortalException e) {
-			e.printStackTrace();
-		} catch (SystemException e) {
-			e.printStackTrace();
-		}
-        
+
+        try {
+
+            PortletPreferences prefs = request.getPreferences();
+            String ideaListType = prefs.getValue("ideaListType", "0");
+
+            Layout ideaLayout = getFriendlyURLLayout(scopeGroupId,
+                    themeDisplay.getLayout().isPrivateLayout());
+
+            long ideaPlid = ideaLayout.getPlid();
+
+            List<Idea> ideaList = new ArrayList<Idea>();
+
+            int currentPage = ParamUtil.getInteger(request, "pageNumber", PageIteratorConstants.PAGINATOR_START_DEFAULT);
+            int pageSize = PageIteratorConstants.PAGE_SIZE_DEFAULT;
+            int maxPages = PageIteratorConstants.MAX_PAGES_DEFAULT;
+            int totalCount = 0;
+
+            int start = (currentPage - 1) * pageSize;
+
+            if (ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_OPEN_IDEAS)) {
+
+                ideaList = ideaService.findIdeasByGroupId(companyId, scopeGroupId, IdeaStatus.PUBLIC_IDEA, start, pageSize);
+
+                totalCount = ideaService.findIdeaCountByGroupId(companyId, scopeGroupId, IdeaStatus.PUBLIC_IDEA);
+            } else if (ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_USER_IDEAS)) {
+
+                if (isSignedIn) {
+                    ideaList = ideaService.findIdeasByGroupIdAndUserId(companyId, scopeGroupId, userId, start, pageSize);
+
+                    totalCount = ideaService.findIdeasCountByGroupIdAndUserId(companyId, scopeGroupId, userId);
+                }
+
+                returnView = "view_user_ideas";
+            } else if (ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_USER_FAVORITED_IDEAS)) {
+
+                if (isSignedIn) {
+                    ideaList = ideaService.findUserFavoritedIdeas(companyId, scopeGroupId, userId, start, pageSize);
+
+                    totalCount = ideaService.findUserFavoritedIdeasCount(companyId, scopeGroupId, userId);
+                }
+
+                returnView = "view_user_favorites";
+            } else if (ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_CLOSED_IDEAS)) {
+
+                if (isSignedIn) {
+                    ideaList = ideaService.findIdeasByGroupId(companyId, scopeGroupId, IdeaStatus.PRIVATE_IDEA, start, pageSize);
+
+                    totalCount = ideaService.findIdeaCountByGroupId(companyId, scopeGroupId, IdeaStatus.PRIVATE_IDEA);
+                }
+
+                returnView = "view_closed_ideas";
+            }
+
+            PageIterator pageIterator = new PageIterator(totalCount, currentPage, pageSize, maxPages);
+            pageIterator.setShowFirst(false);
+            pageIterator.setShowLast(false);
+
+
+            model.addAttribute("ideaPlid", ideaPlid);
+            model.addAttribute("ideaPortletName", IdeaPortletsConstants.PORTLET_NAME_IDEA_PORTLET);
+            model.addAttribute("ideaList", ideaList);
+            model.addAttribute("ideaListType", ideaListType);
+            model.addAttribute("isSignedIn", isSignedIn);
+            model.addAttribute("pageIterator", pageIterator);
+
+        } catch (PortalException e) {
+            e.printStackTrace();
+        } catch (SystemException e) {
+            e.printStackTrace();
+        }
+
         return returnView;
     }
 
