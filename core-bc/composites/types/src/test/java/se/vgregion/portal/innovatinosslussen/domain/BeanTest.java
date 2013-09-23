@@ -7,7 +7,6 @@ import se.vgregion.portal.innovationsslussen.domain.BariumResponse;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstance;
 import se.vgregion.portal.innovationsslussen.domain.pageiterator.PageIterator;
-import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
 
 import java.io.File;
 import java.net.URL;
@@ -106,7 +105,7 @@ public class BeanTest {
         for (Object key : bm.keySet()) {
             String name = (String) key;
 
-            if("ideaContentPrivate".equals(name) || "ideaPerson".equals(name)) {
+            if ("ideaContentPrivate".equals(name) || "ideaPerson".equals(name)) {
                 continue;
             }
 
