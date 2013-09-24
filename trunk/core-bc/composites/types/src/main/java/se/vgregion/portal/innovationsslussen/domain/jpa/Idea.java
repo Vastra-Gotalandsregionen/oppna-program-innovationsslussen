@@ -23,14 +23,14 @@ import se.vgregion.portal.innovationsslussen.domain.IdeaContentType;
 import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
 
 /**
- * JPA entity class representing a Idea for Innovationsslussen
+ * JPA entity class representing a Idea for Innovationsslussen.
  * 
  * @author Erik Andersson
  * @company Monator Technologies AB
  */
 @Entity
 @Table(name = "vgr_innovationsslussen_idea", uniqueConstraints = @UniqueConstraint(
-        columnNames = {"url_title"}))
+        columnNames = {"url_title" }))
 public class Idea extends AbstractEntity<String> {
 
     // Primary Key
@@ -100,6 +100,13 @@ public class Idea extends AbstractEntity<String> {
     public Idea() {
     }
 
+    /**
+     * Instantiates a new idea.
+     *
+     * @param companyId the company id
+     * @param groupId the group id
+     * @param userId the user id
+     */
     public Idea(long companyId, long groupId, long userId) {
         this.companyId = companyId;
         this.groupId = groupId;
@@ -168,6 +175,11 @@ public class Idea extends AbstractEntity<String> {
         return ideaContents;
     }
 
+    /**
+     * Adds the idea content.
+     *
+     * @param ideaContent the idea content
+     */
     public void addIdeaContent(IdeaContent ideaContent) {
         ideaContent.setIdea(this);
 
@@ -179,7 +191,12 @@ public class Idea extends AbstractEntity<String> {
         return ideaPersons;
     }
 
-    // Returns the first IdeaPerson found in set
+
+    /**
+     * Returns the first IdeaPerson found in set.
+     *
+     * @return the idea person
+     */
     public IdeaPerson getIdeaPerson() {
 
         if (ideaPersons.size() > 0) {
@@ -189,10 +206,20 @@ public class Idea extends AbstractEntity<String> {
         }
     }
 
+    /**
+     * Keep here for IdeaValidator to work.
+     *
+     * @param ideaPerson the new idea person
+     */
     public void setIdeaPerson(IdeaPerson ideaPerson) {
         // Keep here for IdeaValidator to work
     }
 
+    /**
+     * Adds the idea person.
+     *
+     * @param ideaPerson the idea person
+     */
     public void addIdeaPerson(IdeaPerson ideaPerson) {
 
         ideaPerson.setIdea(this);
@@ -223,10 +250,20 @@ public class Idea extends AbstractEntity<String> {
         return content;
     }
 
+    /**
+     * Keep here for IdeaValidator to work.
+     *
+     * @param ideaContent the new idea content private
+     */
     public void setIdeaContentPrivate(IdeaContent ideaContent) {
         // Keep here for IdeaValidator to work
     }
 
+    /**
+     * Keep here for IdeaValidator to work.
+     *
+     * @param ideaContent the new idea contents public
+     */
     public void setIdeaContentsPublic(IdeaContent ideaContent) {
         // Keep here for IdeaValidator to work
     }
@@ -236,6 +273,11 @@ public class Idea extends AbstractEntity<String> {
         return likes;
     }
 
+    /**
+     * Adds the favorite.
+     *
+     * @param ideaUserFavorite the idea user favorite
+     */
     public void addFavorite(IdeaUserFavorite ideaUserFavorite) {
         ideaUserFavorite.setIdea(this);
 
@@ -247,6 +289,11 @@ public class Idea extends AbstractEntity<String> {
         return favorites;
     }
 
+    /**
+     * Adds the like.
+     *
+     * @param ideaUserLike the idea user like
+     */
     public void addLike(IdeaUserLike ideaUserLike) {
         ideaUserLike.setIdea(this);
 
@@ -281,15 +328,20 @@ public class Idea extends AbstractEntity<String> {
         this.status = status;
     }
 
-    public boolean getIsPublic() {
+    /**
+     * Gets the checks if is public.
+     *
+     * @return the checks if is public
+     */
+    public boolean isPublic() {
 
-        boolean isPublic = false;
+        boolean publicIdea = false;
 
         if (this.status.equals(IdeaStatus.PUBLIC_IDEA)) {
-            isPublic = true;
+            publicIdea = true;
         }
 
-        return isPublic;
+        return publicIdea;
     }
 
 }

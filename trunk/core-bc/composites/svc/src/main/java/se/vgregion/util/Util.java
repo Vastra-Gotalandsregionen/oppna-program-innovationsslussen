@@ -12,12 +12,10 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Patrik Bergström
  */
-public final class Util {
+public class Util {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Util.class);
 
-    private Util() {
-    }
 
 
     /**

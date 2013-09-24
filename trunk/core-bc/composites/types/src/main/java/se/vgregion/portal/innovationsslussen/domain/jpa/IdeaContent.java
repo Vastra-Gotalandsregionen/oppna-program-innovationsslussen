@@ -10,7 +10,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -20,7 +19,7 @@ import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
 import se.vgregion.portal.innovationsslussen.domain.IdeaContentType;
 
 /**
- * JPA entity class representing a IdeaContent for Innovationsslussen
+ * JPA entity class representing a IdeaContent for Innovationsslussen.
  * 
  * @author Erik Andersson
  * @author Simon Göransson - simon.goransson@monator.com - vgrid: simgo3
@@ -76,7 +75,7 @@ public class IdeaContent extends AbstractEntity<Long> {
     private String state;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "ideaContent")
-   // @JoinColumn(name = "ideaContent")
+    // @JoinColumn(name = "ideaContent")
     private final Set<IdeaFile> ideaFiles = new HashSet<IdeaFile>();
 
     // Foreign
@@ -93,6 +92,13 @@ public class IdeaContent extends AbstractEntity<Long> {
     public IdeaContent() {
     }
 
+    /**
+     * Instantiates a new idea content.
+     *
+     * @param companyId the company id
+     * @param groupId the group id
+     * @param userId the user id
+     */
     public IdeaContent(long companyId, long groupId, long userId) {
         this.companyId = companyId;
         this.groupId = groupId;
@@ -208,6 +214,11 @@ public class IdeaContent extends AbstractEntity<Long> {
         return ideaFiles;
     }
 
+    /**
+     * Adds the idea file.
+     *
+     * @param ideaFile the idea file
+     */
     public void addIdeaFile(IdeaFile ideaFile) {
         // ideaFile.setIdeaContent(this);
         this.ideaFiles.add(ideaFile);

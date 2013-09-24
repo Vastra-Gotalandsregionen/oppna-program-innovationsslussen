@@ -22,7 +22,7 @@
 
 					<div class="idea-hd clearfix">
 					
-					<c:if test="${not idea.isPublic}">
+					<c:if test="${not idea.public}">
 						<div class="portlet-msg-info">
 							Denna id&eacute; &auml;r inte publik &auml;nnu. Detta inneb&auml;r att id&eacute;en inte kan ses av andra sajtmedlemmar.
 						</div>

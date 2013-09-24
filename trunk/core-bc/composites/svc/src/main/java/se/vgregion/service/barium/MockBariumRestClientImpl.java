@@ -174,6 +174,12 @@ public class MockBariumRestClientImpl implements BariumRestClient {
         return bariumInstance;
     }
 
+    /**
+     * Creates the instance.
+     *
+     * @param data the data
+     * @return the string
+     */
     public String createInstance(String data) {
         return RESPONSE_CREATE_INSTANCE;
     }
@@ -263,7 +269,8 @@ public class MockBariumRestClientImpl implements BariumRestClient {
     }
 
     @Override
-    public void uploadFile(String instanceId, String folderName, String fileName, InputStream inputStream) throws BariumException {
+    public void uploadFile(String instanceId, String folderName, String fileName, InputStream inputStream)
+            throws BariumException {
         throw new UnsupportedOperationException();
     }
 

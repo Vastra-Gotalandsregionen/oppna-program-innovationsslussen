@@ -1,9 +1,13 @@
 package se.vgregion.portal.innovationsslussen.domain.pageiterator;
 
-public class PageIteratorConstants {
+public final class PageIteratorConstants {
 
-	public static final int PAGE_SIZE_DEFAULT = 6;
-	
+    private PageIteratorConstants() {
+
+    }
+
+    public static final int PAGE_SIZE_DEFAULT = 6;
+
     public static final int MAX_PAGES_DEFAULT = 10;
 
     public static final int PAGINATOR_START_DEFAULT = 1;

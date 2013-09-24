@@ -2,41 +2,51 @@ package se.vgregion.portal.innovationsslussen.domain;
 
 public class BariumResponse {
 
-	private boolean success;
-	private String instanceId;
-	private String jsonString;
+    private boolean success;
+    private String instanceId;
+    private String jsonString;
 
-	public BariumResponse() {
-	}
+    /**
+     * Instantiates a new barium response.
+     */
+    public BariumResponse() {
+    }
 
-	public BariumResponse(boolean success, String instanceId, String jsonString) {
-		this.success = success;
-		this.instanceId = instanceId;
-		this.jsonString = jsonString;
-	}
+    /**
+     * Instantiates a new barium response.
+     *
+     * @param success the success
+     * @param instanceId the instance id
+     * @param jsonString the json string
+     */
+    public BariumResponse(boolean success, String instanceId, String jsonString) {
+        this.success = success;
+        this.instanceId = instanceId;
+        this.jsonString = jsonString;
+    }
 
-	public boolean getSuccess() {
-		return success;
-	}
+    public boolean getSuccess() {
+        return success;
+    }
 
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
 
-	public String getInstanceId() {
-		return instanceId;
-	}
+    public String getInstanceId() {
+        return instanceId;
+    }
 
-	public void setInstanceId(String instanceId) {
-		this.instanceId = instanceId;
-	}
+    public void setInstanceId(String instanceId) {
+        this.instanceId = instanceId;
+    }
 
-	public String getJsonString() {
-		return jsonString;
-	}
+    public String getJsonString() {
+        return jsonString;
+    }
 
-	public void setJsonString(String jsonString) {
-		this.jsonString = jsonString;
-	}
-	
+    public void setJsonString(String jsonString) {
+        this.jsonString = jsonString;
+    }
+
 }

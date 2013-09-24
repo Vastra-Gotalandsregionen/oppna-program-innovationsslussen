@@ -14,10 +14,10 @@ public class PageIteratorPage {
     private int pagenumber;
 
     /** The is selected. */
-    private boolean isSelected;
+    private boolean selected;
 
     /** The is odd. */
-    private boolean isOdd;
+    private boolean odd;
 
     /**
      * Gets the pagenumber.
@@ -43,18 +43,18 @@ public class PageIteratorPage {
      * 
      * @return the checks if is selected
      */
-    public boolean getIsSelected() {
-        return isSelected;
+    public boolean isSelected() {
+        return selected;
     }
 
     /**
      * Sets the selected.
      * 
-     * @param isSelected
+     * @param selected
      *            the new selected
      */
-    public void setSelected(boolean isSelected) {
-        this.isSelected = isSelected;
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 
     /**
@@ -63,17 +63,17 @@ public class PageIteratorPage {
      * @return true, if is odd
      */
     public boolean isOdd() {
-        return isOdd;
+        return odd;
     }
 
     /**
      * Sets the odd.
      * 
-     * @param isOdd
+     * @param odd
      *            the new odd
      */
-    public void setOdd(boolean isOdd) {
-        this.isOdd = isOdd;
+    public void setOdd(boolean odd) {
+        this.odd = odd;
     }
 
 }

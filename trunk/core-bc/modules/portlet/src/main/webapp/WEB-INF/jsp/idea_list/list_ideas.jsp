@@ -17,7 +17,7 @@
 		
 			<liferay-portlet:renderURL var="ideaUrl" plid="${ideaPlid}" portletName="${ideaPortletName}">
 				<liferay-portlet:param name="showView" value="showIdea" />
-				<c:if test="${not idea.isPublic}">
+				<c:if test="${not idea.public}">
 				    <liferay-portlet:param name="type" value="private" />
 				</c:if>
 				<liferay-portlet:param name="urlTitle" value="${idea.urlTitle}" />
@@ -27,7 +27,7 @@
 			<c:set var="ideaPhaseLabel" scope="page" value="Id&eacute;" />
 			
 			<c:choose>
-				<c:when test="${idea.isPublic}">
+				<c:when test="${idea.public}">
 					<c:choose>
 						<c:when test="${idea.phase eq '3' or idea.phase eq '4'}">
 							<c:set var="ideaItemCssClass" scope="page" value="active-innovationsslussen" />
@@ -46,7 +46,7 @@
 			</c:choose>
 			
 			
-			<c:if test="${not idea.isPublic}">
+			<c:if test="${not idea.public}">
 				<c:set var="ideaItemCssClass" scope="page" value="private" />
 			</c:if>
 		
@@ -70,7 +70,7 @@
 							</div>
 							<div class="idea-content-2">
 								<c:choose>
-									<c:when test="${idea.isPublic}">
+									<c:when test="${idea.public}">
 										<c:choose>
 											<c:when test="${not empty idea.ideaContentPublic.intro}">
 												${fn:substring(idea.ideaContentPublic.intro, 0, 175)}

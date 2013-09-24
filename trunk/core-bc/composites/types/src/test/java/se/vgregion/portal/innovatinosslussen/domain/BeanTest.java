@@ -1,8 +1,10 @@
 package se.vgregion.portal.innovatinosslussen.domain;
 
 import junit.framework.Assert;
+
 import org.apache.commons.collections.BeanMap;
 import org.junit.Test;
+
 import se.vgregion.portal.innovationsslussen.domain.BariumResponse;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstance;
@@ -11,6 +13,7 @@ import se.vgregion.portal.innovationsslussen.domain.pageiterator.PageIterator;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.*;
 
@@ -58,24 +61,29 @@ public class BeanTest {
     @Test
     public void constructors() throws ClassNotFoundException, IllegalAccessException, InstantiationException, InvocationTargetException {
         for (Class type : getTypes(Idea.class)) {
-            if (!type.isEnum())
+            if (!type.isEnum()) {
                 callConstructors(type);
+            }
         }
         for (Class type : getTypes(ApplicationInstance.class)) {
-            if (!type.isEnum())
+            if (!type.isEnum()) {
                 callConstructors(type);
+            }
         }
         for (Class type : getTypes(PageIterator.class)) {
-            if (!type.isEnum())
+            if (!type.isEnum()) {
                 callConstructors(type);
+            }
         }
         for (Class type : getTypes(Idea.class)) {
-            if (!type.isEnum())
+            if (!type.isEnum()) {
                 callConstructors(type);
+            }
         }
         for (Class type : getTypes(BariumResponse.class)) {
-            if (!type.isEnum())
+            if (!type.isEnum()) {
                 callConstructors(type);
+            }
         }
     }
 
@@ -96,24 +104,31 @@ public class BeanTest {
     @Test
     public void gettersAndSetters() throws ClassNotFoundException, IllegalAccessException, InstantiationException {
         for (Class type : getTypes(Idea.class)) {
-            if (!type.isEnum())
+            if (!type.isEnum()) {
                 doGetterSetterValuesMatch(type.newInstance());
+            }
         }
         for (Class type : getTypes(ApplicationInstance.class)) {
-            if (!type.isEnum())
+            if (!type.isEnum()) {
                 doGetterSetterValuesMatch(type.newInstance());
+            }
         }
         for (Class type : getTypes(PageIterator.class)) {
-            if (!type.isEnum())
-                doGetterSetterValuesMatch(type.newInstance());
+            if (!type.isEnum()) {
+                if (type.getDeclaredConstructors()[0].getModifiers() == Modifier.PUBLIC) {
+                    doGetterSetterValuesMatch(type.newInstance());
+                }
+            }
         }
         for (Class type : getTypes(Idea.class)) {
-            if (!type.isEnum())
+            if (!type.isEnum()) {
                 doGetterSetterValuesMatch(type.newInstance());
+            }
         }
         for (Class type : getTypes(BariumResponse.class)) {
-            if (!type.isEnum())
+            if (!type.isEnum()) {
                 doGetterSetterValuesMatch(type.newInstance());
+            }
         }
     }
 
