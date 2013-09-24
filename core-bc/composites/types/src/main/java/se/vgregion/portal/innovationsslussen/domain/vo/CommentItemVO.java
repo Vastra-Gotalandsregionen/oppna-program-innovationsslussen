@@ -40,26 +40,26 @@ public class CommentItemVO {
         this.id = id;
     }
     public String getCommentText() {
-        return commentText;
+        return this.commentText;
     }
     public void setCommentText(String commentText) {
         this.commentText = commentText;
     }
     public Date getCreateDate() {
-        return createDate;
+        return this.createDate;
     }
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
     }
     public String getName() {
-        return name;
+        return this.name;
     }
     public void setName(String name) {
         this.name = name;
     }
 
     public boolean isUserCreator() {
-        return userCreator;
+        return this.userCreator;
     }
 
     public void setUserCreator(boolean userCreator) {
@@ -67,7 +67,7 @@ public class CommentItemVO {
     }
 
     public boolean isUserPrioCouncilMember() {
-        return userPrioCouncilMember;
+        return this.userPrioCouncilMember;
     }
 
     public void setUserPrioCouncilMember(boolean userPrioCouncilMember) {
@@ -75,7 +75,7 @@ public class CommentItemVO {
     }
 
     public boolean isUserInnovationsslussenEmployee() {
-        return userInnovationsslussenEmployee;
+        return this.userInnovationsslussenEmployee;
     }
 
     public void setUserInnovationsslussenEmployee(boolean userInnovationsslussenEmployee) {

@@ -121,11 +121,6 @@ public class IdeaAdminViewController extends BaseController {
     @ActionMapping("someAction")
     public final void someAction(ActionRequest request, ActionResponse response, final ModelMap model) {
 
-        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-        /*long companyId = themeDisplay.getCompanyId();
-        long groupId = themeDisplay.getScopeGroupId();
-        long userId = themeDisplay.getUserId();*/
-
         response.setRenderParameter("view", "view");
     }
 

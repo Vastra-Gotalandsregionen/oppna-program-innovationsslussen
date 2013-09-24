@@ -101,7 +101,6 @@ public class IdeaViewController extends BaseController {
      */
     @RenderMapping()
     public String showIdea(RenderRequest request, RenderResponse response, final ModelMap model) {
-        System.out.println("ldapService " + ldapService);
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
         long scopeGroupId = themeDisplay.getScopeGroupId();
@@ -120,7 +119,6 @@ public class IdeaViewController extends BaseController {
                 boolean isIdeaUserLiked = ideaService.getIsIdeaUserLiked(companyId, scopeGroupId, userId, urlTitle);
                 boolean isIdeaUserFavorite = ideaService.getIsIdeaUserFavorite(companyId, scopeGroupId,
                         userId, urlTitle);
-                IdeaContent visibility = idea.getIdeaContentPrivate();
 
                 List<CommentItemVO> commentsList = null;
 
@@ -186,40 +184,6 @@ public class IdeaViewController extends BaseController {
     }
 
     /**
-     * The default render method.
-     *
-     * @param request  the request
-     * @param response the response
-     * @param model    the model
-     * @return the view
-     */
-    /*
-    @RenderMapping(params = "type=private")
-    public String showIdeaPrivate(RenderRequest request, RenderResponse response, final ModelMap model) {
-
-        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-        long scopeGroupId = themeDisplay.getScopeGroupId();
-        long companyId = themeDisplay.getCompanyId();
-        long userId = themeDisplay.getUserId();
-        boolean isSignedIn = themeDisplay.isSignedIn();
-
-        String urlTitle = ParamUtil.getString(request, "urlTitle", "");
-
-        if(!urlTitle.equals("") && isSignedIn) {
-            Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
-            boolean isIdeaUserFavorite = ideaService.getIsIdeaUserFavorite(companyId, scopeGroupId, userId, urlTitle);
-            boolean isIdeaUserLiked = ideaService.getIsIdeaUserLiked(companyId, scopeGroupId, userId, urlTitle);
-
-            model.addAttribute("idea", idea);
-            model.addAttribute("isIdeaUserFavorite", isIdeaUserFavorite);
-            model.addAttribute("isIdeaUserLiked", isIdeaUserLiked);
-        }
-
-        return "view_private";
-    }
-     */
-
-    /**
      * Method handling Action request.
      *
      * @param request  the request
@@ -228,7 +192,6 @@ public class IdeaViewController extends BaseController {
      */
     @ActionMapping("someAction")
     public final void someAction(ActionRequest request, ActionResponse response, final ModelMap model) {
-        System.out.println("someAction");
         LOGGER.info("someAction");
         response.setRenderParameter("view", "view");
     }
@@ -243,12 +206,9 @@ public class IdeaViewController extends BaseController {
     @ActionMapping(params = "action=addComment")
     public final void addComment(ActionRequest request, ActionResponse response, final ModelMap model) {
 
-        System.out.println("addComment");
-
         LOGGER.info("addComment");
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-        long companyId = themeDisplay.getCompanyId();
         long groupId = themeDisplay.getScopeGroupId();
         long userId = themeDisplay.getUserId();
 
@@ -325,7 +285,6 @@ public class IdeaViewController extends BaseController {
     @ActionMapping(params = "action=addFavorite")
     public final void addFavorite(ActionRequest request, ActionResponse response, final ModelMap model) {
 
-        System.out.println("addFavorite");
         LOGGER.info("addFavorite");
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
@@ -358,7 +317,6 @@ public class IdeaViewController extends BaseController {
     @ActionMapping(params = "action=addLike")
     public final void addLike(ActionRequest request, ActionResponse response, final ModelMap model) {
 
-        System.out.println("addLike");
         LOGGER.info("addLike");
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
@@ -390,12 +348,9 @@ public class IdeaViewController extends BaseController {
     @ActionMapping(params = "action=deleteComment")
     public final void deleteComment(ActionRequest request, ActionResponse response, final ModelMap model) {
 
-        System.out.println("deleteComment");
-
         LOGGER.info("deleteComment");
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-        long companyId = themeDisplay.getCompanyId();
         long groupId = themeDisplay.getScopeGroupId();
         long userId = themeDisplay.getUserId();
 
@@ -442,7 +397,6 @@ public class IdeaViewController extends BaseController {
     @ActionMapping(params = "action=removeFavorite")
     public final void removeFavorite(ActionRequest request, ActionResponse response, final ModelMap model) {
 
-        System.out.println("removeFavorite");
         LOGGER.info("removeFavorite");
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
@@ -475,7 +429,6 @@ public class IdeaViewController extends BaseController {
     @ActionMapping(params = "action=removeLike")
     public final void removeLike(ActionRequest request, ActionResponse response, final ModelMap model) {
 
-        System.out.println("removeLike");
         LOGGER.info("removeLike");
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
@@ -507,7 +460,6 @@ public class IdeaViewController extends BaseController {
     @ActionMapping(params = "action=updateFromBarium")
     public final void updateFromBarium(ActionRequest request, ActionResponse response, final ModelMap model) {
 
-        System.out.println("updateFromBarium");
         LOGGER.info("updateFromBarium");
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);

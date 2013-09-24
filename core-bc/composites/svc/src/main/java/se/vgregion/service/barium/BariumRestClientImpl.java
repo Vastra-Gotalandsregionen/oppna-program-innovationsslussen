@@ -11,7 +11,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.util.AbstractMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -178,11 +180,7 @@ public class BariumRestClientImpl implements BariumRestClient {
 
         String parameterString = "/Instances" + "/" + instanceId;
 
-        System.out.println("BariumRestClientImpl - getBariumInstance - parameterString is: " + parameterString);
-
         String instanceJson = doGet(parameterString);
-
-        System.out.println("BariumRestClientImpl - getBariumInstance - instanceJson is: " + instanceJson);
 
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -751,15 +749,18 @@ public class BariumRestClientImpl implements BariumRestClient {
         sb.append("&template=565d4c81-4baa-451b-aacc-5f7ae295bfaf");
 
         BeanMap bm = new BeanMap(ideaObjectFields);
-        for (Object key : bm.keySet()) {
-            if ("class".equals(key)) {
+        for (Object entryObj : bm.entrySet()) {
+
+            Map.Entry<String,Object> entry = (Map.Entry<String, Object>) entryObj;
+
+            if ("class".equals(entry.getKey())) {
                 continue;
             }
-            Object value = bm.get(key);
+            Object value = entry.getValue();
             if (value != null) {
-                String name = IdeaObjectFields.SPECIAL_FIELD_MAPPINGS_REVERSE.get(key);
+                String name = IdeaObjectFields.SPECIAL_FIELD_MAPPINGS_REVERSE.get(entry.getKey());
                 if (name == null) {
-                    name = (String) key;
+                    name = entry.getKey();
                 }
                 sb.append("&");
                 sb.append(name);

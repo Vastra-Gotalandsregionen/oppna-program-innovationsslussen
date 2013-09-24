@@ -190,8 +190,6 @@ public class CreateIdeaViewController extends BaseController {
 
         idea = IdeaPortletUtil.getIdeaFromRequest(request);
 
-        System.out.println("CreateIdeaViewController - submitIdea - idea title is: " + idea.getTitle());
-
         ideaValidator.validate(idea, result);
 
         if (!result.hasErrors()) {
