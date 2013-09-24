@@ -317,7 +317,7 @@ public class Idea extends AbstractEntity<String> {
     }
 
     public Date getCreated() {
-        return created;
+        return this.created;
     }
 
     public IdeaStatus getStatus() {

@@ -57,8 +57,6 @@ public class UserSettingsViewController extends BaseController {
     public String showIdea(RenderRequest request, RenderResponse response, final ModelMap model) {
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-        long scopeGroupId = themeDisplay.getScopeGroupId();
-        long companyId = themeDisplay.getCompanyId();
         long userId = themeDisplay.getUserId();
 
         try {

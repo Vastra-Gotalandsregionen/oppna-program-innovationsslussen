@@ -3,6 +3,7 @@ package se.vgregion.service.innovationsslussen.ldap;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.naming.NamingEnumeration;
@@ -85,8 +86,6 @@ public class LdapService {
                     String name = toBeanPropertyName(attribute.getID());
                     if (bm.containsKey(name) && bm.getWriteMethod(name) != null) {
                         bm.put(name, attribute.get());
-                    } else {
-                        System.out.println("Not in bean but in result " + attribute.getID());
                     }
                 }
                 return result;
@@ -133,10 +132,11 @@ public class LdapService {
         AndFilter filter = new AndFilter();
         BeanMap bm = new BeanMap(obj);
         Class type = obj.getClass();
-        for (Object key : bm.keySet()) {
-            String property = (String) key;
+        for (Object entryObj : bm.entrySet()) {
+            Map.Entry<String,Object> entry = (Map.Entry<String, Object>) entryObj;
+            String property = entry.getKey();
             if (bm.getWriteMethod(property) != null) {
-                Object value = bm.get(key);
+                Object value = entry.getValue();
                 if (value != null && !"".equals(value.toString().trim())) {
                     String ldapPropertyName = getPlainNameOrExplicit(type, property);
                     filter.and(newAttributeFilter(ldapPropertyName, value.toString()));

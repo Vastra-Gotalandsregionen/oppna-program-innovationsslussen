@@ -195,7 +195,7 @@ public class IdeaServiceImpl implements IdeaService {
         IdeaUserFavorite ideaUserFavorite = new IdeaUserFavorite(companyId, groupId, userId);
         ideaUserFavorite.setIdea(idea);
 
-        ideaUserFavorite = ideaUserFavoriteRepository.merge(ideaUserFavorite);
+        ideaUserFavoriteRepository.merge(ideaUserFavorite);
     }
 
     /* (non-Javadoc)
@@ -217,7 +217,7 @@ public class IdeaServiceImpl implements IdeaService {
         IdeaUserLike ideaUserLike = new IdeaUserLike(companyId, groupId, userId);
         ideaUserLike.setIdea(idea);
 
-        ideaUserLike = ideaUserLikeRepository.merge(ideaUserLike);
+        ideaUserLikeRepository.merge(ideaUserLike);
     }
 
     /* (non-Javadoc)
@@ -566,8 +566,6 @@ public class IdeaServiceImpl implements IdeaService {
     @Transactional
     public void remove(Idea idea) throws RemoveIdeaException {
 
-        System.out.println("IdeaServiceImpl - remove");
-
         if (idea != null) {
             try {
                 bariumService.getBariumIdea(idea.getId());
@@ -609,8 +607,6 @@ public class IdeaServiceImpl implements IdeaService {
     @Override
     @Transactional
     public void removeFromLiferay(Idea idea) {
-
-        System.out.println("IdeaServiceImpl - remove");
 
         try {
 

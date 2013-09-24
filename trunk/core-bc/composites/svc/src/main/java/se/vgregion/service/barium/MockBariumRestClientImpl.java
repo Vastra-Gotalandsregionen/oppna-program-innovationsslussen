@@ -337,8 +337,6 @@ public class MockBariumRestClientImpl implements BariumRestClient {
 
         String replyJson = createInstance(sb.toString());
 
-        System.out.println(replyJson);
-
         try {
             JSONObject jsonObject = new JSONObject(replyJson);
 

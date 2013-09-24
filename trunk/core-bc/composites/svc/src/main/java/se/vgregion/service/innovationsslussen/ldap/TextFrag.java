@@ -96,7 +96,7 @@ public class TextFrag {
         /** The split exp. */
         private String text;
 
-        private final String splitExp = "[,]";
+        private final static String splitExp = "[,]";
 
         /** The end. */
         private char start = '(', end = ')';
@@ -236,7 +236,6 @@ public class TextFrag {
         //parser.text = "hej(och)hå";
         parser.text = s;
         parser.toFrag(parent);
-        System.out.println(parent);
 
         System.out.println("Finding: " + parent.find("zip character varying"));
     }

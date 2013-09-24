@@ -107,8 +107,6 @@ public class BariumService {
             try {
                 JSONObject jsonObject = new JSONObject(replyJson);
 
-                System.out.println("BariumService - deleteBariumIdea - jsonObject: " + jsonObject.toString());
-
                 boolean success = jsonObject.getBoolean("success");
 
                 bariumResponse.setSuccess(success);
@@ -196,7 +194,6 @@ public class BariumService {
 
         IdeaObjectFields ideaObjectFields = new IdeaObjectFields();
 
-        IdeaContent ideaContentPublic = idea.getIdeaContentPublic();
         IdeaContent ideaContentPrivate = idea.getIdeaContentPrivate();
         IdeaPerson ideaPerson = idea.getIdeaPerson();
 
@@ -217,8 +214,6 @@ public class BariumService {
         String name = ideaPerson.getName();
         String jobPosition = ideaPerson.getJobPosition();
         String vgrStrukturPerson = ideaPerson.getVgrStrukturPerson();
-
-        System.out.println("BariumService - createIdea - ideaTested has value: " + ideaTested);
 
         ideaObjectFields.setBehov(solvesProblem);
         ideaObjectFields.setEpost(email);

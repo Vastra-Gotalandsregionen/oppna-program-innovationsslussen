@@ -63,15 +63,8 @@ public class IdeaListEditController extends BaseController {
     @RenderMapping
     public String showEdit(RenderRequest request, RenderResponse response, final ModelMap model) {
 
-        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-        long scopeGroupId = themeDisplay.getScopeGroupId();
-        long companyId = themeDisplay.getCompanyId();
-        boolean isSignedIn = themeDisplay.isSignedIn();
-
         PortletPreferences prefs = request.getPreferences();
-
         String ideaListType = prefs.getValue("ideaListType", "0");
-
         model.addAttribute("ideaListType", ideaListType);
 
         return "edit";
