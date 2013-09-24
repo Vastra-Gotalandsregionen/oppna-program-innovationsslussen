@@ -101,10 +101,12 @@ public class TypesBeanTest {
         file = new File(path);
         List<Class> result = new ArrayList<Class>();
 
-        for (String clazzFileName : file.list()) {
-            if (clazzFileName.endsWith(".class")) {
-                clazzFileName = clazzFileName.substring(0, clazzFileName.indexOf(".class"));
-                result.add(Class.forName(aPackage.getName() + "." + clazzFileName));
+        if (file != null && file.list() != null) {
+            for (String clazzFileName : file.list()) {
+                if (clazzFileName.endsWith(".class")) {
+                    clazzFileName = clazzFileName.substring(0, clazzFileName.indexOf(".class"));
+                    result.add(Class.forName(aPackage.getName() + "." + clazzFileName));
+                }
             }
         }
 
