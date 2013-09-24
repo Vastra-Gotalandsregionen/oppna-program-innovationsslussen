@@ -34,18 +34,6 @@ public class IdeaListViewControllerTest {
     private ThemeDisplay display;
     private PortletPreferences prefs;
 
-    /*
-            long scopeGroupId = themeDisplay.getScopeGroupId();
-        long companyId = themeDisplay.getCompanyId();
-        long userId = themeDisplay.getUserId();
-        boolean isSignedIn = themeDisplay.isSignedIn();
-
-	        PortletPreferences prefs = request.getPreferences();
-	        String ideaListType = prefs.getValue("ideaListType", "0");
-
-
-     */
-
     @Before
     public void setUp() {
         idesService = Mockito.mock(IdeaService.class);

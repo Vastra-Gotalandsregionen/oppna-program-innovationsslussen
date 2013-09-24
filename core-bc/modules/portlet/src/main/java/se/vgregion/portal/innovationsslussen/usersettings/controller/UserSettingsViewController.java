@@ -62,22 +62,22 @@ public class UserSettingsViewController extends BaseController {
         long userId = themeDisplay.getUserId();
         
         try {
-			User user = UserLocalServiceUtil.getUser(userId);
-			
-			String userFullName = user.getFullName();
-			
-			model.addAttribute("userFullName", userFullName);
-			
-		} catch (PortalException e) {
-			LOGGER.error(e.getMessage(), e);
-		} catch (SystemException e) {
+            User user = lookupUser(userId);
+
+            String userFullName = user.getFullName();
+
+            model.addAttribute("userFullName", userFullName);
+
+        } catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 		}
 
         return "view";
     }
-    
-    
+
+    protected User lookupUser(long userId) throws SystemException, PortalException {
+        return UserLocalServiceUtil.getUser(userId);
+    }
 
 }
 
