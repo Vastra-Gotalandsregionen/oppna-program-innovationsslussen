@@ -1,5 +1,9 @@
 package se.vgregion.portal.innovationsslussen.idea.controller;
 
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.User;
+import com.liferay.portal.theme.ThemeDisplay;
+import junit.framework.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -21,7 +25,6 @@ import javax.portlet.RenderResponse;
  */
 public class IdeaViewControllerTest {
 
-    @Ignore
     @Test
     public void showIdea() {
         IdeaService ideaService = Mockito.mock(IdeaService.class);
@@ -32,7 +35,14 @@ public class IdeaViewControllerTest {
         RenderResponse b = Mockito.mock(RenderResponse.class);
         ModelMap c = Mockito.mock(ModelMap.class);
 
-        controller.showIdea(a, b, c);
+        ThemeDisplay themeDisplay = Mockito.mock(ThemeDisplay.class);
+        Mockito.when(a.getAttribute(WebKeys.THEME_DISPLAY)).thenReturn(themeDisplay);
+        Mockito.when(themeDisplay.getScopeGroupId()).thenReturn(1l);
+        User user = Mockito.mock(User.class);
+        Mockito.when(themeDisplay.getUser()).thenReturn(user);
+
+        String r = controller.showIdea(a, b, c);
+        Assert.assertEquals("view_public", r);
     }
 
 }

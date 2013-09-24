@@ -60,9 +60,7 @@ public class IdeaAdminViewController extends BaseController {
     protected Layout getFriendlyURLLayout(long scopeGroupId) {
         try {
             return LayoutLocalServiceUtil.getFriendlyURLLayout(scopeGroupId, false, "/ide");
-        } catch (PortalException e) {
-            LOGGER.error(e.getMessage(), e);
-        } catch (SystemException e) {
+        } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }
         return null;
