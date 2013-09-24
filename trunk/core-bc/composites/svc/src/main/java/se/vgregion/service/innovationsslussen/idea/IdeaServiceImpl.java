@@ -31,7 +31,6 @@ import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaFile;
-import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaPerson;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserFavorite;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserLike;
 import se.vgregion.portal.innovationsslussen.domain.json.ObjectEntry;
@@ -564,7 +563,7 @@ public class IdeaServiceImpl implements IdeaService {
 
         if (idea != null) {
             try {
-                IdeaObjectFields bariumIdea = bariumService.getBariumIdea(idea.getId());
+                bariumService.getBariumIdea(idea.getId());
             } catch (RuntimeException e) {
                 removeFromLiferay(idea);
                 throw new RemoveIdeaException("Can not find idea with id " + idea.getId()
@@ -608,9 +607,9 @@ public class IdeaServiceImpl implements IdeaService {
 
         try {
 
-            IdeaContent ideaContentPublic = idea.getIdeaContentPublic();
-            IdeaContent ideaContentPrivate = idea.getIdeaContentPrivate();
-            IdeaPerson ideaPerson = idea.getIdeaPerson();
+            idea.getIdeaContentPublic();
+            idea.getIdeaContentPrivate();
+            idea.getIdeaPerson();
 
             // Delete resource for Idea
             resourceLocalService.deleteResource(idea.getCompanyId(), Idea.class.getName(),
@@ -802,18 +801,6 @@ public class IdeaServiceImpl implements IdeaService {
         }
     }
 
-    private boolean hasBeenSetToPublic(Idea idea, Future<String> bariulmIsPublicFtr)
-            throws ExecutionException, InterruptedException {
-
-        String bariulmIsPublic = bariulmIsPublicFtr.get();
-        if (!bariulmIsPublic.equals(idea.isPublic())) {
-            idea.setPhase(bariulmIsPublic);
-            return true;
-        }
-
-        return false;
-    }
-
     /**
      * Replace last part.
      *
@@ -825,9 +812,6 @@ public class IdeaServiceImpl implements IdeaService {
         return ideaSiteLink.substring(0, ideaSiteLink.lastIndexOf("/") + 1) + newUrlTitle;
     }
 
-    private Idea findIdeaByBariumId(String bariumId) {
-        return ideaRepository.find(bariumId);
-    }
 
     // 06.15 every morning
     /* (non-Javadoc)
@@ -877,7 +861,7 @@ public class IdeaServiceImpl implements IdeaService {
         idea.setUrlTitle(titleToUrlTitle(ideaObjectFields.getInstanceName()));
 
         IdeaContent ideaContentPublic = idea.getIdeaContentPublic();
-        IdeaContent ideaContentPrivate = idea.getIdeaContentPrivate(); // TODO Vet vi att det ska vara private?
+        IdeaContent ideaContentPrivate = idea.getIdeaContentPrivate();
 
         // Default set idea status to private, then change if conditions are met
         String publik = ideaObjectFields.getPublik();
@@ -951,10 +935,6 @@ public class IdeaServiceImpl implements IdeaService {
         } catch (BariumException e) {
             throw new FileUploadException(e);
         }
-    }
-
-    private List<ObjectEntry> getIdeaFiles(Idea idea, String folderName) throws BariumException {
-        return bariumService.getIdeaFiles(idea, folderName);
     }
 
     /* (non-Javadoc)

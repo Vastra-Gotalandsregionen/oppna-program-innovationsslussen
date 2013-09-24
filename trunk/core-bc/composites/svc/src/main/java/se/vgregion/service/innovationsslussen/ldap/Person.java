@@ -109,7 +109,7 @@ public class Person {
     public Short getBirthYear() {
 
         final int three = 3;
-        final int four = 3;
+        final int four = 4;
 
 
         if (hsaPersonIdentityNumber != null && hsaPersonIdentityNumber.length() > three
