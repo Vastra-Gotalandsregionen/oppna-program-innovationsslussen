@@ -62,7 +62,6 @@ public class CreateIdeaViewController extends BaseController {
 
     /**
      * Instantiates a new creates the idea view controller.
-     *
      * @param ideaService the idea service
      * @param ideaValidator the idea validator
      * @param ldapService the ldap service
@@ -93,8 +92,7 @@ public class CreateIdeaViewController extends BaseController {
 
         Layout ideaLayout = null;
         try {
-            ideaLayout = LayoutLocalServiceUtil.getFriendlyURLLayout(scopeGroupId,
-                    themeDisplay.getLayout().isPrivateLayout(), "/ide");
+            ideaLayout = getFriendlyURLLayout(scopeGroupId, themeDisplay);
 
             long ideaPlid = ideaLayout.getPlid();
             String ideaLink = request.getParameter("ideaLink");
@@ -103,14 +101,16 @@ public class CreateIdeaViewController extends BaseController {
             model.addAttribute("ideaPlid", ideaPlid);
             model.addAttribute("ideaPortletName", IdeaPortletsConstants.PORTLET_NAME_IDEA_PORTLET);
 
-        } catch (PortalException e) {
-            e.printStackTrace();
-        } catch (SystemException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-
         return "confirmation";
+    }
+
+    protected Layout getFriendlyURLLayout(long scopeGroupId, ThemeDisplay themeDisplay) throws SystemException, PortalException {
+        return LayoutLocalServiceUtil.getFriendlyURLLayout(scopeGroupId,
+                themeDisplay.getLayout().isPrivateLayout(), "/ide");
     }
 
     /**
@@ -134,7 +134,6 @@ public class CreateIdeaViewController extends BaseController {
 
             // No idea exists
             idea = IdeaPortletUtil.getIdeaFromRequest(request);
-
 
 
             // Set dummy data for person
@@ -183,7 +182,7 @@ public class CreateIdeaViewController extends BaseController {
      */
     @ActionMapping("submitIdea")
     public final void submitIdea(ActionRequest request, ActionResponse response, final ModelMap model,
-            @ModelAttribute Idea idea, BindingResult result) {
+                                 @ModelAttribute Idea idea, BindingResult result) {
 
         // todo auktoriseringskontroll?
 
@@ -229,7 +228,7 @@ public class CreateIdeaViewController extends BaseController {
 
                 // Add error - create failed
 
-                PortalUtil.copyRequestParameters(request, response);
+                copyRequestParameters(request, response);
                 response.setRenderParameter("view", "view");
             } catch (RuntimeException e) {
                 Throwable lastCause = getLastCause(e);
@@ -242,20 +241,29 @@ public class CreateIdeaViewController extends BaseController {
                 result.addError(new ObjectError("", "Ett tekniskt fel inträffade."));
                 model.addAttribute("errors", result);
 
-                PortalUtil.copyRequestParameters(request, response);
+                copyRequestParameters(request, response);
                 response.setRenderParameter("view", "view");
             }
 
         } else {
             model.addAttribute("errors", result);
 
-            PortalUtil.copyRequestParameters(request, response);
+            copyRequestParameters(request, response);
             response.setRenderParameter("view", "view");
         }
     }
 
+    protected void copyRequestParameters(ActionRequest request, ActionResponse response) {
+        PortalUtil.copyRequestParameters(request, response);
+    }
+
+    protected HttpServletRequest toHttpServletRequest(ActionRequest request) {
+        return PortalUtil.getHttpServletRequest(request);
+    }
+
+
     private String generateSchemeServerNamePort(ActionRequest request) {
-        HttpServletRequest httpServletRequest = PortalUtil.getHttpServletRequest(request);
+        HttpServletRequest httpServletRequest = toHttpServletRequest(request);
 
         String scheme = httpServletRequest.getScheme();
         String serverName = httpServletRequest.getServerName();
@@ -273,7 +281,6 @@ public class CreateIdeaViewController extends BaseController {
 
         return scheme + "://" + serverName + serverPortString;
     }
-
 
 
 }
