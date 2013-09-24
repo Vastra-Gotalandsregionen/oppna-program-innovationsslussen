@@ -131,14 +131,23 @@ public class IdeaServiceImpl implements IdeaService {
     public IdeaServiceImpl() {
     }
 
+
     /**
-     * Constructor.
+     * Instantiates a new idea service impl.
      *
-     * @param ideaRepository        the {@link IdeaRepository}
-     * @param bariumService         the {@link BariumService}
+     * @param ideaRepository the idea repository
+     * @param ideaFileRepository the idea file repository
+     * @param ideaUserLikeRepository the idea user like repository
+     * @param ideaUserFavoriteRepository the idea user favorite repository
+     * @param bariumService the barium service
+     * @param ideaSettingsService the idea settings service
+     * @param mbMessageLocalService the mb message local service
+     * @param userLocalService the user local service
+     * @param userGroupRoleLocalService the user group role local service
+     * @param resourceLocalService the resource local service
      */
     @Autowired
-    public IdeaServiceImpl(IdeaRepository ideaRepository,IdeaFileRepository ideaFileRepository,
+    public IdeaServiceImpl(IdeaRepository ideaRepository, IdeaFileRepository ideaFileRepository,
             IdeaUserLikeRepository ideaUserLikeRepository, IdeaUserFavoriteRepository ideaUserFavoriteRepository,
             BariumService bariumService, IdeaSettingsService ideaSettingsService,
             MBMessageLocalService mbMessageLocalService, UserLocalService userLocalService,
@@ -556,10 +565,10 @@ public class IdeaServiceImpl implements IdeaService {
         if (idea != null) {
             try {
                 IdeaObjectFields bariumIdea = bariumService.getBariumIdea(idea.getId());
-            } catch (RuntimeException e){
+            } catch (RuntimeException e) {
                 removeFromLiferay(idea);
-                throw new RemoveIdeaException("Can not find idea with id " + idea.getId() +
-                        " in Barium. Have deleted idea in Liferay. ");
+                throw new RemoveIdeaException("Can not find idea with id " + idea.getId()
+                        + " in Barium. Have deleted idea in Liferay. ");
             }
 
             BariumResponse bariumResponse = bariumService.deleteBariumIdea(idea.getId());
@@ -1047,9 +1056,10 @@ public class IdeaServiceImpl implements IdeaService {
 
             messageComparator = new MessageCreateDateComparator(false);
 
+            @SuppressWarnings("unchecked")
             List<MBMessage> mbMessages =
-                    mbMessageLocalService.getThreadMessages(threadId, WorkflowConstants.STATUS_ANY,
-                            messageComparator);
+            mbMessageLocalService.getThreadMessages(threadId, WorkflowConstants.STATUS_ANY,
+                    messageComparator);
 
             for (MBMessage mbMessage : mbMessages) {
 

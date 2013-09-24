@@ -17,7 +17,6 @@ import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import se.vgregion.portal.innovationsslussen.BaseController;
-import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.util.IdeaPortletsConstants;
 import se.vgregion.service.innovationsslussen.exception.RemoveIdeaException;
@@ -45,10 +44,13 @@ public class IdeaAdminViewController extends BaseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(IdeaAdminViewController.class.getName());
     private static final int SEARCH_CONTAINER_DELTA_DEFAULT = 10;
 
-    IdeaService ideaService;
+    private final IdeaService ideaService;
+
 
     /**
-     * Constructor.
+     * Instantiates a new idea admin view controller.
+     *
+     * @param ideaService the idea service
      */
     @Autowired
     public IdeaAdminViewController(IdeaService ideaService) {
@@ -152,11 +154,21 @@ public class IdeaAdminViewController extends BaseController {
         response.setRenderParameter("view", "view");
     }
 
+    /**
+     * Sync all from barium.
+     */
     @ActionMapping(params = "action=syncAllFromBarium")
     public void syncAllFromBarium() {
         ideaService.updateAllIdeasFromBarium();
     }
 
+    /**
+     * Sync idea from barium.
+     *
+     * @param request the request
+     * @param response the response
+     * @param model the model
+     */
     @ActionMapping(params = "action=syncIdeaFromBarium")
     public void syncIdeaFromBarium(ActionRequest request, ActionResponse response, final ModelMap model) {
 

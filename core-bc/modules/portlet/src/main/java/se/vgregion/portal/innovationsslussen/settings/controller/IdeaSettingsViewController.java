@@ -33,20 +33,22 @@ import com.liferay.portal.theme.ThemeDisplay;
 public class IdeaSettingsViewController extends BaseController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IdeaSettingsViewController.class.getName());
-    
-    private IdeaSettingsService ideaSettingsService;
-    
+
+    private final IdeaSettingsService ideaSettingsService;
+
+
     /**
-     * Constructor.
+     * Instantiates a new idea settings view controller.
      *
+     * @param ideaSettingsService the idea settings service
      */
     @Autowired
     public IdeaSettingsViewController(IdeaSettingsService ideaSettingsService) {
         this.ideaSettingsService = ideaSettingsService;
     }
-    
-    
-    
+
+
+
     /**
      * The default render method.
      *
@@ -61,15 +63,15 @@ public class IdeaSettingsViewController extends BaseController {
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
         long scopeGroupId = themeDisplay.getScopeGroupId();
         long companyId = themeDisplay.getCompanyId();
-        
-        String bariumDetailsViewUrlPrefix =ideaSettingsService.getSetting(
-        		ExpandoConstants.BARIUM_DETAILS_VIEW_URL_PREFIX, companyId, scopeGroupId);
-        
+
+        String bariumDetailsViewUrlPrefix = ideaSettingsService.getSetting(
+                ExpandoConstants.BARIUM_DETAILS_VIEW_URL_PREFIX, companyId, scopeGroupId);
+
         model.addAttribute("bariumDetailsViewUrlPrefix", bariumDetailsViewUrlPrefix);
 
         return "view";
     }
-    
+
     /**
      * This method saves the settings for the settings portlet.
      * 
@@ -84,13 +86,14 @@ public class IdeaSettingsViewController extends BaseController {
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
         long companyId = themeDisplay.getCompanyId();
         long groupId = themeDisplay.getScopeGroup().getGroupId();
-        
+
         String bariumDetailsViewUrlPrefix = ParamUtil.getString(request, "bariumDetailsViewUrlPrefix", "");
-        
-        ideaSettingsService.setSetting(bariumDetailsViewUrlPrefix, ExpandoConstants.BARIUM_DETAILS_VIEW_URL_PREFIX, companyId, groupId);
+
+        ideaSettingsService.setSetting(bariumDetailsViewUrlPrefix,
+                ExpandoConstants.BARIUM_DETAILS_VIEW_URL_PREFIX, companyId, groupId);
     }
-    
-    
+
+
 
 }
 

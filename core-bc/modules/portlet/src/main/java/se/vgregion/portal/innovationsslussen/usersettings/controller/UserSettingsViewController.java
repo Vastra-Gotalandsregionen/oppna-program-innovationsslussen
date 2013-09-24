@@ -30,8 +30,8 @@ import com.liferay.portal.theme.ThemeDisplay;
 @RequestMapping(value = "VIEW")
 public class UserSettingsViewController extends BaseController {
 
-	IdeaService ideaService;
-	
+    private IdeaService ideaService;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(UserSettingsViewController.class.getName());
 
     /**
@@ -43,7 +43,7 @@ public class UserSettingsViewController extends BaseController {
     public UserSettingsViewController(IdeaService ideaService) {
         this.ideaService = ideaService;
     }
-    */   
+     */
 
     /**
      * The default render method.
@@ -56,11 +56,11 @@ public class UserSettingsViewController extends BaseController {
     @RenderMapping()
     public String showIdea(RenderRequest request, RenderResponse response, final ModelMap model) {
 
-    	ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
         long scopeGroupId = themeDisplay.getScopeGroupId();
         long companyId = themeDisplay.getCompanyId();
         long userId = themeDisplay.getUserId();
-        
+
         try {
             User user = lookupUser(userId);
 
@@ -69,8 +69,8 @@ public class UserSettingsViewController extends BaseController {
             model.addAttribute("userFullName", userFullName);
 
         } catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
-		}
+            LOGGER.error(e.getMessage(), e);
+        }
 
         return "view";
     }

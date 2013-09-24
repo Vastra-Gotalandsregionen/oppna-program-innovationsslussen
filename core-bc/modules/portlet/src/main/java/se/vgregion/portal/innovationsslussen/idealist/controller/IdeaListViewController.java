@@ -40,10 +40,13 @@ public class IdeaListViewController extends BaseController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IdeaListViewController.class.getName());
 
-    IdeaService ideaService;
+    private final IdeaService ideaService;
+
 
     /**
-     * Constructor.
+     * Instantiates a new idea list view controller.
+     *
+     * @param ideaService the idea service
      */
     @Autowired
     public IdeaListViewController(IdeaService ideaService) {
@@ -87,7 +90,8 @@ public class IdeaListViewController extends BaseController {
 
             List<Idea> ideaList = new ArrayList<Idea>();
 
-            int currentPage = ParamUtil.getInteger(request, "pageNumber", PageIteratorConstants.PAGINATOR_START_DEFAULT);
+            int currentPage = ParamUtil.getInteger(request, "pageNumber",
+                    PageIteratorConstants.PAGINATOR_START_DEFAULT);
             int pageSize = PageIteratorConstants.PAGE_SIZE_DEFAULT;
             int maxPages = PageIteratorConstants.MAX_PAGES_DEFAULT;
             int totalCount = 0;
@@ -96,13 +100,15 @@ public class IdeaListViewController extends BaseController {
 
             if (ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_OPEN_IDEAS)) {
 
-                ideaList = ideaService.findIdeasByGroupId(companyId, scopeGroupId, IdeaStatus.PUBLIC_IDEA, start, pageSize);
+                ideaList = ideaService.findIdeasByGroupId(companyId,
+                        scopeGroupId, IdeaStatus.PUBLIC_IDEA, start, pageSize);
 
                 totalCount = ideaService.findIdeaCountByGroupId(companyId, scopeGroupId, IdeaStatus.PUBLIC_IDEA);
             } else if (ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_USER_IDEAS)) {
 
                 if (isSignedIn) {
-                    ideaList = ideaService.findIdeasByGroupIdAndUserId(companyId, scopeGroupId, userId, start, pageSize);
+                    ideaList = ideaService.findIdeasByGroupIdAndUserId(companyId,
+                            scopeGroupId, userId, start, pageSize);
 
                     totalCount = ideaService.findIdeasCountByGroupIdAndUserId(companyId, scopeGroupId, userId);
                 }
@@ -120,7 +126,8 @@ public class IdeaListViewController extends BaseController {
             } else if (ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_CLOSED_IDEAS)) {
 
                 if (isSignedIn) {
-                    ideaList = ideaService.findIdeasByGroupId(companyId, scopeGroupId, IdeaStatus.PRIVATE_IDEA, start, pageSize);
+                    ideaList = ideaService.findIdeasByGroupId(companyId, scopeGroupId,
+                            IdeaStatus.PRIVATE_IDEA, start, pageSize);
 
                     totalCount = ideaService.findIdeaCountByGroupId(companyId, scopeGroupId, IdeaStatus.PRIVATE_IDEA);
                 }

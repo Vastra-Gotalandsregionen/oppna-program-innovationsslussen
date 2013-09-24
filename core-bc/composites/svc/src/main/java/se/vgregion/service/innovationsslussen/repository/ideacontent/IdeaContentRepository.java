@@ -3,11 +3,10 @@ package se.vgregion.service.innovationsslussen.repository.ideacontent;
 import java.util.List;
 
 import se.vgregion.dao.domain.patterns.repository.Repository;
-import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 
 /**
- * Repository interface for managing {@code Idea}s.
+ * Repository interface for managing {@code se.vgregion.portal.innovationsslussen.domain.jpa.Idea}s.
  *
  * @author Erik Andersson
  * @company Monator Technologies AB

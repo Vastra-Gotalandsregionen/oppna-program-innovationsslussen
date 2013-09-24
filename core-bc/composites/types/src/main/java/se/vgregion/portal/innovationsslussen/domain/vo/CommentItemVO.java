@@ -78,7 +78,7 @@ public class CommentItemVO {
         return userInnovationsslussenEmployee;
     }
 
-    public void setUserInnovationsslussenEmployee( boolean userInnovationsslussenEmployee) {
+    public void setUserInnovationsslussenEmployee(boolean userInnovationsslussenEmployee) {
         this.userInnovationsslussenEmployee = userInnovationsslussenEmployee;
     }
 }

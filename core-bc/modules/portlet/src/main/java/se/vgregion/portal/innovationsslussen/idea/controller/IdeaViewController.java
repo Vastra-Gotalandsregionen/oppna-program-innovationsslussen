@@ -72,14 +72,18 @@ import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 @RequestMapping(value = "VIEW")
 public class IdeaViewController extends BaseController {
 
-    IdeaService ideaService;
-    IdeaPermissionCheckerService ideaPermissionCheckerService;
-    LdapService ldapService;
+    private final IdeaService ideaService;
+    private final IdeaPermissionCheckerService ideaPermissionCheckerService;
+    private LdapService ldapService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IdeaViewController.class.getName());
 
+
     /**
-     * Constructor.
+     * Instantiates a new idea view controller.
+     *
+     * @param ideaService the idea service
+     * @param ideaPermissionCheckerService the idea permission checker service
      */
     @Autowired
     public IdeaViewController(IdeaService ideaService, IdeaPermissionCheckerService ideaPermissionCheckerService) {
@@ -109,12 +113,13 @@ public class IdeaViewController extends BaseController {
 
         String returnView = "view_public";
 
-        if (!urlTitle.equals("")){
+        if (!urlTitle.equals("")) {
             Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
-            if (idea != null){
+            if (idea != null) {
 
                 boolean isIdeaUserLiked = ideaService.getIsIdeaUserLiked(companyId, scopeGroupId, userId, urlTitle);
-                boolean isIdeaUserFavorite = ideaService.getIsIdeaUserFavorite(companyId, scopeGroupId, userId, urlTitle);
+                boolean isIdeaUserFavorite = ideaService.getIsIdeaUserFavorite(companyId, scopeGroupId,
+                        userId, urlTitle);
                 IdeaContent visibility = idea.getIdeaContentPrivate();
 
                 List<CommentItemVO> commentsList = null;
@@ -141,14 +146,16 @@ public class IdeaViewController extends BaseController {
                 model.addAttribute("isIdeaOwner", idea.getUserId() == userId);
                 model.addAttribute("ideaType", ideaType);
 
-                if (ideaType.equals("private")  && (ideaPermissionChecker.getHasPermissionViewIdeaPrivate() || idea.getUserId() == userId)) {
+                if (ideaType.equals("private")  && (ideaPermissionChecker.getHasPermissionViewIdeaPrivate()
+                        || idea.getUserId() == userId)) {
                     returnView = "view_private";
                 }
 
                 // If a user trying to access the public or private part of an idea that still is private.
                 // The user dose not have premmisions and is not the creator of the idea.
                 // Showing 404 view.
-                if ( !idea.isPublic() && !(ideaPermissionChecker.getHasPermissionViewIdeaPrivate() || idea.getUserId() == userId)) {
+                if (!idea.isPublic() && !(ideaPermissionChecker.getHasPermissionViewIdeaPrivate()
+                        || idea.getUserId() == userId)) {
                     HttpServletResponse httpServletResponse = PortalUtil.getHttpServletResponse(response);
                     httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
                     returnView = "idea_404";
@@ -163,6 +170,14 @@ public class IdeaViewController extends BaseController {
         return returnView;
     }
 
+    /**
+     * Upload file render.
+     *
+     * @param request the request
+     * @param response the response
+     * @param model the model
+     * @return the string
+     */
     @RenderMapping(params = "showView=showUploadFile")
     public String uploadFile(RenderRequest request, RenderResponse response, Model model) {
         model.addAttribute("urlTitle", request.getParameter("urlTitle"));
@@ -182,7 +197,7 @@ public class IdeaViewController extends BaseController {
     @RenderMapping(params = "type=private")
     public String showIdeaPrivate(RenderRequest request, RenderResponse response, final ModelMap model) {
 
-    	ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
         long scopeGroupId = themeDisplay.getScopeGroupId();
         long companyId = themeDisplay.getCompanyId();
         long userId = themeDisplay.getUserId();
@@ -271,8 +286,10 @@ public class IdeaViewController extends BaseController {
 
                 String commentContentCleaned = comment;
 
+                final int maxLenghtCommentSubject = 50;
+
                 String commentSubject = comment;
-                commentSubject = StringUtil.shorten(commentSubject, 50);
+                commentSubject = StringUtil.shorten(commentSubject, maxLenghtCommentSubject);
                 commentSubject += "...";
 
                 // TODO - validate comment and preserve line breaks
@@ -392,7 +409,7 @@ public class IdeaViewController extends BaseController {
             try {
                 Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
 
-                // TODO: use permission checker to verify that user has delete permissions
+                // TODO use permission checker to verify that user has delete permissions
                 IdeaPermissionChecker ideaPermissionChecker = ideaPermissionCheckerService.getIdeaPermissionChecker(
                         groupId, userId, idea);
 
@@ -517,6 +534,14 @@ public class IdeaViewController extends BaseController {
         response.setRenderParameter("urlTitle", urlTitle);
     }
 
+    /**
+     * Upload file action.
+     *
+     * @param request the request
+     * @param response the response
+     * @param model the model
+     * @throws FileUploadException the file upload exception
+     */
     @ActionMapping(params = "action=uploadFile")
     public void uploadFile(ActionRequest request, ActionResponse response, Model model) throws FileUploadException {
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
@@ -535,8 +560,9 @@ public class IdeaViewController extends BaseController {
             throw new IllegalArgumentException("Unknown filetype: " + fileType);
         }
 
-        // todo onödig slagning? Cacha?
-        Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);// todo Kan det inte finnas flera med samma titel i olika communities?
+        //TODO onödig slagning? Cacha?
+        Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
+        //TODO Kan det inte finnas flera med samma titel i olika communities?
 
         boolean isIdeaOwner = idea.getUserId() == userId;
 
@@ -597,6 +623,14 @@ public class IdeaViewController extends BaseController {
         model.addAttribute("errorMessage", "Uppladdningen misslyckades");
     }
 
+    /**
+     * Download file resource mapping.
+     *
+     * @param id the id
+     * @param response the response
+     * @throws BariumException the barium exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @ResourceMapping("downloadFile")
     public void downloadFile(@RequestParam("id") String id, ResourceResponse response) throws BariumException,
     IOException {
@@ -624,7 +658,9 @@ public class IdeaViewController extends BaseController {
             pos = response.getPortletOutputStream();
             bos = new BufferedOutputStream(pos);
 
-            byte[] buf = new byte[1024];
+            final int oneKB = 1024;
+
+            byte[] buf = new byte[oneKB];
             int n;
             while ((n = bis.read(buf)) != -1) {
                 bos.write(buf, 0, n);

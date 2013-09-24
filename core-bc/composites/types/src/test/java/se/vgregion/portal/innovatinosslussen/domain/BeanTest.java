@@ -72,7 +72,9 @@ public class BeanTest {
         }
         for (Class type : getTypes(PageIterator.class)) {
             if (!type.isEnum()) {
-                callConstructors(type);
+                if (type.getDeclaredConstructors()[0].getModifiers() == Modifier.PUBLIC) {
+                    callConstructors(type);
+                }
             }
         }
         for (Class type : getTypes(Idea.class)) {

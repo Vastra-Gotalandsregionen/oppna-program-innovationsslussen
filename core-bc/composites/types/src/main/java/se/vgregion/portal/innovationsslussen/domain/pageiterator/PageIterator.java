@@ -149,7 +149,7 @@ public class PageIterator {
 
         this.setShowSummary(true);
 
-        int currentHitsStart = (currentPage -1) * pageSize + 1;
+        int currentHitsStart = (currentPage - 1) * pageSize + 1;
         if (currentHitsStart < 1) {
             currentHitsStart = 1;
         }
