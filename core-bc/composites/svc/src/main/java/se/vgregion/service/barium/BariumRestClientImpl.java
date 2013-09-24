@@ -467,11 +467,13 @@ public class BariumRestClientImpl implements BariumRestClient {
 
             response = toString(bis);
         } catch (IOException e) {
-            inputStream = conn.getErrorStream();
-            bis = new BufferedInputStream(inputStream);
 
-            response = toString(bis);
-            throw new BariumException(response, e);
+            if (conn != null) {
+                inputStream = conn.getErrorStream();
+                bis = new BufferedInputStream(inputStream);
+                response = toString(bis);
+                throw new BariumException(response, e);
+            }
         } finally {
             Util.closeClosables(bis, inputStream, bos, outputStream);
         }
@@ -505,16 +507,16 @@ public class BariumRestClientImpl implements BariumRestClient {
 
     private boolean connectInternal() throws BariumException {
 
-        if (this.apiLocation == "") {
+        if (this.apiLocation.isEmpty()) {
             throw new BariumException("Not ready to connect, no URL specified.");
         }
-        if (this.apiKey == "") {
+        if (this.apiKey.isEmpty()) {
             throw new BariumException("Not ready to connect, no API key specified.");
         }
-        if (this.username == "") {
+        if (this.username.isEmpty()) {
             throw new BariumException("Not ready to connect, no username specified.");
         }
-        if (this.password == "") {
+        if (this.password.isEmpty()) {
             throw new BariumException("Not ready to connect, no password specified.");
         }
 

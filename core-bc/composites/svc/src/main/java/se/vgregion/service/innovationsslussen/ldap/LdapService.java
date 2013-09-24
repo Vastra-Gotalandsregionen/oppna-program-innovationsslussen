@@ -2,7 +2,6 @@ package se.vgregion.service.innovationsslussen.ldap;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -79,15 +78,6 @@ public class LdapService {
                 Object result = type.newInstance();
                 BeanMap bm = new BeanMap(result);
                 NamingEnumeration<? extends Attribute> all = attributes.getAll();
-
-                NamingEnumeration<String> ids = attributes.getIDs();
-                List<String> names = new ArrayList<String>();
-                while (ids.hasMore()) {
-                    //System.out.println("id " + ids.next());
-                    String name = ids.next();
-                }
-                //System.out.println(names);
-
 
                 while (all.hasMore()) {
                     Attribute attribute = all.next();
