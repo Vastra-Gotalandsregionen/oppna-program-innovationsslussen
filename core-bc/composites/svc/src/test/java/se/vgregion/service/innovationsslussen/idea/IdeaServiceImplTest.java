@@ -2,209 +2,128 @@ package se.vgregion.service.innovationsslussen.idea;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
 
-import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.Executors;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
+import com.liferay.portal.service.ResourceLocalService;
+import com.liferay.portal.service.UserGroupRoleLocalService;
+import com.liferay.portal.service.UserLocalService;
+import com.liferay.portlet.messageboards.service.MBMessageLocalService;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
+import org.mockito.Mockito;
 
+import se.vgregion.portal.innovationsslussen.domain.BariumResponse;
 import se.vgregion.portal.innovationsslussen.domain.IdeaContentType;
-import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
-import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
-import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaFile;
+import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserFavorite;
 import se.vgregion.service.barium.BariumService;
-import se.vgregion.service.innovationsslussen.exception.FileUploadException;
+import se.vgregion.service.innovationsslussen.exception.CreateIdeaException;
+import se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsService;
 import se.vgregion.service.innovationsslussen.repository.idea.IdeaRepository;
+import se.vgregion.service.innovationsslussen.repository.ideafile.IdeaFileRepository;
+import se.vgregion.service.innovationsslussen.repository.ideauserfavorite.IdeaUserFavoriteRepository;
+import se.vgregion.service.innovationsslussen.repository.ideauserlike.IdeaUserLikeRepository;
 
 /**
  * @author Patrik Bergström
  * @author Simon Göransson - simon.goransson@monator.com - vgrid: simgo3
- * 
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:test-jpa-infrastructure-configuration.xml", "classpath:task-context.xml",
-"classpath:service-context-test.xml"})
 public class IdeaServiceImplTest {
 
-    @PersistenceContext
-    private EntityManager entityManager;
 
-    @Autowired
-    private JpaTransactionManager jpaTransactionManager;
-
-    @Autowired
-    private ApplicationContext applicationContext;
-
-    @Autowired
+    private IdeaServiceImpl service;
     private IdeaRepository ideaRepository;
-
-    @Autowired
+    private IdeaFileRepository ideaFileRepository;
+    private IdeaUserLikeRepository ideaUserLikeRepository;
+    private IdeaUserFavoriteRepository ideaUserFavoriteRepository;
     private BariumService bariumService;
-
-    @Autowired
-    private IdeaServiceImpl ideaService;
+    private IdeaSettingsService ideaSettingsService;
+    private MBMessageLocalService mbMessageLocalService;
+    private UserLocalService userLocalService;
+    private UserGroupRoleLocalService userGroupRoleLocalService;
+    private ResourceLocalService resourceLocalService;
 
     @Before
-    public void setup() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-        // Persist two ideas. This is done once for all test methods
-        Idea idea1 = entityManager.find(Idea.class, "bariumId1");
-        if (idea1 == null) {
-            idea1 = new Idea(1, 1, 1);
-            idea1.setId("bariumId1");
-            idea1.setStatus(IdeaStatus.PUBLIC_IDEA);
+    public void setUp() {
+        ideaRepository = Mockito.mock(IdeaRepository.class);
+        ideaFileRepository = Mockito.mock(IdeaFileRepository.class);
+        ideaUserLikeRepository = Mockito.mock(IdeaUserLikeRepository.class);
+        ideaUserFavoriteRepository = Mockito.mock(IdeaUserFavoriteRepository.class);
+        bariumService = Mockito.mock(BariumService.class);
+        ideaSettingsService = Mockito.mock(IdeaSettingsService.class);
+        mbMessageLocalService = Mockito.mock(MBMessageLocalService.class);
+        userLocalService = Mockito.mock(UserLocalService.class);
+        userGroupRoleLocalService = Mockito.mock(UserGroupRoleLocalService.class);
+        resourceLocalService = Mockito.mock(ResourceLocalService.class);
 
-            IdeaContent ideaContentPrivate1 = new IdeaContent(1, 1, 1);
-            ideaContentPrivate1.setDescription("The description1");
-            ideaContentPrivate1.setIdea(idea1);
-            ideaContentPrivate1.setType(IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE);
+        Idea idea = new Idea();
+        Mockito.when(ideaRepository.findIdeaByUrlTitle(Mockito.anyString())).thenReturn(idea);
 
-            idea1.getIdeaContents().add(ideaContentPrivate1);
-
-            idea1.setUrlTitle("stora-titeln");
-            idea1.setTitle("Stora titeln");
-            idea1.setIdeaSiteLink("http://example.com/asldkfj/url-title");
-
-            Idea idea2 = new Idea(1, 1, 1);
-            idea2.setId("bariumId2");
-            idea2.setTitle("Lilla titeln");
-            idea2.setStatus(IdeaStatus.PUBLIC_IDEA);
-
-            // Mock seems not to work
-            //            IdeaSettingsService ideaSettingsService = Mockito.mock(IdeaSettingsService.class);
-            //
-            //            when(ideaSettingsService.getSetting(Mockito.anyString(), Mockito.anyLong(), Mockito.anyLong())).thenReturn("");
-            //
-            //            Field ideaSettingsServiceField = IdeaServiceImpl.class.getDeclaredField("ideaSettingsService");
-            //
-            //            ideaSettingsServiceField.setAccessible(true);
-            //            ideaSettingsServiceField.set(ideaService, ideaSettingsService);
-
-            TransactionStatus transaction = jpaTransactionManager.getTransaction(new DefaultTransactionAttribute());
-            entityManager.persist(idea1);
-            entityManager.persist(idea2);
-            jpaTransactionManager.commit(transaction);
-        }
-
-        IdeaObjectFields ideaObjectFields = new IdeaObjectFields();
-        ideaObjectFields.setIde("The description1");
-        ideaObjectFields.setInstanceName("Stora titeln");
-
-        when(bariumService.getBariumIdea("bariumId1")).thenReturn(ideaObjectFields);
-        when(bariumService.asyncGetIdeaObjectFields(anyString())).thenCallRealMethod();
-        when(bariumService.asyncGetIdeaPhaseFuture(anyString())).thenCallRealMethod();
-
-        ReflectionTestUtils.setField(bariumService, "executor", Executors.newCachedThreadPool());
+        service = new IdeaServiceImpl(ideaRepository, ideaFileRepository,
+                ideaUserLikeRepository, ideaUserFavoriteRepository,
+                bariumService, ideaSettingsService,
+                mbMessageLocalService, userLocalService,
+                userGroupRoleLocalService, resourceLocalService);
     }
 
     @Test
-    @DirtiesContext
-    public void testInit() throws Exception {
-
-        Idea bariumId1 = entityManager.find(Idea.class, "bariumId1");
-
-        // Given
-        IdeaObjectFields ideaObjectFields = new IdeaObjectFields();
-        ideaObjectFields.setIde("The description has changed");
-        ideaObjectFields.setInstanceName("Stora titeln");
-
-        when(bariumService.getBariumIdea("bariumId1")).thenReturn(ideaObjectFields);
-
-        // When
-        ideaService.init();
-        Thread.sleep(500);
-
-        // Then (see that the description has been updated compared to what the setup() method would result in)
-        Idea idea = ideaService.findIdeaByUrlTitle("stora-titeln");
-
-        assertEquals("The description has changed", idea.getIdeaContentPrivate().getDescription());
+    public void addFavorite() throws NoSuchFieldException, IllegalAccessException {
+        service.addFavorite(1l, 2l, 3l, "foo");
     }
 
     @Test
-    @DirtiesContext
-    public void updateAllIdeasFromBarium() throws Exception {
-
-        // Given
-        IdeaObjectFields ideaObjectFields = new IdeaObjectFields();
-        ideaObjectFields.setIde("The description has changed");
-        ideaObjectFields.setInstanceName("Stora titeln");
-
-        when(bariumService.getBariumIdea("bariumId1")).thenReturn(ideaObjectFields);
-
-        // When
-        ideaService.updateAllIdeasFromBarium();
-
-        // Then (see that the description has been updated compared to what the setup() method would result in)
-        Idea idea = ideaService.findIdeaByUrlTitle("stora-titeln");
-
-        assertEquals("The description has changed", idea.getIdeaContentPrivate().getDescription());
+    public void addLike() throws NoSuchFieldException, IllegalAccessException {
+        service.addLike(1l, 2l, 3l, "foo");
     }
 
     @Test
-    @DirtiesContext
-    public void replaceLastPart() throws Exception {
-        String result = ideaService.replaceLastPart("http://asldkfj.se/aefkjkl/-/skaldjf/toBeReplaced", "newString");
+    public void addIdea() throws NoSuchFieldException, IllegalAccessException, CreateIdeaException {
+        final IdeaContent pub = new IdeaContent(1l,2l,3l);
+        pub.setType(IdeaContentType.IDEA_CONTENT_TYPE_PUBLIC);
+        pub.setUserId(100l);
+        pub.setId(400l);
 
-        assertEquals("http://asldkfj.se/aefkjkl/-/skaldjf/newString", result);
+        final IdeaContent pri = new IdeaContent(4l, 5l, 6l);
+        pri.setType(IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE);
+        pri.setUserId(200l);
+        pri.setId(300l);
+
+        Idea newItem = new Idea(){
+            @Override
+            public IdeaContent getIdeaContentPublic() {
+                return pub;
+            }
+
+            @Override
+            public IdeaContent getIdeaContentPrivate() {
+                return pri;
+            }
+        };
+
+        newItem.setUrlTitle("urlTitle");
+        newItem.setTitle("title");
+        //BariumResponse bariumResponse = bariumService.createIdea(newItem);
+        BariumResponse bariumResponse = Mockito.mock(BariumResponse.class);
+        Mockito.when(bariumService.createIdea(Mockito.any(Idea.class))).thenReturn(bariumResponse);
+        Mockito.when(bariumResponse.getSuccess()).thenReturn(true);
+
+        //idea = ideaRepository.persist(idea);
+        Mockito.when(ideaRepository.persist(newItem)).thenReturn(newItem);
+
+        //newItem.setIdeaContentsPublic(new IdeaContent());
+        //newItem.setIdeaContentPrivate(new IdeaContent());
+
+
+        newItem.getIdeaContents().add(pri);
+        newItem.getIdeaContents().add(pub);
+
+        Idea bar = service.addIdea(newItem, "bar");
     }
 
-    @Test
-    @DirtiesContext
-    public void testDateOnIdeas() throws Exception {
-        List<Idea> ideasByGroupId = ideaService.findIdeasByGroupId(1, 1, IdeaStatus.PUBLIC_IDEA);
 
-        for (Idea idea : ideasByGroupId) {
-            System.out.println(idea.getTitle() + " - " + idea.getCreated());
-        }
-    }
-
-    @Test
-    public void testFindIdeaByUrlTitle() throws Exception {
-        Idea ideaByUrlTitle = ideaService.findIdeaByUrlTitle("stora-titeln");
-
-        assertNotNull(ideaByUrlTitle);
-    }
-
-    @Test
-    public void testuploadFile() {
-
-        Idea idea = ideaService.findIdeaByUrlTitle("stora-titeln");
-        String ideaFileName = null;
-
-        try {
-
-            InputStream inputStream = getClass().getResourceAsStream("/text.txt");
-            IdeaFile ideaFile = ideaService.uploadFile(idea, false, "text.txt", "txt", inputStream);
-
-            Idea idea2 = ideaRepository.findIdeaByUrlTitle("stora-titeln");
-
-            Set<IdeaFile> ideaFiles = idea2.getIdeaContentPrivate().getIdeaFiles();
-            ideaFileName = ideaFiles.iterator().next().getName();
-
-
-        } catch (FileUploadException e) {
-            e.printStackTrace();
-        }
-        assertEquals("text.txt", ideaFileName);
-    }
 
 }

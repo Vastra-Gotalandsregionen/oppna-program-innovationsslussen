@@ -265,6 +265,13 @@ public class IdeaServiceImpl implements IdeaService {
                         idea.getUserId(), Idea.class.getName(), idea.getId(), false, addCommunityPermissions,
                         addGuestPermissions);
 
+                String.valueOf(ideaContentPublic.getUserId());
+                ideaContentPublic.getGroupId();
+                ideaContentPublic.getId();
+                int foo = WorkflowConstants.ACTION_PUBLISH;
+                boolean b = mbMessageLocalService == null;
+                System.out.println(b);
+
                 // Add public discussion
                 mbMessageLocalService.addDiscussionMessage(idea.getUserId(),
                         String.valueOf(ideaContentPublic.getUserId()), ideaContentPublic.getGroupId(),

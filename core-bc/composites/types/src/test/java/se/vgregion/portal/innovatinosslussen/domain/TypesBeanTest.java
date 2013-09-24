@@ -90,7 +90,7 @@ public class TypesBeanTest {
             }
     }
 
-    List<Class> getTypes(Class sampelTypeFromPack) throws ClassNotFoundException {
+    private List<Class> getTypes(Class sampelTypeFromPack) throws ClassNotFoundException {
         Package aPackage = sampelTypeFromPack.getPackage();
         URL url = sampelTypeFromPack.getResource("/");
         File file = new File(url.getFile());
@@ -108,6 +108,8 @@ public class TypesBeanTest {
                     result.add(Class.forName(aPackage.getName() + "." + clazzFileName));
                 }
             }
+        } else {
+            System.out.println("File or its children did not exist " + file);
         }
 
         return result;
