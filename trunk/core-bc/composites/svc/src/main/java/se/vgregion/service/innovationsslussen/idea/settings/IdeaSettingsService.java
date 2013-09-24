@@ -1,9 +1,8 @@
 package se.vgregion.service.innovationsslussen.idea.settings;
 
-import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 
 /**
- * Service interface for managing {@link Idea}s.
+ * Service interface for managing {@link se.vgregion.portal.innovationsslussen.domain.jpa.Idea}s.
  *
  * @author Erik Andersson
  * @company Monator Technologies ABŒ

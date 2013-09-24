@@ -11,16 +11,26 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 
-public class IdeaPortletUtil {
+public final class IdeaPortletUtil {
 
-	public static Idea getIdeaFromRequest(PortletRequest request) {
-    	
-    	ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-    	
+    private IdeaPortletUtil() {
+
+    }
+
+    /**
+     * Gets the idea from request.
+     *
+     * @param request the request
+     * @return the idea from request
+     */
+    public static Idea getIdeaFromRequest(PortletRequest request) {
+
+        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+
         long companyId = themeDisplay.getCompanyId();
         long groupId = themeDisplay.getScopeGroupId();
         long userId = themeDisplay.getUserId();
-        
+
         String title = ParamUtil.getString(request, "title", "");
         String description = ParamUtil.getString(request, "ideaContentPrivate.description", "");
         String ideaTested = ParamUtil.getString(request, "ideaContentPrivate.ideaTested", "");
@@ -36,7 +46,7 @@ public class IdeaPortletUtil {
         String gender = ParamUtil.getString(request, "ideaPerson.gender");
 
         String vgrId = "none";
-        
+
         Idea idea = new Idea(companyId, groupId, userId);
         IdeaContent ideaContentPublic = new IdeaContent(companyId, groupId, userId);
         IdeaContent ideaContentPrivate = new IdeaContent(companyId, groupId, userId);
@@ -58,18 +68,19 @@ public class IdeaPortletUtil {
         ideaPerson.setVgrId(vgrId);
         ideaPerson.setAdditionalPersonsInfo(additionalPersonInfo);
         ideaPerson.setAdministrativeUnit(administrativeUnit);
-        ideaPerson.setGender((gender == null || "".equals(gender) ? IdeaPerson.Gender.UNKNOWN : IdeaPerson.Gender.valueOf(gender)));
+        ideaPerson.setGender((gender == null || "".equals(gender) ? IdeaPerson.Gender.UNKNOWN
+                : IdeaPerson.Gender.valueOf(gender)));
 
         idea.setTitle(title);
 
         idea.addIdeaContent(ideaContentPublic);
         idea.addIdeaContent(ideaContentPrivate);
         idea.addIdeaPerson(ideaPerson);
-    	
-    	return idea;
-    }	
-	
-	
-	
-	
+
+        return idea;
+    }
+
+
+
+
 }

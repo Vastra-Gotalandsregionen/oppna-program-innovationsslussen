@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import se.vgregion.portal.innovationsslussen.domain.json.ObjectField;
 
 /**
+ * the class IdeaObjectFields.
+ * 
  * @author Patrik Bergström
  */
 public class IdeaObjectFields {
@@ -46,6 +48,8 @@ public class IdeaObjectFields {
     private String state;
     private String telefonnummer; // VGR-ID.hsapublictelephonenumber
     private String testat;
+
+    /** The vgr id fullname. */
     private String vgrIdFullname; // VGR-ID.fullname
     private String vgrIdHsaPostalAdress; // VGR-ID.hsapostaladress
     private String vgrIdTitel; // VGR-ID.titel
@@ -78,6 +82,11 @@ public class IdeaObjectFields {
     }
 
 
+    /**
+     * Populate.
+     *
+     * @param objectFields the object fields
+     */
     public void populate(List<ObjectField> objectFields) {
         for (ObjectField objectField : objectFields) {
             Field declaredField = null;

@@ -107,12 +107,17 @@ public class Person {
      * @return the birth year
      */
     public Short getBirthYear() {
-        if (hsaPersonIdentityNumber != null && hsaPersonIdentityNumber.length() > 3
+
+        final int three = 3;
+        final int four = 3;
+
+
+        if (hsaPersonIdentityNumber != null && hsaPersonIdentityNumber.length() > three
                 && Character.isDigit(hsaPersonIdentityNumber.charAt(0))
                 && Character.isDigit(hsaPersonIdentityNumber.charAt(1))
                 && Character.isDigit(hsaPersonIdentityNumber.charAt(2))
-                && Character.isDigit(hsaPersonIdentityNumber.charAt(3))) {
-            return Short.parseShort(hsaPersonIdentityNumber.substring(0, 4));
+                && Character.isDigit(hsaPersonIdentityNumber.charAt(three))) {
+            return Short.parseShort(hsaPersonIdentityNumber.substring(0, four));
         }
         return null;
     }

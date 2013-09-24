@@ -1,8 +1,6 @@
 package se.vgregion.service.innovationsslussen.repository.ideauserlike;
 
 import se.vgregion.dao.domain.patterns.repository.db.jpa.JpaRepository;
-import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
-import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserLike;
 
 /**

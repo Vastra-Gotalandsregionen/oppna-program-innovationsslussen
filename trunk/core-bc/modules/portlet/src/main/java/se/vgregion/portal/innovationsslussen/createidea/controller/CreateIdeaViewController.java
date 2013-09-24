@@ -59,9 +59,13 @@ public class CreateIdeaViewController extends BaseController {
 
     private final LdapService ldapService;
 
+
     /**
-     * Constructor.
+     * Instantiates a new creates the idea view controller.
      *
+     * @param ideaService the idea service
+     * @param ideaValidator the idea validator
+     * @param ldapService the ldap service
      */
     @Autowired
     public CreateIdeaViewController(IdeaService ideaService, IdeaValidator ideaValidator, LdapService ldapService) {
@@ -72,7 +76,7 @@ public class CreateIdeaViewController extends BaseController {
 
 
     /**
-     * The render method for the confirmation view
+     * The render method for the confirmation view.
      *
      * @param request  the request
      * @param response the response
@@ -115,10 +119,13 @@ public class CreateIdeaViewController extends BaseController {
      * @param request  the request
      * @param response the response
      * @param model    the model
+     * @param idea     the idea
+     * @param result   the binding results
      * @return the view
      */
     @RenderMapping()
-    public String createIdea(RenderRequest request, RenderResponse response, final ModelMap model, @ModelAttribute Idea idea, BindingResult result) {
+    public String createIdea(RenderRequest request, RenderResponse response, final ModelMap model,
+            @ModelAttribute Idea idea, BindingResult result) {
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
         boolean isSignedIn = themeDisplay.isSignedIn();
@@ -131,7 +138,7 @@ public class CreateIdeaViewController extends BaseController {
 
 
             // Set dummy data for person
-            if(idea.getIdeaPerson().getName().equals("")) {
+            if (idea.getIdeaPerson().getName().equals("")) {
                 String screenName = themeDisplay.getUser().getScreenName();
                 IdeaPerson ideaPerson = idea.getIdeaPerson();
                 Person criteria = new Person();
@@ -171,6 +178,8 @@ public class CreateIdeaViewController extends BaseController {
      * @param request  the request
      * @param response the response
      * @param model    the model
+     * @param idea     the idea
+     * @param result   the binding results
      */
     @ActionMapping("submitIdea")
     public final void submitIdea(ActionRequest request, ActionResponse response, final ModelMap model,
@@ -182,11 +191,11 @@ public class CreateIdeaViewController extends BaseController {
 
         idea = IdeaPortletUtil.getIdeaFromRequest(request);
 
-        System.out.println("CreateIdeaViewController - submitIdea - idea title is: " + idea.getTitle() );
+        System.out.println("CreateIdeaViewController - submitIdea - idea title is: " + idea.getTitle());
 
         ideaValidator.validate(idea, result);
 
-        if(!result.hasErrors()) {
+        if (!result.hasErrors()) {
 
             try {
                 String schemeServerNamePort = generateSchemeServerNamePort(request);
@@ -206,7 +215,8 @@ public class CreateIdeaViewController extends BaseController {
 
                     Person.Gender gender = person.getGender();
                     if (gender != null && !Person.Gender.UNKNOWN.equals(gender)) {
-                        ip.setGender(Person.Gender.MALE.name().equals(gender.name()) ? IdeaPerson.Gender.MALE : IdeaPerson.Gender.FEMALE);
+                        ip.setGender(Person.Gender.MALE.name().equals(gender.name())
+                                ? IdeaPerson.Gender.MALE : IdeaPerson.Gender.FEMALE);
                     }
                 }
 
@@ -251,8 +261,11 @@ public class CreateIdeaViewController extends BaseController {
         String serverName = httpServletRequest.getServerName();
         int serverPort = httpServletRequest.getServerPort();
 
+        final int httpport = 80;
+        final int httpsport = 443;
+
         String serverPortString;
-        if (serverPort == 80 || serverPort == 443) {
+        if (serverPort == httpport || serverPort == httpsport) {
             serverPortString = "";
         } else {
             serverPortString = ":" + serverPort;

@@ -7,8 +7,6 @@ import java.util.List;
 import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaFile;
-import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserFavorite;
-import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserLike;
 import se.vgregion.portal.innovationsslussen.domain.json.ObjectEntry;
 import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
 import se.vgregion.service.barium.BariumException;
@@ -29,7 +27,7 @@ public interface IdeaService {
 
 
     /**
-     * Add an {@link IdeaUserFavorite}.
+     * Add an {@link se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserFavorite}.
      *
      * @param companyId the company id
      * @param groupId the group id
@@ -40,7 +38,7 @@ public interface IdeaService {
 
 
     /**
-     * Add an {@link IdeaUserLike}.
+     * Add an {@link se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserLike}.
      *
      * @param companyId the company id
      * @param groupId the group id
@@ -343,7 +341,7 @@ public interface IdeaService {
 
 
     /**
-     * Remove an {@link IdeaUserLike}.
+     * Remove an {@link se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserLike}.
      *
      * @param companyId the company id
      * @param groupId the group id

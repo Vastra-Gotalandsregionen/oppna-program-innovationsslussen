@@ -63,7 +63,10 @@ public class BariumRestClientImpl implements BariumRestClient {
     private final ExecutorService executorService = Executors.newFixedThreadPool(4);
 
 
-    public BariumRestClientImpl(){
+    /**
+     * Instantiates a new barium rest client impl.
+     */
+    public BariumRestClientImpl() {
 
     }
 

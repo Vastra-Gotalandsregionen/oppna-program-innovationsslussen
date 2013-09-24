@@ -37,17 +37,20 @@ public class IdeaListEditController extends BaseController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IdeaListEditController.class.getName());
 
-    IdeaService ideaService;
+    /** The idea service. */
+    private final IdeaService ideaService;
+
 
     /**
-     * Constructor.
+     * Instantiates a new idea list edit controller.
      *
+     * @param ideaService the idea service
      */
     @Autowired
     public IdeaListEditController(IdeaService ideaService) {
         this.ideaService = ideaService;
     }
-    
+
 
     /**
      * The default render method.
@@ -64,22 +67,21 @@ public class IdeaListEditController extends BaseController {
         long scopeGroupId = themeDisplay.getScopeGroupId();
         long companyId = themeDisplay.getCompanyId();
         boolean isSignedIn = themeDisplay.isSignedIn();
-        
+
         PortletPreferences prefs = request.getPreferences();
-        
+
         String ideaListType = prefs.getValue("ideaListType", "0");
 
         model.addAttribute("ideaListType", ideaListType);
 
         return "edit";
     }
-    
+
     /**
-     * Store the tags from the posted form.
-     * 
-     * @param request
-     *            the request
-     *            the tags entries
+     * Save preferences.
+     *
+     * @param request the request
+     * @param ideaListType the idea list type
      */
     @ActionMapping(params = "action=save")
     public void savePreferences(ActionRequest request,
@@ -92,11 +94,11 @@ public class IdeaListEditController extends BaseController {
         } catch (ReadOnlyException e) {
             LOGGER.error("could not store preferences in edit mode.", e);
         } catch (ValidatorException e) {
-        	LOGGER.error("could not store preferences in edit mode.", e);
+            LOGGER.error("could not store preferences in edit mode.", e);
         } catch (IOException e) {
-        	LOGGER.error("could not store preferences in edit mode.", e);
+            LOGGER.error("could not store preferences in edit mode.", e);
         }
-    }    
+    }
 
 }
 
