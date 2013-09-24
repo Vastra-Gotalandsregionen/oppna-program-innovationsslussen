@@ -3,166 +3,166 @@ package se.vgregion.portal.innovationsslussen.domain.json;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 public class SingleInstance {
-	@JsonProperty("ApplicationName") private String ApplicationName;
-	@JsonProperty("PlannedDate") private String PlannedDate;
-	@JsonProperty("Description") private String Description;
-	@JsonProperty("ParentInstanceId") private String ParentInstanceId;
-	@JsonProperty("ProcessId") private String ProcessId;
-	@JsonProperty("StartedBy") private String StartedBy;
-	@JsonProperty("ApplicationId") private String ApplicationId;
-	@JsonProperty("Priority") private Integer Priority;
-	@JsonProperty("Name") private String Name;
-	@JsonProperty("Status") private String Status;
-	@JsonProperty("DeadlineDate") private String DeadlineDate;
-	@JsonProperty("State") private String State;
-	@JsonProperty("StartDate") private String StartDate;
-	@JsonProperty("ParentInstanceName") private String ParentInstanceName;
-	@JsonProperty("StartedByUserId") private String StartedByUserId;
-	@JsonProperty("Id") private String Id;
-	@JsonProperty("CompletedDate") private String CompletedDate;
-	@JsonProperty("ReferenceId") private String ReferenceId;
+    @JsonProperty("ApplicationName") private String applicationName;
+    @JsonProperty("PlannedDate") private String plannedDate;
+    @JsonProperty("Description") private String description;
+    @JsonProperty("ParentInstanceId") private String parentInstanceId;
+    @JsonProperty("ProcessId") private String processId;
+    @JsonProperty("StartedBy") private String startedBy;
+    @JsonProperty("ApplicationId") private String applicationId;
+    @JsonProperty("Priority") private Integer priority;
+    @JsonProperty("Name") private String name;
+    @JsonProperty("Status") private String status;
+    @JsonProperty("DeadlineDate") private String deadlineDate;
+    @JsonProperty("State") private String state;
+    @JsonProperty("StartDate") private String startDate;
+    @JsonProperty("ParentInstanceName") private String parentInstanceName;
+    @JsonProperty("StartedByUserId") private String startedByUserId;
+    @JsonProperty("Id") private String id;
+    @JsonProperty("CompletedDate") private String completedDate;
+    @JsonProperty("ReferenceId") private String referenceId;
 
     public String getApplicationName() {
-        return ApplicationName;
+        return applicationName;
     }
 
     public void setApplicationName(String applicationName) {
-        ApplicationName = applicationName;
+        this.applicationName = applicationName;
     }
 
     public String getPlannedDate() {
-        return PlannedDate;
+        return plannedDate;
     }
 
     public void setPlannedDate(String plannedDate) {
-        PlannedDate = plannedDate;
+        this.plannedDate = plannedDate;
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public void setDescription(String description) {
-        Description = description;
+        this.description = description;
     }
 
     public String getParentInstanceId() {
-        return ParentInstanceId;
+        return parentInstanceId;
     }
 
     public void setParentInstanceId(String parentInstanceId) {
-        ParentInstanceId = parentInstanceId;
+        this.parentInstanceId = parentInstanceId;
     }
 
     public String getProcessId() {
-        return ProcessId;
+        return processId;
     }
 
     public void setProcessId(String processId) {
-        ProcessId = processId;
+        this.processId = processId;
     }
 
     public String getStartedBy() {
-        return StartedBy;
+        return startedBy;
     }
 
     public void setStartedBy(String startedBy) {
-        StartedBy = startedBy;
+        this.startedBy = startedBy;
     }
 
     public String getApplicationId() {
-        return ApplicationId;
+        return this.applicationId;
     }
 
     public void setApplicationId(String applicationId) {
-        ApplicationId = applicationId;
+        this.applicationId = applicationId;
     }
 
     public Integer getPriority() {
-        return Priority;
+        return priority;
     }
 
     public void setPriority(Integer priority) {
-        Priority = priority;
+        this.priority = priority;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public String getStatus() {
-        return Status;
+        return status;
     }
 
     public void setStatus(String status) {
-        Status = status;
+        this.status = status;
     }
 
     public String getDeadlineDate() {
-        return DeadlineDate;
+        return deadlineDate;
     }
 
     public void setDeadlineDate(String deadlineDate) {
-        DeadlineDate = deadlineDate;
+        this.deadlineDate = deadlineDate;
     }
 
     public String getState() {
-        return State;
+        return state;
     }
 
     public void setState(String state) {
-        State = state;
+        this.state = state;
     }
 
     public String getStartDate() {
-        return StartDate;
+        return startDate;
     }
 
     public void setStartDate(String startDate) {
-        StartDate = startDate;
+        this.startDate = startDate;
     }
 
     public String getParentInstanceName() {
-        return ParentInstanceName;
+        return parentInstanceName;
     }
 
     public void setParentInstanceName(String parentInstanceName) {
-        ParentInstanceName = parentInstanceName;
+        this.parentInstanceName = parentInstanceName;
     }
 
     public String getStartedByUserId() {
-        return StartedByUserId;
+        return startedByUserId;
     }
 
     public void setStartedByUserId(String startedByUserId) {
-        StartedByUserId = startedByUserId;
+        this.startedByUserId = startedByUserId;
     }
 
     public String getId() {
-        return Id;
+        return id;
     }
 
     public void setId(String id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getCompletedDate() {
-        return CompletedDate;
+        return completedDate;
     }
 
     public void setCompletedDate(String completedDate) {
-        CompletedDate = completedDate;
+        this.completedDate = completedDate;
     }
 
     public String getReferenceId() {
-        return ReferenceId;
+        return referenceId;
     }
 
     public void setReferenceId(String referenceId) {
-        ReferenceId = referenceId;
+        this.referenceId = referenceId;
     }
 }

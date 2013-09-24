@@ -12,8 +12,7 @@ public class BariumException extends Exception {
      *
      * @param message the message
      */
-    public BariumException(String message)
-    {
+    public BariumException(String message) {
         super(message);
     }
 

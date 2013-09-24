@@ -13,10 +13,8 @@ import javax.portlet.ActionResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceResponse;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.liferay.portal.util.PortalUtil;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
@@ -59,6 +57,7 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.messageboards.model.MBMessageDisplay;
 import com.liferay.portlet.messageboards.model.MBThread;
 import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
@@ -149,7 +148,7 @@ public class IdeaViewController extends BaseController {
                 // If a user trying to access the public or private part of an idea that still is private.
                 // The user dose not have premmisions and is not the creator of the idea.
                 // Showing 404 view.
-                if ( !idea.getIsPublic() && !(ideaPermissionChecker.getHasPermissionViewIdeaPrivate() || idea.getUserId() == userId)) {
+                if ( !idea.isPublic() && !(ideaPermissionChecker.getHasPermissionViewIdeaPrivate() || idea.getUserId() == userId)) {
                     HttpServletResponse httpServletResponse = PortalUtil.getHttpServletResponse(response);
                     httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
                     returnView = "idea_404";

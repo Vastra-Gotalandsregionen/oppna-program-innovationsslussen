@@ -17,10 +17,10 @@ public class PageIterator {
 
     /** The current page. */
     private int currentPage;
-    
+
     /** The number of the first hit that is currently displayed. */
     private int currentHitsStart;
-    
+
     /** The number of the last hit that is currently displayed. */
     private int currentHitsEnd;
 
@@ -44,10 +44,10 @@ public class PageIterator {
 
     /** Show pageinator. */
     private boolean showPaginator;
-    
+
     /** Show summary info. */
     private boolean showSummary;
-    
+
 
     /** The last page of the iterator. */
     private int last;
@@ -79,7 +79,7 @@ public class PageIterator {
         this.currentPage = currentPage;
         this.pageSize = pageSize;
         this.maxPages = maxPages;
-        
+
         showPaginator = true;
 
         pages = new ArrayList<PageIteratorPage>();
@@ -94,8 +94,8 @@ public class PageIterator {
 
         double totalHitsDouble = totalHits;
         double pageSizeDouble = pageSize;
-        
-        int numberOfPages = (int)Math.ceil(totalHitsDouble/pageSizeDouble);
+
+        int numberOfPages = (int) Math.ceil(totalHitsDouble / pageSizeDouble);
         last = numberOfPages;
 
         if (endPage > numberOfPages) {
@@ -105,7 +105,7 @@ public class PageIterator {
                 startPage = 1;
             }
         }
-        
+
         for (int i = startPage; i <= endPage; i++) {
 
             PageIteratorPage page = new PageIteratorPage();
@@ -123,7 +123,9 @@ public class PageIterator {
             pages.add(page);
         }
 
-        if (currentPage < 7) {
+        final int seven = 7;
+
+        if (currentPage < seven) {
             this.setShowFirst(false);
             this.setShowPrevious(false);
         } else {
@@ -131,7 +133,9 @@ public class PageIterator {
             this.setShowPrevious(true);
         }
 
-        if ((endPage == numberOfPages && currentPage > endPage - 5)) {
+        final int five = 5;
+
+        if ((endPage == numberOfPages && currentPage > endPage - five)) {
             this.setShowNext(false);
             this.setShowLast(false);
         } else {
@@ -142,16 +146,16 @@ public class PageIterator {
         if (pages.size() <= 1) {
             showPaginator = false;
         }
-        
+
         this.setShowSummary(true);
-        
+
         int currentHitsStart = (currentPage -1) * pageSize + 1;
-        if(currentHitsStart < 1) {
-        	currentHitsStart = 1;
+        if (currentHitsStart < 1) {
+            currentHitsStart = 1;
         }
         this.setCurrentHitsStart(currentHitsStart);
-        
-        int currentHitsEnd = (currentPage) * pageSize;
+
+        int currentHitsEnd = currentPage * pageSize;
 
         this.setCurrentHitsEnd(currentHitsEnd);
     }
@@ -353,43 +357,48 @@ public class PageIterator {
         this.last = last;
     }
 
+
     /**
-     * @return the showPageInator
+     * Gets the showpaginator.
+     *
+     * @return the show paginator
      */
     public boolean getShowPaginator() {
         return showPaginator;
     }
 
+
     /**
-     * @param showPageInator
-     *            the showPageInator to set
+     * Sets the showpaginator.
+     *
+     * @param showPaginator the new show paginator
      */
     public void setShowPaginator(boolean showPaginator) {
         this.showPaginator = showPaginator;
     }
 
-	public int getCurrentHitsStart() {
-		return currentHitsStart;
-	}
+    public int getCurrentHitsStart() {
+        return currentHitsStart;
+    }
 
-	public void setCurrentHitsStart(int currentHitsStart) {
-		this.currentHitsStart = currentHitsStart;
-	}
+    public void setCurrentHitsStart(int currentHitsStart) {
+        this.currentHitsStart = currentHitsStart;
+    }
 
-	public int getCurrentHitsEnd() {
-		return currentHitsEnd;
-	}
+    public int getCurrentHitsEnd() {
+        return currentHitsEnd;
+    }
 
-	public void setCurrentHitsEnd(int currentHitsEnd) {
-		this.currentHitsEnd = currentHitsEnd;
-	}
+    public void setCurrentHitsEnd(int currentHitsEnd) {
+        this.currentHitsEnd = currentHitsEnd;
+    }
 
-	public boolean isShowSummary() {
-		return showSummary;
-	}
+    public boolean isShowSummary() {
+        return showSummary;
+    }
 
-	public void setShowSummary(boolean showSummary) {
-		this.showSummary = showSummary;
-	}
+    public void setShowSummary(boolean showSummary) {
+        this.showSummary = showSummary;
+    }
 
 }

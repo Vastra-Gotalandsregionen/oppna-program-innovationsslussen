@@ -1,14 +1,14 @@
 package se.vgregion.portal.innovationsslussen.domain;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import se.vgregion.portal.innovationsslussen.domain.json.ObjectField;
-
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import se.vgregion.portal.innovationsslussen.domain.json.ObjectField;
 
 /**
  * @author Patrik Bergström
@@ -29,7 +29,7 @@ public class IdeaObjectFields {
     private String hsaIdKivEnhet; // HSA-ID.KIVenhet - Förvaltning
     private String ide;
     private String idetranportorensKommentar;
-    private String Idetranportorenskommentarintern;
+    private String idetranportorenskommentarintern;
     private String instanceName; // instance.name
     private String kommavidare;
     private String komplnamn;
@@ -53,27 +53,27 @@ public class IdeaObjectFields {
     private String vgrStrukturPerson;
 
     // specialFieldMappings are needed to automate population of an instance, see the populate() method
-    public static final Map<String, String> specialFieldMappings = new HashMap<String, String>();
+    public static final Map<String, String> SPECIAL_FIELD_MAPPINGS = new HashMap<String, String>();
 
-    public static final Map<String, String> specialFieldMappingsReverse = new HashMap<String, String>();
+    public static final Map<String, String> SPECIAL_FIELD_MAPPINGS_REVERSE = new HashMap<String, String>();
 
     static {
-//        specialFieldMappings.put("e-post", "epost");
-        specialFieldMappings.put("instance.name", "instanceName");
-        specialFieldMappings.put("Idetranportorenskommentar", "idetranportorensKommentar");
-        specialFieldMappings.put("VGR-ID.email", "epost");
-        specialFieldMappings.put("VGR-ID.forvaltning", "forvaltning");
-        specialFieldMappings.put("VGR-ID.KIVenhet", "hsaIdKivEnhet");
-        specialFieldMappings.put("VGR-ID.fullname", "vgrIdFullname");
-        specialFieldMappings.put("VGR-ID.hsapostaladress", "vgrIdHsaPostalAdress");
-        specialFieldMappings.put("VGR-ID.hsapublictelephonenumber", "telefonnummer");
-        specialFieldMappings.put("VGR-ID.mobiletelephonenumber", "mobiletelephonenumber");
-        specialFieldMappings.put("VGR-ID.titel", "vgrIdTitel");
-        specialFieldMappings.put("VGR-ID", "vgrId");
+        //        specialFieldMappings.put("e-post", "epost");
+        SPECIAL_FIELD_MAPPINGS.put("instance.name", "instanceName");
+        SPECIAL_FIELD_MAPPINGS.put("Idetranportorenskommentar", "idetranportorensKommentar");
+        SPECIAL_FIELD_MAPPINGS.put("VGR-ID.email", "epost");
+        SPECIAL_FIELD_MAPPINGS.put("VGR-ID.forvaltning", "forvaltning");
+        SPECIAL_FIELD_MAPPINGS.put("VGR-ID.KIVenhet", "hsaIdKivEnhet");
+        SPECIAL_FIELD_MAPPINGS.put("VGR-ID.fullname", "vgrIdFullname");
+        SPECIAL_FIELD_MAPPINGS.put("VGR-ID.hsapostaladress", "vgrIdHsaPostalAdress");
+        SPECIAL_FIELD_MAPPINGS.put("VGR-ID.hsapublictelephonenumber", "telefonnummer");
+        SPECIAL_FIELD_MAPPINGS.put("VGR-ID.mobiletelephonenumber", "mobiletelephonenumber");
+        SPECIAL_FIELD_MAPPINGS.put("VGR-ID.titel", "vgrIdTitel");
+        SPECIAL_FIELD_MAPPINGS.put("VGR-ID", "vgrId");
 
-        for (String key: specialFieldMappings.keySet()) {
-            String value = specialFieldMappings.get(key);
-            specialFieldMappingsReverse.put(value, key);
+        for (String key: SPECIAL_FIELD_MAPPINGS.keySet()) {
+            String value = SPECIAL_FIELD_MAPPINGS.get(key);
+            SPECIAL_FIELD_MAPPINGS_REVERSE.put(value, key);
         }
     }
 
@@ -90,7 +90,7 @@ public class IdeaObjectFields {
 
             } catch (NoSuchFieldException e) {
                 try {
-                    declaredField = this.getClass().getDeclaredField(specialFieldMappings.get(objectField.getId()));
+                    declaredField = this.getClass().getDeclaredField(SPECIAL_FIELD_MAPPINGS.get(objectField.getId()));
                 } catch (NoSuchFieldException e1) {
 
                 } catch (NullPointerException e2) {
@@ -221,11 +221,11 @@ public class IdeaObjectFields {
     }
 
     public String getIdetranportorenskommentarintern() {
-        return Idetranportorenskommentarintern;
+        return idetranportorenskommentarintern;
     }
 
     public void setIdetranportorenskommentarintern(String idetranportorenskommentarintern) {
-        Idetranportorenskommentarintern = idetranportorenskommentarintern;
+        this.idetranportorenskommentarintern = idetranportorenskommentarintern;
     }
 
     public String getInstanceName() {

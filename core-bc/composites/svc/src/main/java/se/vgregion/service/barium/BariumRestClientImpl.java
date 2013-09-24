@@ -62,6 +62,11 @@ public class BariumRestClientImpl implements BariumRestClient {
 
     private final ExecutorService executorService = Executors.newFixedThreadPool(4);
 
+
+    public BariumRestClientImpl(){
+
+    }
+
     /**
      * Instantiates a new barium rest client impl.
      *
@@ -747,7 +752,7 @@ public class BariumRestClientImpl implements BariumRestClient {
             }
             Object value = bm.get(key);
             if (value != null) {
-                String name = IdeaObjectFields.specialFieldMappingsReverse.get(key);
+                String name = IdeaObjectFields.SPECIAL_FIELD_MAPPINGS_REVERSE.get(key);
                 if (name == null) {
                     name = (String) key;
                 }

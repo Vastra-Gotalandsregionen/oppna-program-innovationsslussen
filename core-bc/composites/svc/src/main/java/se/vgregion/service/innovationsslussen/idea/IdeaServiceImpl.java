@@ -46,9 +46,7 @@ import se.vgregion.service.innovationsslussen.exception.RemoveIdeaException;
 import se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsService;
 import se.vgregion.service.innovationsslussen.idea.settings.util.ExpandoConstants;
 import se.vgregion.service.innovationsslussen.repository.idea.IdeaRepository;
-import se.vgregion.service.innovationsslussen.repository.ideacontent.IdeaContentRepository;
 import se.vgregion.service.innovationsslussen.repository.ideafile.IdeaFileRepository;
-import se.vgregion.service.innovationsslussen.repository.ideaperson.IdeaPersonRepository;
 import se.vgregion.service.innovationsslussen.repository.ideauserfavorite.IdeaUserFavoriteRepository;
 import se.vgregion.service.innovationsslussen.repository.ideauserlike.IdeaUserLikeRepository;
 import se.vgregion.service.innovationsslussen.util.FriendlyURLNormalizer;
@@ -137,8 +135,6 @@ public class IdeaServiceImpl implements IdeaService {
      * Constructor.
      *
      * @param ideaRepository        the {@link IdeaRepository}
-     * @param ideaContentRepository the {@link IdeaContentRepository}
-     * @param ideaPersonRepository  the {@link IdeaPersonRepository}
      * @param bariumService         the {@link BariumService}
      */
     @Autowired
@@ -801,7 +797,7 @@ public class IdeaServiceImpl implements IdeaService {
             throws ExecutionException, InterruptedException {
 
         String bariulmIsPublic = bariulmIsPublicFtr.get();
-        if (!bariulmIsPublic.equals(idea.getIsPublic())) {
+        if (!bariulmIsPublic.equals(idea.isPublic())) {
             idea.setPhase(bariulmIsPublic);
             return true;
         }

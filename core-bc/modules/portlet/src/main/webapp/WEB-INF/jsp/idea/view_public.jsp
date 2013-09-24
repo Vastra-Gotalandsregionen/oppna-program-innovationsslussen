@@ -34,7 +34,7 @@
 
 					<div class="idea-hd clearfix">
 					
-					<c:if test="${not idea.isPublic}">
+					<c:if test="${not idea.public}">
 						<div class="portlet-msg-info">
 							Denna id&eacute; &auml;r inte publik &auml;nnu. Detta inneb&auml;r att id&eacute;en inte kan ses av andra sajtmedlemmar.
 						</div>
@@ -201,7 +201,7 @@
 
 
 		            <c:choose>
-                    	<c:when test="${idea.isPublic}">
+                    	<c:when test="${idea.public}">
 					        <%@ include file="comments_public.jsp" %>
 					    </c:when>
                         <c:otherwise>

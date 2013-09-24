@@ -19,15 +19,18 @@
             ignore-resource-not-found="true" ignore-unresolvable="true" />
 	
 	<!--  Mock Client -->
-	<!-- -->   
-	<bean id="bariumRestClient" class="se.vgregion.service.barium.BariumRestClientImpl" />
 	<!--<bean id="bariumRestClient" class="se.vgregion.service.barium.MockBariumRestClientImpl" />-->
 
 	
 	<!--  "Real" Client -->
-	<!--   
-	<bean id="bariumRestClient" class="se.vgregion.service.barium.BariumRestClientImpl" />
-	 -->
+    <bean id="bariumRestClient" class="se.vgregion.service.barium.BariumRestClientImpl">
+        <property name="apiKey" value="${apiKey}"/>
+        <property name="username" value="${username}"/>
+        <property name="password" value="${password}"/>
+        <property name="apiLocation" value="${apiLocation}"/>
+        <property name="applicationId" value="${applicationId}"/>
+    </bean>
+
 	 
 	<bean id="bariumService" class="se.vgregion.service.barium.BariumService">
 	    <constructor-arg index="0" ref="bariumRestClient" />

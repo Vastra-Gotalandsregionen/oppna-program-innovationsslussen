@@ -9,10 +9,6 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.model.Layout;
-import com.liferay.portal.service.LayoutLocalServiceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +32,11 @@ import se.vgregion.service.innovationsslussen.ldap.LdapService;
 import se.vgregion.service.innovationsslussen.ldap.Person;
 import se.vgregion.service.innovationsslussen.validator.IdeaValidator;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 
@@ -142,14 +142,14 @@ public class CreateIdeaViewController extends BaseController {
                     ideaPerson.setEmail(person.getMail());
                     ideaPerson.setJobPosition(person.getTitle());
                     ideaPerson.setName(person.getDisplayName());
-                  //  ideaPerson.setVgrId(person.getVgrId());
-                  //  ideaPerson.setBirthYear(person.getBirthYear());
+                    //  ideaPerson.setVgrId(person.getVgrId());
+                    //  ideaPerson.setBirthYear(person.getBirthYear());
                     ideaPerson.setAdministrativeUnit(person.getO());
 
-                //   Person.Gender personGender = person.getGender();
-                //    if (personGender != null) {
-                //        ideaPerson.setGender(IdeaPerson.Gender.valueOf(personGender.name()));
-                //    }
+                    //   Person.Gender personGender = person.getGender();
+                    //    if (personGender != null) {
+                    //        ideaPerson.setGender(IdeaPerson.Gender.valueOf(personGender.name()));
+                    //    }
                 }
             }
         } else {

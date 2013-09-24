@@ -45,12 +45,12 @@
 						
 						<c:set var="pageItemCssClass" scope="page" value="" />
 						
-						<c:if test="${page.isSelected}">
+						<c:if test="${page.selected}">
 							<c:set var="pageItemCssClass" scope="page" value="current" />
 						</c:if>
 						<li class="${pageItemCssClass}">
 							<c:choose>
-								<c:when test="${page.isSelected}">
+								<c:when test="${page.selected}">
 									<span>${page.pagenumber}</span>
 								</c:when>
 								<c:otherwise>

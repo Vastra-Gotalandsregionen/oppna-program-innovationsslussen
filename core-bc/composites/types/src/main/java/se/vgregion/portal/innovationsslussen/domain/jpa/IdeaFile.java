@@ -3,14 +3,22 @@
  */
 package se.vgregion.portal.innovationsslussen.domain.jpa;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
 
 /**
+ * JPA entity class representing a IdeaFile for Innovationsslussen.
+ * 
  * @author Simon Göransson - simon.goransson@monator.com - vgrid: simgo3
  * @company Monator Technologies AB
- * 
  */
 @Entity
 @Table(name = "vgr_innovationsslussen_idea_file")
@@ -48,6 +56,15 @@ public class IdeaFile extends AbstractEntity<Long> {
     public IdeaFile() {
     }
 
+    /**
+     * Instantiates a new idea file.
+     *
+     * @param companyId the company id
+     * @param groupId the group id
+     * @param userId the user id
+     * @param name the name
+     * @param fileType the file type
+     */
     public IdeaFile(long companyId, long groupId, long userId, String name, String fileType) {
         super();
         this.companyId = companyId;

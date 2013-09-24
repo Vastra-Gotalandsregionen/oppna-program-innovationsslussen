@@ -3,85 +3,85 @@ package se.vgregion.portal.innovationsslussen.domain.json;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 public class ObjectField {
-	@JsonProperty("Name") private String Name;
-	@JsonProperty("ReadOnly") private Boolean ReadOnly;
-	@JsonProperty("AllowBlank") private Boolean AllowBlank;
-	@JsonProperty("Value") private String Value;
-	@JsonProperty("DataType") private String DataType;
-	@JsonProperty("Index") private Integer Index;
-	@JsonProperty("FieldType") private String FieldType;
-	@JsonProperty("Id") private String Id;
-	@JsonProperty("FieldTypeNamespace") private String FieldTypeNamespace;
+    @JsonProperty("Name") private String name;
+    @JsonProperty("ReadOnly") private Boolean readOnly;
+    @JsonProperty("AllowBlank") private Boolean allowBlank;
+    @JsonProperty("Value") private String value;
+    @JsonProperty("DataType") private String dataType;
+    @JsonProperty("Index") private Integer index;
+    @JsonProperty("FieldType") private String fieldType;
+    @JsonProperty("Id") private String id;
+    @JsonProperty("FieldTypeNamespace") private String fieldTypeNamespace;
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public Boolean getReadOnly() {
-        return ReadOnly;
+        return readOnly;
     }
 
     public void setReadOnly(Boolean readOnly) {
-        ReadOnly = readOnly;
+        this.readOnly = readOnly;
     }
 
     public Boolean getAllowBlank() {
-        return AllowBlank;
+        return allowBlank;
     }
 
     public void setAllowBlank(Boolean allowBlank) {
-        AllowBlank = allowBlank;
+        this.allowBlank = allowBlank;
     }
 
     public String getValue() {
-        return Value;
+        return value;
     }
 
     public void setValue(String value) {
-        Value = value;
+        this.value = value;
     }
 
     public String getDataType() {
-        return DataType;
+        return dataType;
     }
 
     public void setDataType(String dataType) {
-        DataType = dataType;
+        this.dataType = dataType;
     }
 
     public Integer getIndex() {
-        return Index;
+        return index;
     }
 
     public void setIndex(Integer index) {
-        Index = index;
+        this.index = index;
     }
 
     public String getFieldType() {
-        return FieldType;
+        return fieldType;
     }
 
     public void setFieldType(String fieldType) {
-        FieldType = fieldType;
+        this.fieldType = fieldType;
     }
 
     public String getId() {
-        return Id;
+        return id;
     }
 
     public void setId(String id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getFieldTypeNamespace() {
-        return FieldTypeNamespace;
+        return fieldTypeNamespace;
     }
 
     public void setFieldTypeNamespace(String fieldTypeNamespace) {
-        FieldTypeNamespace = fieldTypeNamespace;
+        this.fieldTypeNamespace = fieldTypeNamespace;
     }
 }

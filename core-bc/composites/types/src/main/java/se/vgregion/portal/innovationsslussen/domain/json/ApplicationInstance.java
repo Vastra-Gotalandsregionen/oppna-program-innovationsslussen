@@ -3,112 +3,112 @@ package se.vgregion.portal.innovationsslussen.domain.json;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 public class ApplicationInstance {
-	@JsonProperty("Name") private String Name;
-	@JsonProperty("Status") private String Status;
-	@JsonProperty("Description") private String Description;
-	@JsonProperty("StartDate") private String StartDate;
-	@JsonProperty("State") private Object State;
-	@JsonProperty("StartedByUserId") private String StartedByUserId;
-	@JsonProperty("DomainId") private Object DomainId;
-	@JsonProperty("Id") private String Id;
-	@JsonProperty("ProcessId") private Object ProcessId;
-	@JsonProperty("CompletedDate") private Object CompletedDate;
-	@JsonProperty("StartedBy") private String StartedBy;
-	@JsonProperty("ReferenceId") private Object ReferenceId;
+    @JsonProperty("Name") private String name;
+    @JsonProperty("Status") private String status;
+    @JsonProperty("Description") private String description;
+    @JsonProperty("StartDate") private String startDate;
+    @JsonProperty("State") private Object state;
+    @JsonProperty("StartedByUserId") private String startedByUserId;
+    @JsonProperty("DomainId") private Object domainId;
+    @JsonProperty("Id") private String id;
+    @JsonProperty("ProcessId") private Object processId;
+    @JsonProperty("CompletedDate") private Object completedDate;
+    @JsonProperty("StartedBy") private String startedBy;
+    @JsonProperty("ReferenceId") private Object referenceId;
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public String getStatus() {
-        return Status;
+        return status;
     }
 
     public void setStatus(String status) {
-        Status = status;
+        this.status = status;
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public void setDescription(String description) {
-        Description = description;
+        this.description = description;
     }
 
     public String getStartDate() {
-        return StartDate;
+        return startDate;
     }
 
     public void setStartDate(String startDate) {
-        StartDate = startDate;
+        this.startDate = startDate;
     }
 
     public Object getState() {
-        return State;
+        return state;
     }
 
     public void setState(Object state) {
-        State = state;
+        this.state = state;
     }
 
     public String getStartedByUserId() {
-        return StartedByUserId;
+        return startedByUserId;
     }
 
     public void setStartedByUserId(String startedByUserId) {
-        StartedByUserId = startedByUserId;
+        this.startedByUserId = startedByUserId;
     }
 
     public Object getDomainId() {
-        return DomainId;
+        return domainId;
     }
 
     public void setDomainId(Object domainId) {
-        DomainId = domainId;
+        this.domainId = domainId;
     }
 
     public String getId() {
-        return Id;
+        return id;
     }
 
     public void setId(String id) {
-        Id = id;
+        this.id = id;
     }
 
     public Object getProcessId() {
-        return ProcessId;
+        return processId;
     }
 
     public void setProcessId(Object processId) {
-        ProcessId = processId;
+        this.processId = processId;
     }
 
     public Object getCompletedDate() {
-        return CompletedDate;
+        return completedDate;
     }
 
     public void setCompletedDate(Object completedDate) {
-        CompletedDate = completedDate;
+        this.completedDate = completedDate;
     }
 
     public String getStartedBy() {
-        return StartedBy;
+        return startedBy;
     }
 
     public void setStartedBy(String startedBy) {
-        StartedBy = startedBy;
+        this.startedBy = startedBy;
     }
 
     public Object getReferenceId() {
-        return ReferenceId;
+        return referenceId;
     }
 
     public void setReferenceId(Object referenceId) {
-        ReferenceId = referenceId;
+        this.referenceId = referenceId;
     }
 }

@@ -5,22 +5,22 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import java.util.List;
 
 public class Objects {
-	@JsonProperty("Data") private List<ObjectEntry> Data;
-	@JsonProperty("TotalCount") private Integer TotalCount;
+    @JsonProperty("Data") private List<ObjectEntry> data;
+    @JsonProperty("TotalCount") private Integer totalCount;
 
     public List<ObjectEntry> getData() {
-        return Data;
+        return data;
     }
 
     public void setData(List<ObjectEntry> data) {
-        Data = data;
+        this.data = data;
     }
 
     public Integer getTotalCount() {
-        return TotalCount;
+        return totalCount;
     }
 
     public void setTotalCount(Integer totalCount) {
-        TotalCount = totalCount;
+        this.totalCount = totalCount;
     }
 }

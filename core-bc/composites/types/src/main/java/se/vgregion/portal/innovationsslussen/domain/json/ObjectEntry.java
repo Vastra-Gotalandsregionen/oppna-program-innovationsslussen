@@ -1,161 +1,159 @@
 package se.vgregion.portal.innovationsslussen.domain.json;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 public class ObjectEntry {
-	@JsonProperty("ReadOnly") private Boolean ReadOnly;
-	@JsonProperty("Description") private String Description;
-	@JsonProperty("Type") private String Type;
-	@JsonProperty("SortIndex") private Object SortIndex;
-	@JsonProperty("DataId") private String DataId;
-	@JsonProperty("TemplateId") private String TemplateId;
-	@JsonProperty("Name") private String Name;
-	@JsonProperty("State") private String State;
-	@JsonProperty("UpdatedDate") private String UpdatedDate;
-	@JsonProperty("FileType") private String FileType;
-	@JsonProperty("CreatedDate") private String CreatedDate;
-	@JsonProperty("ObjectClass") private String ObjectClass;
-	@JsonProperty("Id") private String Id;
-	@JsonProperty("TypeNamespace") private Object TypeNamespace;
-	@JsonProperty("ReferenceId") private Object ReferenceId;
-	@JsonProperty("Container") private Boolean Container;
-    @JsonProperty("ParentId") private String ParentId;
+    @JsonProperty("ReadOnly") private Boolean readOnly;
+    @JsonProperty("Description") private String description;
+    @JsonProperty("Type") private String type;
+    @JsonProperty("SortIndex") private Object sortIndex;
+    @JsonProperty("DataId") private String dataId;
+    @JsonProperty("TemplateId") private String templateId;
+    @JsonProperty("Name") private String name;
+    @JsonProperty("State") private String state;
+    @JsonProperty("UpdatedDate") private String updatedDate;
+    @JsonProperty("FileType") private String fileType;
+    @JsonProperty("CreatedDate") private String createdDate;
+    @JsonProperty("ObjectClass") private String objectClass;
+    @JsonProperty("Id") private String id;
+    @JsonProperty("TypeNamespace") private Object typeNamespace;
+    @JsonProperty("ReferenceId") private Object referenceId;
+    @JsonProperty("Container") private Boolean container;
+    @JsonProperty("ParentId") private String parentId;
 
     public Boolean getReadOnly() {
-        return ReadOnly;
+        return readOnly;
     }
 
     public void setReadOnly(Boolean readOnly) {
-        ReadOnly = readOnly;
+        this.readOnly = readOnly;
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public void setDescription(String description) {
-        Description = description;
+        this.description = description;
     }
 
     public String getType() {
-        return Type;
+        return type;
     }
 
     public void setType(String type) {
-        Type = type;
+        this.type = type;
     }
 
     public Object getSortIndex() {
-        return SortIndex;
+        return sortIndex;
     }
 
     public void setSortIndex(Object sortIndex) {
-        SortIndex = sortIndex;
+        this.sortIndex = sortIndex;
     }
 
     public String getDataId() {
-        return DataId;
+        return this.dataId;
     }
 
     public void setDataId(String dataId) {
-        DataId = dataId;
+        this.dataId = dataId;
     }
 
     public String getTemplateId() {
-        return TemplateId;
+        return templateId;
     }
 
     public void setTemplateId(String templateId) {
-        TemplateId = templateId;
+        this.templateId = templateId;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public String getState() {
-        return State;
+        return state;
     }
 
     public void setState(String state) {
-        State = state;
+        this.state = state;
     }
 
     public String getUpdatedDate() {
-        return UpdatedDate;
+        return updatedDate;
     }
 
     public void setUpdatedDate(String updatedDate) {
-        UpdatedDate = updatedDate;
+        this.updatedDate = updatedDate;
     }
 
     public String getFileType() {
-        return FileType;
+        return fileType;
     }
 
     public void setFileType(String fileType) {
-        FileType = fileType;
+        this.fileType = fileType;
     }
 
     public String getCreatedDate() {
-        return CreatedDate;
+        return createdDate;
     }
 
     public void setCreatedDate(String createdDate) {
-        CreatedDate = createdDate;
+        this.createdDate = createdDate;
     }
 
     public String getObjectClass() {
-        return ObjectClass;
+        return objectClass;
     }
 
     public void setObjectClass(String objectClass) {
-        ObjectClass = objectClass;
+        this.objectClass = objectClass;
     }
 
     public String getId() {
-        return Id;
+        return id;
     }
 
     public void setId(String id) {
-        Id = id;
+        this.id = id;
     }
 
     public Object getTypeNamespace() {
-        return TypeNamespace;
+        return typeNamespace;
     }
 
     public void setTypeNamespace(Object typeNamespace) {
-        TypeNamespace = typeNamespace;
+        this.typeNamespace = typeNamespace;
     }
 
     public Object getReferenceId() {
-        return ReferenceId;
+        return referenceId;
     }
 
     public void setReferenceId(Object referenceId) {
-        ReferenceId = referenceId;
+        this.referenceId = referenceId;
     }
 
     public Boolean getContainer() {
-        return Container;
+        return container;
     }
 
     public void setContainer(Boolean container) {
-        Container = container;
+        this.container = container;
     }
 
     public String getParentId() {
-        return ParentId;
+        return parentId;
     }
 
     public void setParentId(String parentId) {
-        ParentId = parentId;
+        this.parentId = parentId;
     }
 }

@@ -5,7 +5,7 @@ import javax.persistence.*;
 import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
 
 /**
- * JPA entity class representing a IdeaPerson for Innovationsslussen
+ * JPA entity class representing a IdeaPerson for Innovationsslussen.
  *
  * @author Erik Andersson
  * @company Monator Technologies AB
@@ -81,6 +81,13 @@ public class IdeaPerson extends AbstractEntity<Long> {
     public IdeaPerson() {
     }
 
+    /**
+     * Instantiates a new idea person.
+     *
+     * @param companyId the company id
+     * @param groupId the group id
+     * @param userId the user id
+     */
     public IdeaPerson(long companyId, long groupId, long userId) {
         this.companyId = companyId;
         this.groupId = groupId;

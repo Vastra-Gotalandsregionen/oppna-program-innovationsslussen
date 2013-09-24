@@ -33,6 +33,8 @@ import se.vgregion.portal.innovationsslussen.domain.json.ObjectField;
 import se.vgregion.portal.innovationsslussen.domain.json.Objects;
 
 /**
+ * A REST service for communicate with Barium.
+ * 
  * @author Patrik Bergström
  */
 @Service
@@ -55,6 +57,9 @@ public class BariumService {
 
     private BariumRestClient bariumRestClient;
 
+    /**
+     * Instantiates a new barium service.
+     */
     public BariumService() {
         try {
             bariumRestClient = new BariumRestClientImpl(apiLocation, apiKey, username, password, applicationId);
@@ -63,10 +68,18 @@ public class BariumService {
         }
     }
 
+    /**
+     * Instantiates a new barium service.
+     *
+     * @param bariumRestClient the barium rest client
+     */
     public BariumService(BariumRestClient bariumRestClient) {
         this.bariumRestClient = bariumRestClient;
     }
 
+    /**
+     * Inits the.
+     */
     @PostConstruct
     public void init() {
         try {
@@ -77,11 +90,15 @@ public class BariumService {
         }
     }
 
+    /**
+     * Delete barium idea.
+     *
+     * @param bariumId the barium id
+     * @return the barium response
+     */
     public BariumResponse deleteBariumIdea(String bariumId) {
 
         BariumResponse bariumResponse = new BariumResponse();
-
-        //    	System.out.println("BariumService - deleteBariumIdea - bariumId is: " + bariumId + " and currently bariumResponse.getSuccess is: " + bariumResponse.getSuccess());
 
         try {
             String replyJson = bariumRestClient.deleteBariumInstance(bariumId);
@@ -105,11 +122,14 @@ public class BariumService {
             throw new RuntimeException(e);
         }
 
-        //    	System.out.println("BariumService - deleteBariumIdea - bariumResponse.getSuccess before return is: " + bariumResponse.getSuccess());
-
         return bariumResponse;
     }
 
+    /**
+     * Gets the all ideas.
+     *
+     * @return the all ideas
+     */
     public List<IdeaObjectFields> getAllIdeas() {
 
         List<IdeaObjectFields> ideas = new ArrayList<IdeaObjectFields>();
@@ -135,6 +155,12 @@ public class BariumService {
         return ideas;
     }
 
+    /**
+     * Gets the barium idea.
+     *
+     * @param bariumId the barium id
+     * @return the barium idea
+     */
     public IdeaObjectFields getBariumIdea(String bariumId) {
 
         IdeaObjectFields bariumIdea = null;
@@ -159,6 +185,12 @@ public class BariumService {
         return bariumIdea;
     }
 
+    /**
+     * Creates the idea.
+     *
+     * @param idea the idea
+     * @return the barium response
+     */
     public BariumResponse createIdea(Idea idea) {
         BariumResponse bariumResponse = new BariumResponse();
 
@@ -236,10 +268,28 @@ public class BariumService {
         return bariumResponse;
     }
 
-    public void uploadFile(Idea idea, String folderName, String fileName, InputStream inputStream) throws BariumException {
+    /**
+     * Upload file.
+     *
+     * @param idea the idea
+     * @param folderName the folder name
+     * @param fileName the file name
+     * @param inputStream the input stream
+     * @throws BariumException the barium exception
+     */
+    public void uploadFile(Idea idea, String folderName, String fileName, InputStream inputStream)
+            throws BariumException {
         bariumRestClient.uploadFile(idea.getId(), folderName, fileName, inputStream);
     }
 
+    /**
+     * Upload file.
+     *
+     * @param idea the idea
+     * @param fileName the file name
+     * @param inputStream the input stream
+     * @throws BariumException the barium exception
+     */
     public void uploadFile(Idea idea, String fileName, InputStream inputStream) throws BariumException {
         bariumRestClient.uploadFile(idea.getId(), fileName, inputStream);
     }
@@ -271,6 +321,12 @@ public class BariumService {
         return new ArrayList<ObjectEntry>(objectEntries);
     }
 
+    /**
+     * Async get idea object fields.
+     *
+     * @param ideaId the idea id
+     * @return the future
+     */
     public Future<IdeaObjectFields> asyncGetIdeaObjectFields(final String ideaId) {
         return executor.submit(new Callable<IdeaObjectFields>() {
             @Override
@@ -280,6 +336,12 @@ public class BariumService {
         });
     }
 
+    /**
+     * Async get idea phase future.
+     *
+     * @param ideaId the idea id
+     * @return the future
+     */
     public Future<String> asyncGetIdeaPhaseFuture(final String ideaId) {
         return executor.submit(new Callable<String>() {
             @Override
@@ -289,24 +351,60 @@ public class BariumService {
         });
     }
 
+    /**
+     * Gets the idea state.
+     *
+     * @param ideaId the idea id
+     * @return the idea state
+     */
     public String getIdeaState(String ideaId) {
         return bariumRestClient.getIdeaState(ideaId);
     }
 
+    /**
+     * Gets the idea files.
+     *
+     * @param idea the idea
+     * @param folderName the folder name
+     * @return the idea files
+     * @throws BariumException the barium exception
+     */
     public List<ObjectEntry> getIdeaFiles(Idea idea, String folderName) throws BariumException {
         String folderId = bariumRestClient.findFolder(idea.getId(), folderName);
 
         return getIdeaFiles(folderId);
     }
 
+    /**
+     * Gets the object.
+     *
+     * @param id the id
+     * @return the object
+     * @throws BariumException the barium exception
+     */
     public ObjectEntry getObject(String id) throws BariumException {
         return bariumRestClient.getObject(id);
     }
 
+    /**
+     * Download file.
+     *
+     * @param id the id
+     * @return the input stream
+     * @throws BariumException the barium exception
+     */
     public InputStream downloadFile(String id) throws BariumException {
         return bariumRestClient.doGetFileStream(id);
     }
 
+    /**
+     * Update idea.
+     *
+     * @param id the id
+     * @param field the field
+     * @param value the value
+     * @throws BariumException the barium exception
+     */
     public void updateIdea(String id, String field, String value) throws BariumException {
         bariumRestClient.updateField(id, field, value);
     }

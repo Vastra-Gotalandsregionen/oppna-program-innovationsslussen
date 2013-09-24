@@ -45,7 +45,7 @@
 			<c:forEach items="${commentsList}" var="comment" varStatus="status">
 				
 				<c:set var="commentItemCssClass" scope="page" value="comment" />
-				<c:if test="${comment.isUserPrioCouncilMember or comment.isUserInnovationsslussenEmployee}">
+				<c:if test="${comment.userPrioCouncilMember or comment.userInnovationsslussenEmployee}">
 					<c:set var="commentItemCssClass" scope="page" value="comment comment-innovationsslussen" />
 				</c:if>
 
@@ -56,13 +56,13 @@
 						</div>
 						<div class="comment-author-title">
 							<c:choose>
-								<c:when test="${comment.isUserCreator}">
+								<c:when test="${comment.userCreator}">
 									Id&eacute;givare
 								</c:when>
-								<c:when test="${comment.isUserPrioCouncilMember}">
+								<c:when test="${comment.userPrioCouncilMember}">
 									Prioriteringsr&aring;d
 								</c:when>
-								<c:when test="${comment.isUserInnovationsslussenEmployee}">
+								<c:when test="${comment.userInnovationsslussenEmployee}">
 									Innovationsslussen
 								</c:when>
 								<c:otherwise>
