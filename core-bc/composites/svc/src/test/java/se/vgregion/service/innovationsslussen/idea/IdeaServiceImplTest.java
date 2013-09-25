@@ -22,6 +22,7 @@ import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserFavorite;
 import se.vgregion.service.barium.BariumService;
 import se.vgregion.service.innovationsslussen.exception.CreateIdeaException;
+import se.vgregion.service.innovationsslussen.exception.RemoveIdeaException;
 import se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsService;
 import se.vgregion.service.innovationsslussen.repository.idea.IdeaRepository;
 import se.vgregion.service.innovationsslussen.repository.ideafile.IdeaFileRepository;
@@ -124,6 +125,27 @@ public class IdeaServiceImplTest {
         Idea bar = service.addIdea(newItem, "bar");
     }
 
+    @Test
+    public void remove() throws RemoveIdeaException {
 
+        Idea idea = new Idea() {
+            @Override
+            public IdeaContent getIdeaContentPrivate() {
+                return new IdeaContent();
+            }
+
+            @Override
+            public IdeaContent getIdeaContentPublic() {
+                return new IdeaContent();
+            }
+        };
+        Mockito.when(ideaRepository.find("foo")).thenReturn(idea);
+        //BariumResponse bariumResponse = bariumService.deleteBariumIdea(idea.getId());
+        BariumResponse bariumResponse = Mockito.mock(BariumResponse.class);
+        Mockito.when(bariumResponse.getSuccess()).thenReturn(true);
+        Mockito.when(bariumService.deleteBariumIdea(Mockito.anyString())).thenReturn(bariumResponse);
+
+        service.remove("foo");
+    }
 
 }

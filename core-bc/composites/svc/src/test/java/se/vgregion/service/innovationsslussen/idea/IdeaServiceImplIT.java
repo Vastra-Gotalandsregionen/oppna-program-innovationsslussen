@@ -210,24 +210,4 @@ public class IdeaServiceImplIT {
         assertEquals("text.txt", ideaFileName);
     }
 
-    @Test
-    public void addFavorite() throws NoSuchFieldException, IllegalAccessException {
-        IdeaUserFavoriteRepository ideaUserFavoriteRepository = Mockito.mock(IdeaUserFavoriteRepository.class);
-        IdeaRepository ideaRepository = Mockito.mock(IdeaRepository.class);
-        Mockito.when(ideaRepository.findIdeaByUrlTitle(Mockito.anyString())).thenReturn(new Idea());
-        Field field = IdeaServiceImpl.class.getDeclaredField("ideaRepository");
-        field.setAccessible(true);
-        field.set(ideaService, ideaRepository);
-        //ideaRepository.findIdeaByUrlTitle
-
-        List<IdeaUserFavorite> items = new ArrayList<IdeaUserFavorite>();
-        items.add(new IdeaUserFavorite());
-        Mockito.when( ideaUserFavoriteRepository.findFavoritesByUserAndIdea(Mockito.anyLong(), Mockito.anyLong(), Mockito.anyLong(), Mockito.anyString())).thenReturn(items);
-
-        Idea idea = new Idea();
-        Mockito.when(ideaRepository.findIdeaByUrlTitle(Mockito.anyString())).thenReturn(idea);
-
-        ideaService.addFavorite(1l, 2l, 3l, "foo");
-    }
-
 }
