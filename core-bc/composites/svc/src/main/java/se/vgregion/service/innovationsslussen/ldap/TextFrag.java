@@ -92,11 +92,11 @@ public class TextFrag {
 
         /** The sb. */
         private final StringBuilder sb = new StringBuilder();
-        //public String text, splitExp = Pattern.quote(",");
+        //public String text, SPLIT_EXP = Pattern.quote(",");
         /** The split exp. */
         private String text;
 
-        private final static String splitExp = "[,]";
+        private static final String SPLIT_EXP = "[,]";
 
         /** The end. */
         private char start = '(', end = ')';
@@ -138,7 +138,7 @@ public class TextFrag {
             if (isBlanc(newText)) {
                 return null;
             }
-            String[] parts = newText.split(splitExp);
+            String[] parts = newText.split(SPLIT_EXP    );
             List<TextFrag> frags = new ArrayList<TextFrag>();
             for (String part : parts) {
                 frags.add(mkAndAddFrag(parent, part));
@@ -237,7 +237,6 @@ public class TextFrag {
         parser.text = s;
         parser.toFrag(parent);
 
-        System.out.println("Finding: " + parent.find("zip character varying"));
     }
 
 }

@@ -245,8 +245,6 @@ public class BariumService {
         try {
             JSONObject jsonObject = new JSONObject(replyJson);
 
-            System.out.println("BariumService - createIdea - jsonObject: " + jsonObject.toString());
-
             String instanceId = jsonObject.getString("InstanceId");
             boolean success = jsonObject.getBoolean("success");
 

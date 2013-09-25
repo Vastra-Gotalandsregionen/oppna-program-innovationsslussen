@@ -75,7 +75,7 @@ public class IdeaObjectFields {
         SPECIAL_FIELD_MAPPINGS.put("VGR-ID.titel", "vgrIdTitel");
         SPECIAL_FIELD_MAPPINGS.put("VGR-ID", "vgrId");
 
-        for (String key: SPECIAL_FIELD_MAPPINGS.keySet()) {
+        for (String key : SPECIAL_FIELD_MAPPINGS.keySet()) {
             String value = SPECIAL_FIELD_MAPPINGS.get(key);
             SPECIAL_FIELD_MAPPINGS_REVERSE.put(value, key);
         }

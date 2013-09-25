@@ -11,7 +11,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
-import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -751,7 +750,7 @@ public class BariumRestClientImpl implements BariumRestClient {
         BeanMap bm = new BeanMap(ideaObjectFields);
         for (Object entryObj : bm.entrySet()) {
 
-            Map.Entry<String,Object> entry = (Map.Entry<String, Object>) entryObj;
+            Map.Entry<String, Object> entry = (Map.Entry<String, Object>) entryObj;
 
             if ("class".equals(entry.getKey())) {
                 continue;
