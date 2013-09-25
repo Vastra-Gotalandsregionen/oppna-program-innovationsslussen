@@ -365,8 +365,8 @@ public class IdeaViewController extends BaseController {
                 Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
 
                 // TODO use permission checker to verify that user has delete permissions
-                IdeaPermissionChecker ideaPermissionChecker = ideaPermissionCheckerService.getIdeaPermissionChecker(
-                        groupId, userId, idea);
+                //IdeaPermissionChecker ideaPermissionChecker = ideaPermissionCheckerService.getIdeaPermissionChecker(
+                //        groupId, userId, idea);
 
 
                 MBMessageLocalServiceUtil.deleteDiscussionMessage(commentId);
@@ -469,8 +469,6 @@ public class IdeaViewController extends BaseController {
         String urlTitle = ParamUtil.getString(request, "urlTitle", "");
 
         if (themeDisplay.isSignedIn()) {
-            System.out.println("Should now do update");
-
             try {
                 Idea idea = ideaService.find(id);
                 ideaService.updateFromBarium(idea);

@@ -30,8 +30,6 @@ implements JpaIdeaContentRepository {
         String queryString = "SELECT n FROM Idea n WHERE n.companyId = ?1 AND n.groupId = ?2 ORDER BY "
                 + "n.id ASC";
 
-        System.out.println("JpaIdeaRepositoryImpl - findIdeasByGroupId");
-
         Object[] queryObject = new Object[]{companyId, groupId};
 
         List<IdeaContent> ideaContents = findByQuery(queryString, queryObject);

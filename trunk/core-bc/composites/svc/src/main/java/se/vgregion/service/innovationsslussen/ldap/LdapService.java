@@ -133,7 +133,7 @@ public class LdapService {
         BeanMap bm = new BeanMap(obj);
         Class type = obj.getClass();
         for (Object entryObj : bm.entrySet()) {
-            Map.Entry<String,Object> entry = (Map.Entry<String, Object>) entryObj;
+            Map.Entry<String, Object> entry = (Map.Entry<String, Object>) entryObj;
             String property = entry.getKey();
             if (bm.getWriteMethod(property) != null) {
                 Object value = entry.getValue();
