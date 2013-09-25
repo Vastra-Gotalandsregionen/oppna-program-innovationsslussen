@@ -108,7 +108,8 @@ public class CreateIdeaViewController extends BaseController {
         return "confirmation";
     }
 
-    protected Layout getFriendlyURLLayout(long scopeGroupId, ThemeDisplay themeDisplay) throws SystemException, PortalException {
+    protected Layout getFriendlyURLLayout(long scopeGroupId, ThemeDisplay themeDisplay)
+            throws SystemException, PortalException {
         return LayoutLocalServiceUtil.getFriendlyURLLayout(scopeGroupId,
                 themeDisplay.getLayout().isPrivateLayout(), "/ide");
     }

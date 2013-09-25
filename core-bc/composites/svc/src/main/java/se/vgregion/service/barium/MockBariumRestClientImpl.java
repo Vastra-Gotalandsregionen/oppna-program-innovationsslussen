@@ -339,11 +339,7 @@ public class MockBariumRestClientImpl implements BariumRestClient {
 
         try {
             JSONObject jsonObject = new JSONObject(replyJson);
-
             bariumId = jsonObject.getString("InstanceId");
-
-            System.out.println("BariumService - createIdea - InstanceId: " + bariumId);
-
         } catch (JSONException e) {
             LOGGER.error(e.getMessage(), e);
         }

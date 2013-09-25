@@ -251,9 +251,6 @@ public class BariumService {
             bariumResponse.setInstanceId(instanceId);
             bariumResponse.setSuccess(success);
             bariumResponse.setJsonString(replyJson);
-
-            System.out.println("BariumService - createIdea - InstanceId: " + instanceId);
-
         } catch (JSONException e) {
             LOGGER.error(e.getMessage(), e);
         }

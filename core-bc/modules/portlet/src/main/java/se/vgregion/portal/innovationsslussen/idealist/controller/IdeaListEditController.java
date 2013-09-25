@@ -22,9 +22,6 @@ import org.springframework.web.portlet.bind.annotation.RenderMapping;
 import se.vgregion.portal.innovationsslussen.BaseController;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
 
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.theme.ThemeDisplay;
-
 /**
  * Controller class for the edit mode in idealist portlet.
  *
