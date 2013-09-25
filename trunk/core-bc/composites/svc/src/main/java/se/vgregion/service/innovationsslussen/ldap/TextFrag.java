@@ -138,7 +138,7 @@ public class TextFrag {
             if (isBlanc(newText)) {
                 return null;
             }
-            String[] parts = newText.split(SPLIT_EXP    );
+            String[] parts = newText.split(SPLIT_EXP);
             List<TextFrag> frags = new ArrayList<TextFrag>();
             for (String part : parts) {
                 frags.add(mkAndAddFrag(parent, part));

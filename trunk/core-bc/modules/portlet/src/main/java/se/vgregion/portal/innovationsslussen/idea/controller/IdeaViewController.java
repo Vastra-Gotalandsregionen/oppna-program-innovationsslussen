@@ -350,10 +350,6 @@ public class IdeaViewController extends BaseController {
 
         LOGGER.info("deleteComment");
 
-        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-        long groupId = themeDisplay.getScopeGroupId();
-        long userId = themeDisplay.getUserId();
-
         IdeaContentType ideaContentType = IdeaContentType.valueOf(ParamUtil.getString(request, "ideaContentType"));
         String urlTitle = ParamUtil.getString(request, "urlTitle", "");
 

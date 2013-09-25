@@ -23,8 +23,6 @@ import se.vgregion.service.innovationsslussen.exception.RemoveIdeaException;
 import se.vgregion.service.innovationsslussen.exception.UpdateIdeaException;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
 
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Layout;
