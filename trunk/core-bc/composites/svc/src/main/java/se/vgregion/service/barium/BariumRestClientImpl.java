@@ -150,11 +150,7 @@ public class BariumRestClientImpl implements BariumRestClient {
         try {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(instancesJson, ApplicationInstances.class);
-        } catch (JsonMappingException e) {
-            throw new RuntimeException(e);
-        } catch (JsonParseException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
+        }  catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

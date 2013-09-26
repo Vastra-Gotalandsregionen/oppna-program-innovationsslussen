@@ -714,9 +714,9 @@ public class IdeaServiceImpl implements IdeaService {
             int currentPhase = Integer.parseInt(idea.getPhase());
             int bariumPhase = Integer.parseInt(bariumIdeaPhase.get());
 
-            for (int i = currentPhase; i < bariumPhase; i++) {
-                addAutoComment(idea, autoCommentDefaultMessageNewPhase + " " + getIdeaPhaseString(i));
-                idea.setPhase("" + (i + 1));
+            if (currentPhase != bariumPhase){
+                addAutoComment(idea, autoCommentDefaultMessageNewPhase + " " + getIdeaPhaseString(bariumPhase));
+                idea.setPhase("" + (bariumPhase));
             }
 
             if (oldStatus.equals(IdeaStatus.PRIVATE_IDEA) && idea.getStatus().equals(IdeaStatus.PUBLIC_IDEA)) {
@@ -854,7 +854,7 @@ public class IdeaServiceImpl implements IdeaService {
         });
     }
 
-    private void populateIdea(IdeaObjectFields ideaObjectFields, Idea idea) {
+    public static void populateIdea(IdeaObjectFields ideaObjectFields, Idea idea) {
 
         idea.setTitle(ideaObjectFields.getInstanceName());
         idea.setUrlTitle(titleToUrlTitle(ideaObjectFields.getInstanceName()));
@@ -989,7 +989,7 @@ public class IdeaServiceImpl implements IdeaService {
         }
     }
 
-    private String titleToUrlTitle(String title) {
+    private static String titleToUrlTitle(String title) {
         return FriendlyURLNormalizer.normalize(title, URL_TITLE_REPLACE_CHARS);
     }
 
