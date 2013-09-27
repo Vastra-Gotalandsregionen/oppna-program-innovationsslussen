@@ -131,12 +131,16 @@ public class IdeaServiceImplTest {
         Idea idea = new Idea() {
             @Override
             public IdeaContent getIdeaContentPrivate() {
-                return new IdeaContent();
+                IdeaContent r = new IdeaContent();
+                r.setId(10001l);
+                return r;
             }
 
             @Override
             public IdeaContent getIdeaContentPublic() {
-                return new IdeaContent();
+                IdeaContent r = new IdeaContent();
+                r.setId(10001l);
+                return r;
             }
         };
         Mockito.when(ideaRepository.find("foo")).thenReturn(idea);

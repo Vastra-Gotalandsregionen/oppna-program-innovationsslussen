@@ -159,13 +159,17 @@ public class IdeaViewController extends BaseController {
                     returnView = "idea_404";
                 }
             } else {
-                HttpServletResponse httpServletResponse = PortalUtil.getHttpServletResponse(response);
+                HttpServletResponse httpServletResponse = getHttpServletResponse(response);
                 httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 returnView = "idea_404";
             }
         }
 
         return returnView;
+    }
+
+    protected HttpServletResponse getHttpServletResponse(RenderResponse response) {
+        return PortalUtil.getHttpServletResponse(response);
     }
 
     /**
