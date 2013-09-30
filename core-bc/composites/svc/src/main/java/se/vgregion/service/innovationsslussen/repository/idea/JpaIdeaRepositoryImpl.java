@@ -1,5 +1,6 @@
 package se.vgregion.service.innovationsslussen.repository.idea;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -44,6 +45,24 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> im
         return idea;
     }
 
+    @Override
+    public List<Idea> findAll() {
+        Idea idea = null;
+
+        String queryString = ""
+                + " SELECT DISTINCT n FROM Idea n"
+                + " LEFT JOIN FETCH n.ideaContents"
+                + " LEFT JOIN FETCH n.ideaContents ic"
+                + " LEFT JOIN FETCH ic.ideaFiles"
+                + " LEFT JOIN FETCH n.ideaPersons"
+                + " LEFT JOIN FETCH n.likes"
+                + " LEFT JOIN FETCH n.favorites"
+                + " ORDER BY n.id ASC";
+
+        List<Idea> ideas = (List<Idea>) findByQuery(queryString, new HashMap<String, Object>());
+
+        return ideas;
+    }
 
     @Override
     public Idea findIdeaByUrlTitle(String urlTitle) {

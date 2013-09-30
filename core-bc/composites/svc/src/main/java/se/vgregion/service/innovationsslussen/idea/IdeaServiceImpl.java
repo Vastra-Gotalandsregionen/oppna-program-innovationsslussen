@@ -897,11 +897,11 @@ public class IdeaServiceImpl implements IdeaService {
             for (Idea idea : allIdeas) {
                 try {
                     // Do the transaction manually since we may run this in a separate thread.
-                    TransactionStatus transaction2 =
+                    TransactionStatus transaction =
                             transactionManager.getTransaction(new DefaultTransactionAttribute(
-                                    TransactionDefinition.PROPAGATION_REQUIRES_NEW));
+                                    TransactionDefinition.PROPAGATION_REQUIRED));
                     updateFromBarium(idea);
-                    transactionManager.commit(transaction2);
+                    transactionManager.commit(transaction);
                     LOGGER.info("Updated idea with id=" + idea.getId());
                 } catch (RuntimeException e) {
                     LOGGER.error("Failed to update idea: " + idea.toString(), e);
