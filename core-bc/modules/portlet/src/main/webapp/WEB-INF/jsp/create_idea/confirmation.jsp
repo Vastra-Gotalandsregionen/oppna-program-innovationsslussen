@@ -20,7 +20,7 @@
 			<h1>Tack f&ouml;r din id&eacute;!</h1>
 			
 			<div class="content">
-				<p class="intro">
+				<p class="intro-text">
 					Genom att du postat en id&eacute; har du just varit med om att skapa en b&auml;ttre framtid inom v&aring;rden.
 				</p>
 				<p>
@@ -33,18 +33,20 @@
 					Vissa id&eacute;er kan vi b&ouml;rja jobba med direkt, medan andra tar mer tid i anspr&aring;k. Oavsett vilket kan du f&ouml;lja utvecklingen direkt h&auml;r p&aring; Innovationsslussen.
 				</p>
 				
-				<div class="buttons">
+				<div class="link-buttons-wrap clearfix">
+					<c:set var="ideaPrivateUrl" scope="page" value="" />
+					<%-- 
 	                <liferay-portlet:renderURL var="ideaPrivateUrl"plid="${ideaPlid}" portletName="${ideaPortletName}" >
 	                    <liferay-portlet:param name="showView" value="showIdea" />
 	                    <liferay-portlet:param name="type" value="private" />
 	                    <liferay-portlet:param name="urlTitle" value="${urlTitle}" />
 	                </liferay-portlet:renderURL>
-				
-					<a class="link-button" href="${ideaPrivateUrl}">
+					--%>
+					<a class="link-button-mod" href="${ideaPrivateUrl}">
 						G&aring; till din id&eacute; <span class="text-icon">&raquo;</span>
 					</a>
-					<a class="link-button" href="">
-						L&auml;s mer i v&aring; FAQ <span class="text-icon">&raquo;</span>
+					<a class="link-button-mod" href="">
+						L&auml;s mer i v&aring;r FAQ <span class="text-icon">&raquo;</span>
 					</a>
 				</div>
 
