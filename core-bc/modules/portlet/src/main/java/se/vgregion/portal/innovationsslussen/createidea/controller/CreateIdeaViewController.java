@@ -31,6 +31,7 @@ import se.vgregion.service.innovationsslussen.idea.IdeaService;
 import se.vgregion.service.innovationsslussen.ldap.LdapService;
 import se.vgregion.service.innovationsslussen.ldap.Person;
 import se.vgregion.service.innovationsslussen.validator.IdeaValidator;
+import se.vgregion.util.Util;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -230,12 +231,9 @@ public class CreateIdeaViewController extends BaseController {
                 copyRequestParameters(request, response);
                 response.setRenderParameter("view", "view");
             } catch (RuntimeException e) {
-                Throwable lastCause = getLastCause(e);
-                if (lastCause instanceof SQLException) {
-                    SQLException nextException = ((SQLException) lastCause).getNextException();
-                    if (nextException != null) {
-                        LOGGER.error(nextException.getMessage(), nextException);
-                    }
+                SQLException nextException = Util.getNextExceptionFromLastCause(e);
+                if (nextException != null) {
+                    LOGGER.error(nextException.getMessage(), nextException);
                 }
                 result.addError(new ObjectError("", "Ett tekniskt fel inträffade."));
                 model.addAttribute("errors", result);

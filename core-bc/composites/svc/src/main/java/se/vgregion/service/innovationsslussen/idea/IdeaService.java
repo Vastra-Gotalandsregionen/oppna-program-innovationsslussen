@@ -380,6 +380,13 @@ public interface IdeaService {
     void updateAllIdeasFromBarium();
 
     /**
+     * Updates the ideas with the specified ids.
+     *
+     * @param ideaIds the idea ids
+     */
+    void updateIdeasFromBarium(List<String> ideaIds);
+
+    /**
      * Upload file.
      *
      * @param idea the idea
@@ -429,5 +436,4 @@ public interface IdeaService {
      * @return the string
      */
     String generateNewUrlTitle(String title);
-
 }

@@ -344,4 +344,9 @@ public class Idea extends AbstractEntity<String> {
         return publicIdea;
     }
 
+    @Override
+    public String toString() {
+        return "Idea{" +
+                "id='" + id + '}';
+    }
 }

@@ -551,7 +551,7 @@ public class IdeaViewController extends BaseController {
             doExceptionStuff(e, response, model);
             return;
         } catch (RuntimeException e) {
-            Throwable lastCause = getLastCause(e);
+            Throwable lastCause = Util.getLastCause(e);
             if (lastCause instanceof SQLException) {
                 SQLException nextException = ((SQLException) lastCause).getNextException();
                 if (nextException != null) {
