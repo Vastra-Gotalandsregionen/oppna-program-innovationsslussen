@@ -86,6 +86,7 @@ public class IdeaViewControllerTest {
         Assert.assertEquals("view_public", r);
     }
 
+    @Ignore
     @Test
     public void uploadFile() throws FileUploadException {
         Model model = Mockito.mock(Model.class);
