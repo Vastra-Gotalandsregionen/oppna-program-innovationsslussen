@@ -37,7 +37,7 @@
     </c:choose>
 
     <portlet:resourceURL id="downloadFile" var="downloadFileUrl">
-      <portlet:param name="id" value="${file.id}"/>
+      <portlet:param name="id" value="${file.bariumId}"/>
     </portlet:resourceURL>
 
     <li id="<portlet:namespace />documentListItem-${counter.count}" class="${fileType}">

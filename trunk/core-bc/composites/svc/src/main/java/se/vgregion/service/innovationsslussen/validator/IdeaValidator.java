@@ -3,6 +3,8 @@ package se.vgregion.service.innovationsslussen.validator;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+import java.util.regex.Pattern;
+
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -19,6 +21,10 @@ public class IdeaValidator implements Validator {
     static final String NAME_MANDATORY = "Namn är obligatoriskt";
     static final String EMAIL_MANDATORY = "E-post är obligatorisk";
     static final String INVALID_EMAIL = "Angiven e-post är ogiltig";
+    static final String PHONE_MANDATORY = "Telefon är obligatoriskt";
+    static final String INVALID_PHONE = "Ogiltigt telefonnummer";
+
+    private static final Pattern PHONE_NUMBER_PATTERN = Pattern.compile("^?[+]?[0-9]{8,14}");
 
 
     /* (non-Javadoc)
@@ -38,6 +44,7 @@ public class IdeaValidator implements Validator {
         validateNeed(idea, errors);
         validateName(idea, errors);
         validateEmail(idea, errors);
+        validatePhone(idea, errors);
     }
 
     private void validateNeed(Idea idea, Errors errors) {
@@ -95,6 +102,19 @@ public class IdeaValidator implements Validator {
         }
     }
 
+    private void validatePhone(Idea idea, Errors errors) {
+
+        String phone = idea.getIdeaPerson().getPhone();
+
+        if (phone == null) {
+            errors.rejectValue("ideaPerson.phone", "phone.not-null", PHONE_MANDATORY);
+        } else if (phone.equals("")) {
+            errors.rejectValue("ideaPerson.phone", "phone.not-empty", PHONE_MANDATORY);
+        } else if (!isPhoneNumber(phone)) {
+            errors.rejectValue("ideaPerson.phone", "phone.format", INVALID_PHONE);
+        }
+    }
+
     // Validate according to RFC822
     boolean isValidEmail(String email) {
         boolean result = true;
@@ -105,6 +125,14 @@ public class IdeaValidator implements Validator {
             result = false;
         }
         return result;
+    }
+
+    private boolean isPhoneNumber(String value) {
+
+        String phoneNumber = value.replace('.', ' ').replace('-', ' ').replace('(', ' ').replace(')', ' ')
+                .replaceAll("\\W", "");
+
+        return PHONE_NUMBER_PATTERN.matcher(phoneNumber).matches();
     }
 
 }

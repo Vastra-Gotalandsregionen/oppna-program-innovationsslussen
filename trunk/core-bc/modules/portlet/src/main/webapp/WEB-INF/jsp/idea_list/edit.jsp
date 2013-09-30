@@ -45,10 +45,14 @@
 			<c:set var="isOptionSelected" target="page" value="true" />
 		</c:if>
 		<aui:option value="3" selected="${isOptionSelected}" label="Alla st&auml;ngda id&eacute;er (b&ouml;r bara visas p&aring; id&eacute;transport&ouml;rernas sida)" />
-		
-	
 	</aui:select>
-	
+
+    <aui:select name="entryCount" label="entry-count">
+        <c:forEach  begin="1" end="20" step="1" varStatus="countStatus">
+            <aui:option selected="${entryCount == countStatus.index ? 'true' : 'false'}" value="${countStatus.index}">${countStatus.index} st</aui:option>
+        </c:forEach>
+    </aui:select>
+
 	
 	<aui:button-row>
 		<aui:button type="submit" value="save" />

@@ -62,7 +62,7 @@ public class IdeaValidatorTest {
         Assert.assertTrue(errorsConcatenated.contains(IdeaValidator.NAME_MANDATORY));
         Assert.assertTrue(errorsConcatenated.contains(IdeaValidator.INVALID_EMAIL));
 
-        assertEquals(5, allErrors.size());
+        assertEquals(6, allErrors.size());
     }
 
     @Test
@@ -75,6 +75,7 @@ public class IdeaValidatorTest {
         IdeaPerson ideaPerson = new IdeaPerson();
         ideaPerson.setName("name");
         ideaPerson.setEmail("valid@email.com");
+        ideaPerson.setPhone("0704443331");
         idea.addIdeaPerson(ideaPerson);
 
         IdeaContent ideaContent = new IdeaContent();

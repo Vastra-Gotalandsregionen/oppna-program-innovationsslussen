@@ -63,6 +63,6 @@ public class IdeaListEditControllerTest {
         PortletPreferences prefs = Mockito.mock(PortletPreferences.class);
         Mockito.when((actionReq.getPreferences())).thenReturn(prefs);
 
-        controller.savePreferences(actionReq, "");
+        controller.savePreferences(actionReq, "", "");
     }
 }
