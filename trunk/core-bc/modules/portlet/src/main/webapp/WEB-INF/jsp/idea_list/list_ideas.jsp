@@ -31,11 +31,11 @@
 					<c:choose>
 						<c:when test="${idea.phase eq '3' or idea.phase eq '4'}">
 							<c:set var="ideaItemCssClass" scope="page" value="active-innovationsslussen" />
-							<c:set var="ideaPhaseLabel" scope="page" value="Aktiv hos Innovationsslussen" />
+							<c:set var="ideaPhaseLabel" scope="page" value="Mognad" />
 						</c:when>
 						<c:when test="${idea.phase eq '5'}">
 							<c:set var="ideaItemCssClass" scope="page" value="done" />
-							<c:set var="ideaPhaseLabel" scope="page" value="Genomf&ouml;rd" />
+							<c:set var="ideaPhaseLabel" scope="page" value="F&auml;rdig" />
 						</c:when>
 					</c:choose>
 				</c:when>
