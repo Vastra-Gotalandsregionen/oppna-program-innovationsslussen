@@ -1,6 +1,7 @@
 package se.vgregion.service.innovationsslussen.idea;
 
 import java.io.InputStream;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -50,6 +51,7 @@ import se.vgregion.service.innovationsslussen.repository.ideauserfavorite.IdeaUs
 import se.vgregion.service.innovationsslussen.repository.ideauserlike.IdeaUserLikeRepository;
 import se.vgregion.service.innovationsslussen.util.FriendlyURLNormalizer;
 import se.vgregion.service.innovationsslussen.util.IdeaServiceConstants;
+import se.vgregion.util.Util;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -681,6 +683,11 @@ public class IdeaServiceImpl implements IdeaService {
 
         Idea idea = ideaRepository.find(ideaId);
 
+        if (idea == null) {
+            LOGGER.warn("Idea with id=" + ideaId + " was not found. Can't update.");
+            return null;
+        }
+
         idea = updateFromBarium(idea);
 
         return idea;
@@ -705,13 +712,12 @@ public class IdeaServiceImpl implements IdeaService {
         Future<IdeaObjectFields> ideaObjectFieldsFuture = bariumService.asyncGetIdeaObjectFields(ideaId);
         Future<String> bariumIdeaPhase = bariumService.asyncGetIdeaPhaseFuture(ideaId);
 
-
         try {
 
             IdeaStatus oldStatus = idea.getStatus();
             populateIdea(ideaObjectFieldsFuture.get(), idea);
 
-            int currentPhase = Integer.parseInt(idea.getPhase());
+            int currentPhase = Integer.parseInt(idea.getPhase() == null ? "0" : idea.getPhase());
             int bariumPhase = Integer.parseInt(bariumIdeaPhase.get());
 
             if (currentPhase != bariumPhase){
@@ -821,24 +827,39 @@ public class IdeaServiceImpl implements IdeaService {
     public void updateAllIdeasFromBarium() {
         LOGGER.info("Updating all ideas from Barium...");
 
-        // Do the transaction manually since we may run this in a separate thread.
-        TransactionStatus transaction =
-                transactionManager.getTransaction(new DefaultTransactionAttribute(
-                        TransactionDefinition.PROPAGATION_REQUIRED));
+        try {
+            Collection<Idea> allIdeas = findAll();
 
-        Collection<Idea> allIdeas = findAll();
+            for (Idea idea : allIdeas) {
+                try {
+                    // Do the transaction manually since we may run this in a separate thread.
+                    TransactionStatus transaction2 =
+                            transactionManager.getTransaction(new DefaultTransactionAttribute(
+                                    TransactionDefinition.PROPAGATION_REQUIRES_NEW));
+                    updateFromBarium(idea);
+                    transactionManager.commit(transaction2);
+                    LOGGER.info("Updated idea with id=" + idea.getId());
+                } catch (RuntimeException e) {
+                    LOGGER.error("Failed to update idea: " + idea.toString(), e);
+                }
+            }
 
-        for (Idea idea : allIdeas) {
-            try {
-                updateFromBarium(idea);
-            } catch (RuntimeException e) {
-                LOGGER.error(e.getMessage(), e);
+            LOGGER.info("Finished updating all ideas from Barium.");
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            SQLException nextException = Util.getNextExceptionFromLastCause(e);
+            if (nextException != null) {
+                LOGGER.error("Next exception is: " + nextException.getMessage(), nextException);
             }
         }
+    }
 
-        transactionManager.commit(transaction);
-
-        LOGGER.info("Finished updating all ideas from Barium.");
+    @Override
+    @Transactional
+    public void updateIdeasFromBarium(List<String> ideas) {
+        for (String idea : ideas) {
+            updateFromBarium(idea);
+        }
     }
 
 

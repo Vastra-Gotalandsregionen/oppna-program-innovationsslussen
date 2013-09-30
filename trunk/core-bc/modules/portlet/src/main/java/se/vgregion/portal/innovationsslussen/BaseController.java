@@ -10,11 +10,5 @@ package se.vgregion.portal.innovationsslussen;
  */
 public class BaseController {
 
-    protected Throwable getLastCause(Exception exception) {
-        Throwable cause = exception;
-        while (cause.getCause() != null) {
-            cause = cause.getCause();
-        }
-        return cause;
-    }
+
 }

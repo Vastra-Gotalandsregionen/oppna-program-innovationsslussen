@@ -1,11 +1,12 @@
 package se.vgregion.util;
 
-import java.io.Closeable;
-import java.io.IOException;
-
 import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Closeable;
+import java.io.IOException;
+import java.sql.SQLException;
 
 /**
  * An Util class for escapeing html in an String.
@@ -16,7 +17,22 @@ public class Util {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Util.class);
 
+    public static SQLException getNextExceptionFromLastCause(Exception e) {
+        Throwable lastCause = getLastCause(e);
+        SQLException nextException = null;
+        if (lastCause instanceof SQLException) {
+            nextException = ((SQLException) lastCause).getNextException();
+        }
+        return nextException;
+    }
 
+    public static Throwable getLastCause(Exception exception) {
+        Throwable cause = exception;
+        while (cause.getCause() != null) {
+            cause = cause.getCause();
+        }
+        return cause;
+    }
 
     /**
      * Escape html with line breaks.
