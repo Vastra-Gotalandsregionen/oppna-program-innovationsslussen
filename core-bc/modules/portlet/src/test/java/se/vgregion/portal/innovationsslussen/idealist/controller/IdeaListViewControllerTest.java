@@ -48,6 +48,7 @@ public class IdeaListViewControllerTest {
 
         prefs = Mockito.mock(PortletPreferences.class);
         Mockito.when(prefs.getValue("ideaListType", "0")).thenReturn("foo");
+        Mockito.when(prefs.getValue("entryCount", "6")).thenReturn("6");
         Mockito.when(renderReq.getPreferences()).thenReturn(prefs);
 
         Layout layout = Mockito.mock(Layout.class);

@@ -1,11 +1,10 @@
 package se.vgregion.service.innovationsslussen.idea;
 
 import java.io.InputStream;
+
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -717,7 +716,18 @@ public class IdeaServiceImpl implements IdeaService {
             IdeaStatus oldStatus = idea.getStatus();
             populateIdea(ideaObjectFieldsFuture.get(), idea);
 
+
+
+            if (idea.getIdeaContentPrivate() != null){
+                populateFile(idea ,idea.getIdeaContentPrivate(), LIFERAY_CLOSED_DOCUMENTS);
+            }
+
+            if (idea.getIdeaContentPublic() != null){
+                populateFile(idea ,idea.getIdeaContentPublic(), LIFERAY_OPEN_DOCUMENTS);
+            }
+
             int currentPhase = Integer.parseInt(idea.getPhase() == null ? "0" : idea.getPhase());
+
             int bariumPhase = Integer.parseInt(bariumIdeaPhase.get());
 
             if (currentPhase != bariumPhase){
@@ -761,6 +771,60 @@ public class IdeaServiceImpl implements IdeaService {
         }
 
         return idea;
+    }
+
+    private void populateFile(Idea idea, IdeaContent ideaContent, String folderName) {
+
+        try {
+            Set<IdeaFile> ideaFiles = ideaContent.getIdeaFiles();
+
+            ideaFiles.clear();
+
+            List<ObjectEntry> bariumFiles = bariumService.getIdeaFiles(idea, folderName);
+
+            for (IdeaFile ideaFile : new HashSet<IdeaFile>(ideaFiles)) {
+                boolean matched = false;
+                for (ObjectEntry bariumFile : bariumFiles) {
+                    if (bariumFile.getName().equals(ideaFile.getName())){
+                        matched = true;
+                        break;
+                    }
+                }
+                if (!matched) {
+                    ideaFiles.remove(ideaFile);
+                    ideaFileRepository.remove(ideaFile);
+                }
+            }
+
+            for(ObjectEntry bariumFile : bariumFiles){
+                IdeaFile ideaFile = null;
+
+                for (IdeaFile file: ideaFiles){
+                    if (file.getName().equals(bariumFile.getName())){
+                        ideaFile = file;
+                    }
+                }
+
+                if (ideaFile == null){
+                    ideaFile = new IdeaFile();
+                    ideaFiles.add(ideaFile);
+                }
+
+                ideaFile.setBariumId(bariumFile.getId());
+                ideaFile.setIdeaContent(ideaContent);
+                ideaFile.setCompanyId(idea.getCompanyId());
+                ideaFile.setGroupId(idea.getGroupId());
+                ideaFile.setName(bariumFile.getName());
+                ideaFile.setUserId(idea.getUserId());
+
+            }
+
+        } catch (BariumException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+
+
     }
 
     private String getIdeaPhaseString(int i) {
@@ -946,6 +1010,15 @@ public class IdeaServiceImpl implements IdeaService {
             bariumService.uploadFile(idea, folderName, fileName, inputStream);
             IdeaFile ideaFile = new IdeaFile(idea.getCompanyId(), idea.getCompanyId(), idea.getUserId(),
                     fileName, contentType);
+
+            List<ObjectEntry> ideaFiles = bariumService.getIdeaFiles(idea, folderName);
+
+           for(ObjectEntry file : ideaFiles){
+                if (file.getName().equals(fileName)) {
+                    ideaFile.setBariumId(file.getId());
+                    break;
+                }
+           }
 
             ideaFile.setIdeaContent(ideaContent);
             ideaFileRepository.merge(ideaFile);

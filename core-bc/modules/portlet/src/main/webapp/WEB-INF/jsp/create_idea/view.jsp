@@ -210,6 +210,7 @@
 							    	<aui:field-wrapper cssClass="element-field-wrap">
 							    		<label for="<portlet:namespace />ideaPerson.phone">
 							    			<span>Telefon</span>
+			                                <span class="element-mandatory">*<span> Obligatorisk</span></span>
 							    		</label>
 							    		<aui:input name="ideaPerson.phone" cssClass="element-field" type="text" label="" />			    		
 							    	</aui:field-wrapper>

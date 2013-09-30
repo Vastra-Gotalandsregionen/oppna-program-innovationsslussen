@@ -62,7 +62,9 @@ public class IdeaListEditController extends BaseController {
 
         PortletPreferences prefs = request.getPreferences();
         String ideaListType = prefs.getValue("ideaListType", "0");
+        String entryCount = prefs.getValue("entryCount", "6");
         model.addAttribute("ideaListType", ideaListType);
+        model.addAttribute("entryCount", entryCount);
 
         return "edit";
     }
@@ -71,15 +73,18 @@ public class IdeaListEditController extends BaseController {
      * Save preferences.
      *
      * @param request the request
+     * @param entryCount the number of entry to display
      * @param ideaListType the idea list type
      */
     @ActionMapping(params = "action=save")
     public void savePreferences(ActionRequest request,
+            @RequestParam("entryCount") String  entryCount,
             @RequestParam("ideaListType") String ideaListType) {
 
         try {
             PortletPreferences prefs = request.getPreferences();
             prefs.setValue("ideaListType", ideaListType);
+            prefs.setValue("entryCount", entryCount);
             prefs.store();
         } catch (ReadOnlyException e) {
             LOGGER.error("could not store preferences in edit mode.", e);

@@ -46,6 +46,10 @@ public class IdeaFile extends AbstractEntity<Long> {
     @Column(name = "file_type")
     private String fileType;
 
+    //Baruim
+    @Column(name = "barium_id")
+    private String bariumId;
+
     @ManyToOne
     @JoinColumn(name = "idea_content")
     private IdeaContent ideaContent;
@@ -125,5 +129,13 @@ public class IdeaFile extends AbstractEntity<Long> {
 
     public void setIdeaContent(IdeaContent ideaContent) {
         this.ideaContent = ideaContent;
+    }
+
+    public String getBariumId() {
+        return bariumId;
+    }
+
+    public void setBariumId(String bariumId) {
+        this.bariumId = bariumId;
     }
 }
