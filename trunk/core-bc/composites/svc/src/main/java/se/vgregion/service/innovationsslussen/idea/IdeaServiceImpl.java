@@ -773,6 +773,7 @@ public class IdeaServiceImpl implements IdeaService {
         return idea;
     }
 
+    @Transactional
     private void populateFile(Idea idea, IdeaContent ideaContent, String folderName) {
 
         try {
@@ -789,9 +790,7 @@ public class IdeaServiceImpl implements IdeaService {
                     }
                 }
                 if (!matched) {
-                    ideaFiles.remove(ideaFile);
-                    IdeaFile ideaFile2 = ideaFileRepository.find(ideaFile.getId());
-                    ideaFileRepository.remove(ideaFile2);
+                     ideaFiles.remove(ideaFile);
                 }
             }
 
@@ -810,7 +809,6 @@ public class IdeaServiceImpl implements IdeaService {
                 }
 
                 ideaFile.setBariumId(bariumFile.getId());
-                ideaFile.setIdeaContent(ideaContent);
                 ideaFile.setCompanyId(idea.getCompanyId());
                 ideaFile.setGroupId(idea.getGroupId());
                 ideaFile.setName(bariumFile.getName());
@@ -886,6 +884,7 @@ public class IdeaServiceImpl implements IdeaService {
      * @see se.vgregion.service.innovationsslussen.idea.IdeaService#updateAllIdeasFromBarium()
      */
     @Override
+    @Transactional
     @Scheduled(cron = "* 15 6 * * ?")
     public void updateAllIdeasFromBarium() {
         LOGGER.info("Updating all ideas from Barium...");
@@ -1019,8 +1018,11 @@ public class IdeaServiceImpl implements IdeaService {
                 }
            }
 
-            ideaFile.setIdeaContent(ideaContent);
-            ideaFileRepository.merge(ideaFile);
+            ideaContent.getIdeaFiles().add(ideaFile);
+            ideaRepository.merge(idea);
+
+           // ideaFileRepository.merge(ideaFile);
+           // ideaFileRepository.flush();
 
             return ideaFile;
 

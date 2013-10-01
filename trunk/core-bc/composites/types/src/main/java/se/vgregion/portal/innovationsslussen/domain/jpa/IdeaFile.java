@@ -3,14 +3,7 @@
  */
 package se.vgregion.portal.innovationsslussen.domain.jpa;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
 
@@ -49,10 +42,6 @@ public class IdeaFile extends AbstractEntity<Long> {
     //Baruim
     @Column(name = "barium_id")
     private String bariumId;
-
-    @ManyToOne
-    @JoinColumn(name = "idea_content")
-    private IdeaContent ideaContent;
 
     /**
      * Constructor.
@@ -121,14 +110,6 @@ public class IdeaFile extends AbstractEntity<Long> {
     @Override
     public Long getId() {
         return id;
-    }
-
-    public IdeaContent getIdeaContent() {
-        return ideaContent;
-    }
-
-    public void setIdeaContent(IdeaContent ideaContent) {
-        this.ideaContent = ideaContent;
     }
 
     public String getBariumId() {
