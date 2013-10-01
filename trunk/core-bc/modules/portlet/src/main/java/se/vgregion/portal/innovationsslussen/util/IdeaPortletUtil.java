@@ -36,7 +36,7 @@ public final class IdeaPortletUtil {
         String ideaTested = ParamUtil.getString(request, "ideaContentPrivate.ideaTested", "");
         String solvesProblem = ParamUtil.getString(request, "ideaContentPrivate.solvesProblem", "");
         String wantsHelpWith = ParamUtil.getString(request, "ideaContentPrivate.wantsHelpWith", "");
-        String additionalPersonInfo = ParamUtil.getString(request, "ideaPersons.additionalPersonsInfo", "");
+        String additionalPersonInfo = ParamUtil.getString(request, "ideaPerson.additionalPersonsInfo", "");
         String name = ParamUtil.getString(request, "ideaPerson.name", "");
         String email = ParamUtil.getString(request, "ideaPerson.email", "");
         String phone = ParamUtil.getString(request, "ideaPerson.phone", "");
