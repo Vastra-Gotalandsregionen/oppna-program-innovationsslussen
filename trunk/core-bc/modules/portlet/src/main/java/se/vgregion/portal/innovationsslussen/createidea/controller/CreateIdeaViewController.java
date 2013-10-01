@@ -28,6 +28,8 @@ import se.vgregion.portal.innovationsslussen.util.IdeaPortletUtil;
 import se.vgregion.portal.innovationsslussen.util.IdeaPortletsConstants;
 import se.vgregion.service.innovationsslussen.exception.CreateIdeaException;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
+import se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsService;
+import se.vgregion.service.innovationsslussen.idea.settings.util.ExpandoConstants;
 import se.vgregion.service.innovationsslussen.ldap.LdapService;
 import se.vgregion.service.innovationsslussen.ldap.Person;
 import se.vgregion.service.innovationsslussen.validator.IdeaValidator;
@@ -54,22 +56,22 @@ public class CreateIdeaViewController extends BaseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(CreateIdeaViewController.class.getName());
 
     private final IdeaService ideaService;
-
-    //@Autowired
+    private final IdeaSettingsService ideaSettingsService;
     private final IdeaValidator ideaValidator;
-
     private final LdapService ldapService;
 
 
     /**
      * Instantiates a new creates the idea view controller.
      * @param ideaService the idea service
+     * @param ideaSettingsService the idea settings service
      * @param ideaValidator the idea validator
      * @param ldapService the ldap service
      */
     @Autowired
-    public CreateIdeaViewController(IdeaService ideaService, IdeaValidator ideaValidator, LdapService ldapService) {
+    public CreateIdeaViewController(IdeaService ideaService, IdeaSettingsService ideaSettingsService, IdeaValidator ideaValidator, LdapService ldapService) {
         this.ideaService = ideaService;
+        this.ideaSettingsService = ideaSettingsService;
         this.ideaValidator = ideaValidator;
         this.ldapService = ldapService;
     }
@@ -86,19 +88,23 @@ public class CreateIdeaViewController extends BaseController {
     @RenderMapping(params = "view=confirmation")
     public String showConfirmation(RenderRequest request, RenderResponse response, final ModelMap model) {
 
-        //ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+        long companyId = themeDisplay.getCompanyId();
         long scopeGroupId = themeDisplay.getScopeGroupId();
 
-        Layout ideaLayout = null;
         try {
-            ideaLayout = getFriendlyURLLayout(scopeGroupId, themeDisplay);
+            String faqFriendlyURL = ideaSettingsService.getSetting(
+                    ExpandoConstants.FRIENDLY_URL_FAQ, companyId, scopeGroupId);
+            
+            Layout faqLayout = getLayout(scopeGroupId, themeDisplay.getLayout().isPrivateLayout(), faqFriendlyURL);
+            Layout ideaLayout = getFriendlyURLLayout(scopeGroupId, themeDisplay);
 
+            long faqPlid = faqLayout.getPlid();
             long ideaPlid = ideaLayout.getPlid();
             String ideaLink = request.getParameter("ideaLink");
 
             model.addAttribute("urlTitle", ideaLink);
+            model.addAttribute("faqPlid", faqPlid);
             model.addAttribute("ideaPlid", ideaPlid);
             model.addAttribute("ideaPortletName", IdeaPortletsConstants.PORTLET_NAME_IDEA_PORTLET);
 
@@ -277,6 +283,21 @@ public class CreateIdeaViewController extends BaseController {
         }
 
         return scheme + "://" + serverName + serverPortString;
+    }
+    
+    private Layout getLayout(long groupId, boolean isPrivateLayout, String friendlyURL) {
+    	
+    	Layout layout = null;
+    	
+    	try {
+			layout = LayoutLocalServiceUtil.getFriendlyURLLayout(groupId, isPrivateLayout, friendlyURL);
+		} catch (PortalException e) {
+			// Don't do anything (at least not for now)
+		} catch (SystemException e) {
+			// Don't do anything (at least not for now)
+		}
+    	
+    	return layout;
     }
 
 

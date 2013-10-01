@@ -47,8 +47,6 @@ public class IdeaSettingsViewController extends BaseController {
         this.ideaSettingsService = ideaSettingsService;
     }
 
-
-
     /**
      * The default render method.
      *
@@ -64,17 +62,25 @@ public class IdeaSettingsViewController extends BaseController {
         long scopeGroupId = themeDisplay.getScopeGroupId();
         long companyId = themeDisplay.getCompanyId();
 
-        String bariumDetailsViewUrlPrefix = ideaSettingsService.getSetting(
-                ExpandoConstants.BARIUM_DETAILS_VIEW_URL_PREFIX, companyId, scopeGroupId);
-        
         String addThisCode = ideaSettingsService.getSetting(
                 ExpandoConstants.ADD_THIS_CODE, companyId, scopeGroupId);
+        
+        String bariumDetailsViewUrlPrefix = ideaSettingsService.getSetting(
+                ExpandoConstants.BARIUM_DETAILS_VIEW_URL_PREFIX, companyId, scopeGroupId);
+
+        String createIdeaFriendlyURL = ideaSettingsService.getSetting(
+                ExpandoConstants.FRIENDLY_URL_CREATE_IDEA, companyId, scopeGroupId);
+        
+        String faqFriendlyURL = ideaSettingsService.getSetting(
+                ExpandoConstants.FRIENDLY_URL_FAQ, companyId, scopeGroupId);
         
         String piwikCode = ideaSettingsService.getSetting(
                 ExpandoConstants.PIWIK_CODE, companyId, scopeGroupId);
 
         model.addAttribute("addThisCode", addThisCode);
         model.addAttribute("bariumDetailsViewUrlPrefix", bariumDetailsViewUrlPrefix);
+        model.addAttribute("createIdeaFriendlyURL", createIdeaFriendlyURL);
+        model.addAttribute("faqFriendlyURL", faqFriendlyURL);
         model.addAttribute("piwikCode", piwikCode);
 
         return "view";
@@ -97,6 +103,8 @@ public class IdeaSettingsViewController extends BaseController {
 
         String addThisCode = ParamUtil.getString(request, "addThisCode", "");
         String bariumDetailsViewUrlPrefix = ParamUtil.getString(request, "bariumDetailsViewUrlPrefix", "");
+        String createIdeaFriendlyURL = ParamUtil.getString(request, "createIdeaFriendlyURL", "");
+        String faqFriendlyURL = ParamUtil.getString(request, "faqFriendlyURL", "");
         String piwikCode = ParamUtil.getString(request, "piwikCode", "");
 
         ideaSettingsService.setSetting(addThisCode,
@@ -105,11 +113,17 @@ public class IdeaSettingsViewController extends BaseController {
         ideaSettingsService.setSetting(bariumDetailsViewUrlPrefix,
                 ExpandoConstants.BARIUM_DETAILS_VIEW_URL_PREFIX, companyId, groupId);
         
+        ideaSettingsService.setSetting(createIdeaFriendlyURL,
+                ExpandoConstants.FRIENDLY_URL_CREATE_IDEA, companyId, groupId);
+
+        ideaSettingsService.setSetting(faqFriendlyURL,
+                ExpandoConstants.FRIENDLY_URL_FAQ, companyId, groupId);
+        
         ideaSettingsService.setSetting(piwikCode,
                 ExpandoConstants.PIWIK_CODE, companyId, groupId);
     }
-
-
+    
+    
 
 }
 

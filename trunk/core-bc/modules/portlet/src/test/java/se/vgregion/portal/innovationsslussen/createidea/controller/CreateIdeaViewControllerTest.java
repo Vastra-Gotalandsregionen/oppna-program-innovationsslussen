@@ -6,14 +6,18 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.User;
 import com.liferay.portal.theme.ThemeDisplay;
+
 import junit.framework.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
+import se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsService;
 import se.vgregion.service.innovationsslussen.ldap.LdapService;
 import se.vgregion.service.innovationsslussen.ldap.Person;
 import se.vgregion.service.innovationsslussen.validator.IdeaValidator;
@@ -23,6 +27,7 @@ import javax.portlet.ActionResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.servlet.http.HttpServletRequest;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +42,7 @@ public class CreateIdeaViewControllerTest {
 
     CreateIdeaViewController controller;
     private IdeaService ideaService;
+    private IdeaSettingsService ideaSettingsService;
     private IdeaValidator ideaValidator;
     private LdapService ldapService;
     private RenderRequest renderRequest;
@@ -52,6 +58,7 @@ public class CreateIdeaViewControllerTest {
     @Before
     public void setUp() {
         ideaService = Mockito.mock(IdeaService.class);
+        ideaSettingsService = Mockito.mock(IdeaSettingsService.class);
         ideaValidator = Mockito.mock(IdeaValidator.class);
         ldapService = Mockito.mock(LdapService.class);
 
@@ -69,7 +76,7 @@ public class CreateIdeaViewControllerTest {
         persons.add(new Person());
         Mockito.when(ldapService.find(Mockito.any(Person.class))).thenReturn(persons);
 
-        controller = new CreateIdeaViewController(ideaService, ideaValidator, ldapService) {
+        controller = new CreateIdeaViewController(ideaService, ideaSettingsService, ideaValidator, ldapService) {
             @Override
             protected Layout getFriendlyURLLayout(long scopeGroupId, ThemeDisplay themeDisplay) throws SystemException, PortalException {
                 return Mockito.mock(Layout.class);
