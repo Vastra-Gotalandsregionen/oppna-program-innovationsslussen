@@ -66,8 +66,16 @@ public class IdeaSettingsViewController extends BaseController {
 
         String bariumDetailsViewUrlPrefix = ideaSettingsService.getSetting(
                 ExpandoConstants.BARIUM_DETAILS_VIEW_URL_PREFIX, companyId, scopeGroupId);
+        
+        String addThisCode = ideaSettingsService.getSetting(
+                ExpandoConstants.ADD_THIS_CODE, companyId, scopeGroupId);
+        
+        String piwikCode = ideaSettingsService.getSetting(
+                ExpandoConstants.PIWIK_CODE, companyId, scopeGroupId);
 
+        model.addAttribute("addThisCode", addThisCode);
         model.addAttribute("bariumDetailsViewUrlPrefix", bariumDetailsViewUrlPrefix);
+        model.addAttribute("piwikCode", piwikCode);
 
         return "view";
     }
@@ -87,10 +95,18 @@ public class IdeaSettingsViewController extends BaseController {
         long companyId = themeDisplay.getCompanyId();
         long groupId = themeDisplay.getScopeGroup().getGroupId();
 
+        String addThisCode = ParamUtil.getString(request, "addThisCode", "");
         String bariumDetailsViewUrlPrefix = ParamUtil.getString(request, "bariumDetailsViewUrlPrefix", "");
+        String piwikCode = ParamUtil.getString(request, "piwikCode", "");
 
+        ideaSettingsService.setSetting(addThisCode,
+                ExpandoConstants.ADD_THIS_CODE, companyId, groupId);
+        
         ideaSettingsService.setSetting(bariumDetailsViewUrlPrefix,
                 ExpandoConstants.BARIUM_DETAILS_VIEW_URL_PREFIX, companyId, groupId);
+        
+        ideaSettingsService.setSetting(piwikCode,
+                ExpandoConstants.PIWIK_CODE, companyId, groupId);
     }
 
 

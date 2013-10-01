@@ -31,6 +31,19 @@
 				<aui:input type="text" name="bariumDetailsViewUrlPrefix" value="${bariumDetailsViewUrlPrefix}" label="URL-prefix f&ouml;r detaljvyn i Barium" helpMessage="Anv&auml;nds f&ouml;r l&auml;nk till detaljvyn I Barium tillsammans med instans-id f&ouml;r en processinstans (dvs en id&ecaute;)" />
 			</aui:field-wrapper>
 		</aui:fieldset>
+		
+		<aui:fieldset label="Inst&auml;llningar f&ouml;r Social Sharing">
+			<aui:field-wrapper>
+				<aui:input type="text" name="addThisCode" value="${addThisCode}" label="Kod f&ouml;r AddThis" helpMessage="Skriv in kod som anv&auml;nds f&ouml;r social sharing via AddThis. Koden m&aring;ste vara kopplad till den dom&auml;n siten k&ouml;rs p&aring;. Om f&auml;ltet l&auml;mnas blankt kommer inte social sharing via AddThis att aktiveras." />
+			</aui:field-wrapper>
+		</aui:fieldset>
+
+		<aui:fieldset label="Inst&auml;llningar f&ouml;r Piwik">
+			<aui:field-wrapper>
+				<aui:input type="text" name="piwikCode" value="${piwikCode}" label="Kod f&ouml;r Piwik" helpMessage="Skriv in kod som anv&auml;nds f&ouml;r web analytics via Piwik. Koden m&aring;ste vara kopplad till den dom&auml;n siten k&ouml;rs p&aring;. Om f&auml;ltet l&auml;mnas blankt kommer inte web analytics via Piwik att aktiveras." />
+			</aui:field-wrapper>
+		</aui:fieldset>
+		
 	
 		<aui:button-row>
 			<aui:button type="submit" value="save" />
