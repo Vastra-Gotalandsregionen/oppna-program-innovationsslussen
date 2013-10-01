@@ -10,10 +10,12 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
+import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.service.barium.MockBariumRestClientImpl;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
 import se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionCheckerService;
@@ -62,6 +64,7 @@ public class IdeaViewControllerTest {
 
         ThemeDisplay themeDisplay = Mockito.mock(ThemeDisplay.class);
         Mockito.when(request.getAttribute(WebKeys.THEME_DISPLAY)).thenReturn(themeDisplay);
+        Mockito.when(actionRequest.getAttribute(WebKeys.THEME_DISPLAY)).thenReturn(themeDisplay);
         Mockito.when(themeDisplay.getScopeGroupId()).thenReturn(1l);
         User user = Mockito.mock(User.class);
         Mockito.when(themeDisplay.getUser()).thenReturn(user);
@@ -86,12 +89,25 @@ public class IdeaViewControllerTest {
         Assert.assertEquals("view_public", r);
     }
 
-    @Ignore
     @Test
     public void uploadFile() throws FileUploadException {
+        Idea idea = new Idea() {
+            @Override
+            public IdeaContent getIdeaContentPublic() {
+                return new IdeaContent();
+            }
+
+            @Override
+            public IdeaContent getIdeaContentPrivate() {
+                return new IdeaContent();
+            }
+        };
+        idea.setUserId(1l);
+        Mockito.when(ideaService.findIdeaByUrlTitle(Mockito.anyString())).thenReturn(idea);
+        Mockito.when(actionRequest.getParameter("fileType")).thenReturn("public");
         Model model = Mockito.mock(Model.class);
         String r = controller.uploadFile(request, response, model);
-
+        Assert.assertEquals("upload_file", r);
         controller.uploadFile(actionRequest, actionResponse, model);
     }
 
