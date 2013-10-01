@@ -3,17 +3,7 @@ package se.vgregion.portal.innovationsslussen.domain.jpa;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
 import se.vgregion.portal.innovationsslussen.domain.IdeaContentType;
@@ -74,8 +64,8 @@ public class IdeaContent extends AbstractEntity<Long> {
     @Column(name = "state")
     private String state;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ideaContent")
-    // @JoinColumn(name = "ideaContent")
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(referencedColumnName = "id", name = "idea_conten")
     private final Set<IdeaFile> ideaFiles = new HashSet<IdeaFile>();
 
     // Foreign
