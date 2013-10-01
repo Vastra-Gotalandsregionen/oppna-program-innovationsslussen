@@ -16,8 +16,16 @@ public final class ExpandoConstants {
     private ExpandoConstants() {
         throw new UnsupportedOperationException();
     }
+    
+    // Add This (Social Sharing)
+    public static final String ADD_THIS_CODE = "addThisCode";
+    
 
     // Barium
     public static final String BARIUM_DETAILS_VIEW_URL_PREFIX = "innovationsslussenBariumDetailsViewUrlPrefix";
+    
+    // Piwik
+    public static final String PIWIK_CODE = "piwikCode";
+    
 
 }

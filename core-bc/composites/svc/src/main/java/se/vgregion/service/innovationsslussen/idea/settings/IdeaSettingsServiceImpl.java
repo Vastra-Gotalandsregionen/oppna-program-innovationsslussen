@@ -121,7 +121,7 @@ public class IdeaSettingsServiceImpl implements IdeaSettingsService {
         try {
 
             value = expandoValueService.getData(companyId, GROUP_CLASSNAME,
-                    ExpandoTableConstants.DEFAULT_TABLE_NAME, columnName, groupId, "0");
+                    ExpandoTableConstants.DEFAULT_TABLE_NAME, columnName, groupId, "");
         } catch (PortalException e) {
             if (e instanceof com.liferay.portlet.expando.NoSuchTableException) { // If table don't exists we try to
                 try {
