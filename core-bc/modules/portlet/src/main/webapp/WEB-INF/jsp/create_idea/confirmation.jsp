@@ -34,14 +34,13 @@
 				</p>
 				
 				<div class="link-buttons-wrap clearfix">
-					<c:set var="ideaPrivateUrl" scope="page" value="" />
-					<%-- 
+
 	                <liferay-portlet:renderURL var="ideaPrivateUrl"plid="${ideaPlid}" portletName="${ideaPortletName}" >
 	                    <liferay-portlet:param name="showView" value="showIdea" />
 	                    <liferay-portlet:param name="type" value="private" />
 	                    <liferay-portlet:param name="urlTitle" value="${urlTitle}" />
 	                </liferay-portlet:renderURL>
-					--%>
+
 					<a class="link-button-mod" href="${ideaPrivateUrl}">
 						G&aring; till din id&eacute; <span class="text-icon">&raquo;</span>
 					</a>
