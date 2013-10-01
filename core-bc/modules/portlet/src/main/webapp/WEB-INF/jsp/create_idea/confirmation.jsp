@@ -40,11 +40,13 @@
 	                    <liferay-portlet:param name="type" value="private" />
 	                    <liferay-portlet:param name="urlTitle" value="${urlTitle}" />
 	                </liferay-portlet:renderURL>
+	                
+	                <liferay-portlet:renderURL var="faqURL"plid="${faqPlid}" />
 
 					<a class="link-button-mod" href="${ideaPrivateUrl}">
 						G&aring; till din id&eacute; <span class="text-icon">&raquo;</span>
 					</a>
-					<a class="link-button-mod" href="">
+					<a class="link-button-mod" href="${faqURL}">
 						L&auml;s mer i v&aring;r FAQ <span class="text-icon">&raquo;</span>
 					</a>
 				</div>
