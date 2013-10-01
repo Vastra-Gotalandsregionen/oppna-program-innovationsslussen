@@ -778,21 +778,20 @@ public class IdeaServiceImpl implements IdeaService {
         try {
             Set<IdeaFile> ideaFiles = ideaContent.getIdeaFiles();
 
-            ideaFiles.clear();
-
             List<ObjectEntry> bariumFiles = bariumService.getIdeaFiles(idea, folderName);
 
             for (IdeaFile ideaFile : new HashSet<IdeaFile>(ideaFiles)) {
                 boolean matched = false;
                 for (ObjectEntry bariumFile : bariumFiles) {
-                    if (bariumFile.getName().equals(ideaFile.getName())){
+                    if (bariumFile.getId().equals(ideaFile.getBariumId())){
                         matched = true;
                         break;
                     }
                 }
                 if (!matched) {
                     ideaFiles.remove(ideaFile);
-                    ideaFileRepository.remove(ideaFile);
+                    IdeaFile ideaFile2 = ideaFileRepository.find(ideaFile.getId());
+                    ideaFileRepository.remove(ideaFile2);
                 }
             }
 
@@ -800,7 +799,7 @@ public class IdeaServiceImpl implements IdeaService {
                 IdeaFile ideaFile = null;
 
                 for (IdeaFile file: ideaFiles){
-                    if (file.getName().equals(bariumFile.getName())){
+                    if (file.getBariumId().equals(bariumFile.getId())){
                         ideaFile = file;
                     }
                 }
