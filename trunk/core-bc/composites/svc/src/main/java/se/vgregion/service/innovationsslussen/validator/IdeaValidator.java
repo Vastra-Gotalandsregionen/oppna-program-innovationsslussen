@@ -23,6 +23,13 @@ public class IdeaValidator implements Validator {
     static final String INVALID_EMAIL = "Angiven e-post är ogiltig";
     static final String PHONE_MANDATORY = "Telefon är obligatoriskt";
     static final String INVALID_PHONE = "Ogiltigt telefonnummer";
+    static final String MAX_LENGTH_TEXT = " har för många tecken";
+
+
+    static final int MAX_LENGTH_SMALL = 200;
+    static final int MAX_LENGTH_MEDIUM = 800;
+    static final int MAX_LENGTH_BIG = 4000;
+
 
     private static final Pattern PHONE_NUMBER_PATTERN = Pattern.compile("^?[+]?[0-9]{8,14}");
 
@@ -45,6 +52,32 @@ public class IdeaValidator implements Validator {
         validateName(idea, errors);
         validateEmail(idea, errors);
         validatePhone(idea, errors);
+        validateLength(idea, errors);
+    }
+
+    private void validateLength(Idea idea, Errors errors) {
+
+        maxLengthValidation(idea.getTitle(), "title", "Title", errors, MAX_LENGTH_SMALL);
+        maxLengthValidation(idea.getIdeaContentPrivate().getDescription(), "ideaContentPrivate.description", "Beskrivning", errors, MAX_LENGTH_SMALL);
+        maxLengthValidation(idea.getIdeaContentPrivate().getSolvesProblem(), "ideaContentPrivate.solvesProblem", "Löser behov / problem",errors, MAX_LENGTH_BIG);
+        maxLengthValidation(idea.getIdeaContentPrivate().getIdeaTested(), "ideaContentPrivate.ideaTested", "Testning av idé", errors, MAX_LENGTH_BIG);
+        maxLengthValidation(idea.getIdeaContentPrivate().getWantsHelpWith(), "ideaContentPrivate.wantsHelpWith", "Vad behöver du hjälp med?", errors, MAX_LENGTH_BIG);
+        maxLengthValidation(idea.getIdeaPerson().getName(), "ideaPerson.name", "Namn", errors, MAX_LENGTH_SMALL);
+        maxLengthValidation(idea.getIdeaPerson().getEmail(), "ideaPerson.email", "E-post", errors, MAX_LENGTH_SMALL);
+        maxLengthValidation(idea.getIdeaPerson().getPhone(), "ideaPerson.phone", "Telefon", errors, MAX_LENGTH_SMALL);
+        maxLengthValidation(idea.getIdeaPerson().getPhoneMobile(), "ideaPerson.phoneMobile", "Mobiltelefon", errors, MAX_LENGTH_SMALL);
+        maxLengthValidation(idea.getIdeaPerson().getAdministrativeUnit(), "ideaPerson.administrativeUnit", "Förvaltning", errors, MAX_LENGTH_SMALL);
+        maxLengthValidation(idea.getIdeaPerson().getJobPosition(), "ideaPerson.jobPosition", "Yrkesroll", errors, MAX_LENGTH_SMALL);
+        maxLengthValidation(idea.getIdeaPerson().getAdditionalPersonsInfo(), "ideaPerson.additionalPersonsInfo", "Fler idégivare", errors, MAX_LENGTH_SMALL);
+
+    }
+
+    private void maxLengthValidation(String feildToValidate, String feildName, String svFeildName,  Errors errors, int max) {
+
+        if (feildToValidate.length() > max){
+            errors.rejectValue(feildName, feildName + ".max-length", svFeildName + MAX_LENGTH_TEXT);
+        }
+
     }
 
     private void validateNeed(Idea idea, Errors errors) {
