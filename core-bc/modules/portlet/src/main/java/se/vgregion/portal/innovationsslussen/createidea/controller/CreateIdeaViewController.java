@@ -235,6 +235,7 @@ public class CreateIdeaViewController extends BaseController {
                 // Add error - create failed
 
                 copyRequestParameters(request, response);
+                System.out.println("Dubbelfel !!!! 1 ");
                 response.setRenderParameter("view", "view");
             } catch (RuntimeException e) {
                 SQLException nextException = Util.getNextExceptionFromLastCause(e);
@@ -243,7 +244,7 @@ public class CreateIdeaViewController extends BaseController {
                 }
                 result.addError(new ObjectError("", "Ett tekniskt fel inträffade."));
                 model.addAttribute("errors", result);
-
+                System.out.println("Dubbelfel !!!! 2 ");
                 copyRequestParameters(request, response);
                 response.setRenderParameter("view", "view");
             }
