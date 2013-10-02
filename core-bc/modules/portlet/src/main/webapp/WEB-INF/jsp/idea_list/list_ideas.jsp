@@ -55,8 +55,9 @@
 					<a href="${ideaUrl}">
 						<div class="idea-content">
 							<div class="idea-content-1">
-								<h3>${idea.title}</h3>
-								
+								<div class="idea-content-inner">
+									<h3>${idea.title}</h3>
+								</div>
 								<ul class="idea-stats clearfix">
 									<li class="likes">
 										${fn:length(idea.likes)}
@@ -69,21 +70,23 @@
 								</ul>
 							</div>
 							<div class="idea-content-2">
-								<c:choose>
-									<c:when test="${idea.public}">
-										<c:choose>
-											<c:when test="${not empty idea.ideaContentPublic.intro}">
-												${fn:substring(idea.ideaContentPublic.intro, 0, 175)}
-											</c:when>
-											<c:otherwise>
-												${fn:substring(idea.ideaContentPublic.description, 0, 175)}
-											</c:otherwise>
-										</c:choose>
-									</c:when>
-									<c:otherwise>
-										${fn:substring(idea.ideaContentPrivate.description, 0, 175)}
-									</c:otherwise>
-								</c:choose>
+								<div class="idea-content-inner">
+									<c:choose>
+										<c:when test="${idea.public}">
+											<c:choose>
+												<c:when test="${not empty idea.ideaContentPublic.intro}">
+													${fn:substring(idea.ideaContentPublic.intro, 0, 175)}
+												</c:when>
+												<c:otherwise>
+													${fn:substring(idea.ideaContentPublic.description, 0, 175)}
+												</c:otherwise>
+											</c:choose>
+										</c:when>
+										<c:otherwise>
+											${fn:substring(idea.ideaContentPrivate.description, 0, 175)}
+										</c:otherwise>
+									</c:choose>
+								</div>
 							</div>
 						</div>
 						<div class="idea-label">
