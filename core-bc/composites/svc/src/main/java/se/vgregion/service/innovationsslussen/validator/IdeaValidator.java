@@ -24,6 +24,7 @@ public class IdeaValidator implements Validator {
     static final String PHONE_MANDATORY = "Telefon är obligatoriskt";
     static final String INVALID_PHONE = "Ogiltigt telefonnummer";
     static final String MAX_LENGTH_TEXT = " har för många tecken";
+    static final String MANDATORY = " är obligatoriskt";
 
 
     static final int MAX_LENGTH_SMALL = 200;
@@ -74,10 +75,12 @@ public class IdeaValidator implements Validator {
 
     private void maxLengthValidation(String feildToValidate, String feildName, String svFeildName,  Errors errors, int max) {
 
-        if (feildToValidate.length() > max){
+        if (feildToValidate == null){
+            errors.rejectValue(feildName, feildName + ".not-null", svFeildName + MANDATORY);
+
+        } else if (feildToValidate.length() > max){
             errors.rejectValue(feildName, feildName + ".max-length", svFeildName + MAX_LENGTH_TEXT);
         }
-
     }
 
     private void validateNeed(Idea idea, Errors errors) {

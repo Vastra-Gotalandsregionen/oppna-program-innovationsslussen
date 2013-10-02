@@ -62,7 +62,7 @@ public class IdeaValidatorTest {
         Assert.assertTrue(errorsConcatenated.contains(IdeaValidator.NAME_MANDATORY));
         Assert.assertTrue(errorsConcatenated.contains(IdeaValidator.INVALID_EMAIL));
 
-        assertEquals(6, allErrors.size());
+        assertEquals(17, allErrors.size());
     }
 
     @Test
@@ -76,12 +76,18 @@ public class IdeaValidatorTest {
         ideaPerson.setName("name");
         ideaPerson.setEmail("valid@email.com");
         ideaPerson.setPhone("0704443331");
+        ideaPerson.setPhoneMobile("0704443331");
+        ideaPerson.setAdditionalPersonsInfo("sven");
+        ideaPerson.setAdministrativeUnit("enhet");
+        ideaPerson.setJobPosition("myJob");
         idea.addIdeaPerson(ideaPerson);
 
         IdeaContent ideaContent = new IdeaContent();
         ideaContent.setType(IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE);
         ideaContent.setDescription("sadfasdf");
         ideaContent.setSolvesProblem("saldkfj");
+        ideaContent.setIdeaTested("tested");
+        ideaContent.setWantsHelpWith("helpme");
 
         idea.getIdeaContents().add(ideaContent);
         MapBindingResult result = new MapBindingResult(map, "aName");
