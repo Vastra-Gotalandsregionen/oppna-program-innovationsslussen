@@ -38,28 +38,30 @@
 	</div>
 </c:if>
 
-<ul class="documents-list">
-	<c:forEach items="${ideaFiles}" var="file" varStatus="counter">
-		<c:set var="fileType" value="txt"/>
-		<c:choose>
-			<c:when test="${file.fileType eq 'application/pdf'}">
-				<c:set var="fileType" value="pdf"/>
-			</c:when>
-			<c:when test="${file.fileType eq 'application/doc' or file.fileType eq 'application/docx'}">
-				<c:set var="fileType" value="doc"/>
-			</c:when>
-			<c:when test="${file.fileType eq 'application/png' or file.fileType eq 'application/jpg' or file.fileType eq 'application/gif'}">
-				<c:set var="fileType" value="img"/>
-			</c:when>
-		</c:choose>
-
-		<portlet:resourceURL id="downloadFile" var="downloadFileUrl">
-			<portlet:param name="id" value="${file.bariumId}"/>
-		</portlet:resourceURL>
-
-		<li id="<portlet:namespace />documentListItem-${counter.count}" class="${fileType}">
-			<a href="${downloadFileUrl}" target="_blank">${file.name}</a>
-		</li>
-	</c:forEach>
-
-</ul>
+<c:if test="${not empty ideaFiles}">
+	<ul class="documents-list">
+		<c:forEach items="${ideaFiles}" var="file" varStatus="counter">
+			<c:set var="fileType" value="txt"/>
+			<c:choose>
+				<c:when test="${file.fileType eq 'application/pdf'}">
+					<c:set var="fileType" value="pdf"/>
+				</c:when>
+				<c:when test="${file.fileType eq 'application/doc' or file.fileType eq 'application/docx'}">
+					<c:set var="fileType" value="doc"/>
+				</c:when>
+				<c:when test="${file.fileType eq 'application/png' or file.fileType eq 'application/jpg' or file.fileType eq 'application/gif'}">
+					<c:set var="fileType" value="img"/>
+				</c:when>
+			</c:choose>
+	
+			<portlet:resourceURL id="downloadFile" var="downloadFileUrl">
+				<portlet:param name="id" value="${file.bariumId}"/>
+			</portlet:resourceURL>
+	
+			<li id="<portlet:namespace />documentListItem-${counter.count}" class="${fileType}">
+				<a href="${downloadFileUrl}" target="_blank">${file.name}</a>
+			</li>
+		</c:forEach>
+	
+	</ul>
+</c:if>
