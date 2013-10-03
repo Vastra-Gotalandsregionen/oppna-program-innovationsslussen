@@ -65,20 +65,22 @@
                             <c:out value="${comment.name}"/>
 						</div>
 						<div class="comment-author-title">
+							<c:set var="commentUserLabel" scope="page" value="Sajtmedlem" />
 							<c:choose>
 								<c:when test="${comment.userCreator}">
-									Id&eacute;givare
+									<c:set var="commentUserLabel" scope="page" value="Id&eacute;givare" />
 								</c:when>
 								<c:when test="${comment.userPrioCouncilMember}">
-									Prioriteringsr&aring;d
+									<c:set var="commentUserLabel" scope="page" value="Prioriteringsr&aring;d" />
 								</c:when>
 								<c:when test="${comment.userInnovationsslussenEmployee}">
-									Innovationsslussen
+									<c:set var="commentUserLabel" scope="page" value="Innovationsslussen" />
 								</c:when>
-								<c:otherwise>
-									Sajtmedlem
-								</c:otherwise>
+								<c:when test="${comment.userIdeaTransporter}">
+									<c:set var="commentUserLabel" scope="page" value="Id&eacute;transport&ouml;r" />
+								</c:when>
 							</c:choose>
+							${commentUserLabel}
 						</div>
 					</div>
 					<div class="comment-entry">

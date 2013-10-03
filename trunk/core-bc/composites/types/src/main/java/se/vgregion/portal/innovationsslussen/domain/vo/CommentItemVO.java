@@ -29,7 +29,8 @@ public class CommentItemVO {
     private String commentText;
     private Date createDate;
     private boolean userCreator;
-    private boolean userInnovationsslussenEmployee;
+    private boolean userIdeaTransporter;
+	private boolean userInnovationsslussenEmployee;
     private boolean userPrioCouncilMember;
     private String name;
 
@@ -65,6 +66,14 @@ public class CommentItemVO {
     public void setUserCreator(boolean userCreator) {
         this.userCreator = userCreator;
     }
+    
+    public boolean isUserIdeaTransporter() {
+		return userIdeaTransporter;
+	}
+
+	public void setUserIdeaTransporter(boolean userIdeaTransporter) {
+		this.userIdeaTransporter = userIdeaTransporter;
+	}
 
     public boolean isUserPrioCouncilMember() {
         return this.userPrioCouncilMember;
