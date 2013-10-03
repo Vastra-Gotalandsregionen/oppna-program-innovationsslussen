@@ -4,6 +4,9 @@ public class IdeaPermissionChecker {
 
     private boolean hasPermissionAddCommentPublic;
     private boolean hasPermissionAddCommentPrivate;
+	private boolean hasPermissionAddDocumentPublic;
+	private boolean hasPermissionAddDocumentPrivate;
+
     private boolean hasPermissionAddLike;
     private boolean hasPermissionAddFavorite;
 
@@ -168,5 +171,23 @@ public class IdeaPermissionChecker {
     public void setIsIdeaOwner(boolean isIdeaOwner) {
         this.isIdeaOwner = isIdeaOwner;
     }
+
+	public boolean isHasPermissionAddDocumentPublic() {
+		return hasPermissionAddDocumentPublic;
+	}
+
+	public void setHasPermissionAddDocumentPublic(
+			boolean hasPermissionAddDocumentPublic) {
+		this.hasPermissionAddDocumentPublic = hasPermissionAddDocumentPublic;
+	}
+
+	public boolean isHasPermissionAddDocumentPrivate() {
+		return hasPermissionAddDocumentPrivate;
+	}
+
+	public void setHasPermissionAddDocumentPrivate(
+			boolean hasPermissionAddDocumentPrivate) {
+		this.hasPermissionAddDocumentPrivate = hasPermissionAddDocumentPrivate;
+	}
 
 }
