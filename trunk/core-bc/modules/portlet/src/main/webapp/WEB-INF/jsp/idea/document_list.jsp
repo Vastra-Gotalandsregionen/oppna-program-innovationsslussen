@@ -10,29 +10,35 @@
 <%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 <%@ taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 
+<c:choose>
+	<c:when test="${ideaType eq 'public'}">
+		<c:set var="ideaFiles" value="${idea.ideaContentPublic.ideaFiles}"/>
+	</c:when>
+	<c:otherwise>
+		<c:set var="ideaFiles" value="${idea.ideaContentPrivate.ideaFiles}"/>
+	</c:otherwise>
+</c:choose>
+
 <h2>
 	<span>Dokument</span>
 </h2>
-<ul class="documents-list">
-	<c:if test="${ideaPermissionChecker.isIdeaOwner}">
-		<li class="">
-			<portlet:renderURL var="uploadFile">
-	        	<portlet:param name="urlTitle" value="${param.urlTitle}"/>
-	        	<portlet:param name="showView" value="showUploadFile"/>
-	        	<portlet:param name="ideaType" value="${ideaType}"/>
-	      	</portlet:renderURL>
-	      	<a href="${uploadFile}">Lägg till dokument</a>
-	    </li>
-  	</c:if>
-	<c:choose>
-		<c:when test="${ideaType eq 'public'}">
-			<c:set var="ideaFiles" value="${idea.ideaContentPublic.ideaFiles}"/>
-		</c:when>
-		<c:otherwise>
-			<c:set var="ideaFiles" value="${idea.ideaContentPrivate.ideaFiles}"/>
-		</c:otherwise>
-	</c:choose>
 
+<c:if test="${ideaPermissionChecker.isIdeaOwner}">
+	<portlet:renderURL var="uploadFile">
+		<portlet:param name="urlTitle" value="${param.urlTitle}"/>
+		<portlet:param name="showView" value="showUploadFile"/>
+		<portlet:param name="ideaType" value="${ideaType}"/>
+   	</portlet:renderURL>
+   	<div class="link-button-wrap clearfix">
+		<a href="${uploadFile}" class="link-button-mod-1 link-button-mod-1-add">
+			<span>
+				L&auml;gg till dokument
+			</span>
+		</a>
+	</div>
+</c:if>
+
+<ul class="documents-list">
 	<c:forEach items="${ideaFiles}" var="file" varStatus="counter">
 		<c:set var="fileType" value="txt"/>
 		<c:choose>
