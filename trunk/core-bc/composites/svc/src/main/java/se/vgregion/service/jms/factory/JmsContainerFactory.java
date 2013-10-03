@@ -2,13 +2,15 @@ package se.vgregion.service.jms.factory;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.SmartLifecycle;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import se.vgregion.service.jms.BariumUpdateConsumer;
 
 /**
  * @author Patrik Bergström
  */
-public class JmsContainerFactory implements FactoryBean<DefaultMessageListenerContainer> {
+public class JmsContainerFactory implements FactoryBean<DefaultMessageListenerContainer>, InitializingBean, SmartLifecycle {
 
     private static DefaultMessageListenerContainer theInstance;
     private String destinationName;
@@ -21,6 +23,10 @@ public class JmsContainerFactory implements FactoryBean<DefaultMessageListenerCo
             return theInstance;
         }
 
+        return init();
+    }
+
+    private DefaultMessageListenerContainer init() {
         if (connectionFactory != null) {
             DefaultMessageListenerContainer container = new DefaultMessageListenerContainer();
             container.setDestinationName(destinationName);
@@ -66,5 +72,63 @@ public class JmsContainerFactory implements FactoryBean<DefaultMessageListenerCo
 
     public ActiveMQConnectionFactory getConnectionFactory() {
         return connectionFactory;
+    }
+
+    @Override
+    public boolean isAutoStartup() {
+        if (theInstance != null) {
+            return theInstance.isAutoStartup();
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public void stop(Runnable callback) {
+        if (theInstance != null) {
+            theInstance.stop(callback);
+        }
+    }
+
+    @Override
+    public void start() {
+        if (theInstance != null) {
+            theInstance.start();
+        }
+    }
+
+    @Override
+    public void stop() {
+        if (theInstance != null) {
+            theInstance.stop();
+        }
+    }
+
+    @Override
+    public boolean isRunning() {
+        if (theInstance != null) {
+            return theInstance.isRunning();
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int getPhase() {
+        if (theInstance != null) {
+            return theInstance.getPhase();
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        if (theInstance == null) {
+            init();
+        }
+        if (theInstance != null) {
+            theInstance.afterPropertiesSet();
+        }
     }
 }
