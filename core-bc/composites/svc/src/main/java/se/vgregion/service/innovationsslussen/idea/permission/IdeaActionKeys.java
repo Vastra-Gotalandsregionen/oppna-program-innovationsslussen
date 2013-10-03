@@ -12,6 +12,7 @@ public final class IdeaActionKeys {
     public static final String ADD_FAVORITE = "ADD_FAVORITE";
 
     public static final String CREATE_IDEA = "CREATE_IDEA";
+    public static final String CREATE_IDEA_FOR_OTHER_USER = "CREATE_IDEA_FOR_OTHER_USER";
 
     public static final String DELETE = "DELETE";
     public static final String DELETE_COMMENT_PUBLIC = "DELETE_COMMENT_PUBLIC";

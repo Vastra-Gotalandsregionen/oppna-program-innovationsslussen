@@ -25,12 +25,7 @@ import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaPerson;
-import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstance;
-import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstances;
-import se.vgregion.portal.innovationsslussen.domain.json.BariumInstance;
-import se.vgregion.portal.innovationsslussen.domain.json.ObjectEntry;
-import se.vgregion.portal.innovationsslussen.domain.json.ObjectField;
-import se.vgregion.portal.innovationsslussen.domain.json.Objects;
+import se.vgregion.portal.innovationsslussen.domain.json.*;
 
 /**
  * A REST service for communicate with Barium.
@@ -267,9 +262,34 @@ public class BariumService {
      * @param inputStream the input stream
      * @throws BariumException the barium exception
      */
-    public void uploadFile(Idea idea, String folderName, String fileName, InputStream inputStream)
+    public FileEntry uploadFile(Idea idea, String folderName, String fileName, InputStream inputStream)
             throws BariumException {
-        bariumRestClient.uploadFile(idea.getId(), folderName, fileName, inputStream);
+
+        FileEntry fileEntry = new FileEntry();
+
+        String replyJson = bariumRestClient.uploadFile(idea.getId(), folderName, fileName, inputStream);
+
+        //  {"success":true,"Items":[{"success":true,"Name":"index2.jpg",
+        // "Id":"ada759d4-e49f-410e-a738-7c7baecedc10","ReferenceId":"ada759d4-e49f-410e-a738-7c7baecedc10"}]}
+
+        try {
+            JSONObject jsonObject = new JSONObject(replyJson);
+
+            String id = jsonObject.getString("Id");
+            String name = jsonObject.getString("Name");
+            String referenceId = jsonObject.getString("ReferenceId");
+            boolean success = jsonObject.getBoolean("success");
+
+            fileEntry.setId(id);
+            fileEntry.setName(name);
+            fileEntry.setReferenceId(referenceId);
+            fileEntry.setSuccess(success);
+
+        } catch (JSONException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+
+        return fileEntry;
     }
 
     /**

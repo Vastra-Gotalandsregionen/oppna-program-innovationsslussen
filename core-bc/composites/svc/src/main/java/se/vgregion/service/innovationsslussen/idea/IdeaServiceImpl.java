@@ -33,6 +33,7 @@ import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaFile;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserFavorite;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserLike;
+import se.vgregion.portal.innovationsslussen.domain.json.FileEntry;
 import se.vgregion.portal.innovationsslussen.domain.json.ObjectEntry;
 import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
 import se.vgregion.service.barium.BariumException;
@@ -1005,30 +1006,32 @@ public class IdeaServiceImpl implements IdeaService {
         }
 
         try {
-            bariumService.uploadFile(idea, folderName, fileName, inputStream);
+            FileEntry fileEntry = bariumService.uploadFile(idea, folderName, fileName, inputStream);
             IdeaFile ideaFile = new IdeaFile(idea.getCompanyId(), idea.getCompanyId(), idea.getUserId(),
-                    fileName, contentType);
+                    fileEntry.getName(), getContentType(fileEntry.getName()));
 
-            List<ObjectEntry> ideaFiles = bariumService.getIdeaFiles(idea, folderName);
-
-           for(ObjectEntry file : ideaFiles){
-                if (file.getName().equals(fileName)) {
-                    ideaFile.setBariumId(file.getId());
-                    break;
-                }
-           }
+            ideaFile.setBariumId(fileEntry.getId());
 
             ideaContent.getIdeaFiles().add(ideaFile);
             ideaRepository.merge(idea);
-
-           // ideaFileRepository.merge(ideaFile);
-           // ideaFileRepository.flush();
 
             return ideaFile;
 
         } catch (BariumException e) {
             throw new FileUploadException(e);
         }
+    }
+
+    private String getContentType(String name) {
+
+        String[] nameArray = name.split(".");
+
+        int length = nameArray.length;
+
+        if (length > 0){
+            return nameArray[length - 1];
+        }
+        return "";
     }
 
     /* (non-Javadoc)

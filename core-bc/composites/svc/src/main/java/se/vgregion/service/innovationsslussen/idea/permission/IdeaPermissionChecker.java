@@ -7,6 +7,8 @@ public class IdeaPermissionChecker {
     private boolean hasPermissionAddLike;
     private boolean hasPermissionAddFavorite;
 
+    private boolean hasPermissionCreateIdeaForOtherUser;
+
     private boolean hasPermissionDeleteCommentPublic;
     private boolean hasPermissionDeleteCommentPrivate;
 
@@ -25,10 +27,19 @@ public class IdeaPermissionChecker {
 
     private boolean isIdeaOwner;
 
+
     /**
      * Instantiates a new idea permission checker.
      */
     public IdeaPermissionChecker() {
+    }
+
+    public boolean isHasPermissionCreateIdeaForOtherUser() {
+        return hasPermissionCreateIdeaForOtherUser;
+    }
+
+    public void setHasPermissionCreateIdeaForOtherUser(boolean hasPermissionCreateIdeaForOtherUser) {
+        this.hasPermissionCreateIdeaForOtherUser = hasPermissionCreateIdeaForOtherUser;
     }
 
     public boolean getHasPermissionViewIdeaPublic() {
@@ -157,8 +168,5 @@ public class IdeaPermissionChecker {
     public void setIsIdeaOwner(boolean isIdeaOwner) {
         this.isIdeaOwner = isIdeaOwner;
     }
-
-
-
 
 }
