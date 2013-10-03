@@ -13,6 +13,7 @@ import java.util.concurrent.Future;
 
 import javax.annotation.PostConstruct;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -275,14 +276,22 @@ public class BariumService {
         try {
             JSONObject jsonObject = new JSONObject(replyJson);
 
-            String id = jsonObject.getString("Id");
-            String name = jsonObject.getString("Name");
-            String referenceId = jsonObject.getString("ReferenceId");
             boolean success = jsonObject.getBoolean("success");
 
-            fileEntry.setId(id);
-            fileEntry.setName(name);
-            fileEntry.setReferenceId(referenceId);
+            if (success){
+                JSONArray items = jsonObject.getJSONArray("Items");
+
+                JSONObject fileEntryObject = items.getJSONObject(0);
+
+                String id = fileEntryObject.getString("Id");
+                String name = fileEntryObject.getString("Name");
+                String referenceId = fileEntryObject.getString("ReferenceId");
+
+                fileEntry.setId(id);
+                fileEntry.setName(name);
+                fileEntry.setReferenceId(referenceId);
+            }
+
             fileEntry.setSuccess(success);
 
         } catch (JSONException e) {

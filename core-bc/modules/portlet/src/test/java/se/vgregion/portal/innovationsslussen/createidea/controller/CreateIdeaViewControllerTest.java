@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
+import se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionCheckerService;
 import se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsService;
 import se.vgregion.service.innovationsslussen.ldap.LdapService;
 import se.vgregion.service.innovationsslussen.ldap.Person;
@@ -45,6 +46,7 @@ public class CreateIdeaViewControllerTest {
     private IdeaSettingsService ideaSettingsService;
     private IdeaValidator ideaValidator;
     private LdapService ldapService;
+    private IdeaPermissionCheckerService ideaPermissionCheckerService;
     private RenderRequest renderRequest;
     private RenderResponse renderResponse;
     private ModelMap model;
@@ -61,6 +63,8 @@ public class CreateIdeaViewControllerTest {
         ideaSettingsService = Mockito.mock(IdeaSettingsService.class);
         ideaValidator = Mockito.mock(IdeaValidator.class);
         ldapService = Mockito.mock(LdapService.class);
+        ideaPermissionCheckerService = Mockito.mock(IdeaPermissionCheckerService.class);
+
 
         renderRequest = Mockito.mock(RenderRequest.class);
         renderResponse = Mockito.mock(RenderResponse.class);
@@ -76,7 +80,7 @@ public class CreateIdeaViewControllerTest {
         persons.add(new Person());
         Mockito.when(ldapService.find(Mockito.any(Person.class))).thenReturn(persons);
 
-        controller = new CreateIdeaViewController(ideaService, ideaSettingsService, ideaValidator, ldapService) {
+        controller = new CreateIdeaViewController(ideaService, ideaSettingsService, ideaValidator, ldapService, ideaPermissionCheckerService) {
             @Override
             protected Layout getFriendlyURLLayout(long scopeGroupId, ThemeDisplay themeDisplay) throws SystemException, PortalException {
                 return Mockito.mock(Layout.class);
