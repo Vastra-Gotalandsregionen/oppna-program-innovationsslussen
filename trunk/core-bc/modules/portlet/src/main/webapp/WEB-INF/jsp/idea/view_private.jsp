@@ -179,7 +179,7 @@
 							</div>
 						</aui:column>
 						<aui:column last="true" columnWidth="40" cssClass="idea-meta">
-              <%@ include file="document_list.jspf" %>
+              				<%@ include file="document_list.jsp" %>
 						</aui:column>
 					</aui:layout>
 					
