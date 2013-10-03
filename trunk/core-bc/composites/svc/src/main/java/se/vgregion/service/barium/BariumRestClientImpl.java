@@ -17,10 +17,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.apache.commons.collections.BeanMap;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ContentBody;
@@ -249,14 +251,15 @@ public class BariumRestClientImpl implements BariumRestClient {
      * java.lang.String, java.lang.String, java.lang.String, java.io.InputStream)
      */
     @Override
-    public void uploadFile(String instanceId, String folderName, String fileName, InputStream inputStream)
+    public String uploadFile(String instanceId, String folderName, String fileName, InputStream inputStream)
             throws BariumException {
         String folderId = findFolder(instanceId, folderName);
 
         if (folderId == null) {
             folderId = createFolder(instanceId, folderName);
         }
-        doPostMultipart("/Objects/" + folderId + "/Objects", fileName, inputStream);
+        return doPostMultipart("/Objects/" + folderId + "/Objects", fileName, inputStream);
+
     }
 
     /* (non-Javadoc)
@@ -288,7 +291,7 @@ public class BariumRestClientImpl implements BariumRestClient {
     String doPostMultipart(String endpoint, String fileName, InputStream inputStream) throws BariumException {
         DefaultHttpClient httpClient = new DefaultHttpClient();
 
-        //        httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, new HttpHost("127.0.0.1", 8888));
+        //httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, new HttpHost("140.166.209.205", 8888));
 
         HttpPost httpPost = new HttpPost(this.apiLocation + endpoint);
 
@@ -337,7 +340,7 @@ public class BariumRestClientImpl implements BariumRestClient {
 
             InputStream content = response.getEntity().getContent();
 
-            return toString(content);
+             return toString(content);
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         } catch (ClientProtocolException e) {

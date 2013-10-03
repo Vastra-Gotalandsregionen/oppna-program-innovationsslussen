@@ -40,6 +40,10 @@ public class IdeaPermissionCheckerServiceImpl implements IdeaPermissionCheckerSe
             boolean hasPermissionAddLike = permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(),
                     ideaId, IdeaActionKeys.ADD_LIKE);
 
+            // Get create permissions
+            boolean hasPermissionCreateIdeaForOtherUser = permissionChecker.hasPermission(scopeGroupId,
+                    Idea.class.getName(), ideaId, IdeaActionKeys.CREATE_IDEA_FOR_OTHER_USER);
+
             // Get delete permissions
             boolean hasPermissionDeleteCommentPublic = permissionChecker.hasPermission(scopeGroupId,
                     Idea.class.getName(), ideaId, IdeaActionKeys.DELETE_COMMENT_PUBLIC);
@@ -75,6 +79,10 @@ public class IdeaPermissionCheckerServiceImpl implements IdeaPermissionCheckerSe
             ideaPermissionChecker.setHasPermissionAddCommentPublic(hasPermissionAddCommentPublic);
             ideaPermissionChecker.setHasPermissionAddFavorite(hasPermissionAddFavorite);
             ideaPermissionChecker.setHasPermissionAddLike(hasPermissionAddLike);
+
+            //Set create premissions
+            ideaPermissionChecker.setHasPermissionCreateIdeaForOtherUser(hasPermissionCreateIdeaForOtherUser);
+
 
             // Set delete permissions
             ideaPermissionChecker.setHasPermissionDeleteCommentPrivate(hasPermissionDeleteCommentPrivate);

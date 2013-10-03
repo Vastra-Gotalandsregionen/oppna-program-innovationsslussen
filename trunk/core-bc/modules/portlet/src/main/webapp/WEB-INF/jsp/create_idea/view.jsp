@@ -65,7 +65,27 @@
 						</spring:bind>
 					
 						<aui:fieldset label="Ber&auml;tta mer om din id&eacute;">
-		
+
+		                    <c:if test="${ideaPermissionChecker.hasPermissionCreateIdeaForOtherUser}">
+                                <spring:bind path="idea.ideaPerson.vgrId">
+                                    <c:set var="elementWrapCssClass" scope="page" value="element-wrap" />
+                                    <c:if test="${status.error}">
+                                        <c:set var="elementWrapCssClass" scope="page" value="element-wrap element-has-errors" />
+                                    </c:if>
+                                    <div class="${elementWrapCssClass}">
+                                        <aui:field-wrapper cssClass="element-field-wrap">
+                                            <label for="<portlet:namespace />title">
+                                                <span>VGRID</span>
+                                            </label>
+                                            <aui:input name="VGR-Id" cssClass="element-field" type="text" label="" />
+                                        </aui:field-wrapper>
+                                        <span class="element-field-help">
+                                            Det går att skapa en idé för en annan användare genom att ange denna användarens VGR-Id i detta fältet.
+                                        </span>
+                                    </div>
+                                </spring:bind>
+                            </c:if>
+
 							<spring:bind path="idea.title">
 								<c:set var="elementWrapCssClass" scope="page" value="element-wrap" />
 								<c:if test="${status.error}">

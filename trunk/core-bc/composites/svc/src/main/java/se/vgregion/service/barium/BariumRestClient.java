@@ -158,13 +158,14 @@ public interface BariumRestClient {
     /**
      * Upload file.
      *
+     *
      * @param instanceId the instance id
      * @param folderName the folder name
      * @param fileName the file name
      * @param inputStream the input stream
      * @throws BariumException the barium exception
      */
-    void uploadFile(String instanceId, String folderName, String fileName, InputStream inputStream)
+    String uploadFile(String instanceId, String folderName, String fileName, InputStream inputStream)
             throws BariumException;
 
     /**
