@@ -140,8 +140,7 @@ public class IdeaViewController extends BaseController {
 
                 model.addAttribute("isSignedIn", isSignedIn);
                 model.addAttribute("ideaPermissionChecker", ideaPermissionChecker);
-
-                model.addAttribute("isIdeaOwner", idea.getUserId() == userId);
+                
                 model.addAttribute("ideaType", ideaType);
 
                 if (ideaType.equals("private")  && (ideaPermissionChecker.getHasPermissionViewIdeaPrivate()
