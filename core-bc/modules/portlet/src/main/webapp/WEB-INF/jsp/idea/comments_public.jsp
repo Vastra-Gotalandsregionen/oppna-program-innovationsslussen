@@ -97,7 +97,7 @@
 					</div>
 					
 					<div class="comment-controls">
-           				<c:if test="${ideaPermissionChecker.hasPermissionDeleteCommentPublic}">
+           				<c:if test="${ideaPermissionChecker.hasPermissionDeleteCommentPublic || idea.userId == comment.userId}">
 							<portlet:actionURL name="deleteComment" var="deleteCommentUrl">
 								<portlet:param name="action" value="deleteComment" />
 								<portlet:param name="urlTitle" value="${idea.urlTitle}" />
