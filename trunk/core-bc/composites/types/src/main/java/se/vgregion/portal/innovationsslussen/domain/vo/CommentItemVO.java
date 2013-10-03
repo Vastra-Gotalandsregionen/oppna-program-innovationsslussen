@@ -33,6 +33,7 @@ public class CommentItemVO {
 	private boolean userInnovationsslussenEmployee;
     private boolean userPrioCouncilMember;
     private String name;
+    private long userId;
 
     public long getId() {
         return id;
@@ -90,4 +91,12 @@ public class CommentItemVO {
     public void setUserInnovationsslussenEmployee(boolean userInnovationsslussenEmployee) {
         this.userInnovationsslussenEmployee = userInnovationsslussenEmployee;
     }
+
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
 }

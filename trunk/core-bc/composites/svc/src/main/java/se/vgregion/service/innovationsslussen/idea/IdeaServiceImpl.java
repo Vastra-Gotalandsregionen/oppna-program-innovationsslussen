@@ -1161,6 +1161,7 @@ public class IdeaServiceImpl implements IdeaService {
                     commentItem.setUserIdeaTransporter(isUserIdeaTransporter);
                     commentItem.setUserPrioCouncilMember(isUserPrioCouncilMember);
                     commentItem.setUserInnovationsslussenEmployee(isUserInnovationsslussenEmployee);
+                    commentItem.setUserId(curCommentUserId);
 
                     commentsList.add(commentItem);
                 }
