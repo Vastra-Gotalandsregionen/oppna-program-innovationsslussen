@@ -23,7 +23,22 @@
 	<span>Dokument</span>
 </h2>
 
-<c:if test="${ideaPermissionChecker.isIdeaOwner}">
+<c:set var="isAllowedToUploadDocuments" scope="page" value="false" />
+
+<c:choose>
+    <c:when test="${ideaPermissionChecker.isIdeaOwner}">
+        <c:set var="isAllowedToUploadDocuments" scope="page" value="true" />
+    </c:when>
+    <c:when test="${ideaPermissionChecker.hasPermissionAddDocumentPublic and (ideaType eq 'public') }">
+        <c:set var="isAllowedToUploadDocuments" scope="page" value="true" />
+    </c:when>
+    <c:when test="${ideaPermissionChecker.hasPermissionAddDocumentPrivate and (ideaType eq 'private') }">
+        <c:set var="isAllowedToUploadDocuments" scope="page" value="true" />
+    </c:when>
+</c:choose>
+
+
+<c:if test="${isAllowedToUploadDocuments}">
 	<portlet:renderURL var="uploadFile">
 		<portlet:param name="urlTitle" value="${param.urlTitle}"/>
 		<portlet:param name="showView" value="showUploadFile"/>
@@ -41,20 +56,6 @@
 <c:if test="${not empty ideaFiles}">
 	<ul class="documents-list">
 		<c:forEach items="${ideaFiles}" var="file" varStatus="counter">
-			<%-- 
-			<c:set var="fileType" value="txt"/>
-			<c:choose>
-				<c:when test="${file.fileType eq 'application/pdf'}">
-					<c:set var="fileType" value="pdf"/>
-				</c:when>
-				<c:when test="${file.fileType eq 'application/doc' or file.fileType eq 'application/docx'}">
-					<c:set var="fileType" value="doc"/>
-				</c:when>
-				<c:when test="${file.fileType eq 'application/png' or file.fileType eq 'application/jpg' or file.fileType eq 'application/gif'}">
-					<c:set var="fileType" value="img"/>
-				</c:when>
-			</c:choose>
-			--%>
 			<portlet:resourceURL id="downloadFile" var="downloadFileUrl">
 				<portlet:param name="id" value="${file.bariumId}"/>
 			</portlet:resourceURL>

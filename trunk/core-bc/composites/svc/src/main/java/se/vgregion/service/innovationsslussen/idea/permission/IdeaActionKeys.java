@@ -8,6 +8,8 @@ public final class IdeaActionKeys {
 
     public static final String ADD_COMMENT_PUBLIC = "ADD_COMMENT_PUBLIC";
     public static final String ADD_COMMENT_PRIVATE = "ADD_COMMENT_PRIVATE";
+	public static final String ADD_DOCUMENT_PUBLIC = "ADD_DOCUMENT_PUBLIC";
+	public static final String ADD_DOCUMENT_PRIVATE = "ADD_DOCUMENT_PUBLIC";
     public static final String ADD_LIKE = "ADD_LIKE";
     public static final String ADD_FAVORITE = "ADD_FAVORITE";
 

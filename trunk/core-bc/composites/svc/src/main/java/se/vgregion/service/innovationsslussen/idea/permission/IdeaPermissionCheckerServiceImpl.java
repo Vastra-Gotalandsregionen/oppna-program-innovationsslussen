@@ -35,6 +35,10 @@ public class IdeaPermissionCheckerServiceImpl implements IdeaPermissionCheckerSe
                     Idea.class.getName(), ideaId, IdeaActionKeys.ADD_COMMENT_PUBLIC);
             boolean hasPermissionAddCommentPrivate = permissionChecker.hasPermission(scopeGroupId,
                     Idea.class.getName(), ideaId, IdeaActionKeys.ADD_COMMENT_PRIVATE);
+            boolean hasPermissionAddDocumentPublic = permissionChecker.hasPermission(scopeGroupId,
+                    Idea.class.getName(), ideaId, IdeaActionKeys.ADD_DOCUMENT_PUBLIC);
+            boolean hasPermissionAddDocumentPrivate = permissionChecker.hasPermission(scopeGroupId,
+                    Idea.class.getName(), ideaId, IdeaActionKeys.ADD_DOCUMENT_PRIVATE);
             boolean hasPermissionAddFavorite = permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(),
                     ideaId, IdeaActionKeys.ADD_FAVORITE);
             boolean hasPermissionAddLike = permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(),
@@ -77,6 +81,8 @@ public class IdeaPermissionCheckerServiceImpl implements IdeaPermissionCheckerSe
             // Set add permissions
             ideaPermissionChecker.setHasPermissionAddCommentPrivate(hasPermissionAddCommentPrivate);
             ideaPermissionChecker.setHasPermissionAddCommentPublic(hasPermissionAddCommentPublic);
+            ideaPermissionChecker.setHasPermissionAddDocumentPrivate(hasPermissionAddDocumentPrivate);
+            ideaPermissionChecker.setHasPermissionAddDocumentPublic(hasPermissionAddDocumentPublic);
             ideaPermissionChecker.setHasPermissionAddFavorite(hasPermissionAddFavorite);
             ideaPermissionChecker.setHasPermissionAddLike(hasPermissionAddLike);
 

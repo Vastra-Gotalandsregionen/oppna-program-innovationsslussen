@@ -11,6 +11,8 @@
 			<supports>
 				<action-key>ADD_COMMENT_PUBLIC</action-key>
 				<action-key>ADD_COMMENT_PRIVATE</action-key>
+                <action-key>ADD_DOCUMENT_PUBLIC</action-key>
+                <action-key>ADD_DOCUMENT_PRIVATE</action-key>
 				<action-key>ADD_FAVORITE</action-key>
 				<action-key>ADD_LIKE</action-key>
 				<action-key>CREATE_IDEA</action-key>
@@ -44,7 +46,9 @@
 			<guest-unsupported>
 			    <action-key>ADD_COMMENT_PUBLIC</action-key>
 			    <action-key>ADD_COMMENT_PRIVATE</action-key>
-				<action-key>ADD_FAVORITE</action-key>
+                <action-key>ADD_DOCUMENT_PUBLIC</action-key>
+                <action-key>ADD_DOCUMENT_PRIVATE</action-key>
+			    <action-key>ADD_FAVORITE</action-key>
 				<action-key>ADD_LIKE</action-key>
 			    <action-key>CREATE_IDEA</action-key>
 				<action-key>DELETE</action-key>
