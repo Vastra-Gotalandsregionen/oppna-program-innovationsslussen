@@ -52,7 +52,7 @@
 		</portlet:resourceURL>
 
 		<li id="<portlet:namespace />documentListItem-${counter.count}" class="${fileType}">
-			<a href="${downloadFileUrl}" target="_blank">${file.name}</a>
+			<a href="${downloadFileUrl}" target="_blank">${file.name} (${file.fileType})</a>
 		</li>
 	</c:forEach>
 
