@@ -1149,8 +1149,8 @@ public class IdeaServiceImpl implements IdeaService {
 
                     boolean isUserIdeaCreator = isUserIdeaCreator(curCommentUserId, idea);
                     boolean isUserPrioCouncilMember = isUserPrioCouncilMember(curCommentUserId, scopeGroupId);
-                    boolean isUserInnovationsslussenEmployee =
-                            isUserInnovationsslussenEmployee(curCommentUserId, scopeGroupId);
+                    boolean isUserInnovationsslussenEmployee = isUserInnovationsslussenEmployee(curCommentUserId, scopeGroupId);
+                    boolean isUserIdeaTransporter = isUserIdeaTransporter(curCommentUserId, scopeGroupId);
 
                     CommentItemVO commentItem = new CommentItemVO();
                     commentItem.setCommentText(curCommentText);
@@ -1158,6 +1158,7 @@ public class IdeaServiceImpl implements IdeaService {
                     commentItem.setId(commentId);
                     commentItem.setName(curCommentUserFullName);
                     commentItem.setUserCreator(isUserIdeaCreator);
+                    commentItem.setUserIdeaTransporter(isUserIdeaTransporter);
                     commentItem.setUserPrioCouncilMember(isUserPrioCouncilMember);
                     commentItem.setUserInnovationsslussenEmployee(isUserInnovationsslussenEmployee);
 
@@ -1196,6 +1197,27 @@ public class IdeaServiceImpl implements IdeaService {
         return isUserIdeaCreator;
     }
 
+    protected boolean isUserIdeaTransporter(long userId, long groupId) {
+
+        boolean isUserIdeaTransporter = false;
+
+        boolean checkInheritedRoles = true;
+
+        try {
+            isUserIdeaTransporter =
+                    userGroupRoleLocalService.hasUserGroupRole(userId, groupId,
+                            IdeaServiceConstants.ROLE_NAME_COMMUNITY_IDEA_TRANSPORTER, checkInheritedRoles);
+        } catch (PortalException e) {
+            LOGGER.error(e.getMessage(), e);
+        } catch (SystemException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+
+        return isUserIdeaTransporter;
+
+    }
+    
+    
     protected boolean isUserInnovationsslussenEmployee(long userId, long groupId) {
 
         boolean isUserInnovationsslussenEmployee = false;
