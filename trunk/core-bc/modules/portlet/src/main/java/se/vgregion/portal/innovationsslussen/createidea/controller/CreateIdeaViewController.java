@@ -28,6 +28,8 @@ import se.vgregion.portal.innovationsslussen.util.IdeaPortletUtil;
 import se.vgregion.portal.innovationsslussen.util.IdeaPortletsConstants;
 import se.vgregion.service.innovationsslussen.exception.CreateIdeaException;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
+import se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionChecker;
+import se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionCheckerService;
 import se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsService;
 import se.vgregion.service.innovationsslussen.idea.settings.util.ExpandoConstants;
 import se.vgregion.service.innovationsslussen.ldap.LdapService;
@@ -59,6 +61,7 @@ public class CreateIdeaViewController extends BaseController {
     private final IdeaSettingsService ideaSettingsService;
     private final IdeaValidator ideaValidator;
     private final LdapService ldapService;
+    private final IdeaPermissionCheckerService ideaPermissionCheckerService;
 
 
     /**
@@ -67,13 +70,15 @@ public class CreateIdeaViewController extends BaseController {
      * @param ideaSettingsService the idea settings service
      * @param ideaValidator the idea validator
      * @param ldapService the ldap service
+     * @param ideaPermissionCheckerService
      */
     @Autowired
-    public CreateIdeaViewController(IdeaService ideaService, IdeaSettingsService ideaSettingsService, IdeaValidator ideaValidator, LdapService ldapService) {
+    public CreateIdeaViewController(IdeaService ideaService, IdeaSettingsService ideaSettingsService, IdeaValidator ideaValidator, LdapService ldapService, IdeaPermissionCheckerService ideaPermissionCheckerService) {
         this.ideaService = ideaService;
         this.ideaSettingsService = ideaSettingsService;
         this.ideaValidator = ideaValidator;
         this.ldapService = ldapService;
+        this.ideaPermissionCheckerService = ideaPermissionCheckerService;
     }
 
 
@@ -136,6 +141,8 @@ public class CreateIdeaViewController extends BaseController {
             @ModelAttribute Idea idea, BindingResult result) {
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+        long scopeGroupId = themeDisplay.getScopeGroupId();
+        long userId = themeDisplay.getUserId();
         boolean isSignedIn = themeDisplay.isSignedIn();
 
         if (model.get("errors") == null) {
@@ -171,9 +178,13 @@ public class CreateIdeaViewController extends BaseController {
             result.addAllErrors((BindingResult) model.get("errors"));
         }
 
+        IdeaPermissionChecker ideaPermissionChecker = ideaPermissionCheckerService.getIdeaPermissionChecker(
+                scopeGroupId, userId, idea);
+
         model.addAttribute("isSignedIn", isSignedIn);
         model.addAttribute("idea", idea);
         model.addAttribute("ideaClass", Idea.class);
+        model.addAttribute("ideaPermissionChecker", ideaPermissionChecker);
 
         return "view";
     }

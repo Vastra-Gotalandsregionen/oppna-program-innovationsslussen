@@ -1024,7 +1024,7 @@ public class IdeaServiceImpl implements IdeaService {
 
     private String getContentType(String name) {
 
-        String[] nameArray = name.split(".");
+        String[] nameArray = name.split("\\.");
 
         int length = nameArray.length;
 
