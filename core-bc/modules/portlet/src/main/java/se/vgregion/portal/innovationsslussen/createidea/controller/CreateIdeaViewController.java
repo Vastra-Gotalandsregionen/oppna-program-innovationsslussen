@@ -18,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
@@ -153,7 +154,19 @@ public class CreateIdeaViewController extends BaseController {
 
             // Set dummy data for person
             if (idea.getIdeaPerson().getName().equals("")) {
-                String screenName = themeDisplay.getUser().getScreenName();
+
+                String screenName = "";
+                String otherUserVgrId = (String) model.get("otherUserVgrId");
+                if (otherUserVgrId != null){
+                    if (!otherUserVgrId.equals("")){
+                        screenName = otherUserVgrId;
+
+                    }
+                } else {
+                    screenName = themeDisplay.getUser().getScreenName();
+                }
+
+
                 IdeaPerson ideaPerson = idea.getIdeaPerson();
                 Person criteria = new Person();
                 criteria.setCn(screenName);
@@ -163,7 +176,7 @@ public class CreateIdeaViewController extends BaseController {
                     ideaPerson.setEmail(person.getMail());
                     ideaPerson.setJobPosition(person.getTitle());
                     ideaPerson.setName(person.getDisplayName());
-                    //  ideaPerson.setVgrId(person.getVgrId());
+                    ideaPerson.setVgrId(person.getVgrId());
                     //  ideaPerson.setBirthYear(person.getBirthYear());
                     ideaPerson.setAdministrativeUnit(person.getO());
 
@@ -184,11 +197,23 @@ public class CreateIdeaViewController extends BaseController {
         model.addAttribute("isSignedIn", isSignedIn);
         model.addAttribute("idea", idea);
         model.addAttribute("ideaClass", Idea.class);
+        model.addAttribute("otherUserVgrId", idea.getIdeaPerson().getVgrId());
         model.addAttribute("ideaPermissionChecker", ideaPermissionChecker);
 
         return "view";
     }
 
+
+
+
+    @ActionMapping("loadOtherUser")
+    public final void loadOtherUser(ActionRequest request, ActionResponse response,
+                       @RequestParam("otherUserVgrId") String otherUserVgrId, final ModelMap model) {
+
+        model.addAttribute("otherUserVgrId",otherUserVgrId);
+        response.setRenderParameter("view", "view");
+
+    }
 
     /**
      * Method handling Action request.
