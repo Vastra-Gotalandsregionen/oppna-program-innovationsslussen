@@ -184,6 +184,7 @@ public class CreateIdeaViewController extends BaseController {
                     //    if (personGender != null) {
                     //        ideaPerson.setGender(IdeaPerson.Gender.valueOf(personGender.name()));
                     //    }
+                    model.addAttribute("otherUserVgrId", idea.getIdeaPerson().getVgrId());
                 }
             }
         } else {
@@ -197,7 +198,6 @@ public class CreateIdeaViewController extends BaseController {
         model.addAttribute("isSignedIn", isSignedIn);
         model.addAttribute("idea", idea);
         model.addAttribute("ideaClass", Idea.class);
-        model.addAttribute("otherUserVgrId", idea.getIdeaPerson().getVgrId());
         model.addAttribute("ideaPermissionChecker", ideaPermissionChecker);
 
         return "view";
