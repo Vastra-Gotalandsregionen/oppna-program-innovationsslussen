@@ -33,13 +33,45 @@
 					F&auml;lt markerade med <span class="element-mandatory">*</span> &auml;r obligatoriska.
 				</p>
 			</div>
-			
+
 			<c:choose>
 				<c:when test="${isSignedIn}">
+                    <c:if test="${ideaPermissionChecker.hasPermissionCreateIdeaForOtherUser}">
+
+                        <portlet:actionURL name="loadOtherUser" var="loadOtherUserURL" />
+
+				        <aui:form action="${loadOtherUserURL}" name="createIdeaForOtherUser" cssClass="create-idea-form" method="post">
+
+                            <aui:fieldset label="L&auml;s in annan anv&auml;ndare;">
+                                <spring:bind path="idea.ideaPerson.vgrId">
+                                    <c:set var="elementWrapCssClass" scope="page" value="element-wrap" />
+                                    <c:if test="${status.error}">
+                                        <c:set var="elementWrapCssClass" scope="page" value="element-wrap element-has-errors" />
+                                    </c:if>
+                                    <div class="${elementWrapCssClass}">
+                                        <aui:field-wrapper cssClass="element-field-wrap">
+                                            <label for="<portlet:namespace />title">
+                                                <span>VGR-Id</span>
+                                            </label>
+                                            <aui:input name="otherUserVgrId" cssClass="element-field" type="text" label="" value=" ${otherUserVgrId}"/>
+                                        </aui:field-wrapper>
+                                        <span class="element-field-help">
+                                            Det g&aringr att skapa en id&eacute f&ouml;r en annan anv&auml;ndare genom att ange denna anv&auml;ndarens VGR-Id i detta f&auml;ltet.
+                                        </span>
+                                    </div>
+                                </spring:bind>
+                                <div class="link-button-wrap">
+                                    <aui:button type="submit" value="L&auml;s in anv&auml;ndare" />
+                                </div>
+                            </aui:fieldset>
+
+				        </aui:form>
+                    </c:if>
+
 					<aui:form action="${submitIdeaURL}" name="createIdeaForm" cssClass="create-idea-form" method="post">
-					
+
 						<aui:model-context bean="${idea}" model="${ideaClass}" />
-						
+
 						<%--
 					    <spring:hasBindErrors name="idea">
 					        <h2>Errors</h2>
@@ -63,29 +95,8 @@
 								</div>
 							</c:if>
 						</spring:bind>
-					
+
 						<aui:fieldset label="Ber&auml;tta mer om din id&eacute;">
-
-		                    <c:if test="${ideaPermissionChecker.hasPermissionCreateIdeaForOtherUser}">
-                                <spring:bind path="idea.ideaPerson.vgrId">
-                                    <c:set var="elementWrapCssClass" scope="page" value="element-wrap" />
-                                    <c:if test="${status.error}">
-                                        <c:set var="elementWrapCssClass" scope="page" value="element-wrap element-has-errors" />
-                                    </c:if>
-                                    <div class="${elementWrapCssClass}">
-                                        <aui:field-wrapper cssClass="element-field-wrap">
-                                            <label for="<portlet:namespace />title">
-                                                <span>VGRID</span>
-                                            </label>
-                                            <aui:input name="VGR-Id" cssClass="element-field" type="text" label="" />
-                                        </aui:field-wrapper>
-                                        <span class="element-field-help">
-                                            Det går att skapa en idé för en annan användare genom att ange denna användarens VGR-Id i detta fältet.
-                                        </span>
-                                    </div>
-                                </spring:bind>
-                            </c:if>
-
 							<spring:bind path="idea.title">
 								<c:set var="elementWrapCssClass" scope="page" value="element-wrap" />
 								<c:if test="${status.error}">
