@@ -15,6 +15,8 @@ import javax.portlet.RenderResponse;
 import javax.portlet.ResourceResponse;
 import javax.servlet.http.HttpServletResponse;
 
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.service.LayoutLocalServiceUtil;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
@@ -22,6 +24,7 @@ import org.apache.commons.fileupload.portlet.PortletFileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -37,6 +40,7 @@ import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.portal.innovationsslussen.domain.json.ObjectEntry;
 import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
+import se.vgregion.portal.innovationsslussen.util.IdeaPortletsConstants;
 import se.vgregion.service.barium.BariumException;
 import se.vgregion.service.innovationsslussen.exception.UpdateIdeaException;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
@@ -76,6 +80,9 @@ public class IdeaViewController extends BaseController {
     private final IdeaPermissionCheckerService ideaPermissionCheckerService;
     private LdapService ldapService;
 
+    //@Value("${comment.page.size}")
+    private int defaultCommentCount = 1;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(IdeaViewController.class.getName());
 
 
@@ -91,6 +98,11 @@ public class IdeaViewController extends BaseController {
         this.ideaPermissionCheckerService = ideaPermissionCheckerService;
     }
 
+    protected Layout getFriendlyURLLayout(long scopeGroupId, boolean priv) throws SystemException, PortalException {
+        return LayoutLocalServiceUtil.getFriendlyURLLayout(scopeGroupId,
+                priv, "/ide");
+    }
+
     /**
      * The default render method.
      *
@@ -100,7 +112,7 @@ public class IdeaViewController extends BaseController {
      * @return the view
      */
     @RenderMapping()
-    public String showIdea(RenderRequest request, RenderResponse response, final ModelMap model) {
+    public String showIdea(RenderRequest request, RenderResponse response, final ModelMap model) throws PortalException, SystemException {
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
         long scopeGroupId = themeDisplay.getScopeGroupId();
@@ -109,6 +121,17 @@ public class IdeaViewController extends BaseController {
         boolean isSignedIn = themeDisplay.isSignedIn();
         String ideaType = ParamUtil.getString(request, "type", "public");
         String urlTitle = ParamUtil.getString(request, "urlTitle", "");
+
+        Layout ideaLayout = getFriendlyURLLayout(scopeGroupId,
+                themeDisplay.getLayout().isPrivateLayout());
+        long ideaPlid = ideaLayout.getPlid();
+        model.addAttribute("ideaPlid", ideaPlid);
+
+        int maxCommentCountDisplay = ParamUtil.getInteger(request, "maxCommentCountDisplay", defaultCommentCount);
+        boolean moreComments = ParamUtil.getString(request, "moreComments") != null;
+        if (moreComments) {
+            maxCommentCountDisplay += defaultCommentCount;
+        }
 
         String returnView = "view_public";
 
@@ -123,13 +146,16 @@ public class IdeaViewController extends BaseController {
                 List<CommentItemVO> commentsList = null;
 
                 if (ideaType.equals("private")) {
-                    commentsList = ideaService.getPrivateComments(idea);
+                    commentsList = ideaService.getPrivateComments(idea, maxCommentCountDisplay);
                 } else {
-                    commentsList = ideaService.getPublicComments(idea);
+                    commentsList = ideaService.getPublicComments(idea, maxCommentCountDisplay);
                 }
 
                 IdeaPermissionChecker ideaPermissionChecker = ideaPermissionCheckerService.getIdeaPermissionChecker(
                         scopeGroupId, userId, idea);
+
+                model.addAttribute("commentCount", commentsList.size());
+                commentsList = commentsList.subList(0, Math.min(maxCommentCountDisplay, commentsList.size()));
 
                 model.addAttribute("idea", idea);
                 model.addAttribute("commentsList", commentsList);
@@ -142,6 +168,11 @@ public class IdeaViewController extends BaseController {
                 model.addAttribute("ideaPermissionChecker", ideaPermissionChecker);
                 
                 model.addAttribute("ideaType", ideaType);
+
+                model.addAttribute("maxCommentCountDisplay", maxCommentCountDisplay);
+                model.addAttribute("defaultCommentCount", defaultCommentCount);
+
+                model.addAttribute("ideaPortletName", IdeaPortletsConstants.PORTLET_NAME_IDEA_PORTLET);
 
                 if (ideaType.equals("private")  && (ideaPermissionChecker.getHasPermissionViewIdeaPrivate()
                         || idea.getUserId() == userId)) {
