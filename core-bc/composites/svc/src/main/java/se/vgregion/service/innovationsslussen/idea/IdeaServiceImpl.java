@@ -98,6 +98,9 @@ public class IdeaServiceImpl implements IdeaService {
     @Value("${auto.comment.default.subject}")
     private String autoCommentDefaultSubject;
 
+    @Value("${comment.page.size}")
+    private String defaultCommentCount;
+
     private IdeaRepository ideaRepository;
     private IdeaFileRepository ideaFileRepository;
     private IdeaUserLikeRepository ideaUserLikeRepository;
@@ -1267,6 +1270,16 @@ public class IdeaServiceImpl implements IdeaService {
 
     private String generateIdeaSiteLink(String schemeServerNamePort, String urlTitle) {
         return schemeServerNamePort + "/web/innovationsslussen/ide/-/idea/" + urlTitle;
+    }
+
+    @Override
+    public String getDefaultCommentCount() {
+        return defaultCommentCount;
+    }
+
+    @Override
+    public void setDefaultCommentCount(String defaultCommentCount) {
+        this.defaultCommentCount = defaultCommentCount;
     }
 
     private static class DaemonThreadFactory implements ThreadFactory {

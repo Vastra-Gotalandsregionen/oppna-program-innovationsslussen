@@ -438,4 +438,16 @@ public interface IdeaService {
      * @return the string
      */
     String generateNewUrlTitle(String title);
+
+    /**
+     * Getter for defaultCommentCount.
+     * @return the integer value.
+     */
+    public String getDefaultCommentCount();
+
+    /**
+     * Setter for defaultCommentCount.
+     * @param defaultCommentCount new value for defaultCommentCount.
+     */
+    public void setDefaultCommentCount(String defaultCommentCount);
 }
