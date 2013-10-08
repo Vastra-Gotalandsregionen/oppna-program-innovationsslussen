@@ -80,11 +80,9 @@ public class IdeaViewController extends BaseController {
     private final IdeaPermissionCheckerService ideaPermissionCheckerService;
     private LdapService ldapService;
 
-    //@Value("${comment.page.size}")
-    private int defaultCommentCount = 1;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(IdeaViewController.class.getName());
 
+    private int defaultCommentCount;
 
     /**
      * Instantiates a new idea view controller.
@@ -96,6 +94,15 @@ public class IdeaViewController extends BaseController {
     public IdeaViewController(IdeaService ideaService, IdeaPermissionCheckerService ideaPermissionCheckerService) {
         this.ideaService = ideaService;
         this.ideaPermissionCheckerService = ideaPermissionCheckerService;
+        initDefaultCommentCount();
+    }
+
+    private void initDefaultCommentCount() {
+        try {
+            defaultCommentCount = Integer.parseInt(ideaService.getDefaultCommentCount());
+        } catch (Exception e) {
+            defaultCommentCount = 10;
+        }
     }
 
     protected Layout getFriendlyURLLayout(long scopeGroupId, boolean priv) throws SystemException, PortalException {
