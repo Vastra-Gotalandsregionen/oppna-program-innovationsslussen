@@ -98,7 +98,6 @@ public class IdeaServiceImpl implements IdeaService {
     @Value("${auto.comment.default.subject}")
     private String autoCommentDefaultSubject;
 
-
     private IdeaRepository ideaRepository;
     private IdeaFileRepository ideaFileRepository;
     private IdeaUserLikeRepository ideaUserLikeRepository;
@@ -490,8 +489,8 @@ public class IdeaServiceImpl implements IdeaService {
      * .IdeaService#getPublicComments(se.vgregion.portal.innovationsslussen.domain.jpa.Idea)
      */
     @Override
-    public List<CommentItemVO> getPublicComments(Idea idea) {
-        return getComments(idea.getIdeaContentPublic());
+    public List<CommentItemVO> getPublicComments(Idea idea, int count) {
+        return getComments(idea.getIdeaContentPublic(), count);
     }
 
     /* (non-Javadoc)
@@ -499,8 +498,8 @@ public class IdeaServiceImpl implements IdeaService {
      * .IdeaService#getPrivateComments(se.vgregion.portal.innovationsslussen.domain.jpa.Idea)
      */
     @Override
-    public List<CommentItemVO> getPrivateComments(Idea idea) {
-        return getComments(idea.getIdeaContentPrivate());
+    public List<CommentItemVO> getPrivateComments(Idea idea, int count) {
+        return getComments(idea.getIdeaContentPrivate(), count);
     }
 
     /* (non-Javadoc)
@@ -1107,7 +1106,7 @@ public class IdeaServiceImpl implements IdeaService {
         return bariumUrl;
     }
 
-    protected List<CommentItemVO> getComments(IdeaContent ideaContent) {
+    protected List<CommentItemVO> getComments(IdeaContent ideaContent, int count) {
 
         ArrayList<CommentItemVO> commentsList = new ArrayList<CommentItemVO>();
 

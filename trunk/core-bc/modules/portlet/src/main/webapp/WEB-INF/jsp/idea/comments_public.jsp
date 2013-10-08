@@ -30,8 +30,7 @@
 				<portlet:param name="ideaContentType" value="IDEA_CONTENT_TYPE_PUBLIC" />
 			</portlet:actionURL>
 		</c:if>
-	
-	
+
 		<aui:form action="${addCommentUrl}" cssClass="add-comment-form clearfix" method="POST">
 			<div class="field-wrap">
 				<label for="<portlet:namespace />comment">
@@ -110,6 +109,8 @@
 					
 				</div>
 			</c:forEach>
+
+
 		</c:when>
 		<c:otherwise>
 			<div class="comment">
@@ -117,4 +118,5 @@
 			</div>
 		</c:otherwise>
 	</c:choose>
-</div>	
+	<%@ include file="comments_pagination.jsp" %>
+</div>

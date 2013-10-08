@@ -250,19 +250,21 @@ public interface IdeaService {
      * Get all public comments for an {@link Idea} {@link CommentItemVO}.
      *
      * @param idea {@link Idea} the idea
+     * @param count max count of comments.
      * @return a {@link Idea} of {@link Idea}s
      */
 
-    List<CommentItemVO> getPublicComments(Idea idea);
+    List<CommentItemVO> getPublicComments(Idea idea, int count);
 
     /**
      * Get all private comments for an {@link Idea} {@link CommentItemVO}.
      *
      * @param idea {@link Idea} the idea
+     * @param count max count of comments.
      * @return a {@link Idea} of {@link Idea}s
      */
 
-    List<CommentItemVO> getPrivateComments(Idea idea);
+    List<CommentItemVO> getPrivateComments(Idea idea, int count);
 
 
 
