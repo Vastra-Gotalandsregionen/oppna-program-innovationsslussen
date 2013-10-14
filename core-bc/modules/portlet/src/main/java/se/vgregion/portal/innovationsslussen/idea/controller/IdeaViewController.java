@@ -5,9 +5,9 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.security.acl.Group;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -18,7 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transaction;
 
 import com.liferay.portal.model.Layout;
-import com.liferay.portal.service.LayoutLocalServiceUtil;
+import com.liferay.portal.model.Role;
+import com.liferay.portal.service.*;
 import org.apache.commons.collections.BeanMap;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
@@ -61,9 +62,6 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.User;
-import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.service.ServiceContextFactory;
-import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.messageboards.model.MBMessageDisplay;
@@ -83,6 +81,9 @@ public class IdeaViewController extends BaseController {
     private final IdeaService ideaService;
     private final IdeaPermissionCheckerService ideaPermissionCheckerService;
     private LdapService ldapService;
+
+    private final Set<String> rolesMayUploadFile = new HashSet<String>(
+            Arrays.asList("Idea Innovationsslussen", "Idea Priority Council", "Idea Transporter"));
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IdeaViewController.class.getName());
 
@@ -536,7 +537,7 @@ public class IdeaViewController extends BaseController {
      * @throws FileUploadException the file upload exception
      */
     @ActionMapping(params = "action=uploadFile")
-    public void uploadFile(ActionRequest request, ActionResponse response, Model model) throws FileUploadException {
+    public void uploadFile(ActionRequest request, ActionResponse response, Model model) throws FileUploadException, SystemException, PortalException {
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
         long userId = themeDisplay.getUserId();
 
@@ -557,10 +558,25 @@ public class IdeaViewController extends BaseController {
         Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
         //TODO Kan det inte finnas flera med samma titel i olika communities?
 
-        boolean isIdeaOwner = idea.getUserId() == userId;
+        boolean mayUploadFile = idea.getUserId() == userId;
 
-        if (!isIdeaOwner) {
-            throw new FileUploadException("The user is not authorized to upload to this idea instance.");
+        List<Role> roles = RoleLocalServiceUtil.getUserRoles(themeDisplay.getUserId());
+        if (!mayUploadFile) {
+            for (Role role : roles) {
+                if (rolesMayUploadFile.contains(role.getName())) {
+                    mayUploadFile = true;
+                    break;
+                }
+            }
+        }
+
+        if (!mayUploadFile) {
+            SortedSet ss = new TreeSet();
+            for (Role role: roles) {
+                ss.add(role.getName());
+            }
+
+            throw new FileUploadException("The user is not authorized to upload to this idea instance. User have roles: " + ss);
         }
 
         response.setRenderParameter("urlTitle", urlTitle);
