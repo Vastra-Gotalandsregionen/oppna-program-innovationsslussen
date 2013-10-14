@@ -76,6 +76,12 @@ public class IdeaContent extends AbstractEntity<Long> {
     @Column(name = "idea_transporter_comment")
     private String ideaTransporterComment;
 
+    @Column(name = "prioritization_council_meeting")
+    private String prioritizationCouncilMeeting;
+
+    @Column(name = "additional_idea_originators")
+    private String additionalIdeaOriginators;
+
     /**
      * Constructor.
      */
@@ -215,5 +221,19 @@ public class IdeaContent extends AbstractEntity<Long> {
     }
 
 
+    public void setPrioritizationCouncilMeeting(String prioritizationCouncilMeeting) {
+        this.prioritizationCouncilMeeting = prioritizationCouncilMeeting;
+    }
 
+    public String getPrioritizationCouncilMeeting() {
+        return prioritizationCouncilMeeting;
+    }
+
+    public void setAdditionalIdeaOriginators(String additionalIdeaOriginators) {
+        this.additionalIdeaOriginators = additionalIdeaOriginators;
+    }
+
+    public String getAdditionalIdeaOriginators() {
+        return additionalIdeaOriginators;
+    }
 }

@@ -27,6 +27,21 @@
 							Denna id&eacute; &auml;r inte publik &auml;nnu. Detta inneb&auml;r att id&eacute;en inte kan ses av andra sajtmedlemmar.
 						</div>
 					</c:if>
+
+                    <c:if test="${not empty updateFromBariumOutcome}">
+                        <c:choose>
+                            <c:when test="${updateFromBariumOutcome}">
+                                <div class="portlet-msg-info">
+                                    H&auml;mtade f&ouml;r&auml;ndringar fr&aring;n Barium.
+                                </div>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="portlet-msg-info">
+                                    Letade efter &auml;ndringar i data hos barium. Inga funna.
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:if>
 					
 						<div class="idea-toolbar-wrap">
 							<ul class="rp-toolbar clearfix">
@@ -175,6 +190,30 @@
 								</div>
 								<p>
 									${idea.ideaContentPrivate.wantsHelpWith}
+								</p>
+							</div>
+							<div class="idea-content-item">
+								<div class="label">
+									Har du testat din id&eacute;?
+								</div>
+								<p>
+									${idea.ideaContentPrivate.ideaTested}
+								</p>
+							</div>
+							<div class="idea-content-item">
+								<div class="label">
+									Prioriteringsr&aring;dsm&ouml;te
+								</div>
+								<p>
+									${idea.ideaContentPrivate.prioritizationCouncilMeeting}
+								</p>
+							</div>
+							<div class="idea-content-item">
+								<div class="label">
+								    &Auml;r ni fler idid&eacute;givare?
+								</div>
+								<p>
+									${idea.ideaContentPrivate.additionalIdeaOriginators}
 								</p>
 							</div>
 						</aui:column>

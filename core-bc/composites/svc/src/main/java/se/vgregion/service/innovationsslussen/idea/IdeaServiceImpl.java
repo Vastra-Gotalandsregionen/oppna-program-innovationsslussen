@@ -2,6 +2,7 @@ package se.vgregion.service.innovationsslussen.idea;
 
 import java.io.InputStream;
 
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -13,6 +14,7 @@ import java.util.concurrent.ThreadFactory;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.collections.BeanMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -690,7 +692,7 @@ public class IdeaServiceImpl implements IdeaService {
             return null;
         }
 
-        idea = updateFromBarium(idea);
+        idea = updateFromBarium(idea).getNewIdea();
 
         return idea;
     }
@@ -701,7 +703,12 @@ public class IdeaServiceImpl implements IdeaService {
      */
     @Override
     @Transactional
-    public Idea updateFromBarium(Idea idea) {
+    public UpdateFromBariumResult updateFromBarium(Idea idea) {
+
+        UpdateFromBariumResult result = new UpdateFromBariumResult();
+        result.setOldIdea(find(idea.getId()));
+        result.getOldIdea().getIdeaContentPrivate();
+        result.getOldIdea().getIdeaContentPublic();
 
         LOGGER.info(" Update from Barium, idea: " + idea.getTitle());
 
@@ -749,6 +756,8 @@ public class IdeaServiceImpl implements IdeaService {
         }
 
         idea = ideaRepository.merge(idea);
+        result.setNewIdea(idea);
+        result.setChanged(!isIdeasTheSame(idea, result.getOldIdea()));
 
         if (!oldTitle.equals(idea.getTitle())) {
             final Idea finalIdea = idea;
@@ -773,7 +782,40 @@ public class IdeaServiceImpl implements IdeaService {
             });
         }
 
-        return idea;
+        return result;
+    }
+
+    boolean isIdeasTheSame(Idea i1, Idea i2) {
+        if (i1 == i2) {
+            return true;
+        }
+        if (!same(i1, i2)) {
+            return false;
+        }
+        if (!same(i1.getIdeaContentPrivate(), i2.getIdeaContentPrivate())) {
+            return false;
+        }
+        if (!same(i1.getIdeaContentPublic(), i2.getIdeaContentPublic())) {
+            return false;
+        }
+        return true;
+    }
+
+
+    boolean same(Object i1, Object i2) {
+        if (i1 == i2) {
+            return true;
+        }
+        if (i1 == null || i2 == null) {
+            return false;
+        }
+        Map bm1 = new HashMap(new BeanMap(i1));
+        Map bm2 = new HashMap(new BeanMap(i2));
+
+        if (!bm1.equals(bm2)) {
+            return false;
+        }
+        return true;
     }
 
     @Transactional
@@ -968,6 +1010,8 @@ public class IdeaServiceImpl implements IdeaService {
             ideaContentPrivate.setWantsHelpWith(ideaObjectFields.getKommavidare());
 
             ideaContentPrivate.setIdeaTransporterComment(ideaObjectFields.getIdetranportorensKommentar());
+            ideaContentPrivate.setPrioritizationCouncilMeeting(ideaObjectFields.getPrioriteringsradsmote());
+            ideaContentPrivate.setAdditionalIdeaOriginators(ideaObjectFields.getKomplnamn());
         }
     }
 

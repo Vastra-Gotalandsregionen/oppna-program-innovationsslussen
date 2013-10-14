@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.portlet.ActionRequest;
@@ -14,9 +15,11 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceResponse;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transaction;
 
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
+import org.apache.commons.collections.BeanMap;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
@@ -26,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -508,9 +512,11 @@ public class IdeaViewController extends BaseController {
         if (themeDisplay.isSignedIn()) {
             try {
                 Idea idea = ideaService.find(id);
-                ideaService.updateFromBarium(idea);
+                boolean updated = ideaService.updateFromBarium(idea).isChanged();
+                model.put("updateFromBariumOutcome", updated);
             } catch (UpdateIdeaException e) {
                 LOGGER.error(e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
 
