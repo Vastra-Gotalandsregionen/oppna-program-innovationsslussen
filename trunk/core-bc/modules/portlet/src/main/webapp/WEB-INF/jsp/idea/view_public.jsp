@@ -40,6 +40,21 @@
 						</div>
 					</c:if>
 
+                    <c:if test="${not empty updateFromBariumOutcome}">
+                        <c:choose>
+                            <c:when test="${updateFromBariumOutcome}">
+                                <div class="portlet-msg-info">
+                                    H&auml;mtade f&ouml;r&auml;ndringar fr&aring;n Barium.
+                                </div>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="portlet-msg-info">
+                                    Letade efter &auml;ndringar i data hos barium. Inga funna.
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:if>
+
 						<div class="idea-toolbar-wrap">
 							<ul class="rp-toolbar clearfix">
 							

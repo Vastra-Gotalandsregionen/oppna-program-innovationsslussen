@@ -1,6 +1,7 @@
 package se.vgregion.service.innovationsslussen.idea;
 
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
@@ -360,8 +361,40 @@ public interface IdeaService {
      * @return the idea
      * @throws UpdateIdeaException the update idea exception
      */
-    Idea updateFromBarium(Idea idea) throws UpdateIdeaException;
+    UpdateFromBariumResult updateFromBarium(Idea idea) throws UpdateIdeaException;
 
+    public static class UpdateFromBariumResult implements Serializable {
+
+        private boolean changed;
+
+        private Idea newIdea;
+
+        private Idea oldIdea;
+
+        public boolean isChanged() {
+            return changed;
+        }
+
+        public void setChanged(boolean changed) {
+            this.changed = changed;
+        }
+
+        public Idea getNewIdea() {
+            return newIdea;
+        }
+
+        public void setNewIdea(Idea newIdea) {
+            this.newIdea = newIdea;
+        }
+
+        public Idea getOldIdea() {
+            return oldIdea;
+        }
+
+        public void setOldIdea(Idea oldIdea) {
+            this.oldIdea = oldIdea;
+        }
+    }
 
 
     /**

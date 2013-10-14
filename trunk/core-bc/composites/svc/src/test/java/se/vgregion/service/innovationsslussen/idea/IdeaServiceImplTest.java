@@ -4,12 +4,15 @@ import com.liferay.portal.service.ResourceLocalService;
 import com.liferay.portal.service.UserGroupRoleLocalService;
 import com.liferay.portal.service.UserLocalService;
 import com.liferay.portlet.messageboards.service.MBMessageLocalService;
+import junit.framework.Assert;
+import org.apache.commons.collections.BeanMap;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import se.vgregion.portal.innovationsslussen.domain.BariumResponse;
 import se.vgregion.portal.innovationsslussen.domain.IdeaContentType;
+import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.service.barium.BariumService;
@@ -142,6 +145,58 @@ public class IdeaServiceImplTest {
         Mockito.when(bariumService.deleteBariumIdea(Mockito.anyString())).thenReturn(bariumResponse);
 
         service.remove("foo");
+    }
+
+    @Test
+    public void isIdeasTheSame() {
+        Idea i1 = new Idea();
+        Idea i2 = new Idea();
+
+        i1.setId("1");
+        i2.setId("1");
+
+        i1.setStatus(IdeaStatus.PUBLIC_IDEA);
+        i2.setStatus(IdeaStatus.PUBLIC_IDEA);
+
+        boolean r = service.isIdeasTheSame(i1, i2);
+        Assert.assertTrue(r);
+
+        initDefaultStringValues(i1);
+        r = service.isIdeasTheSame(i1, i2);
+        Assert.assertFalse(r);
+
+        initDefaultStringValues(i2);
+        r = service.isIdeasTheSame(i1, i2);
+        Assert.assertTrue(r);
+
+        IdeaContent priv1 = new IdeaContent();
+        priv1.setId(1l);
+        priv1.setType(IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE);
+        i1.getIdeaContents().add(priv1);
+
+        IdeaContent priv2 = new IdeaContent();
+        priv2.setId(1l);
+        priv2.setType(IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE);
+        i2.getIdeaContents().add(priv2);
+
+        r = service.isIdeasTheSame(i1, i2);
+        Assert.assertTrue(r);
+
+        i1.setBariumUrl("foo");
+        r = service.isIdeasTheSame(i1, i2);
+        Assert.assertFalse(r);
+    }
+
+    private void initDefaultStringValues(Object o) {
+        BeanMap bm = new BeanMap(o);
+        for (Object key: bm.keySet()) {
+            String name = (String) key;
+            if (bm.getWriteMethod(name) != null) {
+                if (bm.getType(name).equals(String.class)) {
+                    bm.put(name, name);
+                }
+            }
+        }
     }
 
 }
