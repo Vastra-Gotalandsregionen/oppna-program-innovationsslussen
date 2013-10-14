@@ -100,7 +100,7 @@ public class IdeaViewControllerTest {
 
     @Ignore
     @Test
-    public void uploadFile() throws FileUploadException {
+    public void uploadFile() throws FileUploadException, PortalException, SystemException {
         Idea idea = new Idea() {
             @Override
             public IdeaContent getIdeaContentPublic() {
