@@ -363,6 +363,12 @@ public interface IdeaService {
      */
     UpdateFromBariumResult updateFromBarium(Idea idea) throws UpdateIdeaException;
 
+    boolean isUserIdeaTransporter(long userId, long groupId);
+
+    boolean isUserInnovationsslussenEmployee(long userId, long groupId);
+
+    boolean isUserPrioCouncilMember(long userId, long groupId);
+
     public static class UpdateFromBariumResult implements Serializable {
 
         private boolean changed;

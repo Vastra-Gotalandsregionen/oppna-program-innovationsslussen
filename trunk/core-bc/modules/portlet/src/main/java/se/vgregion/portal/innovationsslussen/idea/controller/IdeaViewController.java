@@ -52,6 +52,7 @@ import se.vgregion.service.innovationsslussen.idea.IdeaService;
 import se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionChecker;
 import se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionCheckerService;
 import se.vgregion.service.innovationsslussen.ldap.LdapService;
+import se.vgregion.service.innovationsslussen.util.IdeaServiceConstants;
 import se.vgregion.util.Util;
 
 import com.liferay.portal.kernel.exception.PortalException;
@@ -92,7 +93,7 @@ public class IdeaViewController extends BaseController {
     /**
      * Instantiates a new idea view controller.
      *
-     * @param ideaService the idea service
+     * @param ideaService                  the idea service
      * @param ideaPermissionCheckerService the idea permission checker service
      */
     @Autowired
@@ -115,6 +116,58 @@ public class IdeaViewController extends BaseController {
                 priv, "/ide");
     }
 
+
+    private void fooing(ThemeDisplay themeDisplay) {
+        try {
+            System.out.println("Foing-start");
+            User user = themeDisplay.getUser();
+            Set<String> names = new TreeSet<String>();
+            for (com.liferay.portal.model.Group group : user.getGroups()) {
+                names.add(group.getName());
+            }
+            System.out.println("User.groups: " + names);
+
+            names.clear();
+            for (Role role : user.getRoles()) {
+                names.add(role.getName());
+            }
+            System.out.println("User.roles: " + names);
+
+            /*
+            names.clear();
+            for (Role role : RoleServiceUtil.getUserRoles(user.getUserId())) {
+                names.add(role.getName());
+            }
+            System.out.println("User.roles2: " + names);
+            */
+
+            names.clear();
+            for (Role role : RoleServiceUtil.getUserGroupRoles(user.getUserId(), themeDisplay.getCompanyGroupId())) {
+                names.add(role.getName());
+            }
+            System.out.println("User.getUserGroupRoles: " + names);
+
+
+            Role r = RoleServiceUtil.getRole(themeDisplay.getCompanyId(), IdeaServiceConstants.ROLE_NAME_COMMUNITY_IDEA_TRANSPORTER);
+            System.out.println("themeDisplay.getCompanyId + ROLE_NAME_COMMUNITY_IDEA_TRANSPORTER: " + r);
+
+
+
+            r = RoleServiceUtil.getRole(themeDisplay.getCompanyGroupId(), IdeaServiceConstants.ROLE_NAME_COMMUNITY_IDEA_TRANSPORTER);
+            System.out.println("themeDisplay.getCompanyGroupId + ROLE_NAME_COMMUNITY_IDEA_TRANSPORTER: " + r);
+
+            r = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), IdeaServiceConstants.ROLE_NAME_COMMUNITY_IDEA_TRANSPORTER);
+            System.out.println("RoleLocalServiceUtil themeDisplay.getCompanyId + ROLE_NAME_COMMUNITY_IDEA_TRANSPORTER: " + r);
+
+            r = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyGroupId(), IdeaServiceConstants.ROLE_NAME_COMMUNITY_IDEA_TRANSPORTER);
+            System.out.println("RoleLocalServiceUtil themeDisplay.getCompanyGroupId + ROLE_NAME_COMMUNITY_IDEA_TRANSPORTER: " + r);
+
+        } catch (Exception e) {
+            System.out.println("Fel i fooing");
+            e.printStackTrace();
+        }
+    }
+
     /**
      * The default render method.
      *
@@ -133,6 +186,8 @@ public class IdeaViewController extends BaseController {
         boolean isSignedIn = themeDisplay.isSignedIn();
         String ideaType = ParamUtil.getString(request, "type", "public");
         String urlTitle = ParamUtil.getString(request, "urlTitle", "");
+
+        fooing(themeDisplay);
 
         Layout ideaLayout = getFriendlyURLLayout(scopeGroupId,
                 themeDisplay.getLayout().isPrivateLayout());
@@ -178,7 +233,7 @@ public class IdeaViewController extends BaseController {
 
                 model.addAttribute("isSignedIn", isSignedIn);
                 model.addAttribute("ideaPermissionChecker", ideaPermissionChecker);
-                
+
                 model.addAttribute("ideaType", ideaType);
 
                 model.addAttribute("maxCommentCountDisplay", maxCommentCountDisplay);
@@ -186,7 +241,7 @@ public class IdeaViewController extends BaseController {
 
                 model.addAttribute("ideaPortletName", IdeaPortletsConstants.PORTLET_NAME_IDEA_PORTLET);
 
-                if (ideaType.equals("private")  && (ideaPermissionChecker.getHasPermissionViewIdeaPrivate()
+                if (ideaType.equals("private") && (ideaPermissionChecker.getHasPermissionViewIdeaPrivate()
                         || idea.getUserId() == userId)) {
                     returnView = "view_private";
                 }
@@ -217,9 +272,9 @@ public class IdeaViewController extends BaseController {
     /**
      * Upload file render.
      *
-     * @param request the request
+     * @param request  the request
      * @param response the response
-     * @param model the model
+     * @param model    the model
      * @return the string
      */
     @RenderMapping(params = "showView=showUploadFile")
@@ -531,9 +586,9 @@ public class IdeaViewController extends BaseController {
     /**
      * Upload file action.
      *
-     * @param request the request
+     * @param request  the request
      * @param response the response
-     * @param model the model
+     * @param model    the model
      * @throws FileUploadException the file upload exception
      */
     @ActionMapping(params = "action=uploadFile")
@@ -572,7 +627,7 @@ public class IdeaViewController extends BaseController {
 
         if (!mayUploadFile) {
             SortedSet ss = new TreeSet();
-            for (Role role: roles) {
+            for (Role role : roles) {
                 ss.add(role.getName());
             }
 
@@ -635,14 +690,14 @@ public class IdeaViewController extends BaseController {
     /**
      * Download file resource mapping.
      *
-     * @param id the id
+     * @param id       the id
      * @param response the response
      * @throws BariumException the barium exception
-     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws IOException     Signals that an I/O exception has occurred.
      */
     @ResourceMapping("downloadFile")
     public void downloadFile(@RequestParam("id") String id, ResourceResponse response) throws BariumException,
-    IOException {
+            IOException {
         ObjectEntry objectEntry = ideaService.getObject(id);
         String name = objectEntry.getName();
 

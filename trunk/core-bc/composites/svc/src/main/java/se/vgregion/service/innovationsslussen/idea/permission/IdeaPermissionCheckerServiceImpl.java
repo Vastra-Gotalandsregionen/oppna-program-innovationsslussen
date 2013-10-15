@@ -12,10 +12,13 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
+import se.vgregion.service.innovationsslussen.idea.IdeaService;
 
 public class IdeaPermissionCheckerServiceImpl implements IdeaPermissionCheckerService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IdeaPermissionCheckerServiceImpl.class);
+
+    private IdeaService ideaService;
 
     @Override
     public IdeaPermissionChecker getIdeaPermissionChecker(long scopeGroupId, long userId, Idea idea) {
@@ -75,6 +78,10 @@ public class IdeaPermissionCheckerServiceImpl implements IdeaPermissionCheckerSe
             boolean hasPermissionViewInBarium = permissionChecker.hasPermission(scopeGroupId,
                     Idea.class.getName(), ideaId, IdeaActionKeys.VIEW_IN_BARIUM);
 
+            boolean userPrioCouncilMember = ideaService.isUserPrioCouncilMember(userId, scopeGroupId);
+            boolean userInnovationsslussenEmployee = ideaService.isUserInnovationsslussenEmployee(userId, scopeGroupId);
+            boolean userIdeaTransporter = ideaService.isUserIdeaTransporter(userId, scopeGroupId);
+
             // Get owner permissions
             boolean isIdeaOwner = (userId == idea.getUserId());
 
@@ -109,6 +116,10 @@ public class IdeaPermissionCheckerServiceImpl implements IdeaPermissionCheckerSe
             // Set owner permissions
             ideaPermissionChecker.setIsIdeaOwner(isIdeaOwner);
 
+            // Set info about roles.
+            ideaPermissionChecker.setUserPrioCouncilMember(userPrioCouncilMember);
+            ideaPermissionChecker.setUserInnovationsslussenEmployee(userInnovationsslussenEmployee);
+            ideaPermissionChecker.setUserIdeaTransporter(userIdeaTransporter);
 
         } catch (PortalException e) {
             LOGGER.error(e.getMessage(), e);
@@ -135,4 +146,11 @@ public class IdeaPermissionCheckerServiceImpl implements IdeaPermissionCheckerSe
         return permissionChecker;
     }
 
+    public IdeaService getIdeaService() {
+        return ideaService;
+    }
+
+    public void setIdeaService(IdeaService ideaService) {
+        this.ideaService = ideaService;
+    }
 }

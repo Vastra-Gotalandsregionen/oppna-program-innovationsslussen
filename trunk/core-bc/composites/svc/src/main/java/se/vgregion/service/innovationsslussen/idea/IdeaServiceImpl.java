@@ -1247,7 +1247,8 @@ public class IdeaServiceImpl implements IdeaService {
         return isUserIdeaCreator;
     }
 
-    protected boolean isUserIdeaTransporter(long userId, long groupId) {
+    @Override
+    public boolean isUserIdeaTransporter(long userId, long groupId) {
 
         boolean isUserIdeaTransporter = false;
 
@@ -1267,8 +1268,8 @@ public class IdeaServiceImpl implements IdeaService {
 
     }
     
-    
-    protected boolean isUserInnovationsslussenEmployee(long userId, long groupId) {
+    @Override
+    public boolean isUserInnovationsslussenEmployee(long userId, long groupId) {
 
         boolean isUserInnovationsslussenEmployee = false;
 
@@ -1288,7 +1289,8 @@ public class IdeaServiceImpl implements IdeaService {
 
     }
 
-    protected boolean isUserPrioCouncilMember(long userId, long groupId) {
+    @Override
+    public boolean isUserPrioCouncilMember(long userId, long groupId) {
 
         boolean isUserPrioCouncilMember = false;
 
