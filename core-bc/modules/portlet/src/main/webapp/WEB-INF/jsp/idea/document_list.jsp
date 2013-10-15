@@ -35,6 +35,15 @@
     <c:when test="${ideaPermissionChecker.hasPermissionAddDocumentPrivate and (ideaType eq 'private') }">
         <c:set var="isAllowedToUploadDocuments" scope="page" value="true" />
     </c:when>
+    <c:when test="${ideaPermissionChecker.userPrioCouncilMember}">
+        <c:set var="isAllowedToUploadDocuments" scope="page" value="true" />
+    </c:when>
+    <c:when test="${ideaPermissionChecker.userInnovationsslussenEmployee}">
+        <c:set var="isAllowedToUploadDocuments" scope="page" value="true" />
+    </c:when>
+    <c:when test="${ideaPermissionChecker.userIdeaTransporter}">
+        <c:set var="isAllowedToUploadDocuments" scope="page" value="true" />
+    </c:when>
 </c:choose>
 
 

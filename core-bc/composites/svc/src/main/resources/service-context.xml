@@ -57,7 +57,9 @@
 	    <constructor-arg index="9" ref="resourceLocalService" />
 	</bean>
 	
-	<bean id="ideaPermissionCheckerService" class="se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionCheckerServiceImpl" />
+	<bean id="ideaPermissionCheckerService" class="se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionCheckerServiceImpl">
+        <property name="ideaService" ref="ideaService"></property>
+    </bean>
 	
   <bean id="expandoColumnService" class="com.liferay.portlet.expando.service.ExpandoColumnLocalServiceUtil" factory-method="getService" />
   <bean id="expandoTableService" class="com.liferay.portlet.expando.service.ExpandoTableLocalServiceUtil" factory-method="getService" />

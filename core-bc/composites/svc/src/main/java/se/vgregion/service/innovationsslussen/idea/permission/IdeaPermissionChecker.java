@@ -30,6 +30,10 @@ public class IdeaPermissionChecker {
 
     private boolean isIdeaOwner;
 
+    private boolean userPrioCouncilMember;
+    private boolean userInnovationsslussenEmployee;
+    private boolean userIdeaTransporter;
+
 
     /**
      * Instantiates a new idea permission checker.
@@ -190,4 +194,27 @@ public class IdeaPermissionChecker {
 		this.hasPermissionAddDocumentPrivate = hasPermissionAddDocumentPrivate;
 	}
 
+    public boolean isUserPrioCouncilMember() {
+        return userPrioCouncilMember;
+    }
+
+    public void setUserPrioCouncilMember(boolean userPrioCouncilMember) {
+        this.userPrioCouncilMember = userPrioCouncilMember;
+    }
+
+    public boolean isUserInnovationsslussenEmployee() {
+        return userInnovationsslussenEmployee;
+    }
+
+    public void setUserInnovationsslussenEmployee(boolean userInnovationsslussenEmployee) {
+        this.userInnovationsslussenEmployee = userInnovationsslussenEmployee;
+    }
+
+    public boolean isUserIdeaTransporter() {
+        return userIdeaTransporter;
+    }
+
+    public void setUserIdeaTransporter(boolean userIdeaTransporter) {
+        this.userIdeaTransporter = userIdeaTransporter;
+    }
 }
