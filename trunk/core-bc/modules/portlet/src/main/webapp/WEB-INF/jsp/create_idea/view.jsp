@@ -318,6 +318,10 @@
 									</span>
 								</div>
 							</spring:bind>
+
+                            <spring:bind path="idea.ideaPerson.vgrId">
+                                <aui:input name="ideaPerson.vgrId" cssClass="element-field" type="hidden" label="" />
+                            </spring:bind>
 							
 							
 						</aui:fieldset>

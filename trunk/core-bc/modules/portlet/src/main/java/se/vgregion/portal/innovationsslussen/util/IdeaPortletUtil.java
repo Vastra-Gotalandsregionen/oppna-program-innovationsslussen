@@ -45,7 +45,7 @@ public final class IdeaPortletUtil {
         String jobPosition = ParamUtil.getString(request, "ideaPerson.jobPosition", "");
         String gender = ParamUtil.getString(request, "ideaPerson.gender");
 
-        String vgrId = "none";
+        String vgrId = ParamUtil.getString(request, "ideaPerson.vgrId");
 
         Idea idea = new Idea(companyId, groupId, userId);
         IdeaContent ideaContentPublic = new IdeaContent(companyId, groupId, userId);
