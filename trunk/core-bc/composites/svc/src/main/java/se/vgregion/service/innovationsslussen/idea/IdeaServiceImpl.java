@@ -103,6 +103,9 @@ public class IdeaServiceImpl implements IdeaService {
     @Value("${auto.comment.default.message.become.private}")
     private String autoCommentDefaultMessageBecomePrivate;
 
+    @Value("${auto.comment.default.message.become.public.public}")
+    private String autoCommentDefaultMessageBecomePublicPublic;
+
     @Value("${auto.comment.default.subject}")
     private String autoCommentDefaultSubject;
 
@@ -747,16 +750,18 @@ public class IdeaServiceImpl implements IdeaService {
             int bariumPhase = Integer.parseInt(bariumIdeaPhase.get());
 
             if (currentPhase != bariumPhase){
-                addAutoComment(idea, autoCommentDefaultMessageNewPhase + " " + getIdeaPhaseString(bariumPhase));
+                addAutoComment(idea, idea.getIdeaContentPrivate().getId(), autoCommentDefaultMessageNewPhase + " " + getIdeaPhaseString(bariumPhase));
                 idea.setPhase("" + (bariumPhase));
             }
 
             if (oldStatus.equals(IdeaStatus.PRIVATE_IDEA) && idea.getStatus().equals(IdeaStatus.PUBLIC_IDEA)) {
-                addAutoComment(idea, autoCommentDefaultMessageBecomePublic);
+                addAutoComment(idea, idea.getIdeaContentPrivate().getId(), autoCommentDefaultMessageBecomePublic);
+                addAutoComment(idea, idea.getIdeaContentPublic().getId(), autoCommentDefaultMessageBecomePublicPublic);
+
             }
 
             if (oldStatus.equals(IdeaStatus.PUBLIC_IDEA) && idea.getStatus().equals(IdeaStatus.PRIVATE_IDEA)) {
-                addAutoComment(idea, autoCommentDefaultMessageBecomePrivate);
+                addAutoComment(idea, idea.getIdeaContentPrivate().getId(), autoCommentDefaultMessageBecomePrivate);
             }
 
         } catch (InterruptedException e) {
@@ -895,12 +900,13 @@ public class IdeaServiceImpl implements IdeaService {
     }
 
 
-    private void addAutoComment(Idea idea, String message) {
+    private void addAutoComment(Idea idea, long classPK, String message) {
         try {
+
             String threadView = PropsKeys.DISCUSSION_THREAD_VIEW;
             MBMessageDisplay messageDisplay = mbMessageLocalService.getDiscussionMessageDisplay(
                     idea.getUserId(), idea.getGroupId(), IdeaContent.class.getName(),
-                    idea.getIdeaContentPrivate().getId(), WorkflowConstants.STATUS_ANY, threadView);
+                    classPK, WorkflowConstants.STATUS_ANY, threadView);
             MBThread thread = messageDisplay.getThread();
 
             long threadId = thread.getThreadId();
