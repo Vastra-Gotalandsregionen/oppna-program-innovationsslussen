@@ -1031,7 +1031,6 @@ public class IdeaServiceImpl implements IdeaService {
             ideaContentPrivate.setWantsHelpWith(ideaObjectFields.getKommavidare());
 
             ideaContentPrivate.setIdeaTransporterComment(ideaObjectFields.getIdetranportorensKommentar());
-            ideaContentPrivate.setPrioritizationCouncilMeeting(ideaObjectFields.getPrioriteringsradsmote());
             ideaContentPrivate.setPrioritizationCouncilMeetingTime(toDate(ideaObjectFields.getPrioriteringsradsmote()));
             ideaContentPrivate.setAdditionalIdeaOriginators(ideaObjectFields.getKomplnamn());
         }
