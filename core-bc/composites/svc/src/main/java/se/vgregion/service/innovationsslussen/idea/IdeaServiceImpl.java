@@ -4,6 +4,8 @@ import java.io.InputStream;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import java.util.concurrent.ExecutionException;
@@ -86,6 +88,7 @@ public class IdeaServiceImpl implements IdeaService {
     private static final char[] URL_TITLE_REPLACE_CHARS = new char[]{'.', '/'};
     private static final String LIFERAY_OPEN_DOCUMENTS = "Liferay öppna dokument";
     private static final String LIFERAY_CLOSED_DOCUMENTS = "Liferay stängda dokument";
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 
     @Value("${auto.comment.default.user.id}")
@@ -961,6 +964,17 @@ public class IdeaServiceImpl implements IdeaService {
         }
     }
 
+    private static Date toDate(String s) {
+        if (s == null || s.isEmpty()) {
+            return null;
+        }
+        try {
+            return dateFormat.parse(s);
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+
     @Override
     @Transactional
     public void updateIdeasFromBarium(List<String> ideas) {
@@ -1011,6 +1025,7 @@ public class IdeaServiceImpl implements IdeaService {
 
             ideaContentPrivate.setIdeaTransporterComment(ideaObjectFields.getIdetranportorensKommentar());
             ideaContentPrivate.setPrioritizationCouncilMeeting(ideaObjectFields.getPrioriteringsradsmote());
+            ideaContentPrivate.setPrioritizationCouncilMeetingTime(toDate(ideaObjectFields.getPrioriteringsradsmote()));
             ideaContentPrivate.setAdditionalIdeaOriginators(ideaObjectFields.getKomplnamn());
         }
     }
