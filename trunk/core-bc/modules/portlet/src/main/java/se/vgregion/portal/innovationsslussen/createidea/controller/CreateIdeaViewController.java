@@ -243,8 +243,14 @@ public class CreateIdeaViewController extends BaseController {
 
                 //Populate with extra information about the user (from the ldap if at all).
                 Person criteria = new Person();
-                ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-                criteria.setCn(themeDisplay.getUser().getScreenName());
+                String otherUserVgrId = (String) model.get("otherUserVgrId");
+                if (otherUserVgrId != null && !otherUserVgrId.isEmpty()) {
+                    criteria.setCn(otherUserVgrId);
+                } else {
+                    ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+                    criteria.setCn(themeDisplay.getUser().getScreenName());
+                }
+
                 List<Person> findings = ldapService.find(criteria);
                 if (findings.size() == 1) {
                     Person person = findings.get(0);
