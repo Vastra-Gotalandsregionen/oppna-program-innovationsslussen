@@ -17,6 +17,7 @@ auto.comment.default.subject=
 auto.comment.default.message.newphase=
 auto.comment.default.message.become.public=
 auto.comment.default.message.become.private=
+auto.comment.default.message.become.public.public=
 
 comment.page.size=
 
