@@ -18,5 +18,7 @@ auto.comment.default.message.newphase=
 auto.comment.default.message.become.public=
 auto.comment.default.message.become.private=
 
+comment.page.size=
+
 # Message queue
 activemq.broker.url=

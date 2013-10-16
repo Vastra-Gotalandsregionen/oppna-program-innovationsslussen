@@ -190,6 +190,12 @@ public class CreateIdeaViewController extends BaseController {
         } else {
             // Copy binding error from save action
             result.addAllErrors((BindingResult) model.get("errors"));
+
+            String vgrId = idea.getIdeaPerson().getVgrId();
+
+            if (vgrId != null && !vgrId.isEmpty()){
+                model.addAttribute("otherUserVgrId", vgrId);
+            }
         }
 
         IdeaPermissionChecker ideaPermissionChecker = ideaPermissionCheckerService.getIdeaPermissionChecker(
@@ -228,6 +234,8 @@ public class CreateIdeaViewController extends BaseController {
     public final void submitIdea(ActionRequest request, ActionResponse response, final ModelMap model,
                                  @ModelAttribute Idea idea, BindingResult result) {
 
+        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+
         // todo auktoriseringskontroll?
 
         LOGGER.info("submitIdea");
@@ -243,11 +251,19 @@ public class CreateIdeaViewController extends BaseController {
 
                 //Populate with extra information about the user (from the ldap if at all).
                 Person criteria = new Person();
-                String otherUserVgrId = (String) model.get("otherUserVgrId");
+
+                String otherUserVgrId = "";
+
+                IdeaPermissionChecker ideaPermissionChecker = ideaPermissionCheckerService.getIdeaPermissionChecker(
+                        themeDisplay.getScopeGroupId(), themeDisplay.getUserId(), idea);
+
+                if (ideaPermissionChecker.isHasPermissionCreateIdeaForOtherUser()){
+                    otherUserVgrId = idea.getIdeaPerson().getVgrId();
+                }
+
                 if (otherUserVgrId != null && !otherUserVgrId.isEmpty()) {
                     criteria.setCn(otherUserVgrId);
                 } else {
-                    ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
                     criteria.setCn(themeDisplay.getUser().getScreenName());
                 }
 
@@ -293,6 +309,7 @@ public class CreateIdeaViewController extends BaseController {
 
         } else {
             model.addAttribute("errors", result);
+            model.addAttribute("idea", idea);
 
             copyRequestParameters(request, response);
             response.setRenderParameter("view", "view");
