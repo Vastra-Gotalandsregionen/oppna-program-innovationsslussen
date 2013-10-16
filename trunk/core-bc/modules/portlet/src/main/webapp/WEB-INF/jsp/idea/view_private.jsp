@@ -205,7 +205,7 @@
 									Prioriteringsr&aring;dsm&ouml;te
 								</div>
 								<p>
-									${idea.ideaContentPrivate.prioritizationCouncilMeeting}
+									<fmt:formatDate value="${idea.ideaContentPrivate.prioritizationCouncilMeetingTime}" pattern="yyyy-MM-dd" />
 								</p>
 							</div>
 							<div class="idea-content-item">

@@ -29,7 +29,7 @@ public class IdeaValidator implements Validator {
 
     static final int MAX_LENGTH_SMALL = 200;
     static final int MAX_LENGTH_MEDIUM = 800;
-    static final int MAX_LENGTH_BIG = 4000;
+    static final int MAX_LENGTH_BIG = 40000;
 
 
     private static final Pattern PHONE_NUMBER_PATTERN = Pattern.compile("^?[+]?[0-9]{8,14}");

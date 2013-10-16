@@ -21,6 +21,15 @@
         <liferay-portlet:param name="urlTitle" value="${idea.urlTitle}" />
     </liferay-portlet:renderURL>
     <a href="${ideaUrl}" class="action-link action-link-button">
-      <span>Visa ytterligare ${defaultCommentCount} kommentarer av totalt ${commentCount} st.</span>
+      <span>
+          <c:choose>
+            <c:when test="${((commentCount - maxCommentCountDisplay) > defaultCommentCount)}">
+              Visa ytterligare ${defaultCommentCount} kommentarer av totalt ${commentCount} st.
+            </c:when>
+            <c:otherwise>
+              Visa de sista ${(commentCount - maxCommentCountDisplay)} kommentarerna av totalt ${commentCount} st.
+            </c:otherwise>
+          </c:choose>
+      </span>
     </a>
 </c:if>

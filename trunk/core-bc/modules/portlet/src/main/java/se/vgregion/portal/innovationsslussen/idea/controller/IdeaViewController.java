@@ -116,58 +116,6 @@ public class IdeaViewController extends BaseController {
                 priv, "/ide");
     }
 
-
-    private void fooing(ThemeDisplay themeDisplay) {
-        try {
-            System.out.println("Foing-start");
-            User user = themeDisplay.getUser();
-            Set<String> names = new TreeSet<String>();
-            for (com.liferay.portal.model.Group group : user.getGroups()) {
-                names.add(group.getName());
-            }
-            System.out.println("User.groups: " + names);
-
-            names.clear();
-            for (Role role : user.getRoles()) {
-                names.add(role.getName());
-            }
-            System.out.println("User.roles: " + names);
-
-            /*
-            names.clear();
-            for (Role role : RoleServiceUtil.getUserRoles(user.getUserId())) {
-                names.add(role.getName());
-            }
-            System.out.println("User.roles2: " + names);
-            */
-
-            names.clear();
-            for (Role role : RoleServiceUtil.getUserGroupRoles(user.getUserId(), themeDisplay.getCompanyGroupId())) {
-                names.add(role.getName());
-            }
-            System.out.println("User.getUserGroupRoles: " + names);
-
-
-            Role r = RoleServiceUtil.getRole(themeDisplay.getCompanyId(), IdeaServiceConstants.ROLE_NAME_COMMUNITY_IDEA_TRANSPORTER);
-            System.out.println("themeDisplay.getCompanyId + ROLE_NAME_COMMUNITY_IDEA_TRANSPORTER: " + r);
-
-
-
-            r = RoleServiceUtil.getRole(themeDisplay.getCompanyGroupId(), IdeaServiceConstants.ROLE_NAME_COMMUNITY_IDEA_TRANSPORTER);
-            System.out.println("themeDisplay.getCompanyGroupId + ROLE_NAME_COMMUNITY_IDEA_TRANSPORTER: " + r);
-
-            r = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), IdeaServiceConstants.ROLE_NAME_COMMUNITY_IDEA_TRANSPORTER);
-            System.out.println("RoleLocalServiceUtil themeDisplay.getCompanyId + ROLE_NAME_COMMUNITY_IDEA_TRANSPORTER: " + r);
-
-            r = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyGroupId(), IdeaServiceConstants.ROLE_NAME_COMMUNITY_IDEA_TRANSPORTER);
-            System.out.println("RoleLocalServiceUtil themeDisplay.getCompanyGroupId + ROLE_NAME_COMMUNITY_IDEA_TRANSPORTER: " + r);
-
-        } catch (Exception e) {
-            System.out.println("Fel i fooing");
-            e.printStackTrace();
-        }
-    }
-
     /**
      * The default render method.
      *
@@ -186,8 +134,6 @@ public class IdeaViewController extends BaseController {
         boolean isSignedIn = themeDisplay.isSignedIn();
         String ideaType = ParamUtil.getString(request, "type", "public");
         String urlTitle = ParamUtil.getString(request, "urlTitle", "");
-
-        fooing(themeDisplay);
 
         Layout ideaLayout = getFriendlyURLLayout(scopeGroupId,
                 themeDisplay.getLayout().isPrivateLayout());

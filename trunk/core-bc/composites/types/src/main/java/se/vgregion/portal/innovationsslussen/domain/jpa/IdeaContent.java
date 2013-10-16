@@ -1,5 +1,6 @@
 package se.vgregion.portal.innovationsslussen.domain.jpa;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -78,6 +79,9 @@ public class IdeaContent extends AbstractEntity<Long> {
 
     @Column(name = "prioritization_council_meeting")
     private String prioritizationCouncilMeeting;
+
+    @Column(name = "prioritization_council_meeting_time")
+    private Date prioritizationCouncilMeetingTime;
 
     @Column(name = "additional_idea_originators")
     private String additionalIdeaOriginators;
@@ -235,5 +239,13 @@ public class IdeaContent extends AbstractEntity<Long> {
 
     public String getAdditionalIdeaOriginators() {
         return additionalIdeaOriginators;
+    }
+
+    public Date getPrioritizationCouncilMeetingTime() {
+        return prioritizationCouncilMeetingTime;
+    }
+
+    public void setPrioritizationCouncilMeetingTime(Date prioritizationCouncilMeetingTime) {
+        this.prioritizationCouncilMeetingTime = prioritizationCouncilMeetingTime;
     }
 }
