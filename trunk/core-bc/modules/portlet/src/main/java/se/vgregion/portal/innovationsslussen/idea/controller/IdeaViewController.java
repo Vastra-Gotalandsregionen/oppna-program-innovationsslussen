@@ -176,6 +176,7 @@ public class IdeaViewController extends BaseController {
                 model.addAttribute("isIdeaUserFavorite", isIdeaUserFavorite);
                 model.addAttribute("isIdeaUserLiked", isIdeaUserLiked);
                 model.addAttribute("urlTitle", urlTitle);
+                model.addAttribute("userId", userId);
 
                 model.addAttribute("isSignedIn", isSignedIn);
                 model.addAttribute("ideaPermissionChecker", ideaPermissionChecker);
