@@ -16,6 +16,7 @@ auto.comment.default.user.id=
 auto.comment.default.subject=
 auto.comment.default.message.newphase=
 auto.comment.default.message.become.public=
+auto.comment.default.message.become.private=
 
 # Message queue
 activemq.broker.url=

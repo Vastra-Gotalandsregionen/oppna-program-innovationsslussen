@@ -100,6 +100,9 @@ public class IdeaServiceImpl implements IdeaService {
     @Value("${auto.comment.default.message.become.public}")
     private String autoCommentDefaultMessageBecomePublic;
 
+    @Value("${auto.comment.default.message.become.private}")
+    private String autoCommentDefaultMessageBecomePrivate;
+
     @Value("${auto.comment.default.subject}")
     private String autoCommentDefaultSubject;
 
@@ -752,6 +755,10 @@ public class IdeaServiceImpl implements IdeaService {
                 addAutoComment(idea, autoCommentDefaultMessageBecomePublic);
             }
 
+            if (oldStatus.equals(IdeaStatus.PUBLIC_IDEA) && idea.getStatus().equals(IdeaStatus.PRIVATE_IDEA)) {
+                addAutoComment(idea, autoCommentDefaultMessageBecomePrivate);
+            }
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -876,12 +883,12 @@ public class IdeaServiceImpl implements IdeaService {
 
         List<String> list = new ArrayList<String>();
 
-        list.add("Gemensam utveckling");
-        list.add("Idé");
-        list.add("Värdering/Utredning");
-        list.add("Koncept");
-        list.add("Prövning");
-        list.add("Kommersialisering");
+        list.add("gemensam utveckling");
+        list.add("idé");
+        list.add("värdering/utredning");
+        list.add("koncept");
+        list.add("prövning");
+        list.add("kommersialisering");
 
         return list.get(i);
 
