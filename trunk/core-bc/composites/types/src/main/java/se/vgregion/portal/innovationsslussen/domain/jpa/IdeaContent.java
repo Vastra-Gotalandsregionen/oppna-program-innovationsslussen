@@ -38,6 +38,7 @@ public class IdeaContent extends AbstractEntity<Long> {
 
     // IdeaContent Related
 
+    @Lob
     @Column(name = "intro")
     private String intro;
 
