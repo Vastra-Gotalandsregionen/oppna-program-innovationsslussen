@@ -770,9 +770,9 @@ public class IdeaServiceImpl implements IdeaService {
             e.printStackTrace();
         }
 
+        result.setChanged(!isIdeasTheSame(idea, result.getOldIdea()));
         idea = ideaRepository.merge(idea);
         result.setNewIdea(idea);
-        result.setChanged(!isIdeasTheSame(idea, result.getOldIdea()));
 
         if (!oldTitle.equals(idea.getTitle())) {
             final Idea finalIdea = idea;
