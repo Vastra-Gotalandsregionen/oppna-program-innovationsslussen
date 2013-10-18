@@ -194,7 +194,7 @@ public class IdeaPermissionChecker {
 		this.hasPermissionAddDocumentPrivate = hasPermissionAddDocumentPrivate;
 	}
 
-    public boolean isUserPrioCouncilMember() {
+	public boolean getIsUserPrioCouncilMember() {
         return userPrioCouncilMember;
     }
 
