@@ -135,21 +135,23 @@
 							</ul>							
 						</div>
 						
+						
+						
 						<div class="idea-flow-wrap">
 							<ul class="idea-flow-list">
-								<li class="${idea.phase >= 1 ? 'done' : ''}" title="This is step 1. Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
+								<li class="${idea.phase >= 1 ? 'done' : ''}" title="<liferay-ui:message key='innovationsslussen.idea.tooltip.step-1' />">
 									<span>1</span>
 								</li>
-								<li class="${idea.phase >= 2 ? 'done' : ''}" title="This is step 2. Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
+								<li class="${idea.phase >= 2 ? 'done' : ''}" title="<liferay-ui:message key='innovationsslussen.idea.tooltip.step-2' />">
 									<span>2</span>
 								</li>
-								<li class="${idea.phase >= 3 ? 'done' : ''}" title="This is step 3. Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
+								<li class="${idea.phase >= 3 ? 'done' : ''}" title="<liferay-ui:message key='innovationsslussen.idea.tooltip.step-3' />">
 									<span>3</span>
 								</li>
-								<li class="${idea.phase >= 4 ? 'done' : ''}" title="This is step 4. Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
+								<li class="${idea.phase >= 4 ? 'done' : ''}" title="<liferay-ui:message key='innovationsslussen.idea.tooltip.step-4' />">
 									<span>4</span>
 								</li>
-								<li class="${idea.phase >= 5 ? 'done' : ''}" title="This is step 5. Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
+								<li class="${idea.phase >= 5 ? 'done' : ''}" title="<liferay-ui:message key='innovationsslussen.idea.tooltip.step-5' />">
 									<span>5</span>
 								</li>
 							</ul>
