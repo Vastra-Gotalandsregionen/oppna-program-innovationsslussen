@@ -47,6 +47,8 @@ AUI().add('innovationsslussen-idea',function(A) {
                 
                 prototype: {
                 	
+                	flowNodesTooltip: null,
+                	
                     initializer: function(config) {
                         var instance = this;
                     },
@@ -90,7 +92,7 @@ AUI().add('innovationsslussen-idea',function(A) {
             			if(portletNode) {
             				var flowNodes = portletNode.all('.idea-flow-list li');
 
-            				var flowNodesTooltip = new A.Tooltip({
+            				instance.flowNodesTooltip = new A.Tooltip({
             			         trigger: flowNodes,
             			         align: { points: [ 'tc', 'bc' ] },
             			         cssClass: 'rp-tooltip',

@@ -139,19 +139,19 @@
 						
 						<div class="idea-flow-wrap">
 							<ul class="idea-flow-list">
-								<li class="${idea.phase >= 1 ? 'done' : ''}" title="<liferay-ui:message key='innovationsslussen.idea.tooltip.step-1' />">
+								<li class="${idea.phase >= 1 ? 'done' : ''}" title="<div><strong><liferay-ui:message key='innovationsslussen.idea.tooltip.step-1.title' /></strong></div><liferay-ui:message key='innovationsslussen.idea.tooltip.step-1.content' />">
 									<span>1</span>
 								</li>
-								<li class="${idea.phase >= 2 ? 'done' : ''}" title="<liferay-ui:message key='innovationsslussen.idea.tooltip.step-2' />">
+								<li class="${idea.phase >= 2 ? 'done' : ''}" title="<div><strong><liferay-ui:message key='innovationsslussen.idea.tooltip.step-2.title' /></strong></div><liferay-ui:message key='innovationsslussen.idea.tooltip.step-2.content' />">
 									<span>2</span>
 								</li>
-								<li class="${idea.phase >= 3 ? 'done' : ''}" title="<liferay-ui:message key='innovationsslussen.idea.tooltip.step-3' />">
+								<li class="${idea.phase >= 3 ? 'done' : ''}" title="<div><strong><liferay-ui:message key='innovationsslussen.idea.tooltip.step-3.title' /></strong></div><liferay-ui:message key='innovationsslussen.idea.tooltip.step-3.content' />">
 									<span>3</span>
 								</li>
-								<li class="${idea.phase >= 4 ? 'done' : ''}" title="<liferay-ui:message key='innovationsslussen.idea.tooltip.step-4' />">
+								<li class="${idea.phase >= 4 ? 'done' : ''}" title="<div><strong><liferay-ui:message key='innovationsslussen.idea.tooltip.step-4.title' /></strong></div><liferay-ui:message key='innovationsslussen.idea.tooltip.step-4.content' />">
 									<span>4</span>
 								</li>
-								<li class="${idea.phase >= 5 ? 'done' : ''}" title="<liferay-ui:message key='innovationsslussen.idea.tooltip.step-5' />">
+								<li class="${idea.phase >= 5 ? 'done' : ''}" title="<div><strong><liferay-ui:message key='innovationsslussen.idea.tooltip.step-5.title' /></strong></div><liferay-ui:message key='innovationsslussen.idea.tooltip.step-5.content' />">
 									<span>5</span>
 								</li>
 							</ul>
