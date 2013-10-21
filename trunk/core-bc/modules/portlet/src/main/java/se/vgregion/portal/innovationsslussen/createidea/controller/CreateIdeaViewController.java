@@ -191,10 +191,12 @@ public class CreateIdeaViewController extends BaseController {
             // Copy binding error from save action
             result.addAllErrors((BindingResult) model.get("errors"));
 
-            String vgrId = idea.getIdeaPerson().getVgrId();
+            if (idea.getIdeaPerson() != null){
+                String vgrId = idea.getIdeaPerson().getVgrId();
 
-            if (vgrId != null && !vgrId.isEmpty()){
-                model.addAttribute("otherUserVgrId", vgrId);
+                if (vgrId != null && !vgrId.isEmpty()){
+                    model.addAttribute("otherUserVgrId", vgrId);
+                }
             }
         }
 
@@ -292,17 +294,19 @@ public class CreateIdeaViewController extends BaseController {
 
                 // Add error - create failed
 
+                result.addError(new ObjectError("", "Hoppsan nu gick något fel, vi får inte kontakt med ett " +
+                                                    "bakomliggande system. Var god försök igen sennare."));
+                model.addAttribute("errors", result);
                 copyRequestParameters(request, response);
-                System.out.println("Dubbelfel !!!! 1 ");
                 response.setRenderParameter("view", "view");
             } catch (RuntimeException e) {
                 SQLException nextException = Util.getNextExceptionFromLastCause(e);
                 if (nextException != null) {
                     LOGGER.error(nextException.getMessage(), nextException);
                 }
-                result.addError(new ObjectError("", "Ett tekniskt fel inträffade."));
+                result.addError(new ObjectError("", "Hoppsan nu gick något fel, vi får inte kontakt med ett " +
+                                                    "bakomliggande system. Var god försök igen sennare."));
                 model.addAttribute("errors", result);
-                System.out.println("Dubbelfel !!!! 2 ");
                 copyRequestParameters(request, response);
                 response.setRenderParameter("view", "view");
             }
