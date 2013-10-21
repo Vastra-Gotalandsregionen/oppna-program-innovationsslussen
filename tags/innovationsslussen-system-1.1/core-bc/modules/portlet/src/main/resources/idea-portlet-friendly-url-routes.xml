@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE routes PUBLIC "-//Liferay//DTD Friendly URL Routes 6.0.0//EN" "http://www.liferay.com/dtd/liferay-friendly-url-routes_6_0_0.dtd">
+
+<routes>
+    
+	<route>
+		<pattern>/stangd/{urlTitle}</pattern>
+		<implicit-parameter name="showView">showIdea</implicit-parameter>
+		<implicit-parameter name="type">private</implicit-parameter>
+	</route>
+
+	<route>
+		<pattern>/{urlTitle}</pattern>
+		<implicit-parameter name="showView">showIdea</implicit-parameter>
+		<implicit-parameter name="type">public</implicit-parameter>
+	</route>
+
+	<route>
+		<pattern>/{urlTitle}</pattern>
+		<implicit-parameter name="showView">showIdea</implicit-parameter>
+	</route>	
+
+	<route>
+		<pattern>/{urlTitle}/uploadFile</pattern>
+		<implicit-parameter name="showView">showUploadFile</implicit-parameter>
+	</route>
+</routes>
