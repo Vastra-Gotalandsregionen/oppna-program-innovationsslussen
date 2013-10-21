@@ -37,7 +37,6 @@ public class IdeaContent extends AbstractEntity<Long> {
     private long userId;
 
     // IdeaContent Related
-
     @Lob
     @Column(name = "intro")
     private String intro;
@@ -63,6 +62,7 @@ public class IdeaContent extends AbstractEntity<Long> {
     @Enumerated
     private IdeaContentType type;
 
+    @Lob
     @Column(name = "state")
     private String state;
 
@@ -81,6 +81,7 @@ public class IdeaContent extends AbstractEntity<Long> {
     @Column(name = "prioritization_council_meeting_time")
     private Date prioritizationCouncilMeetingTime;
 
+    @Lob
     @Column(name = "additional_idea_originators")
     private String additionalIdeaOriginators;
 
