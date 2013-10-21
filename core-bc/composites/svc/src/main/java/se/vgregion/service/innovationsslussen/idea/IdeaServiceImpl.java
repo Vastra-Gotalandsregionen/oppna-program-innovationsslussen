@@ -711,8 +711,12 @@ public class IdeaServiceImpl implements IdeaService {
      * .innovationsslussen.domain.jpa.Idea)
      */
     @Override
-    @Transactional
     public UpdateFromBariumResult updateFromBarium(Idea idea) {
+
+        // Do the transaction manually since we may run this in a separate thread.
+        TransactionStatus transaction =
+                transactionManager.getTransaction(new DefaultTransactionAttribute(
+                        TransactionDefinition.PROPAGATION_REQUIRED));
 
         UpdateFromBariumResult result = new UpdateFromBariumResult();
         result.setOldIdea(find(idea.getId()));
@@ -730,12 +734,14 @@ public class IdeaServiceImpl implements IdeaService {
         Future<IdeaObjectFields> ideaObjectFieldsFuture = bariumService.asyncGetIdeaObjectFields(ideaId);
         Future<String> bariumIdeaPhase = bariumService.asyncGetIdeaPhaseFuture(ideaId);
 
+        int bariumPhase = 0;
+        int currentPhase = Integer.parseInt(idea.getPhase() == null ? "0" : idea.getPhase());
+        IdeaStatus oldStatus = idea.getStatus();
+
         try {
+            bariumPhase = Integer.parseInt(bariumIdeaPhase.get());
 
-            IdeaStatus oldStatus = idea.getStatus();
             populateIdea(ideaObjectFieldsFuture.get(), idea);
-
-
 
             if (idea.getIdeaContentPrivate() != null){
                 populateFile(idea ,idea.getIdeaContentPrivate(), LIFERAY_CLOSED_DOCUMENTS);
@@ -743,25 +749,6 @@ public class IdeaServiceImpl implements IdeaService {
 
             if (idea.getIdeaContentPublic() != null){
                 populateFile(idea ,idea.getIdeaContentPublic(), LIFERAY_OPEN_DOCUMENTS);
-            }
-
-            int currentPhase = Integer.parseInt(idea.getPhase() == null ? "0" : idea.getPhase());
-
-            int bariumPhase = Integer.parseInt(bariumIdeaPhase.get());
-
-            if (currentPhase != bariumPhase){
-                addAutoComment(idea, idea.getIdeaContentPrivate().getId(), autoCommentDefaultMessageNewPhase + " " + getIdeaPhaseString(bariumPhase));
-                idea.setPhase("" + (bariumPhase));
-            }
-
-            if (oldStatus.equals(IdeaStatus.PRIVATE_IDEA) && idea.getStatus().equals(IdeaStatus.PUBLIC_IDEA)) {
-                addAutoComment(idea, idea.getIdeaContentPrivate().getId(), autoCommentDefaultMessageBecomePublic);
-                addAutoComment(idea, idea.getIdeaContentPublic().getId(), autoCommentDefaultMessageBecomePublicPublic);
-
-            }
-
-            if (oldStatus.equals(IdeaStatus.PUBLIC_IDEA) && idea.getStatus().equals(IdeaStatus.PRIVATE_IDEA)) {
-                addAutoComment(idea, idea.getIdeaContentPrivate().getId(), autoCommentDefaultMessageBecomePrivate);
             }
 
         } catch (InterruptedException e) {
@@ -794,10 +781,37 @@ public class IdeaServiceImpl implements IdeaService {
                                 + newIdeaSiteLink, e);
                     }
                 }
+
             });
         }
 
+
+        if (currentPhase != bariumPhase){
+          idea.setPhase("" + (bariumPhase));
+        }
+
+        transactionManager.commit(transaction);
+
+        // Add auto-comments to the idea.
+        generateAutoComments(idea, oldStatus, currentPhase, bariumPhase);
+
+
         return result;
+    }
+
+    private void generateAutoComments(Idea idea, IdeaStatus oldStatus, int currentPhase, int bariumPhase) {
+        if (currentPhase != bariumPhase){
+            addAutoComment(idea, idea.getIdeaContentPrivate().getId(), autoCommentDefaultMessageNewPhase + " " + getIdeaPhaseString(bariumPhase));
+        }
+
+        if (oldStatus.equals(IdeaStatus.PRIVATE_IDEA) && idea.getStatus().equals(IdeaStatus.PUBLIC_IDEA)) {
+            addAutoComment(idea, idea.getIdeaContentPrivate().getId(), autoCommentDefaultMessageBecomePublic);
+            addAutoComment(idea, idea.getIdeaContentPublic().getId(), autoCommentDefaultMessageBecomePublicPublic);
+        }
+
+        if (oldStatus.equals(IdeaStatus.PUBLIC_IDEA) && idea.getStatus().equals(IdeaStatus.PRIVATE_IDEA)) {
+            addAutoComment(idea, idea.getIdeaContentPrivate().getId(), autoCommentDefaultMessageBecomePrivate);
+        }
     }
 
     boolean isIdeasTheSame(Idea i1, Idea i2) {
@@ -1026,7 +1040,7 @@ public class IdeaServiceImpl implements IdeaService {
         }
 
         if (ideaContentPublic != null) {
-            ideaContentPublic.setIntro(ideaObjectFields.getPublikintrotext());
+            ideaContentPublic.setIntro(headString(ideaObjectFields.getPublikintrotext()));
             ideaContentPublic.setDescription(ideaObjectFields.getPublikbeskrivning());
         }
 
@@ -1036,10 +1050,19 @@ public class IdeaServiceImpl implements IdeaService {
             ideaContentPrivate.setIdeaTested(ideaObjectFields.getTestat());
             ideaContentPrivate.setWantsHelpWith(ideaObjectFields.getKommavidare());
 
-            ideaContentPrivate.setIdeaTransporterComment(ideaObjectFields.getIdetranportorensKommentar());
+            ideaContentPrivate.setIdeaTransporterComment(headString(ideaObjectFields.getIdetranportorensKommentar()));
+
             ideaContentPrivate.setPrioritizationCouncilMeetingTime(toDate(ideaObjectFields.getPrioriteringsradsmote()));
-            ideaContentPrivate.setAdditionalIdeaOriginators(ideaObjectFields.getKomplnamn());
+
+            ideaContentPrivate.setAdditionalIdeaOriginators(headString(ideaObjectFields.getKomplnamn()));
         }
+    }
+
+    private static String headString(String ideaTransporterComment) {
+        if (ideaTransporterComment != null && ideaTransporterComment.length() > 250){
+            ideaTransporterComment = ideaTransporterComment.substring(0,250);
+        }
+        return ideaTransporterComment;
     }
 
     /* (non-Javadoc)
