@@ -57,7 +57,6 @@ public class IdeaValidator implements Validator {
     }
 
     private void validateLength(Idea idea, Errors errors) {
-
         maxLengthValidation(idea.getTitle(), "title", "Title", errors, MAX_LENGTH_SMALL);
         maxLengthValidation(idea.getIdeaContentPrivate().getDescription(), "ideaContentPrivate.description", "Beskrivning", errors, MAX_LENGTH_SMALL);
         maxLengthValidation(idea.getIdeaContentPrivate().getSolvesProblem(), "ideaContentPrivate.solvesProblem", "Löser behov / problem",errors, MAX_LENGTH_BIG);
@@ -69,8 +68,7 @@ public class IdeaValidator implements Validator {
         maxLengthValidation(idea.getIdeaPerson().getPhoneMobile(), "ideaPerson.phoneMobile", "Mobiltelefon", errors, MAX_LENGTH_SMALL);
         maxLengthValidation(idea.getIdeaPerson().getAdministrativeUnit(), "ideaPerson.administrativeUnit", "Förvaltning", errors, MAX_LENGTH_SMALL);
         maxLengthValidation(idea.getIdeaPerson().getJobPosition(), "ideaPerson.jobPosition", "Yrkesroll", errors, MAX_LENGTH_SMALL);
-        maxLengthValidation(idea.getIdeaPerson().getAdditionalPersonsInfo(), "ideaPerson.additionalPersonsInfo", "Fler idégivare", errors, MAX_LENGTH_SMALL);
-
+        maxLengthValidation(idea.getIdeaContentPrivate().getAdditionalIdeaOriginators(), "ideaPerson.additionalPersonsInfo", "Fler idégivare", errors, MAX_LENGTH_SMALL);
     }
 
     private void maxLengthValidation(String feildToValidate, String feildName, String svFeildName,  Errors errors, int max) {

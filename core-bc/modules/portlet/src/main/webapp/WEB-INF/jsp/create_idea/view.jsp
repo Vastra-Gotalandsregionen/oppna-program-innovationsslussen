@@ -301,7 +301,7 @@
 								</div>
 							</spring:bind>
 							
-							<spring:bind path="idea.ideaPerson.additionalPersonsInfo">
+							<spring:bind path="idea.ideaContentPrivate.additionalIdeaOriginators">
 								<c:set var="elementWrapCssClass" scope="page" value="element-wrap" />
 								<c:if test="${status.error}">
 									<c:set var="elementWrapCssClass" scope="page" value="element-wrap element-has-errors" />
@@ -311,7 +311,7 @@
 							    		<label for="<portlet:namespace />ideaPerson.additionalPersonInfo">
 							    			<span>Fler id&eacute;givare</span>
 							    		</label>
-							    		<aui:input name="ideaPerson.additionalPersonsInfo" cssClass="element-field" type="textarea" label="" />			    		
+							    		<aui:input name="idea.ideaContentPrivate.additionalIdeaOriginators" cssClass="element-field" type="textarea" label="" />
 							    	</aui:field-wrapper>
 									<span class="element-field-help">
 										&Auml;r ni fler id&eacute;givare? Fyll g&auml;rna i uppgifter om dessa personer i s&aring;dana fall.
