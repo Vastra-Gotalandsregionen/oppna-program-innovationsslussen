@@ -203,7 +203,7 @@ public class BariumService {
         String wantsHelpWith = ideaContentPrivate.getWantsHelpWith();
 
         String administrativeUnit = ideaPerson.getAdministrativeUnit();
-        String additonalPersonsInfo = ideaPerson.getAdditionalPersonsInfo();
+        String additonalPersonsInfo = ideaContentPrivate.getAdditionalIdeaOriginators();
         String phone = ideaPerson.getPhone();
         String phoneMobile = ideaPerson.getPhoneMobile();
         String vgrId = ideaPerson.getVgrId();

@@ -34,7 +34,6 @@ public class IdeaPermissionChecker {
     private boolean userInnovationsslussenEmployee;
     private boolean userIdeaTransporter;
 
-
     /**
      * Instantiates a new idea permission checker.
      */
@@ -217,4 +216,5 @@ public class IdeaPermissionChecker {
     public void setUserIdeaTransporter(boolean userIdeaTransporter) {
         this.userIdeaTransporter = userIdeaTransporter;
     }
+
 }

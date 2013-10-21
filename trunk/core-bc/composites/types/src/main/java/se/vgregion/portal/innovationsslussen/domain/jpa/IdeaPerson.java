@@ -33,9 +33,9 @@ public class IdeaPerson extends AbstractEntity<Long> {
 
     // IdeaPerson Related
 
-    @Lob
+    /*@Lob
     @Column(name = "additional_persons_info")
-    private String additionalPersonsInfo;
+    private String additionalPersonsInfo;*/
 
     @Column(name = "vgr_id")
     private String vgrId;
@@ -124,14 +124,6 @@ public class IdeaPerson extends AbstractEntity<Long> {
 
     public void setUserId(long userId) {
         this.userId = userId;
-    }
-
-    public String getAdditionalPersonsInfo() {
-        return additionalPersonsInfo;
-    }
-
-    public void setAdditionalPersonsInfo(String additionalPersonsInfo) {
-        this.additionalPersonsInfo = additionalPersonsInfo;
     }
 
     public String getVgrId() {

@@ -66,7 +66,9 @@ public final class IdeaPortletUtil {
         ideaPerson.setPhoneMobile(phoneMobile);
         ideaPerson.setJobPosition(jobPosition);
         ideaPerson.setVgrId(vgrId);
-        ideaPerson.setAdditionalPersonsInfo(additionalPersonInfo);
+
+        ideaContentPrivate.setAdditionalIdeaOriginators(additionalPersonInfo);
+
         ideaPerson.setAdministrativeUnit(administrativeUnit);
         ideaPerson.setGender((gender == null || "".equals(gender) ? IdeaPerson.Gender.UNKNOWN
                 : IdeaPerson.Gender.valueOf(gender)));

@@ -77,7 +77,6 @@ public class IdeaValidatorTest {
         ideaPerson.setEmail("valid@email.com");
         ideaPerson.setPhone("0704443331");
         ideaPerson.setPhoneMobile("0704443331");
-        ideaPerson.setAdditionalPersonsInfo("sven");
         ideaPerson.setAdministrativeUnit("enhet");
         ideaPerson.setJobPosition("myJob");
         idea.addIdeaPerson(ideaPerson);
@@ -88,6 +87,7 @@ public class IdeaValidatorTest {
         ideaContent.setSolvesProblem("saldkfj");
         ideaContent.setIdeaTested("tested");
         ideaContent.setWantsHelpWith("helpme");
+        ideaContent.setAdditionalIdeaOriginators("sven");
 
         idea.getIdeaContents().add(ideaContent);
         MapBindingResult result = new MapBindingResult(map, "aName");
