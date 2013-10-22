@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Copyright 2010 Västra Götalandsregionen
+
+      This library is free software; you can redistribute it and/or modify
+      it under the terms of version 2.1 of the GNU Lesser General Public
+      License as published by the Free Software Foundation.
+
+      This library is distributed in the hope that it will be useful,
+      but WITHOUT ANY WARRANTY; without even the implied warranty of
+      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+      GNU Lesser General Public License for more details.
+
+      You should have received a copy of the GNU Lesser General Public
+      License along with this library; if not, write to the
+      Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+      Boston, MA 02111-1307  USA
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+		 http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+  <import resource="task-context.xml"/>
+  <import resource="messaging-context.xml"/>
+    <!--
+    <context:component-scan base-package="se.vgregion.service.innovationsslussen.validator" />
+    -->
+    
+	<context:annotation-config />
+
+    <context:property-placeholder
+            location="file:${user.home}/.innovationsslussen/application.properties"
+            ignore-resource-not-found="true" ignore-unresolvable="true" />
+	
+	<!--  Mock Client -->
+	<!--<bean id="bariumRestClient" class="se.vgregion.service.barium.MockBariumRestClientImpl" />-->
+
+	
+	<!--  "Real" Client -->
+    <bean id="bariumRestClient" class="se.vgregion.service.barium.BariumRestClientImpl">
+        <property name="apiKey" value="${apiKey}"/>
+        <property name="username" value="${username}"/>
+        <property name="password" value="${password}"/>
+        <property name="apiLocation" value="${apiLocation}"/>
+        <property name="applicationId" value="${applicationId}"/>
+    </bean>
+
+	 
+	<bean id="bariumService" class="se.vgregion.service.barium.BariumService">
+	    <constructor-arg index="0" ref="bariumRestClient" />
+    </bean>
+    
+	<bean id="ideaRepository" class="se.vgregion.service.innovationsslussen.repository.idea.JpaIdeaRepositoryImpl"/>
+	<bean id="ideaFileRepository" class="se.vgregion.service.innovationsslussen.repository.ideafile.JpaIdeaFileRepositoryImpl"/>
+	<bean id="ideaUserLikeRepository" class="se.vgregion.service.innovationsslussen.repository.ideauserlike.JpaIdeaUserLikeRepositoryImpl"/>
+	<bean id="ideaUserFavoriteRepository" class="se.vgregion.service.innovationsslussen.repository.ideauserfavorite.JpaIdeaUserFavoriteRepositoryImpl"/>
+	
+	<bean id="ideaSettingsService" class="se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsServiceImpl"/>
+
+	<bean id="ideaService" class="se.vgregion.service.innovationsslussen.idea.IdeaServiceImpl">
+	    <constructor-arg index="0" ref="ideaRepository" />
+        <constructor-arg index="1" ref="ideaFileRepository" />
+	    <constructor-arg index="2" ref="ideaUserLikeRepository" />
+	    <constructor-arg index="3" ref="ideaUserFavoriteRepository" />
+	    <constructor-arg index="4" ref="bariumService" />
+	    <constructor-arg index="5" ref="ideaSettingsService" />
+	    <constructor-arg index="6" ref="mbMessageLocalService" />
+	    <constructor-arg index="7" ref="userLocalService" />
+	    <constructor-arg index="8" ref="userGroupRoleLocalService" />
+	    <constructor-arg index="9" ref="resourceLocalService" />
+	</bean>
+	
+	<bean id="ideaPermissionCheckerService" class="se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionCheckerServiceImpl">
+        <property name="ideaService" ref="ideaService"></property>
+    </bean>
+	
+  <bean id="expandoColumnService" class="com.liferay.portlet.expando.service.ExpandoColumnLocalServiceUtil" factory-method="getService" />
+  <bean id="expandoTableService" class="com.liferay.portlet.expando.service.ExpandoTableLocalServiceUtil" factory-method="getService" />
+  <bean id="expandoValueService" class="com.liferay.portlet.expando.service.ExpandoValueLocalServiceUtil" factory-method="getService" />
+
+  <bean id="mbMessageLocalService" class="com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil" factory-method="getService" />
+  <bean id="userLocalService" class="com.liferay.portal.service.UserLocalServiceUtil" factory-method="getService" />
+  <bean id="userGroupRoleLocalService" class="com.liferay.portal.service.UserGroupRoleLocalServiceUtil" factory-method="getService" />
+  <bean id="resourceLocalService" class="com.liferay.portal.service.ResourceLocalServiceUtil" factory-method="getService" />
+
+  <import resource="ldap-config.xml" />
+
+</beans>
+
+
