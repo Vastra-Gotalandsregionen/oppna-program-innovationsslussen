@@ -51,14 +51,14 @@
 										<liferay-portlet:param name="urlTitle" value="${idea.urlTitle}" />
 									</liferay-portlet:renderURL>
 									<a href="${ideaPublicUrl}">
-										<span>Visa &ouml;ppen beskrivning</span>
+										<span class="label">Visa &ouml;ppen beskrivning</span>
 									</a>
 								</li>
 							
 								<c:if test="${ideaPermissionChecker.hasPermissionAddCommentPrivate}">
 									<li class="icon comment">
 										<a class="" href="#">
-											<span>Kommentera (${fn:length(commentsList)})</span>
+											<span class="label">Kommentera</span>&nbsp;<span class="amount">(${fn:length(commentsList)})</span>
 										</a>
 									</li>
 								</c:if>
@@ -72,7 +72,7 @@
 												<portlet:param name="ideaContentType" value="IDEA_CONTENT_TYPE_PRIVATE" />
 											</portlet:actionURL>
 											<a href="${removeLikeUrl}">
-												<span>Sluta gilla (${fn:length(idea.likes)})</span>
+												<span class="label">Sluta gilla</span>&nbsp;<span class="amount">(${fn:length(idea.likes)})</span>
 											</a>
 										</c:when>
 										<c:otherwise>
@@ -82,7 +82,7 @@
 												<portlet:param name="ideaContentType" value="IDEA_CONTENT_TYPE_PRIVATE" />
 											</portlet:actionURL>
 											<a href="${addLikeUrl}">
-												<span>Gilla (${fn:length(idea.likes)})</span>
+												<span class="label">Gilla</span>&nbsp;<span class="amount">(${fn:length(idea.likes)})</span>
 											</a>
 										</c:otherwise>
 									</c:choose>
@@ -97,7 +97,7 @@
 												<portlet:param name="ideaContentType" value="IDEA_CONTENT_TYPE_PRIVATE" />
 											</portlet:actionURL>
 											<a href="${removeFavoriteUrl}">
-												<span>Ta bort som favorit (${fn:length(idea.favorites)})</span>
+												<span class="label">Ta bort som favorit</span>&nbsp;<span class="amount">(${fn:length(idea.favorites)})</span>
 											</a>
 										</c:when>
 										<c:otherwise>
@@ -107,7 +107,7 @@
 												<portlet:param name="ideaContentType" value="IDEA_CONTENT_TYPE_PRIVATE" />
 											</portlet:actionURL>
 											<a href="${addFavoriteUrl}">
-												<span>L&auml;gg till som favorit (${fn:length(idea.favorites)})</span>
+												<span class="label">L&auml;gg till som favorit</span>&nbsp;<span class="amount">(${fn:length(idea.favorites)})</span>
 											</a>
 										</c:otherwise>
 									</c:choose>
@@ -117,7 +117,9 @@
 							<ul class="rp-toolbar clearfix">
 								<c:if test="${ideaPermissionChecker.hasPermissionViewInBarium}">
 									<li class="icon barium">
-										<a href="${idea.bariumUrl}" target="_BLANK">Visa i Barium</a>
+										<a href="${idea.bariumUrl}" target="_BLANK">
+										  <span class="label">Visa i Barium</span>
+									  </a>
 									</li>
 								</c:if>
 								
@@ -129,7 +131,9 @@
 											<portlet:param name="id" value="${idea.id}" />
 											<portlet:param name="ideaContentType" value="IDEA_CONTENT_TYPE_PRIVATE" />
 										</portlet:actionURL>
-										<a href="${updateFromBariumUrl}">Uppdatera fr&aring;n Barium</a>
+										<a href="${updateFromBariumUrl}">
+										  <span class="label">Uppdatera fr&aring;n Barium</span>
+									   </a>
 									</li>
 								</c:if>
 							</ul>							

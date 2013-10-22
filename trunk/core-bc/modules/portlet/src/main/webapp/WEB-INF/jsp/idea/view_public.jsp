@@ -68,7 +68,7 @@
 										</liferay-portlet:renderURL>
 									
 										<a href="${ideaPrivateUrl}">
-											<span>Visa st&auml;ngd beskrivning</span>
+											<span class="label">Visa st&auml;ngd beskrivning</span>
 										</a>
 									</li>
 								</c:if>
@@ -83,7 +83,7 @@
 									</c:if>
 								
 									<a class="${linkCssClass}" href="#" data-promptmsg="${signinPromptMsg}">
-										<span>Kommentera (${fn:length(commentsList)})</span>
+										<span class="label">Kommentera</span>&nbsp;<span class="amount">(${fn:length(commentsList)})</span>
 									</a>
 								</li>
 								
@@ -107,7 +107,7 @@
 											</c:if>
 										
 											<a class="${linkCssClass}" href="${removeLikeUrl}" data-promptmsg="${signinPromptMsg}">
-												<span>Sluta gilla (${fn:length(idea.likes)})</span>
+												<span class="label">Sluta gilla</span>&nbsp;<span class="amount">(${fn:length(idea.likes)})</span>
 											</a>
 										</c:when>
 										<c:otherwise>
@@ -127,7 +127,7 @@
 											</c:if>
 										
 											<a class="${linkCssClass}" href="${addLikeUrl}" data-promptmsg="${signinPromptMsg}">
-												<span>Gilla (${fn:length(idea.likes)})</span>
+												<span class="label">Gilla</span>&nbsp;<span class="amount">(${fn:length(idea.likes)})</span>
 											</a>
 										</c:otherwise>
 									</c:choose>
@@ -153,7 +153,7 @@
 											</c:if>
 										
 											<a class="${linkCssClass}" href="${removeFavoriteUrl}" data-promptmsg="${signinPromptMsg}">
-												<span>Ta bort som favorit (${fn:length(idea.favorites)})</span>
+												<span class="label">Ta bort som favorit</span>&nbsp;<span class="amount">(${fn:length(idea.favorites)})</span>
 											</a>
 										</c:when>
 										<c:otherwise>
@@ -174,7 +174,7 @@
 											</c:if>
 										
 											<a class="${linkCssClass}" href="${addFavoriteUrl}" data-promptmsg="${signinPromptMsg}">
-												<span>L&auml;gg till som favorit (${fn:length(idea.favorites)})</span>
+												<span class="label">L&auml;gg till som favorit</span>&nbsp;<span class="amount">(${fn:length(idea.favorites)})</span>
 											</a>
 										</c:otherwise>
 									</c:choose>
