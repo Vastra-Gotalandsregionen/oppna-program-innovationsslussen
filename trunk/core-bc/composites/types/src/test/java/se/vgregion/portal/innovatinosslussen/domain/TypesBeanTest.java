@@ -143,7 +143,7 @@ public class TypesBeanTest {
         for (Object key : bm.keySet()) {
             String name = (String) key;
 
-            if ("ideaContentPrivate".equals(name) || "ideaPerson".equals(name)) {
+            if ("ideaContentPrivate".equals(name) || "ideaPerson".equals(name) || "ideaContentPublic".equals(name)  ) {
                 continue;
             }
 

@@ -190,7 +190,6 @@ public class Idea extends AbstractEntity<String> {
     }
 
     public Set<IdeaContent> getIdeaContents() {
-
         return ideaContents;
     }
 
@@ -249,8 +248,32 @@ public class Idea extends AbstractEntity<String> {
         return getIdeaContent(IdeaContentType.IDEA_CONTENT_TYPE_PUBLIC);
     }
 
+    /**
+     * Keep here for IdeaValidator to work.
+     *
+     * @param ideaContent the new idea content public
+     */
+    public void setIdeaContentPublic(IdeaContent ideaContent) {
+
+    }
+
+
     public IdeaContent getIdeaContentPrivate() {
         return getIdeaContent(IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE);
+    }
+
+    /**
+     * Keep here for IdeaValidator to work.
+     *
+     * @param ideaContent the new idea content private
+     */
+    public void setIdeaContentPrivate(IdeaContent ideaContent) {
+
+    }
+
+    public Set<IdeaUserLike> getLikes() {
+
+        return likes;
     }
 
     private IdeaContent getIdeaContent(IdeaContentType ideaContentType) {
@@ -267,29 +290,6 @@ public class Idea extends AbstractEntity<String> {
             }
         }
         return content;
-    }
-
-    /**
-     * Keep here for IdeaValidator to work.
-     *
-     * @param ideaContent the new idea content private
-     */
-    public void setIdeaContentPrivate(IdeaContent ideaContent) {
-        // Keep here for IdeaValidator to work
-    }
-
-    /**
-     * Keep here for IdeaValidator to work.
-     *
-     * @param ideaContent the new idea contents public
-     */
-    public void setIdeaContentsPublic(IdeaContent ideaContent) {
-        // Keep here for IdeaValidator to work
-    }
-
-    public Set<IdeaUserLike> getLikes() {
-
-        return likes;
     }
 
     /**
