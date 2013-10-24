@@ -110,7 +110,7 @@ public class CreateIdeaViewController extends BaseController {
      * @param model    the model
      * @return the view
      */
-    @RenderMapping(params = "view=confirmation")
+	@RenderMapping(params = "view=confirmation")
     public String showConfirmation(RenderRequest request, RenderResponse response, final ModelMap model) {
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
@@ -156,7 +156,7 @@ public class CreateIdeaViewController extends BaseController {
      * @param result   the binding results
      * @return the view
      */
-    @RenderMapping()
+	@RenderMapping()
     public String createIdea(RenderRequest request, RenderResponse response, final ModelMap model,
             @ModelAttribute Idea idea, BindingResult result) {
 
