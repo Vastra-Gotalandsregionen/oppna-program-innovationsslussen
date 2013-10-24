@@ -25,7 +25,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>createidea</portlet-name>
-		<action-url-redirect>true</action-url-redirect>
+		<action-url-redirect>false</action-url-redirect>
 		<instanceable>false</instanceable>
 		<css-class-wrapper>innovation-create-idea-portlet</css-class-wrapper>
 	</portlet>

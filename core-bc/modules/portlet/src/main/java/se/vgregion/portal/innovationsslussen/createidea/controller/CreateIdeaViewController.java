@@ -334,7 +334,7 @@ public class CreateIdeaViewController extends BaseController {
             model.addAttribute("errors", result);
             model.addAttribute("idea", idea);
 
-            copyRequestParameters(request, response);
+            //copyRequestParameters(request, response);
             response.setRenderParameter("view", "view");
         }
     }

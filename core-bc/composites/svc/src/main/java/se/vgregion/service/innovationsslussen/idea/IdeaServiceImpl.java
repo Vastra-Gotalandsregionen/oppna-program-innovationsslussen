@@ -807,6 +807,7 @@ public class IdeaServiceImpl implements IdeaService {
 
         if (currentPhase != bariumPhase){
           idea.setPhase("" + (bariumPhase));
+          result.setChanged(true);
         }
 
         transactionManager.commit(transaction);

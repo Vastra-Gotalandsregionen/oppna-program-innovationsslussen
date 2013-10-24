@@ -100,21 +100,6 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> im
 
         List<Idea> ideas = findByQuery(queryString, queryObject);
 
-
-        //        System.out.println("monator ideas - " + ideas.size());
-        //
-        //        for (Idea idea : ideas) {
-        //            System.out.println("monator - ideas " + idea.getTitle());
-        //            for (IdeaContent ideaContent : idea.getIdeaContents()) {
-        //                System.out.println("monator - ideasCo " + ideaContent.getIdeaFiles().size());
-        //                for (IdeaFile ideaFile : ideaContent.getIdeaFiles()) {
-        //                    System.out.println("monator - ideasCo " + ideaFile.getName());
-        //
-        //                }
-        //            }
-        //        }
-
-
         if (ideas.size() > 1) {
             throw new IllegalStateException("There shouldn't be more than one idea with the same title.");
             // TODO Erik, vi får diskutera detta. /Patrik
