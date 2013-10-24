@@ -41,6 +41,7 @@ import se.vgregion.portal.innovationsslussen.domain.BariumResponse;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstance;
 import se.vgregion.portal.innovationsslussen.domain.pageiterator.PageIterator;
+import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
 
 /**
  * Created with IntelliJ IDEA.
@@ -84,7 +85,8 @@ public class TypesBeanTest {
 
     @Test
     public void fields() throws IllegalAccessException, InstantiationException, InvocationTargetException, ClassNotFoundException {
-		Class[] types = new Class[] { Idea.class, ApplicationInstance.class,
+		Class[] types = new Class[] { CommentItemVO.class, Idea.class,
+				ApplicationInstance.class,
 				PageIterator.class, Idea.class, BariumResponse.class };
         callConstructors(types);
         doGetterSetterValuesMatch(types);
