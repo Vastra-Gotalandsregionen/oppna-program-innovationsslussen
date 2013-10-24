@@ -20,13 +20,17 @@
 package se.vgregion.service.innovationsslussen.idea;
 
 import java.io.InputStream;
-
-import java.io.Serializable;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -522,8 +526,8 @@ public class IdeaServiceImpl implements IdeaService {
      * .IdeaService#getPublicComments(se.vgregion.portal.innovationsslussen.domain.jpa.Idea)
      */
     @Override
-    public List<CommentItemVO> getPublicComments(Idea idea, int count) {
-        return getComments(idea.getIdeaContentPublic(), count);
+	public List<CommentItemVO> getPublicComments(Idea idea) {
+		return getComments(idea.getIdeaContentPublic());
     }
 
     /* (non-Javadoc)
@@ -531,9 +535,33 @@ public class IdeaServiceImpl implements IdeaService {
      * .IdeaService#getPrivateComments(se.vgregion.portal.innovationsslussen.domain.jpa.Idea)
      */
     @Override
-    public List<CommentItemVO> getPrivateComments(Idea idea, int count) {
-        return getComments(idea.getIdeaContentPrivate(), count);
+	public List<CommentItemVO> getPrivateComments(Idea idea) {
+		return getComments(idea.getIdeaContentPrivate());
     }
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see se.vgregion.service.innovationsslussen.idea
+	 * .IdeaService#getPublicComments
+	 * (se.vgregion.portal.innovationsslussen.domain.jpa.Idea)
+	 */
+	@Override
+	public int getPublicCommentsCount(Idea idea) {
+		return getCommentsCount(idea.getIdeaContentPublic());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see se.vgregion.service.innovationsslussen.idea
+	 * .IdeaService#getPrivateComments
+	 * (se.vgregion.portal.innovationsslussen.domain.jpa.Idea)
+	 */
+	@Override
+	public int getPrivateCommentsCount(Idea idea) {
+		return getCommentsCount(idea.getIdeaContentPrivate());
+	}
 
     /* (non-Javadoc)
      * @see se.vgregion.service.innovationsslussen.idea
@@ -1223,7 +1251,7 @@ public class IdeaServiceImpl implements IdeaService {
         return bariumUrl;
     }
 
-    protected List<CommentItemVO> getComments(IdeaContent ideaContent, int count) {
+	protected List<CommentItemVO> getComments(IdeaContent ideaContent) {
 
         ArrayList<CommentItemVO> commentsList = new ArrayList<CommentItemVO>();
 
@@ -1294,6 +1322,55 @@ public class IdeaServiceImpl implements IdeaService {
 
         return commentsList;
     }
+
+	protected int getCommentsCount(IdeaContent ideaContent) {
+
+		int commentsCount = 0;
+
+		try {
+
+			MBMessageDisplay messageDisplay = null;
+
+			try {
+				messageDisplay = mbMessageLocalService
+						.getDiscussionMessageDisplay(ideaContent.getUserId(),
+								ideaContent.getGroupId(),
+								IdeaContent.class.getName(),
+								ideaContent.getId(),
+								WorkflowConstants.STATUS_ANY);
+			} catch (NullPointerException e) {
+				return commentsCount;
+			}
+
+			MBThread thread = messageDisplay.getThread();
+
+			long threadId = thread.getThreadId();
+			long rootMessageId = thread.getRootMessageId();
+
+			messageComparator = new MessageCreateDateComparator(false);
+
+			@SuppressWarnings("unchecked")
+			List<MBMessage> mbMessages = mbMessageLocalService
+					.getThreadMessages(threadId, WorkflowConstants.STATUS_ANY,
+							messageComparator);
+
+			for (MBMessage mbMessage : mbMessages) {
+
+				long commentId = mbMessage.getMessageId();
+
+				if (commentId != rootMessageId) {
+					commentsCount++;
+				}
+			}
+
+		} catch (PortalException e) {
+			LOGGER.error(e.getMessage(), e);
+		} catch (SystemException e) {
+			LOGGER.error(e.getMessage(), e);
+		}
+
+		return commentsCount;
+	}
 
     protected boolean isUniqueUrlTitle(String urlTitle) {
         boolean isUnique = false;

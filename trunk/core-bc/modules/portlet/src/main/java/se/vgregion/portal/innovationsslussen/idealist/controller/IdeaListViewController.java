@@ -19,13 +19,13 @@
 
 package se.vgregion.portal.innovationsslussen.idealist.controller;
 
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.model.Layout;
-import com.liferay.portal.service.LayoutLocalServiceUtil;
-import com.liferay.portal.theme.ThemeDisplay;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.portlet.PortletPreferences;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +33,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
+
 import se.vgregion.portal.innovationsslussen.BaseController;
 import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
@@ -41,11 +42,13 @@ import se.vgregion.portal.innovationsslussen.domain.pageiterator.PageIteratorCon
 import se.vgregion.portal.innovationsslussen.util.IdeaPortletsConstants;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
 
-import javax.portlet.PortletPreferences;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-import java.util.ArrayList;
-import java.util.List;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.service.LayoutLocalServiceUtil;
+import com.liferay.portal.theme.ThemeDisplay;
 
 /**
  * Controller class for the view mode in idealist portlet.
@@ -108,6 +111,7 @@ public class IdeaListViewController extends BaseController {
 
             long ideaPlid = ideaLayout.getPlid();
 
+			List<Idea> ideasFromService = new ArrayList<Idea>();
             List<Idea> ideaList = new ArrayList<Idea>();
 
             int currentPage = ParamUtil.getInteger(request, "pageNumber",
@@ -119,14 +123,16 @@ public class IdeaListViewController extends BaseController {
 
             if (ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_OPEN_IDEAS)) {
 
-                ideaList = ideaService.findIdeasByGroupId(companyId,
+				ideasFromService = ideaService
+						.findIdeasByGroupId(companyId,
                         scopeGroupId, IdeaStatus.PUBLIC_IDEA, start, entryCount);
 
                 totalCount = ideaService.findIdeaCountByGroupId(companyId, scopeGroupId, IdeaStatus.PUBLIC_IDEA);
             } else if (ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_USER_IDEAS)) {
 
                 if (isSignedIn) {
-                    ideaList = ideaService.findIdeasByGroupIdAndUserId(companyId,
+					ideasFromService = ideaService.findIdeasByGroupIdAndUserId(
+							companyId,
                             scopeGroupId, userId, start, entryCount);
 
                     totalCount = ideaService.findIdeasCountByGroupIdAndUserId(companyId, scopeGroupId, userId);
@@ -136,7 +142,8 @@ public class IdeaListViewController extends BaseController {
             } else if (ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_USER_FAVORITED_IDEAS)) {
 
                 if (isSignedIn) {
-                    ideaList = ideaService.findUserFavoritedIdeas(companyId, scopeGroupId, userId, start, entryCount);
+					ideasFromService = ideaService.findUserFavoritedIdeas(
+							companyId, scopeGroupId, userId, start, entryCount);
 
                     totalCount = ideaService.findUserFavoritedIdeasCount(companyId, scopeGroupId, userId);
                 }
@@ -145,7 +152,8 @@ public class IdeaListViewController extends BaseController {
             } else if (ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_CLOSED_IDEAS)) {
 
                 if (isSignedIn) {
-                    ideaList = ideaService.findIdeasByGroupId(companyId, scopeGroupId,
+					ideasFromService = ideaService.findIdeasByGroupId(
+							companyId, scopeGroupId,
                             IdeaStatus.PRIVATE_IDEA, start, entryCount);
 
                     totalCount = ideaService.findIdeaCountByGroupId(companyId, scopeGroupId, IdeaStatus.PRIVATE_IDEA);
@@ -154,10 +162,23 @@ public class IdeaListViewController extends BaseController {
                 returnView = "view_closed_ideas";
             }
 
+			for (Idea idea : ideasFromService) {
+				int commentsCount = 0;
+
+				if (idea.isPublic()) {
+					commentsCount = ideaService.getPublicCommentsCount(idea);
+				} else {
+					commentsCount = ideaService.getPrivateCommentsCount(idea);
+				}
+
+				idea.setCommentsCount(commentsCount);
+
+				ideaList.add(idea);
+			}
+
             PageIterator pageIterator = new PageIterator(totalCount, currentPage, entryCount, maxPages);
             pageIterator.setShowFirst(false);
             pageIterator.setShowLast(false);
-
 
             model.addAttribute("ideaPlid", ideaPlid);
             model.addAttribute("ideaPortletName", IdeaPortletsConstants.PORTLET_NAME_IDEA_PORTLET);

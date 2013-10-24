@@ -113,6 +113,9 @@ public class Idea extends AbstractEntity<String> {
     @Transient
     private boolean isPublic;
 
+	@Transient
+	private int commentsCount;
+
     /**
      * Constructor.
      */
@@ -368,4 +371,12 @@ public class Idea extends AbstractEntity<String> {
         return "Idea{" +
                 "id='" + id + '}';
     }
+
+	public int getCommentsCount() {
+		return commentsCount;
+	}
+
+	public void setCommentsCount(int commentsCount) {
+		this.commentsCount = commentsCount;
+	}
 }

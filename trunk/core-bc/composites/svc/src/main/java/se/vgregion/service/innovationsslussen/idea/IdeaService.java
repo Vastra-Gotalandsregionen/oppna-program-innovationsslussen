@@ -27,6 +27,7 @@ import java.util.List;
 import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaFile;
+import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserFavorite;
 import se.vgregion.portal.innovationsslussen.domain.json.ObjectEntry;
 import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
 import se.vgregion.service.barium.BariumException;
@@ -270,21 +271,41 @@ public interface IdeaService {
      * Get all public comments for an {@link Idea} {@link CommentItemVO}.
      *
      * @param idea {@link Idea} the idea
-     * @param count max count of comments.
      * @return a {@link Idea} of {@link Idea}s
      */
 
-    List<CommentItemVO> getPublicComments(Idea idea, int count);
+	List<CommentItemVO> getPublicComments(Idea idea);
 
     /**
      * Get all private comments for an {@link Idea} {@link CommentItemVO}.
      *
      * @param idea {@link Idea} the idea
-     * @param count max count of comments.
      * @return a {@link Idea} of {@link Idea}s
      */
 
-    List<CommentItemVO> getPrivateComments(Idea idea, int count);
+	List<CommentItemVO> getPrivateComments(Idea idea);
+
+	/**
+	 * Get the number of public comments for an {@link Idea}
+	 * {@link CommentItemVO}.
+	 * 
+	 * @param idea
+	 *            {@link Idea} the idea
+	 * @return a {@link Idea} of {@link Idea}s
+	 */
+
+	int getPublicCommentsCount(Idea idea);
+
+	/**
+	 * Get the number of private comments for an {@link Idea}
+	 * {@link CommentItemVO}.
+	 * 
+	 * @param idea
+	 *            {@link Idea} the idea
+	 * @return a {@link Idea} of {@link Idea}s
+	 */
+
+	int getPrivateCommentsCount(Idea idea);
 
 
 
