@@ -28,11 +28,13 @@
 		<div class="idea-inner">
 		
 			<h1>Skicka in din id&eacute;</h1>
-			<p class="sub-heading">
-				Skicka in en aff&auml;rs- eller produktid&eacute; till Innovationssluss V&auml;stra G&ouml;taland
-			</p>
 			
 			<div class="intro">
+			
+	            <p class="sub-heading">
+	                Skicka in en aff&auml;rs- eller produktid&eacute; till Innovationssluss V&auml;stra G&ouml;taland
+	            </p>
+			
 				<p>
 					Har du en l&ouml;sning p&aring; ett praktiskt problem p&aring; din arbetsplats? &Auml;r du anst&auml;lld inom V&auml;stra G&ouml;talandsregionen? D&aring; &auml;r du v&auml;lkommen att skicka in din id&eacute; till oss. Fyll i formul&auml;ret och skicka in, s&aring; blir kontaktad av oss inom kort.
 				</p>
