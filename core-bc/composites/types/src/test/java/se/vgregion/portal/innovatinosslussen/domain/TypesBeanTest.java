@@ -19,6 +19,19 @@
 
 package se.vgregion.portal.innovatinosslussen.domain;
 
+import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import junit.framework.Assert;
 
 import org.apache.commons.collections.BeanMap;
@@ -28,14 +41,6 @@ import se.vgregion.portal.innovationsslussen.domain.BariumResponse;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstance;
 import se.vgregion.portal.innovationsslussen.domain.pageiterator.PageIterator;
-import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
-
-import java.io.File;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
-import java.net.URL;
-import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -79,7 +84,8 @@ public class TypesBeanTest {
 
     @Test
     public void fields() throws IllegalAccessException, InstantiationException, InvocationTargetException, ClassNotFoundException {
-        Class[] types = new Class[]{CommentItemVO.class, Idea.class, ApplicationInstance.class, PageIterator.class, Idea.class, BariumResponse.class};
+		Class[] types = new Class[] { Idea.class, ApplicationInstance.class,
+				PageIterator.class, Idea.class, BariumResponse.class };
         callConstructors(types);
         doGetterSetterValuesMatch(types);
     }

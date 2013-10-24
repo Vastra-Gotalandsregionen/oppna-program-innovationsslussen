@@ -69,11 +69,9 @@
 									<li class="likes">
 										${fn:length(idea.likes)}
 									</li>
-									<%-- 
 									<li class="comments">
-										(${fn:length(idea.likes)})
+										${idea.commentsCount}
 									</li>
-									--%>
 								</ul>
 							</div>
 							<div class="idea-content-2">

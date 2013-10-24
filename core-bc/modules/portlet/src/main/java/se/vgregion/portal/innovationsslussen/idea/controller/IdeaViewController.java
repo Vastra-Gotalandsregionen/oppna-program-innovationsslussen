@@ -24,9 +24,13 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.security.acl.Group;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -34,12 +38,7 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceResponse;
 import javax.servlet.http.HttpServletResponse;
-import javax.transaction.Transaction;
 
-import com.liferay.portal.model.Layout;
-import com.liferay.portal.model.Role;
-import com.liferay.portal.service.*;
-import org.apache.commons.collections.BeanMap;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
@@ -47,9 +46,7 @@ import org.apache.commons.fileupload.portlet.PortletFileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -71,7 +68,6 @@ import se.vgregion.service.innovationsslussen.idea.IdeaService;
 import se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionChecker;
 import se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionCheckerService;
 import se.vgregion.service.innovationsslussen.ldap.LdapService;
-import se.vgregion.service.innovationsslussen.util.IdeaServiceConstants;
 import se.vgregion.util.Util;
 
 import com.liferay.portal.kernel.exception.PortalException;
@@ -81,7 +77,14 @@ import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
+import com.liferay.portal.service.LayoutLocalServiceUtil;
+import com.liferay.portal.service.RoleLocalServiceUtil;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextFactory;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.messageboards.model.MBMessageDisplay;
@@ -178,9 +181,9 @@ public class IdeaViewController extends BaseController {
                 List<CommentItemVO> commentsList = null;
 
                 if (ideaType.equals("private")) {
-                    commentsList = ideaService.getPrivateComments(idea, maxCommentCountDisplay);
+					commentsList = ideaService.getPrivateComments(idea);
                 } else {
-                    commentsList = ideaService.getPublicComments(idea, maxCommentCountDisplay);
+					commentsList = ideaService.getPublicComments(idea);
                 }
 
                 IdeaPermissionChecker ideaPermissionChecker = ideaPermissionCheckerService.getIdeaPermissionChecker(
