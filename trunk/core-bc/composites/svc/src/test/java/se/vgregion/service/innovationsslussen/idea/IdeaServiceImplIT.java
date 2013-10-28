@@ -19,6 +19,7 @@
 
 package se.vgregion.service.innovationsslussen.idea;
 
+import java.util.concurrent.Future;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +27,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -133,7 +135,7 @@ public class IdeaServiceImplIT {
 
         when(bariumService.getBariumIdea("bariumId1")).thenReturn(ideaObjectFields);
         when(bariumService.asyncGetIdeaObjectFields(anyString())).thenCallRealMethod();
-        when(bariumService.asyncGetIdeaPhaseFuture(anyString())).thenCallRealMethod();
+        when(bariumService.asyncGetIdeaPhaseFuture(anyString())).thenReturn(new AsyncResult<String>("1"));
 
         ReflectionTestUtils.setField(bariumService, "executor", Executors.newCachedThreadPool());
     }

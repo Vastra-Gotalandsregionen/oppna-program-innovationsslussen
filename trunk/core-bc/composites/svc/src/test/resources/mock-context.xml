@@ -39,6 +39,14 @@
         <constructor-arg index="7" ref="userLocalService" />
         <constructor-arg index="8" ref="userGroupRoleLocalService" />
         <constructor-arg index="9" ref="resourceLocalService" />
+        <constructor-arg index="10" ref="counterLocalService" />
+        <constructor-arg index="11" ref="contactLocalService" />
+        <constructor-arg index="12" ref="assetEntryLocalService" />
+        <constructor-arg index="13" ref="groupLocalService" />
+        <constructor-arg index="14" ref="classNameLocalService" />
+        <constructor-arg index="15" ref="resourcePermissionLocalService" />
+        <constructor-arg index="16" ref="roleLocalService" />
+        <constructor-arg index="17" ref="layoutSetLocalService" />
     </bean>
 
     <bean id="ideaContentRepository" class="org.mockito.Mockito" factory-method="mock">
@@ -71,7 +79,30 @@
     <bean id="resourceLocalService" class="org.mockito.Mockito" factory-method="mock" >
         <constructor-arg value="com.liferay.portal.service.ResourceLocalService" />
     </bean>
-
+     <bean id="counterLocalService" class="org.mockito.Mockito" factory-method="mock" >
+        <constructor-arg value="com.liferay.counter.service.CounterLocalService" />
+    </bean>
+    <bean id="contactLocalService" class="org.mockito.Mockito" factory-method="mock" >
+        <constructor-arg value="com.liferay.portal.service.ContactLocalService" />
+    </bean>
+    <bean id="assetEntryLocalService" class="org.mockito.Mockito" factory-method="mock" >
+        <constructor-arg value="com.liferay.portlet.asset.service.AssetEntryLocalService" />
+    </bean>
+    <bean id="groupLocalService" class="org.mockito.Mockito" factory-method="mock" >
+        <constructor-arg value="com.liferay.portal.service.GroupLocalService" />
+    </bean>
+    <bean id="classNameLocalService" class="org.mockito.Mockito" factory-method="mock" >
+        <constructor-arg value="com.liferay.portal.service.ClassNameLocalService" />
+    </bean>
+    <bean id="resourcePermissionLocalService" class="org.mockito.Mockito" factory-method="mock" >
+        <constructor-arg value="com.liferay.portal.service.ResourcePermissionLocalService" />
+    </bean>
+    <bean id="roleLocalService" class="org.mockito.Mockito" factory-method="mock" >
+        <constructor-arg value="com.liferay.portal.service.RoleLocalService" />
+    </bean>
+    <bean id="layoutSetLocalService" class="org.mockito.Mockito" factory-method="mock" >
+        <constructor-arg value="com.liferay.portal.service.LayoutSetLocalService" />
+    </bean>
 
     <bean id="ideaFileRepository" class="se.vgregion.service.innovationsslussen.repository.ideafile.JpaIdeaFileRepositoryImpl"/>
 
