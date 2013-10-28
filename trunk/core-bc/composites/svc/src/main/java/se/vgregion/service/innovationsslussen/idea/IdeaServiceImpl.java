@@ -481,7 +481,9 @@ public class IdeaServiceImpl implements IdeaService {
             user.setAgreedToTermsOfUse(true);
             userLocalService.addUser(user);
 
-    //Insert Contact for a user
+            userLocalService.addDefaultGroups(user.getUserId());
+            userLocalService.addDefaultRoles(user.getUserId());
+            //Insert Contact for a user
 
             Contact contact = contactLocalService.createContact(idContact);
             contact.setCompanyId(companyId);
