@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+
+<!-- Copyright 2010 Västra Götalandsregionen This library is free software; you can redistribute it and/or modify it
+  under the terms of version 2.1 of the GNU Lesser General Public License as published by the Free Software Foundation.
+  This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+  of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+  You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the
+  Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA -->
+
+<resource-action-mapping>
+
+	<model-resource>
+		<model-name>se.vgregion.portal.innovationsslussen.domain.jpa.Idea</model-name>
+		<portlet-ref>
+			<portlet-name>idea</portlet-name>
+		</portlet-ref>
+		<permissions>
+			<supports>
+				<action-key>ADD_COMMENT_PUBLIC</action-key>
+				<action-key>ADD_COMMENT_PRIVATE</action-key>
+                <action-key>ADD_DOCUMENT_PUBLIC</action-key>
+                <action-key>ADD_DOCUMENT_PRIVATE</action-key>
+				<action-key>ADD_FAVORITE</action-key>
+				<action-key>ADD_LIKE</action-key>
+				<action-key>CREATE_IDEA</action-key>
+				<action-key>CREATE_IDEA_FOR_OTHER_USER</action-key>
+				<action-key>DELETE_COMMENT_PUBLIC</action-key>
+				<action-key>DELETE_COMMENT_PRIVATE</action-key>
+				<action-key>DELETE_FAVORITE</action-key>
+				<action-key>DELETE_LIKE</action-key>
+				<action-key>DELETE</action-key>
+				<action-key>PERMISSIONS</action-key>
+				<action-key>UPDATE_FROM_BARIUM</action-key>
+				<action-key>VIEW_IDEA_PUBLIC</action-key>
+				<action-key>VIEW_IDEA_PRIVATE</action-key>
+				<action-key>VIEW_COMMENT_PUBLIC</action-key>
+				<action-key>VIEW_COMMENT_PRIVATE</action-key>
+				<action-key>VIEW_IN_BARIUM</action-key>
+			</supports>
+			<community-defaults>
+			    <action-key>ADD_COMMENT_PUBLIC</action-key>
+				<action-key>ADD_FAVORITE</action-key>
+				<action-key>ADD_LIKE</action-key>
+				<action-key>DELETE_FAVORITE</action-key>
+				<action-key>DELETE_LIKE</action-key>
+				<action-key>VIEW_IDEA_PUBLIC</action-key>
+				<action-key>VIEW_COMMENT_PUBLIC</action-key>
+			</community-defaults>
+			<guest-defaults>
+				<action-key>VIEW_IDEA_PUBLIC</action-key>
+				<action-key>VIEW_COMMENT_PUBLIC</action-key>
+			</guest-defaults>
+			<guest-unsupported>
+			    <action-key>ADD_COMMENT_PUBLIC</action-key>
+			    <action-key>ADD_COMMENT_PRIVATE</action-key>
+                <action-key>ADD_DOCUMENT_PUBLIC</action-key>
+                <action-key>ADD_DOCUMENT_PRIVATE</action-key>
+			    <action-key>ADD_FAVORITE</action-key>
+				<action-key>ADD_LIKE</action-key>
+			    <action-key>CREATE_IDEA</action-key>
+				<action-key>DELETE</action-key>
+				<action-key>DELETE_COMMENT_PUBLIC</action-key>
+				<action-key>DELETE_COMMENT_PRIVATE</action-key>
+				<action-key>DELETE</action-key>
+				<action-key>PERMISSIONS</action-key>
+				<action-key>UPDATE_FROM_BARIUM</action-key>
+				<action-key>VIEW_IDEA_PRIVATE</action-key>
+				<action-key>VIEW_COMMENT_PRIVATE</action-key>
+				<action-key>VIEW_IN_BARIUM</action-key>
+			</guest-unsupported>
+			<owner-defaults>
+				<action-key>ADD_COMMENT_PUBLIC</action-key>
+				<action-key>ADD_COMMENT_PRIVATE</action-key>
+				<action-key>ADD_FAVORITE</action-key>
+				<action-key>ADD_LIKE</action-key>
+				<action-key>DELETE_FAVORITE</action-key>
+				<action-key>DELETE_LIKE</action-key>
+				<action-key>VIEW_IDEA_PUBLIC</action-key>
+				<action-key>VIEW_IDEA_PRIVATE</action-key>
+				<action-key>VIEW_COMMENT_PUBLIC</action-key>
+				<action-key>VIEW_COMMENT_PRIVATE</action-key>
+			</owner-defaults>
+		</permissions>
+	</model-resource>
+
+</resource-action-mapping>
