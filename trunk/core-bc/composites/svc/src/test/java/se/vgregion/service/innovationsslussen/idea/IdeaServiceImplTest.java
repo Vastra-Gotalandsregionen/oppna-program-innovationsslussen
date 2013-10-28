@@ -19,6 +19,8 @@
 
 package se.vgregion.service.innovationsslussen.idea;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.service.ResourceLocalService;
 import com.liferay.portal.service.UserGroupRoleLocalService;
 import com.liferay.portal.service.UserLocalService;
@@ -136,7 +138,13 @@ public class IdeaServiceImplTest {
         newItem.getIdeaContents().add(pri);
         newItem.getIdeaContents().add(pub);
 
-        Idea bar = service.addIdea(newItem, "bar");
+        try {
+            Idea bar = service.addIdea(newItem, "bar");
+        } catch (PortalException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (SystemException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
     }
 
     @Test @Ignore

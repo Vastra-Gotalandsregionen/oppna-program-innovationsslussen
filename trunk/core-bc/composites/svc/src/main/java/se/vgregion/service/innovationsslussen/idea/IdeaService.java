@@ -19,6 +19,8 @@
 
 package se.vgregion.service.innovationsslussen.idea;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Collection;
@@ -78,7 +80,7 @@ public interface IdeaService {
      * @return the idea
      * @throws CreateIdeaException the create idea exception
      */
-    Idea addIdea(Idea idea, String schemeServerNamePort) throws CreateIdeaException;
+    Idea addIdea(Idea idea, String schemeServerNamePort) throws CreateIdeaException, PortalException, SystemException;
 
     /**
      * Find an {@link Idea}.
