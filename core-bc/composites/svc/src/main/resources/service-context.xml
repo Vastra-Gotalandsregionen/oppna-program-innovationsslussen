@@ -88,6 +88,8 @@
   <bean id="userLocalService" class="com.liferay.portal.service.UserLocalServiceUtil" factory-method="getService" />
   <bean id="userGroupRoleLocalService" class="com.liferay.portal.service.UserGroupRoleLocalServiceUtil" factory-method="getService" />
   <bean id="resourceLocalService" class="com.liferay.portal.service.ResourceLocalServiceUtil" factory-method="getService" />
+  <bean id="counterLocalService" class="com.liferay.counter.service.CounterLocalServiceUtil" factory-method="getService" />
+
 
   <import resource="ldap-config.xml" />
 

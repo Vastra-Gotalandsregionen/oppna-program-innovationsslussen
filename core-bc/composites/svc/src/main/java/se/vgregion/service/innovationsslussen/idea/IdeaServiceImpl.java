@@ -19,6 +19,8 @@
 
 package se.vgregion.service.innovationsslussen.idea;
 
+import com.liferay.counter.service.CounterLocalService;
+import com.liferay.portal.NoSuchUserException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -158,6 +160,10 @@ public class IdeaServiceImpl implements IdeaService {
 
     @Autowired
     private ResourceLocalService resourceLocalService;
+
+    @Autowired
+    private CounterLocalService counterLocalService;
+
     private MessageCreateDateComparator messageComparator;
 
 
@@ -264,13 +270,15 @@ public class IdeaServiceImpl implements IdeaService {
      */
     @Override
     @Transactional(rollbackFor = CreateIdeaException.class)
-    public Idea addIdea(Idea idea, String schemeServerNamePort) throws CreateIdeaException {
+    public Idea addIdea(Idea idea, String schemeServerNamePort) throws CreateIdeaException, PortalException, SystemException {
 
         // Do the urlTitle and ideaSiteLink before sending to Barium
         if (idea.getUrlTitle() == null) {
             idea.setUrlTitle(generateNewUrlTitle(idea.getTitle()));
         }
         idea.setIdeaSiteLink(generateIdeaSiteLink(schemeServerNamePort, idea.getUrlTitle()));
+
+        idea = checkIfIdeaIsForAnotherPerson(idea);
 
         // Create Barium Idea
         BariumResponse bariumResponse = bariumService.createIdea(idea);
@@ -347,6 +355,61 @@ public class IdeaServiceImpl implements IdeaService {
         }
 
         return idea;
+    }
+
+    private Idea checkIfIdeaIsForAnotherPerson(Idea idea) throws SystemException, PortalException {
+
+            String ideaUserScreenName = userLocalService.getUser(idea.getUserId()).getScreenName();
+            String ideaPersonVgrId = idea.getIdeaPerson().getVgrId();
+
+            if (!ideaUserScreenName.equals(ideaPersonVgrId)){
+                idea.getUserId();
+
+                User ideaOriginatorUser;
+
+                try{
+                    ideaOriginatorUser = userLocalService.getUserByScreenName(idea.getCompanyId(),ideaPersonVgrId);
+                }catch (NoSuchUserException e){
+
+
+                    ideaOriginatorUser = userLocalService.createUser(counterLocalService.increment());
+
+                    ideaOriginatorUser.setScreenName(ideaPersonVgrId);
+                    ideaOriginatorUser.setEmailAddress(idea.getIdeaPerson().getEmail());
+                    ideaOriginatorUser.setCompanyId(idea.getCompanyId());
+                    ideaOriginatorUser.setLanguageId("sv_SE");
+                    ideaOriginatorUser.setActive(true);
+                    ideaOriginatorUser.setFirstName("test");
+                    ideaOriginatorUser.setLastName("test");
+                    ideaOriginatorUser.setJobTitle("");
+                    ideaOriginatorUser.setPassword("test");
+                    ideaOriginatorUser.setModifiedDate(new Date());
+                    ideaOriginatorUser.setCreateDate(new Date());
+
+                    ideaOriginatorUser = userLocalService.addUser(ideaOriginatorUser);
+
+
+              //   ideaOriginatorUser = userLocalService.addUser(counterLocalService.increment() /* UserId */,
+               //             idea.getCompanyId() /* companyId */, false /* autoPassword */, "test" /* password1 */, "test" /* password2 */,
+               //             false /* autoScreenName */, ideaPersonVgrId /* screenName == vgrId */,
+               //             idea.getIdeaPerson().getEmail() /* emailAddress */, 0 /* facebookId */, "" /* openId */,
+               //             defaultLocale /* locale */, "" /* Given name */, "" /* middleName */, "" /* surname */, 0 /* prefixId */, 0 /* suffixId */,
+               //             true /* male */, 1 /* birthdayMonth */, 1 /* birthdayDay */,
+               //             1990 /* birthdayYear */, "" /* jobTitle */, null /* groupIds */, null /* organizationIds */,
+               //             null /* roleIds */, null /* userGroupIds */, false /* sendEmail */, serviceContext /* serviceContext */);
+                }
+
+
+                Long ideaOriginatorUserId = ideaOriginatorUser.getUserId();
+
+                idea.setUserId(ideaOriginatorUserId);
+                idea.getIdeaPerson().setUserId(ideaOriginatorUserId);
+                idea.getIdeaContentPrivate().setUserId(ideaOriginatorUserId);
+                idea.getIdeaContentPublic().setUserId(ideaOriginatorUserId);
+            }
+
+        return idea;
+
     }
 
     /* (non-Javadoc)
