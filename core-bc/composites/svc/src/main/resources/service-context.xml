@@ -64,16 +64,24 @@
 	<bean id="ideaSettingsService" class="se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsServiceImpl"/>
 
 	<bean id="ideaService" class="se.vgregion.service.innovationsslussen.idea.IdeaServiceImpl">
-	    <constructor-arg index="0" ref="ideaRepository" />
+        <constructor-arg index="0" ref="ideaRepository" />
         <constructor-arg index="1" ref="ideaFileRepository" />
-	    <constructor-arg index="2" ref="ideaUserLikeRepository" />
-	    <constructor-arg index="3" ref="ideaUserFavoriteRepository" />
-	    <constructor-arg index="4" ref="bariumService" />
-	    <constructor-arg index="5" ref="ideaSettingsService" />
-	    <constructor-arg index="6" ref="mbMessageLocalService" />
-	    <constructor-arg index="7" ref="userLocalService" />
-	    <constructor-arg index="8" ref="userGroupRoleLocalService" />
-	    <constructor-arg index="9" ref="resourceLocalService" />
+        <constructor-arg index="2" ref="ideaUserLikeRepository" />
+        <constructor-arg index="3" ref="ideaUserFavoriteRepository" />
+        <constructor-arg index="4" ref="bariumService" />
+        <constructor-arg index="5" ref="ideaSettingsService" />
+        <constructor-arg index="6" ref="mbMessageLocalService" />
+        <constructor-arg index="7" ref="userLocalService" />
+        <constructor-arg index="8" ref="userGroupRoleLocalService" />
+        <constructor-arg index="9" ref="resourceLocalService" />
+        <constructor-arg index="10" ref="counterLocalService" />
+        <constructor-arg index="11" ref="contactLocalService" />
+        <constructor-arg index="12" ref="assetEntryLocalService" />
+        <constructor-arg index="13" ref="groupLocalService" />
+        <constructor-arg index="14" ref="classNameLocalService" />
+        <constructor-arg index="15" ref="resourcePermissionLocalService" />
+        <constructor-arg index="16" ref="roleLocalService" />
+        <constructor-arg index="17" ref="layoutSetLocalService" />
 	</bean>
 	
 	<bean id="ideaPermissionCheckerService" class="se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionCheckerServiceImpl">
@@ -89,6 +97,14 @@
   <bean id="userGroupRoleLocalService" class="com.liferay.portal.service.UserGroupRoleLocalServiceUtil" factory-method="getService" />
   <bean id="resourceLocalService" class="com.liferay.portal.service.ResourceLocalServiceUtil" factory-method="getService" />
   <bean id="counterLocalService" class="com.liferay.counter.service.CounterLocalServiceUtil" factory-method="getService" />
+  <bean id="contactLocalService" class="com.liferay.portal.service.ContactLocalServiceUtil" factory-method="getService" />
+  <bean id="assetEntryLocalService" class="com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil" factory-method="getService" />
+  <bean id="groupLocalService" class="com.liferay.portal.service.GroupLocalServiceUtil" factory-method="getService" />
+  <bean id="classNameLocalService" class="com.liferay.portal.service.ClassNameLocalServiceUtil" factory-method="getService" />
+  <bean id="resourcePermissionLocalService" class="com.liferay.portal.service.ResourcePermissionLocalServiceUtil" factory-method="getService" />
+  <bean id="roleLocalService" class="com.liferay.portal.service.RoleLocalServiceUtil" factory-method="getService" />
+  <bean id="layoutSetLocalService" class="com.liferay.portal.service.LayoutSetLocalServiceUtil" factory-method="getService" />
+
 
 
   <import resource="ldap-config.xml" />

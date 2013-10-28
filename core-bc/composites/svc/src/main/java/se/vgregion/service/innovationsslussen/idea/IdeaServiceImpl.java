@@ -18,9 +18,6 @@
  */
 
 package se.vgregion.service.innovationsslussen.idea;
-
-import com.liferay.counter.service.CounterLocalService;
-import com.liferay.portal.NoSuchUserException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -31,6 +28,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -82,6 +80,23 @@ import se.vgregion.service.innovationsslussen.util.FriendlyURLNormalizer;
 import se.vgregion.service.innovationsslussen.util.IdeaServiceConstants;
 import se.vgregion.util.Util;
 
+
+import com.liferay.portal.NoSuchUserException;
+import com.liferay.portal.model.ClassName;
+import com.liferay.portal.model.Contact;
+import com.liferay.portal.model.Group;
+import com.liferay.portal.model.ResourcePermission;
+import com.liferay.portal.model.LayoutSet;
+import com.liferay.portal.service.LayoutSetLocalService;
+import com.liferay.portal.model.Role;
+import com.liferay.portal.service.ClassNameLocalService;
+import com.liferay.portal.service.ContactLocalService;
+import com.liferay.portal.service.GroupLocalService;
+import com.liferay.portal.service.ResourcePermissionLocalService;
+import com.liferay.portal.service.RoleLocalService;
+import com.liferay.portlet.asset.model.AssetEntry;
+import com.liferay.portlet.asset.service.AssetEntryLocalService;
+import com.liferay.counter.service.CounterLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.PropsKeys;
@@ -164,6 +179,28 @@ public class IdeaServiceImpl implements IdeaService {
     @Autowired
     private CounterLocalService counterLocalService;
 
+    @Autowired
+    private ContactLocalService contactLocalService;
+
+    @Autowired
+    private AssetEntryLocalService assetEntryLocalService;
+
+    @Autowired
+    private GroupLocalService groupLocalService;
+
+    @Autowired
+    private ClassNameLocalService classNameLocalService;
+
+    @Autowired
+    private ResourcePermissionLocalService resourcePermissionLocalService;
+
+    @Autowired
+    private RoleLocalService roleLocalService;
+
+    @Autowired
+    private LayoutSetLocalService layoutSetLocalService;
+
+
     private MessageCreateDateComparator messageComparator;
 
 
@@ -194,7 +231,11 @@ public class IdeaServiceImpl implements IdeaService {
             IdeaUserLikeRepository ideaUserLikeRepository, IdeaUserFavoriteRepository ideaUserFavoriteRepository,
             BariumService bariumService, IdeaSettingsService ideaSettingsService,
             MBMessageLocalService mbMessageLocalService, UserLocalService userLocalService,
-            UserGroupRoleLocalService userGroupRoleLocalService, ResourceLocalService resourceLocalService) {
+            UserGroupRoleLocalService userGroupRoleLocalService, ResourceLocalService resourceLocalService,
+            CounterLocalService counterLocalService, ContactLocalService contactLocalService,
+            AssetEntryLocalService assetEntryLocalService, GroupLocalService groupLocalService,
+            ClassNameLocalService classNameLocalService, ResourcePermissionLocalService resourcePermissionLocalService,
+            RoleLocalService roleLocalService, LayoutSetLocalService layoutSetLocalService) {
         this.ideaRepository = ideaRepository;
         this.ideaFileRepository = ideaFileRepository;
         this.ideaUserLikeRepository = ideaUserLikeRepository;
@@ -205,6 +246,14 @@ public class IdeaServiceImpl implements IdeaService {
         this.userLocalService = userLocalService;
         this.userGroupRoleLocalService = userGroupRoleLocalService;
         this.resourceLocalService = resourceLocalService;
+        this.counterLocalService = counterLocalService;
+        this.contactLocalService= contactLocalService;
+        this.assetEntryLocalService = assetEntryLocalService;
+        this.groupLocalService = groupLocalService;
+        this.classNameLocalService = classNameLocalService;
+        this.resourcePermissionLocalService = resourcePermissionLocalService;
+        this.roleLocalService = roleLocalService;
+        this.layoutSetLocalService = layoutSetLocalService;
 
     }
 
@@ -372,33 +421,7 @@ public class IdeaServiceImpl implements IdeaService {
                 }catch (NoSuchUserException e){
 
 
-                    ideaOriginatorUser = userLocalService.createUser(counterLocalService.increment());
-
-                    ideaOriginatorUser.setScreenName(ideaPersonVgrId);
-                    ideaOriginatorUser.setEmailAddress(idea.getIdeaPerson().getEmail());
-                    ideaOriginatorUser.setCompanyId(idea.getCompanyId());
-                    ideaOriginatorUser.setLanguageId("sv_SE");
-                    ideaOriginatorUser.setActive(true);
-                    ideaOriginatorUser.setFirstName("test");
-                    ideaOriginatorUser.setLastName("test");
-                    ideaOriginatorUser.setJobTitle("");
-                    ideaOriginatorUser.setPassword("test");
-                    ideaOriginatorUser.setModifiedDate(new Date());
-                    ideaOriginatorUser.setCreateDate(new Date());
-
-                    ideaOriginatorUser = userLocalService.addUser(ideaOriginatorUser);
-
-
-              //   ideaOriginatorUser = userLocalService.addUser(counterLocalService.increment() /* UserId */,
-               //             idea.getCompanyId() /* companyId */, false /* autoPassword */, "test" /* password1 */, "test" /* password2 */,
-               //             false /* autoScreenName */, ideaPersonVgrId /* screenName == vgrId */,
-               //             idea.getIdeaPerson().getEmail() /* emailAddress */, 0 /* facebookId */, "" /* openId */,
-               //             defaultLocale /* locale */, "" /* Given name */, "" /* middleName */, "" /* surname */, 0 /* prefixId */, 0 /* suffixId */,
-               //             true /* male */, 1 /* birthdayMonth */, 1 /* birthdayDay */,
-               //             1990 /* birthdayYear */, "" /* jobTitle */, null /* groupIds */, null /* organizationIds */,
-               //             null /* roleIds */, null /* userGroupIds */, false /* sendEmail */, serviceContext /* serviceContext */);
-                }
-
+                ideaOriginatorUser = createUser(idea, ideaPersonVgrId);
 
                 Long ideaOriginatorUserId = ideaOriginatorUser.getUserId();
 
@@ -406,9 +429,153 @@ public class IdeaServiceImpl implements IdeaService {
                 idea.getIdeaPerson().setUserId(ideaOriginatorUserId);
                 idea.getIdeaContentPrivate().setUserId(ideaOriginatorUserId);
                 idea.getIdeaContentPublic().setUserId(ideaOriginatorUserId);
+                }
             }
 
         return idea;
+
+    }
+
+    private User createUser(Idea idea , String ideaPersonVgrId) {
+
+        try {
+            long companyId = idea.getCompanyId();
+            long groupId= idea.getGroupId();
+            String password1= "qUqP5cyxm6YcTAhz05Hph5gvu9M="; //test
+            String domainName = null;
+            long facebookId=0;
+            String openId=null;
+            String firstName= idea.getIdeaPerson().getName();
+            String lastName="";
+            int prefixId=0;
+            int suffixId=0;
+            String jobTitle="";
+
+            String emailAddress = idea.getIdeaPerson().getEmail();
+
+            String greeting="Welcome "+ ideaPersonVgrId;
+
+            long idContact = counterLocalService.increment();
+
+            User user = userLocalService.createUser(counterLocalService.increment());
+            user.setCompanyId(companyId);
+            user.setPassword(password1);
+            user.setPasswordEncrypted(true);
+            user.setPasswordReset(false);
+            user.setPasswordModifiedDate(new Date());
+            user.setScreenName(ideaPersonVgrId);
+            user.setGreeting(greeting);
+            user.setEmailAddress(emailAddress);
+            user.setFacebookId(facebookId);
+            user.setOpenId(openId);
+            user.setFirstName(firstName);
+            user.setLastName(lastName);
+            user.setJobTitle(jobTitle);
+            user.setCreateDate(new Date ());
+            user.setContactId(idContact);
+            user.setCreateDate(new Date());
+            user.setModifiedDate(new Date());
+            user.setLanguageId("sv_SE");
+            user.setTimeZoneId("Europe/Paris");
+            user.setActive(true);
+            user.setAgreedToTermsOfUse(true);
+            userLocalService.addUser(user);
+
+    //Insert Contact for a user
+
+            Contact contact = contactLocalService.createContact(idContact);
+            contact.setCompanyId(companyId);
+            contact.setCreateDate(new Date());
+            contact.setUserName(ideaPersonVgrId);
+            contact.setUserId(user.getUserId());
+            contact.setModifiedDate(new Date());
+            contact.setFirstName("contact-"+contact.getContactId());
+            contact.setLastName("contact-"+contact.getContactId());
+            contact.setMiddleName("contact-"+contact.getContactId());
+            contact.setPrefixId(prefixId);
+            contact.setBirthday(new Date());
+            contact.setSuffixId(suffixId);
+            contact.setJobTitle(jobTitle+contact.getContactId());
+
+            contactLocalService.addContact(contact);
+
+            //Associate a role with user
+            long userid = user.getUserId();
+            long userIds[] = {userid};
+            Role role = roleLocalService.getRole(companyId, "User");
+            userLocalService.addRoleUsers(role.getRoleId(), userIds);
+            long roleids[]= {role.getRoleId()};
+            userGroupRoleLocalService.addUserGroupRoles(user.getUserId(), groupId, roleids);
+            ClassName clsNameUser = classNameLocalService.getClassName("com.liferay.portal.model.User");
+            long classNameId=clsNameUser.getClassNameId();
+
+            //Insert Group for a user
+            long gpId = counterLocalService.increment();
+            Group userGrp = groupLocalService.createGroup(gpId);
+            userGrp.setClassNameId(classNameId);
+            userGrp.setClassPK(userid);
+            userGrp.setCompanyId(companyId);
+            userGrp.setName("group"+String.valueOf(userid));
+            userGrp.setFriendlyURL("/group"+gpId);
+            userGrp.setCreatorUserId(userid);
+            userGrp.setActive(true);
+            groupLocalService.addGroup(userGrp);
+
+    //Create AssetEntry
+            long assetEntryId = counterLocalService.increment();
+            AssetEntry ae = assetEntryLocalService.createAssetEntry(assetEntryId);
+            ae.setCompanyId(companyId);
+            ae.setClassPK(user.getUserId());
+            ae.setGroupId(userGrp.getGroupId());
+            ae.setClassNameId(classNameId);
+            assetEntryLocalService.addAssetEntry(ae);
+
+            //Insert ResourcePermission for a User
+            long resPermId = counterLocalService.increment();
+            ResourcePermission rpEntry = resourcePermissionLocalService.createResourcePermission(resPermId);
+            rpEntry.setCompanyId(companyId);
+            rpEntry.setName("com.liferay.portal.model.User");
+            rpEntry.setPrimaryKey(userid);
+            rpEntry.setPrimKey("" + userid);
+            rpEntry.setRoleId(role.getRoleId());
+            rpEntry.setScope(4);
+            resourcePermissionLocalService.addResourcePermission(rpEntry);
+
+
+
+            //Insert Layoutset for public and private
+            long layoutSetIdPub = counterLocalService.increment();
+            LayoutSet layoutSetPub = layoutSetLocalService.createLayoutSet(layoutSetIdPub);
+            layoutSetPub.setCompanyId(companyId);
+            layoutSetPub.setPrivateLayout(false);
+            layoutSetPub.setGroupId(userGrp.getGroupId());
+            layoutSetPub.setThemeId("classic");
+            try{
+                layoutSetLocalService.addLayoutSet(layoutSetPub);
+            }catch(SystemException se){
+
+            }
+
+            long layoutSetIdPriv= counterLocalService.increment();
+            LayoutSet layoutSetPriv=layoutSetLocalService.createLayoutSet(layoutSetIdPriv);
+            layoutSetPriv.setCompanyId(companyId);
+            layoutSetPriv.setPrivateLayout(true);
+            layoutSetPriv.setThemeId("classic");
+            layoutSetPriv.setGroupId(userGrp.getGroupId());
+            try{
+                layoutSetLocalService.addLayoutSet(layoutSetPriv);
+            }catch(SystemException se){
+            }
+
+            return user;
+
+        } catch (SystemException e) {
+            e.printStackTrace();
+        } catch (PortalException e) {
+            e.printStackTrace();
+        }
+
+        return null;
 
     }
 
@@ -1397,10 +1564,10 @@ public class IdeaServiceImpl implements IdeaService {
 			try {
 				messageDisplay = mbMessageLocalService
 						.getDiscussionMessageDisplay(ideaContent.getUserId(),
-								ideaContent.getGroupId(),
-								IdeaContent.class.getName(),
-								ideaContent.getId(),
-								WorkflowConstants.STATUS_ANY);
+                                ideaContent.getGroupId(),
+                                IdeaContent.class.getName(),
+                                ideaContent.getId(),
+                                WorkflowConstants.STATUS_ANY);
 			} catch (NullPointerException e) {
 				return commentsCount;
 			}
