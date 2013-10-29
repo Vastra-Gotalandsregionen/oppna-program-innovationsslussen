@@ -194,4 +194,9 @@ public interface BariumRestClient {
      * @return the idea state
      */
     String getIdeaState(String instanceId);
+
+    /**
+     * Shutdown the threadpool.
+     */
+    void shutdown();
 }

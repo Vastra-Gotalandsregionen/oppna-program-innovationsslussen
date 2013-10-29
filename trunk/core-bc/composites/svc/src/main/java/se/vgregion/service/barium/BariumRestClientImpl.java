@@ -599,6 +599,7 @@ public class BariumRestClientImpl implements BariumRestClient {
     /**
      * Shutdown the connection to Barium.
      */
+    @Override
     public void shutdown() {
         executorService.shutdown();
     }

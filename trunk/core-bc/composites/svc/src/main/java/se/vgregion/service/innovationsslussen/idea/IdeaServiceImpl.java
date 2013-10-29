@@ -38,6 +38,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.apache.commons.collections.BeanMap;
 import org.slf4j.Logger;
@@ -267,6 +268,11 @@ public class IdeaServiceImpl implements IdeaService {
         } catch (RuntimeException e) {
             LOGGER.error(e.getMessage(), e);
         }
+    }
+
+    @PreDestroy
+    public void shutdown() {
+        executor.shutdown();
     }
 
     /* (non-Javadoc)

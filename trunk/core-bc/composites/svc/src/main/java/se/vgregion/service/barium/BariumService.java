@@ -31,6 +31,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -103,6 +104,12 @@ public class BariumService {
         } catch (BariumException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @PreDestroy
+    public void shutdown() {
+        executor.shutdown();
+        bariumRestClient.shutdown();
     }
 
     /**

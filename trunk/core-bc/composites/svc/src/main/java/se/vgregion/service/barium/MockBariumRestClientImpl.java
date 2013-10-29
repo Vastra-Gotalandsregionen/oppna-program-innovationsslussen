@@ -298,6 +298,11 @@ public class MockBariumRestClientImpl implements BariumRestClient {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public void shutdown() {
+
+    }
+
 
     @Override
     public String createIdeaInstance(IdeaObjectFields ideaObjectFields) {
