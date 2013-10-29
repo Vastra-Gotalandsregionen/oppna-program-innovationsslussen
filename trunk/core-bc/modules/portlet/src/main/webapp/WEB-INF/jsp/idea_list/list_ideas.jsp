@@ -48,7 +48,7 @@
 				</c:when>
 				<c:otherwise>
 					<c:set var="ideaItemCssClass" scope="page" value="private" />
-					<c:set var="ideaPhaseLabel" scope="page" value="Privat" />
+					<c:set var="ideaPhaseLabel" scope="page" value="St&auml;ngd" />
 				</c:otherwise>
 			</c:choose>
 			
