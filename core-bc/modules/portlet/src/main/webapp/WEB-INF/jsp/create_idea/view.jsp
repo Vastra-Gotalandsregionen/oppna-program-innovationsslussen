@@ -120,7 +120,7 @@
 							    		<aui:input name="title" cssClass="element-field" type="text" label="" />
 							    	</aui:field-wrapper>
 									<span class="element-field-help">
-										Skriv in f&ouml;rslag p&aring; titel f&ouml;r ditt projekt eller din aff&auml;rsid&eacute;
+										Skriv in f&ouml;rslag p&aring; titel f&ouml;r ditt projekt eller din aff&auml;rsid&eacute; (Max 200 tecken).
 									</span>
 								</div>
 							</spring:bind>
@@ -139,7 +139,7 @@
 							    		<aui:input name="ideaContentPrivate.description" cssClass="element-field" type="textarea" label ="" />			    		
 							    	</aui:field-wrapper>
 									<span class="element-field-help">
-										Beskriv din id&eacute; kortfattat
+										Beskriv din id&eacute; kortfattat (Max 2000 tecken).
 									</span>
 								</div>
 							</spring:bind>
@@ -158,7 +158,7 @@
 							    		<aui:input name="ideaContentPrivate.solvesProblem" cssClass="element-field" type="textarea" label="" />			    		
 							    	</aui:field-wrapper>
 									<span class="element-field-help">
-										F&ouml;rklara det behov eller problem som din id&eacute; l&ouml;ser
+										F&ouml;rklara det behov eller problem som din id&eacute; l&ouml;ser (Max 2000 tecken).
 									</span>
 								</div>
 							</spring:bind>
@@ -176,7 +176,7 @@
 							    		<aui:input name="ideaContentPrivate.ideaTested"  cssClass="element-field" type="textarea" label="" />
 							    	</aui:field-wrapper>
 									<span class="element-field-help">
-										Har du testat din id&eacute; p&aring; n&aring;got s&auml;tt? Vilka tester har du gjort? Vad visade testerna?
+										Har du testat din id&eacute; p&aring; n&aring;got s&auml;tt? Vilka tester har du gjort? Vad visade testerna? (Max 2000 tecken).
 									</span>
 								</div>
 							</spring:bind>
@@ -194,7 +194,7 @@
 							    		<aui:input name="ideaContentPrivate.wantsHelpWith" cssClass="element-field" type="textarea" label="" />			    		
 							    	</aui:field-wrapper>
 									<span class="element-field-help">
-										Beskriv hur du tror att Innovationsslussen kan hj&auml;lpa dig att komma vidare med din id&eacute;
+										Beskriv hur du tror att Innovationsslussen kan hj&auml;lpa dig att komma vidare med din id&eacute; (Max 2000 tecken).
 									</span>
 								</div>
 							</spring:bind>
@@ -323,7 +323,7 @@
 							    		<aui:input name="idea.ideaContentPrivate.additionalIdeaOriginators" cssClass="element-field" type="textarea" label="" />
 							    	</aui:field-wrapper>
 									<span class="element-field-help">
-										&Auml;r ni fler id&eacute;givare? Fyll g&auml;rna i uppgifter om dessa personer i s&aring;dana fall.
+										&Auml;r ni fler id&eacute;givare? Fyll g&auml;rna i uppgifter om dessa personer i s&aring;dana fall. (Max 800 tecken).
 									</span>
 								</div>
 							</spring:bind>

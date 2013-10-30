@@ -314,7 +314,7 @@ public class CreateIdeaViewController extends BaseController {
                 // Add error - create failed
 
                 result.addError(new ObjectError("", "Hoppsan nu gick något fel, vi får inte kontakt med ett " +
-                                                    "bakomliggande system. Var god försök igen sennare."));
+                                                    "bakomliggande system. Var god försök igen senare."));
                 model.addAttribute("errors", result);
                 copyRequestParameters(request, response);
                 response.setRenderParameter("view", "view");
@@ -324,7 +324,7 @@ public class CreateIdeaViewController extends BaseController {
                     LOGGER.error(nextException.getMessage(), nextException);
                 }
                 result.addError(new ObjectError("", "Hoppsan nu gick något fel, vi får inte kontakt med ett " +
-                                                    "bakomliggande system. Var god försök igen sennare."));
+                                                    "bakomliggande system. Var god försök igen senare."));
                 model.addAttribute("errors", result);
                 copyRequestParameters(request, response);
                 response.setRenderParameter("view", "view");
