@@ -418,6 +418,7 @@ public class IdeaServiceImpl implements IdeaService {
             String ideaPersonVgrId = idea.getIdeaPerson().getVgrId();
 
             if (!ideaUserScreenName.equals(ideaPersonVgrId)){
+
                 idea.getUserId();
 
                 User ideaOriginatorUser;
@@ -425,9 +426,8 @@ public class IdeaServiceImpl implements IdeaService {
                 try{
                     ideaOriginatorUser = userLocalService.getUserByScreenName(idea.getCompanyId(),ideaPersonVgrId);
                 }catch (NoSuchUserException e){
-
-
-                ideaOriginatorUser = createUser(idea, ideaPersonVgrId);
+                    ideaOriginatorUser = createUser(idea, ideaPersonVgrId);
+                }
 
                 Long ideaOriginatorUserId = ideaOriginatorUser.getUserId();
 
@@ -435,7 +435,6 @@ public class IdeaServiceImpl implements IdeaService {
                 idea.getIdeaPerson().setUserId(ideaOriginatorUserId);
                 idea.getIdeaContentPrivate().setUserId(ideaOriginatorUserId);
                 idea.getIdeaContentPublic().setUserId(ideaOriginatorUserId);
-                }
             }
 
         return idea;
