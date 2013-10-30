@@ -48,7 +48,8 @@ public class IdeaValidator implements Validator {
 
     static final int MAX_LENGTH_SMALL = 200;
     static final int MAX_LENGTH_MEDIUM = 800;
-    static final int MAX_LENGTH_BIG = 40000;
+    static final int MAX_LENGTH_BIG = 2000;
+    static final int MAX_LENGTH_GIANT = 40000;
 
 
     private static final Pattern PHONE_NUMBER_PATTERN = Pattern.compile("^?[+]?[0-9]{8,14}");
@@ -77,7 +78,7 @@ public class IdeaValidator implements Validator {
 
     private void validateLength(Idea idea, Errors errors) {
         maxLengthValidation(idea.getTitle(), "title", "Title", errors, MAX_LENGTH_SMALL);
-        maxLengthValidation(idea.getIdeaContentPrivate().getDescription(), "ideaContentPrivate.description", "Beskrivning", errors, MAX_LENGTH_SMALL);
+        maxLengthValidation(idea.getIdeaContentPrivate().getDescription(), "ideaContentPrivate.description", "Beskrivning", errors, MAX_LENGTH_BIG);
         maxLengthValidation(idea.getIdeaContentPrivate().getSolvesProblem(), "ideaContentPrivate.solvesProblem", "Löser behov / problem",errors, MAX_LENGTH_BIG);
         maxLengthValidation(idea.getIdeaContentPrivate().getIdeaTested(), "ideaContentPrivate.ideaTested", "Testning av idé", errors, MAX_LENGTH_BIG);
         maxLengthValidation(idea.getIdeaContentPrivate().getWantsHelpWith(), "ideaContentPrivate.wantsHelpWith", "Vad behöver du hjälp med?", errors, MAX_LENGTH_BIG);
@@ -87,7 +88,7 @@ public class IdeaValidator implements Validator {
         maxLengthValidation(idea.getIdeaPerson().getPhoneMobile(), "ideaPerson.phoneMobile", "Mobiltelefon", errors, MAX_LENGTH_SMALL);
         maxLengthValidation(idea.getIdeaPerson().getAdministrativeUnit(), "ideaPerson.administrativeUnit", "Förvaltning", errors, MAX_LENGTH_SMALL);
         maxLengthValidation(idea.getIdeaPerson().getJobPosition(), "ideaPerson.jobPosition", "Yrkesroll", errors, MAX_LENGTH_SMALL);
-        maxLengthValidation(idea.getIdeaContentPrivate().getAdditionalIdeaOriginators(), "ideaContentPrivate.additionalIdeaOriginators", "Fler idégivare", errors, MAX_LENGTH_SMALL);
+        maxLengthValidation(idea.getIdeaContentPrivate().getAdditionalIdeaOriginators(), "ideaContentPrivate.additionalIdeaOriginators", "Fler idégivare", errors, MAX_LENGTH_MEDIUM);
     }
 
     private void maxLengthValidation(String feildToValidate, String feildName, String svFeildName,  Errors errors, int max) {
