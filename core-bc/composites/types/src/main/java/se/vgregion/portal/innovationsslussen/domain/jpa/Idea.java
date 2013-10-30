@@ -66,6 +66,9 @@ public class Idea extends AbstractEntity<String> {
     @Column(name = "user_id")
     private long userId;
 
+    @Column(name = "original_user_id")
+    private Long originalUserId;
+
     @Column(name = "title")
     private String title;
 
@@ -379,4 +382,12 @@ public class Idea extends AbstractEntity<String> {
 	public void setCommentsCount(int commentsCount) {
 		this.commentsCount = commentsCount;
 	}
+
+    public Long getOriginalUserId() {
+        return originalUserId;
+    }
+
+    public void setOriginalUserId(Long originalUserId) {
+        this.originalUserId = originalUserId;
+    }
 }

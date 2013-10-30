@@ -284,6 +284,7 @@ public class CreateIdeaViewController extends BaseController {
 
                 if (otherUserVgrId != null && !otherUserVgrId.isEmpty()) {
                     criteria.setCn(otherUserVgrId);
+                    idea.setOriginalUserId(themeDisplay.getUserId());
                 } else {
                     criteria.setCn(themeDisplay.getUser().getScreenName());
                 }
@@ -318,6 +319,7 @@ public class CreateIdeaViewController extends BaseController {
                 model.addAttribute("errors", result);
                 copyRequestParameters(request, response);
                 response.setRenderParameter("view", "view");
+                e.printStackTrace();
             } catch (RuntimeException e) {
                 SQLException nextException = Util.getNextExceptionFromLastCause(e);
                 if (nextException != null) {
@@ -328,6 +330,7 @@ public class CreateIdeaViewController extends BaseController {
                 model.addAttribute("errors", result);
                 copyRequestParameters(request, response);
                 response.setRenderParameter("view", "view");
+                e.printStackTrace();
             } catch (SystemException e) {
                 result.addError(new ObjectError("", "Hoppsan nu gick något fel, användaren som du försöler skapa " +
                         "idén för finns inte eller går inte att skapa."));
@@ -335,6 +338,7 @@ public class CreateIdeaViewController extends BaseController {
             } catch (PortalException e) {
                 result.addError(new ObjectError("", "Hoppsan nu gick något fel, användaren som du försöler skapa " +
                         "idén för finns inte eller går inte att skapa."));
+                e.printStackTrace();
             }
 
         } else {
