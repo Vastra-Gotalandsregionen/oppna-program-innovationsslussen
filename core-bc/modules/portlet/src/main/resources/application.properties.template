@@ -23,7 +23,10 @@ username=
 password=
 applicationId=
 
-schemeServerNamePort=http://innovationsslussen-test.vgregion.se/web/innovationsslussen/ide/-/idea/
+#scheme.server.name.url=http://innovationsslussen-test.vgregion.se/web/innovationsslussen/ide/-/idea/
+#scheme.server.name.url=http://innovationsslussen-prod.vgregion.se/web/innovationsslussen/ide/-/idea/
+#scheme.server.name.url=http://innovationsslussen.se/web/innovationsslussen/ide/-/idea/
+scheme.server.name.url=http://localhost/web/innovationsslussen/ide/-/idea/
 
 # Ldap for user information
 ldap.org.authentication.java.naming.provider.url=
