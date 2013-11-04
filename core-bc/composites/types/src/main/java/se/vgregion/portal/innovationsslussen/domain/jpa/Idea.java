@@ -78,9 +78,6 @@ public class Idea extends AbstractEntity<String> {
     @Column(name = "phase", length = 12)
     private String phase;
 
-    @Column(name = "idea_site_link")
-    private String ideaSiteLink;
-
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private IdeaStatus status;
@@ -331,14 +328,6 @@ public class Idea extends AbstractEntity<String> {
 
     public void setBariumUrl(String bariumUrl) {
         this.bariumUrl = bariumUrl;
-    }
-
-    public void setIdeaSiteLink(String ideaSiteLink) {
-        this.ideaSiteLink = ideaSiteLink;
-    }
-
-    public String getIdeaSiteLink() {
-        return ideaSiteLink;
     }
 
     public Date getCreated() {

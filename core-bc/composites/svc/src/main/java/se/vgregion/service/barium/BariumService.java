@@ -73,6 +73,9 @@ public class BariumService {
 
     private BariumRestClient bariumRestClient;
 
+    @Value("${schemeServerNamePort}")
+    private String schemeServerNamePort;
+
     /**
      * Instantiates a new barium service.
      */
@@ -205,6 +208,10 @@ public class BariumService {
         return bariumIdea;
     }
 
+    private String generateIdeaSiteLink(String urlTitle) {
+        return schemeServerNamePort + urlTitle;
+    }
+
     /**
      * Creates the idea.
      *
@@ -219,7 +226,7 @@ public class BariumService {
         IdeaContent ideaContentPrivate = idea.getIdeaContentPrivate();
         IdeaPerson ideaPerson = idea.getIdeaPerson();
 
-        String ideaSiteLink = idea.getIdeaSiteLink();
+        String ideaSiteLink = generateIdeaSiteLink(idea.getUrlTitle());
 
         String solvesProblem = ideaContentPrivate.getSolvesProblem();
         String email = ideaPerson.getEmail();

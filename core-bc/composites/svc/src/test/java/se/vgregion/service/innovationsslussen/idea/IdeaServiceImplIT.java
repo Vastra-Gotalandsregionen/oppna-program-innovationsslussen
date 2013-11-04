@@ -106,7 +106,7 @@ public class IdeaServiceImplIT {
 
             idea1.setUrlTitle("stora-titeln");
             idea1.setTitle("Stora titeln");
-            idea1.setIdeaSiteLink("http://example.com/asldkfj/url-title");
+            //idea1.setIdeaSiteLink("http://example.com/asldkfj/url-title");
 
             Idea idea2 = new Idea(1, 1, 1);
             idea2.setId("bariumId2");
