@@ -73,9 +73,9 @@ public class BariumService {
 
     private BariumRestClient bariumRestClient;
 
-    @Value("${schemeServerNamePort}")
-    private String schemeServerNamePort;
 
+    @Value("${scheme.server.name.url}")
+    private String schemeServerNameUrl;
     /**
      * Instantiates a new barium service.
      */
@@ -209,7 +209,7 @@ public class BariumService {
     }
 
     private String generateIdeaSiteLink(String urlTitle) {
-        return schemeServerNamePort + urlTitle;
+        return schemeServerNameUrl + urlTitle;
     }
 
     /**

@@ -153,8 +153,8 @@ public class IdeaServiceImpl implements IdeaService {
     @Value("${comment.page.size}")
     private String defaultCommentCount;
 
-    private String schemeServerNamePort;
-    @Value("${schemeServerNamePort}")
+    @Value("${scheme.server.name.url}")
+    private String schemeServerNameUrl;
 
     private IdeaRepository ideaRepository;
     private IdeaFileRepository ideaFileRepository;
@@ -1059,7 +1059,7 @@ public class IdeaServiceImpl implements IdeaService {
                 public void run() {
                     // We need to update the ideaSiteLink in Barium.
 
-                    String ideaSiteLink = generateIdeaSiteLink(schemeServerNamePort, finalIdea.getUrlTitle());
+                    String ideaSiteLink = generateIdeaSiteLink(schemeServerNameUrl, finalIdea.getUrlTitle());
 
                     String newUrlTitle = generateNewUrlTitle(finalIdea.getTitle());
                     String newIdeaSiteLink = replaceLastPart(ideaSiteLink, newUrlTitle);
