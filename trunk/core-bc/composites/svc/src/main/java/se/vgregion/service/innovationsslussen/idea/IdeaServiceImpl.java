@@ -153,6 +153,9 @@ public class IdeaServiceImpl implements IdeaService {
     @Value("${comment.page.size}")
     private String defaultCommentCount;
 
+    private String schemeServerNamePort;
+    @Value("${schemeServerNamePort}")
+
     private IdeaRepository ideaRepository;
     private IdeaFileRepository ideaFileRepository;
     private IdeaUserLikeRepository ideaUserLikeRepository;
@@ -331,7 +334,7 @@ public class IdeaServiceImpl implements IdeaService {
         if (idea.getUrlTitle() == null) {
             idea.setUrlTitle(generateNewUrlTitle(idea.getTitle()));
         }
-        idea.setIdeaSiteLink(generateIdeaSiteLink(schemeServerNamePort, idea.getUrlTitle()));
+        // idea.setIdeaSiteLink(generateIdeaSiteLink(schemeServerNamePort, idea.getUrlTitle()));
 
         idea = checkIfIdeaIsForAnotherPerson(idea);
 
@@ -1055,7 +1058,9 @@ public class IdeaServiceImpl implements IdeaService {
                 @Override
                 public void run() {
                     // We need to update the ideaSiteLink in Barium.
-                    String ideaSiteLink = finalIdea.getIdeaSiteLink();
+
+                    String ideaSiteLink = generateIdeaSiteLink(schemeServerNamePort, finalIdea.getUrlTitle());
+
                     String newUrlTitle = generateNewUrlTitle(finalIdea.getTitle());
                     String newIdeaSiteLink = replaceLastPart(ideaSiteLink, newUrlTitle);
                     try {
@@ -1698,7 +1703,7 @@ public class IdeaServiceImpl implements IdeaService {
         this.transactionManager = transactionManager;
     }
 
-    private String generateIdeaSiteLink(String schemeServerNamePort, String urlTitle) {
+    public String generateIdeaSiteLink(String schemeServerNamePort, String urlTitle) {
         return schemeServerNamePort + "/web/innovationsslussen/ide/-/idea/" + urlTitle;
     }
 
