@@ -140,6 +140,10 @@
 							    	</aui:field-wrapper>
 									<span class="element-field-help">
 										Beskriv din id&eacute; kortfattat (Max 2000 tecken).
+										<br />
+										<span class="element-field-help-additional">
+										  Efter att du har skapat idéen kan du gå in på den och ladda upp ytterligare information i form av bilder, skisser och dokument.
+										</span>
 									</span>
 								</div>
 							</spring:bind>
@@ -198,22 +202,6 @@
 									</span>
 								</div>
 							</spring:bind>
-							
-                            <c:set var="elementWrapCssClass" scope="page" value="element-wrap" />
-                            <div class="${elementWrapCssClass}">
-                                <aui:field-wrapper cssClass="element-field-wrap">
-                                    <label for="">
-                                        <span>Filer</span>
-                                    </label>
-                                    <span class="element-field">
-                                        <span class="empty">-</span>
-                                    </span>
-                                </aui:field-wrapper>
-                                <span class="element-field-help">
-                                    Efter att idéen har skapats kan du gå in på den och ladda upp ytterligare information i form av bilder, skisser och dokument.
-                                </span>
-                            </div>
-							
 							
 						</aui:fieldset>
 						
