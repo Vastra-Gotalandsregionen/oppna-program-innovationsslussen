@@ -139,11 +139,7 @@
 							    		<aui:input name="ideaContentPrivate.description" cssClass="element-field" type="textarea" label ="" />			    		
 							    	</aui:field-wrapper>
 									<span class="element-field-help">
-										Beskriv din id&eacute; kortfattat (Max 2000 tecken).
-										<br />
-										<span class="element-field-help-additional">
-										  Efter att du har skapat idéen kan du gå in på den och ladda upp ytterligare information i form av bilder, skisser och dokument.
-										</span>
+										Beskriv din id&eacute; kortfattat. Efter att du har skapat idéen kan du gå in på den och ladda upp ytterligare information i form av bilder, skisser och dokument. (Max 2000 tecken).
 									</span>
 								</div>
 							</spring:bind>
