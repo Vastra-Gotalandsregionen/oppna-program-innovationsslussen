@@ -199,6 +199,22 @@
 								</div>
 							</spring:bind>
 							
+                            <c:set var="elementWrapCssClass" scope="page" value="element-wrap" />
+                            <div class="${elementWrapCssClass}">
+                                <aui:field-wrapper cssClass="element-field-wrap">
+                                    <label for="">
+                                        <span>Filer</span>
+                                    </label>
+                                    <span class="element-field">
+                                        <span class="empty">-</span>
+                                    </span>
+                                </aui:field-wrapper>
+                                <span class="element-field-help">
+                                    Efter att idéen har skapats kan du gå in på den och ladda upp ytterligare information i form av bilder, skisser och dokument.
+                                </span>
+                            </div>
+							
+							
 						</aui:fieldset>
 						
 						<aui:fieldset label="Ber&auml;tta mer om dig sj&auml;lv">
