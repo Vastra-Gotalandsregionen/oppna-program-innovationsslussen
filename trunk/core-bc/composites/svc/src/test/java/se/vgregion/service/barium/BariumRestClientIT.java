@@ -32,6 +32,7 @@ import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 
+import org.apache.commons.collections.BeanMap;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -223,6 +224,56 @@ public class BariumRestClientIT {
 
         //if no exception, the user is already authenticated.
         System.out.println("OK, successfully authenticating user");
+    }
+
+    /**
+     * After this 'test' go to Barium and check the data. Did this seem to be thread safe?
+     * @throws BariumException
+     */
+    @Ignore
+    @Test
+    public void toCreateConcurrent() throws BariumException {
+        BariumRestClientImpl client = createBariumRestClient();
+        client.connect();
+        for (int i = 0; i < 3; i++) {
+            IdeaObjectFields fields = new IdeaObjectFields();
+            BeanMap bm = new BeanMap(fields);
+            for (Object key : bm.keySet()) {
+                String name = (String) key;
+                if (bm.getWriteMethod(name) != null && String.class.equals(bm.getType(name))) {
+                    bm.put(name, name + " " + i);
+                }
+            }
+            fields.setInstanceName("instanceName (async) " + i + " " + System.currentTimeMillis());
+            createAsync(client, fields);
+        }
+
+        try {
+            do {
+                System.out.println("Delaying some to make the threads finish.");
+                Thread.sleep(1000);
+            } while (asyncCount != 0);
+            System.exit(0);
+        } catch (InterruptedException ie) {
+            System.out.println("Child thread interrupted! " + ie);
+        }
+
+    }
+
+    public static int asyncCount;
+
+    private void createAsync(final BariumRestClientImpl client, final IdeaObjectFields fields) {
+
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                asyncCount++;
+                client.createIdeaInstance(fields);
+                asyncCount--;
+            }
+        };
+        Thread t = new Thread(r, "My Thread " + Math.random());
+        t.start();
     }
 
 
