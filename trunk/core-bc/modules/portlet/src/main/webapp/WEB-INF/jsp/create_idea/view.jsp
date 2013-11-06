@@ -139,7 +139,7 @@
 							    		<aui:input name="ideaContentPrivate.description" cssClass="element-field" type="textarea" label ="" />			    		
 							    	</aui:field-wrapper>
 									<span class="element-field-help">
-										Beskriv din id&eacute; kortfattat. Efter att du har skapat idéen kan du gå in på den och ladda upp ytterligare information i form av bilder, skisser och dokument. (Max 2000 tecken).
+										Beskriv din id&eacute; kortfattat. Efter att du har skapat idï¿½en kan du gï¿½ in pï¿½ den och ladda upp ytterligare information i form av bilder, skisser och dokument. (Max 2000 tecken).
 									</span>
 								</div>
 							</spring:bind>
@@ -320,7 +320,8 @@
 							    		<label for="<portlet:namespace />ideaPerson.additionalPersonInfo">
 							    			<span>Fler id&eacute;givare</span>
 							    		</label>
-							    		<aui:input name="idea.ideaContentPrivate.additionalIdeaOriginators" cssClass="element-field" type="textarea" label="" />
+							    		<aui:input name="idea.ideaContentPrivate.additionalIdeaOriginators" cssClass="element-field"
+							    		    type="textarea" label="" value="${idea.ideaContentPrivate.additionalIdeaOriginators}"/>
 							    	</aui:field-wrapper>
 									<span class="element-field-help">
 										&Auml;r ni fler id&eacute;givare? Fyll g&auml;rna i uppgifter om dessa personer i s&aring;dana fall. (Max 800 tecken).
