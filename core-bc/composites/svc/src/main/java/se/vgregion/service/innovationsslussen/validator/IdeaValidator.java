@@ -35,6 +35,7 @@ public class IdeaValidator implements Validator {
 
 
     static final String TITLE_MANDATORY = "Titel är obligatorisk";
+    static final String TITLE_CANNOT_HAVE_NUMBERS = "Titel får inte innehålla enbart siffror.";
     static final String DESCRIPTION_MANDATORY = "Beskrivning är obligatorisk";
     static final String SOLVES_PROBLEM_MANDATORY = "Löser behov / problem är obligatoriskt";
     static final String NAME_MANDATORY = "Namn är obligatoriskt";
@@ -119,6 +120,17 @@ public class IdeaValidator implements Validator {
         } else if (title.equals("")) {
             errors.rejectValue("title", "title.not-empty", TITLE_MANDATORY);
         }
+
+        if (containsOnlyNumbers(title)) {
+            errors.rejectValue("title", "title.not-number", TITLE_CANNOT_HAVE_NUMBERS);
+        }
+    }
+
+    boolean containsOnlyNumbers(String string) {
+        if (string == null) {
+            return false;
+        }
+        return string.matches("[0-9]+");
     }
 
     private void validateDescription(Idea idea, Errors errors) {

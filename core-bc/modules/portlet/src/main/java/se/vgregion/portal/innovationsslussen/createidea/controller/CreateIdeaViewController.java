@@ -83,7 +83,6 @@ public class CreateIdeaViewController extends BaseController {
     private final LdapService ldapService;
     private final IdeaPermissionCheckerService ideaPermissionCheckerService;
 
-
     /**
      * Instantiates a new creates the idea view controller.
      * @param ideaService the idea service
@@ -100,7 +99,6 @@ public class CreateIdeaViewController extends BaseController {
         this.ldapService = ldapService;
         this.ideaPermissionCheckerService = ideaPermissionCheckerService;
     }
-
 
     /**
      * The render method for the confirmation view.
@@ -170,7 +168,6 @@ public class CreateIdeaViewController extends BaseController {
             // No idea exists
             idea = IdeaPortletUtil.getIdeaFromRequest(request);
 
-
             // Set dummy data for person
             if (idea.getIdeaPerson().getName().equals("")) {
 
@@ -196,13 +193,7 @@ public class CreateIdeaViewController extends BaseController {
                     ideaPerson.setJobPosition(person.getTitle());
                     ideaPerson.setName(person.getDisplayName());
                     ideaPerson.setVgrId(person.getVgrId());
-                    //  ideaPerson.setBirthYear(person.getBirthYear());
                     ideaPerson.setAdministrativeUnit(person.getO());
-
-                    //   Person.Gender personGender = person.getGender();
-                    //    if (personGender != null) {
-                    //        ideaPerson.setGender(IdeaPerson.Gender.valueOf(personGender.name()));
-                    //    }
                     model.addAttribute("otherUserVgrId", idea.getIdeaPerson().getVgrId());
                 }
             }
@@ -229,9 +220,6 @@ public class CreateIdeaViewController extends BaseController {
 
         return "view";
     }
-
-
-
 
     @ActionMapping("loadOtherUser")
     public final void loadOtherUser(ActionRequest request, ActionResponse response,
@@ -358,7 +346,6 @@ public class CreateIdeaViewController extends BaseController {
         return PortalUtil.getHttpServletRequest(request);
     }
 
-
     private String generateSchemeServerNamePort(ActionRequest request) {
         HttpServletRequest httpServletRequest = toHttpServletRequest(request);
 
@@ -393,7 +380,6 @@ public class CreateIdeaViewController extends BaseController {
     	
     	return layout;
     }
-
 
 }
 
