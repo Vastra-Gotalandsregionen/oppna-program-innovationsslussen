@@ -1268,27 +1268,14 @@ public class IdeaServiceImpl implements IdeaService {
                     LOGGER.info("Updated idea with id=" + idea.getId());
                 } catch (RuntimeException e) {
                     LOGGER.error("Failed to update idea: " + idea.toString(), e);
+                    logIfNextExceptionExists(e);
                 }
             }
 
             LOGGER.info("Finished updating all ideas from Barium.");
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
-            SQLException nextException = Util.getNextExceptionFromLastCause(e);
-            if (nextException != null) {
-                LOGGER.error("Next exception is: " + nextException.getMessage(), nextException);
-            }
-        }
-    }
-
-    private static Date toDate(String s) {
-        if (s == null || s.isEmpty()) {
-            return null;
-        }
-        try {
-            return dateFormat.parse(s);
-        } catch (ParseException e) {
-            return null;
+            logIfNextExceptionExists(e);
         }
     }
 
@@ -1715,6 +1702,24 @@ public class IdeaServiceImpl implements IdeaService {
     @Override
     public void setDefaultCommentCount(String defaultCommentCount) {
         this.defaultCommentCount = defaultCommentCount;
+    }
+
+    private void logIfNextExceptionExists(Exception e) {
+        SQLException nextException = Util.getNextExceptionFromLastCause(e);
+        if (nextException != null) {
+            LOGGER.error("Next exception is: " + nextException.getMessage(), nextException);
+        }
+    }
+
+    private static Date toDate(String s) {
+        if (s == null || s.isEmpty()) {
+            return null;
+        }
+        try {
+            return dateFormat.parse(s);
+        } catch (ParseException e) {
+            return null;
+        }
     }
 
     private static class DaemonThreadFactory implements ThreadFactory {
