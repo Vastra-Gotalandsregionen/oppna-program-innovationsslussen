@@ -126,4 +126,13 @@ public class IdeaValidatorTest {
 
         assertEquals(0, allErrors.size());
     }
+
+    @Test
+    public void containtsOnlyNumbers() {
+        boolean b = ideaValidator.containsOnlyNumbers("012345");
+        Assert.assertTrue(b);
+
+        b = !ideaValidator.containsOnlyNumbers("abcdefg");
+        Assert.assertTrue(b);
+    }
 }
