@@ -55,6 +55,11 @@ Generation time : 2013-05-08 10:10:47 CEST
       <groupId>com.liferay.portal</groupId>
       <artifactId>portal-service</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.liferay.portal</groupId>
+      <artifactId>util-java</artifactId>
+      <scope>provided</scope>
+    </dependency>
     <!-- To get tag assistance in your IDE -->
     <dependency>
       <groupId>com.liferay.portal</groupId>
@@ -101,6 +106,12 @@ Generation time : 2013-05-08 10:10:47 CEST
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
     </dependency>
+      <dependency>
+          <groupId>javax.mail</groupId>
+          <artifactId>javax.mail-api</artifactId>
+          <version>1.4.7</version>
+          <scope>provided</scope>
+      </dependency>
   </dependencies>
 
   <profiles>

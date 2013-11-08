@@ -19,6 +19,8 @@
 
 package se.vgregion.portal.innovationsslussen.settings.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.RenderRequest;
@@ -45,6 +47,7 @@ import com.liferay.portal.theme.ThemeDisplay;
  * Controller class for the view mode in the settings portlet.
  *
  * @author Erik Andersson
+ * @author Simon Göransson
  * @company Monator Technologies AB
  */
 @Controller
@@ -55,6 +58,8 @@ public class IdeaSettingsViewController extends BaseController {
 
     private final IdeaSettingsService ideaSettingsService;
 
+    private  List<String> textExpandos = new ArrayList<String>();
+    private  List<String> booleanExpandos = new ArrayList<String>();
 
     /**
      * Instantiates a new idea settings view controller.
@@ -64,6 +69,19 @@ public class IdeaSettingsViewController extends BaseController {
     @Autowired
     public IdeaSettingsViewController(IdeaSettingsService ideaSettingsService) {
         this.ideaSettingsService = ideaSettingsService;
+
+        textExpandos.add(ExpandoConstants.ADD_THIS_CODE);
+        textExpandos.add(ExpandoConstants.BARIUM_DETAILS_VIEW_URL_PREFIX);
+        textExpandos.add(ExpandoConstants.FRIENDLY_URL_CREATE_IDEA);
+        textExpandos.add(ExpandoConstants.FRIENDLY_URL_FAQ);
+        textExpandos.add(ExpandoConstants.PIWIK_CODE);
+        textExpandos.add(ExpandoConstants.NOTIFICATION_EMAIL_FROM);
+        textExpandos.add(ExpandoConstants.NOTIFICATION_EMAIL_SUBJECT);
+        textExpandos.add(ExpandoConstants.NOTIFICATION_EMAIL_PUBLIC_BODY);
+        textExpandos.add(ExpandoConstants.NOTIFICATION_EMAIL_PRIVATE_BODY);
+        textExpandos.add(ExpandoConstants.SERVER_NAME_URL);
+
+        booleanExpandos.add(ExpandoConstants.NOTIFICATION_EMAIL_ACTIVE);
     }
 
     /**
@@ -81,26 +99,15 @@ public class IdeaSettingsViewController extends BaseController {
         long scopeGroupId = themeDisplay.getScopeGroupId();
         long companyId = themeDisplay.getCompanyId();
 
-        String addThisCode = ideaSettingsService.getSetting(
-                ExpandoConstants.ADD_THIS_CODE, companyId, scopeGroupId);
-        
-        String bariumDetailsViewUrlPrefix = ideaSettingsService.getSetting(
-                ExpandoConstants.BARIUM_DETAILS_VIEW_URL_PREFIX, companyId, scopeGroupId);
+        for (String expando : textExpandos) {
+            String value = ideaSettingsService.getSetting(expando, companyId, scopeGroupId);
+            model.addAttribute(expando, value);
+        }
 
-        String createIdeaFriendlyURL = ideaSettingsService.getSetting(
-                ExpandoConstants.FRIENDLY_URL_CREATE_IDEA, companyId, scopeGroupId);
-        
-        String faqFriendlyURL = ideaSettingsService.getSetting(
-                ExpandoConstants.FRIENDLY_URL_FAQ, companyId, scopeGroupId);
-        
-        String piwikCode = ideaSettingsService.getSetting(
-                ExpandoConstants.PIWIK_CODE, companyId, scopeGroupId);
-
-        model.addAttribute("addThisCode", addThisCode);
-        model.addAttribute("bariumDetailsViewUrlPrefix", bariumDetailsViewUrlPrefix);
-        model.addAttribute("createIdeaFriendlyURL", createIdeaFriendlyURL);
-        model.addAttribute("faqFriendlyURL", faqFriendlyURL);
-        model.addAttribute("piwikCode", piwikCode);
+        for (String expando : booleanExpandos) {
+            boolean value = ideaSettingsService.getSettingBoolean(expando, companyId, scopeGroupId);
+            model.addAttribute(expando, value);
+        }
 
         return "view";
     }
@@ -120,29 +127,15 @@ public class IdeaSettingsViewController extends BaseController {
         long companyId = themeDisplay.getCompanyId();
         long groupId = themeDisplay.getScopeGroup().getGroupId();
 
-        String addThisCode = ParamUtil.getString(request, "addThisCode", "");
-        String bariumDetailsViewUrlPrefix = ParamUtil.getString(request, "bariumDetailsViewUrlPrefix", "");
-        String createIdeaFriendlyURL = ParamUtil.getString(request, "createIdeaFriendlyURL", "");
-        String faqFriendlyURL = ParamUtil.getString(request, "faqFriendlyURL", "");
-        String piwikCode = ParamUtil.getString(request, "piwikCode", "");
+        for (String expando : textExpandos) {
+            String value = ParamUtil.getString(request, expando, "");
+            ideaSettingsService.setSetting(value, expando, companyId, groupId);
+        }
 
-        ideaSettingsService.setSetting(addThisCode,
-                ExpandoConstants.ADD_THIS_CODE, companyId, groupId);
-        
-        ideaSettingsService.setSetting(bariumDetailsViewUrlPrefix,
-                ExpandoConstants.BARIUM_DETAILS_VIEW_URL_PREFIX, companyId, groupId);
-        
-        ideaSettingsService.setSetting(createIdeaFriendlyURL,
-                ExpandoConstants.FRIENDLY_URL_CREATE_IDEA, companyId, groupId);
-
-        ideaSettingsService.setSetting(faqFriendlyURL,
-                ExpandoConstants.FRIENDLY_URL_FAQ, companyId, groupId);
-        
-        ideaSettingsService.setSetting(piwikCode,
-                ExpandoConstants.PIWIK_CODE, companyId, groupId);
+        for (String expando : booleanExpandos) {
+            Boolean value = ParamUtil.getBoolean(request, expando, false);
+            ideaSettingsService.setSettingBoolean(value, expando, companyId, groupId);
+        }
     }
-    
-    
-
 }
 

@@ -47,6 +47,7 @@ import javax.portlet.ActionResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.servlet.http.HttpServletResponse;
+import se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsService;
 
 /**
  * Created with IntelliJ IDEA.
@@ -59,6 +60,7 @@ public class IdeaViewControllerTest {
 
     IdeaService ideaService;
     IdeaPermissionCheckerService ideaPermissionCheckerService;
+    IdeaSettingsService ideaSettingsService;
     IdeaViewController controller;
     RenderRequest request;
     ModelMap modelMap;
@@ -70,8 +72,10 @@ public class IdeaViewControllerTest {
     public void setUp() {
         ideaService = Mockito.mock(IdeaService.class);
         ideaPermissionCheckerService = Mockito.mock(IdeaPermissionCheckerService.class);
+        ideaSettingsService = Mockito.mock(IdeaSettingsService.class);
 
-        controller = new IdeaViewController(ideaService, ideaPermissionCheckerService) {
+
+        controller = new IdeaViewController(ideaService, ideaPermissionCheckerService, ideaSettingsService) {
             @Override
             protected HttpServletResponse getHttpServletResponse(RenderResponse response) {
                 return Mockito.mock(HttpServletResponse.class);

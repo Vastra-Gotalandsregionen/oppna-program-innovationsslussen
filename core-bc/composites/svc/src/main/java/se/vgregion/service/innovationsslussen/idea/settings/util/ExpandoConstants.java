@@ -49,6 +49,18 @@ public final class ExpandoConstants {
     
     // Piwik
     public static final String PIWIK_CODE = "piwikCode";
+
+    // Email notifications
+    public static final String NOTIFICATION_EMAIL_ACTIVE = "notificationEmailActive";
+    public static final String NOTIFICATION_EMAIL_FROM = "notificationEmailForm";
+    public static final String NOTIFICATION_EMAIL_SUBJECT = "notificationEmailSubject";
+    public static final String NOTIFICATION_EMAIL_PUBLIC_BODY = "notificationEmailPublicBody";
+    public static final String NOTIFICATION_EMAIL_PRIVATE_BODY = "notificationEmailPrivateBody";
+
+    // Server
+    public static final String SERVER_NAME_URL = "serverNameUrl";
+
+
     
 
 }
