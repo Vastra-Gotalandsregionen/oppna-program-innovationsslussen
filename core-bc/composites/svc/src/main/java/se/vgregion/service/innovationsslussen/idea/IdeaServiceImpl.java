@@ -1045,12 +1045,18 @@ public class IdeaServiceImpl implements IdeaService {
         }
 
         result.setChanged(!isIdeasTheSame(idea, result.getOldIdea()));
+
+        String urlTitle = null;
+        if (!oldTitle.equals(idea.getTitle())) {
+            idea.setUrlTitle(urlTitle = generateIdeaSiteLink(schemeServerNameUrl, idea.getUrlTitle()));
+        }
+
         idea = ideaRepository.merge(idea);
         result.setNewIdea(idea);
 
-        if (!oldTitle.equals(idea.getTitle())) {
+        if (urlTitle != null) {
             final Idea finalIdea = idea;
-
+            final String finalUrlTitle =urlTitle;
             // We may just as well do this asynchronously since we don't throw anything and don't return anything
             // from
             // here.
@@ -1061,8 +1067,7 @@ public class IdeaServiceImpl implements IdeaService {
 
                     String ideaSiteLink = generateIdeaSiteLink(schemeServerNameUrl, finalIdea.getUrlTitle());
 
-                    String newUrlTitle = generateNewUrlTitle(finalIdea.getTitle());
-                    String newIdeaSiteLink = replaceLastPart(ideaSiteLink, newUrlTitle);
+                    String newIdeaSiteLink = replaceLastPart(ideaSiteLink, finalUrlTitle);
                     try {
                         bariumService.updateIdea(finalIdea.getId(), "siteLank", newIdeaSiteLink);
                     } catch (BariumException e) {
@@ -1073,7 +1078,6 @@ public class IdeaServiceImpl implements IdeaService {
 
             });
         }
-
 
         if (currentPhase != bariumPhase){
           idea.setPhase("" + (bariumPhase));
