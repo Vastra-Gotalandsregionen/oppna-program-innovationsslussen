@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
@@ -410,6 +411,8 @@ public interface IdeaService {
     boolean isUserInnovationsslussenEmployee(long userId, long groupId);
 
     boolean isUserPrioCouncilMember(long userId, long groupId);
+
+    LinkedList<String> getUsersToEmail(Idea idea);
 
     public static class UpdateFromBariumResult implements Serializable {
 

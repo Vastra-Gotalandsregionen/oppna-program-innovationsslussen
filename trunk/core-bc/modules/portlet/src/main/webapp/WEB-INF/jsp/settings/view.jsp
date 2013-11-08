@@ -21,7 +21,11 @@
 		.innovation-settings-wrap input[type="text"] {
 			min-width: 300px;
 		}
-		
+
+		.innovation-settings-wrap textarea {
+            min-width: 450px;
+            min-height: 180px;
+        }
 	</style>
 </liferay-util:html-top>
 
@@ -59,9 +63,31 @@
 				<aui:input type="text" name="faqFriendlyURL" value="${faqFriendlyURL}" label="FAQ friendly-URL" helpMessage="Skriv in friendly url f&ouml;r sidan f&ouml;r FAQ (t.ex. /faq) ." />
 			</aui:field-wrapper>
 		</aui:fieldset>
-		
-		
-	
+
+        <aui:fieldset label="Notifieringar via E-post">
+            <aui:field-wrapper>
+                <aui:input type="checkbox" name="notificationEmailActive" value="${notificationEmailActive}" label="Aktivera epost-notifieringen." />
+            </aui:field-wrapper>
+            <aui:field-wrapper>
+                <aui:input type="text" name="notificationEmailForm" value="${notificationEmailForm}" label="Ange den e-postadress som notifieringen ska skickas fr&aring;n." />
+            </aui:field-wrapper>
+            <aui:field-wrapper>
+                <aui:input type="text" name="notificationEmailSubject" value="${notificationEmailSubject}" label="Subjekt f&ouml;r notifieringen" />
+            </aui:field-wrapper>
+            <aui:field-wrapper>
+                <aui:input type="textarea" name="notificationEmailPublicBody" value="${notificationEmailPublicBody}" label="Body f&ouml;r &ouml;ppna notifieringen" />
+            </aui:field-wrapper>
+            <aui:field-wrapper>
+                <aui:input type="textarea" name="notificationEmailPrivateBody" value="${notificationEmailPrivateBody}" label="Body f&ouml;r s&auml;ngda notifieringen" />
+            </aui:field-wrapper>
+        </aui:fieldset>
+
+        <aui:fieldset label="Server">
+             <aui:field-wrapper>
+                <aui:input type="text" name="serverNameUrl" value="${serverNameUrl}" label="Ange url f&ouml;r idea view portlet" />
+             </aui:field-wrapper>
+        </aui:fieldset>
+
 		<aui:button-row>
 			<aui:button type="submit" value="save" />
 		</aui:button-row> 

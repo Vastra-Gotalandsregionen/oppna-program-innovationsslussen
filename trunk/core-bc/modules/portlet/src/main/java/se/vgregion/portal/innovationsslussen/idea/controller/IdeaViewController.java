@@ -19,6 +19,12 @@
 
 package se.vgregion.portal.innovationsslussen.idea.controller;
 
+import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.messaging.Message;
+import com.liferay.portal.kernel.messaging.MessageBusUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -27,6 +33,7 @@ import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
@@ -43,9 +50,11 @@ import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.portlet.PortletFileUpload;
+import org.codehaus.jackson.annotate.JsonValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -58,37 +67,31 @@ import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 import se.vgregion.portal.innovationsslussen.BaseController;
 import se.vgregion.portal.innovationsslussen.domain.IdeaContentType;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
-import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.portal.innovationsslussen.domain.json.ObjectEntry;
 import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
+import se.vgregion.portal.innovationsslussen.util.IdeaPortletUtil;
 import se.vgregion.portal.innovationsslussen.util.IdeaPortletsConstants;
 import se.vgregion.service.barium.BariumException;
 import se.vgregion.service.innovationsslussen.exception.UpdateIdeaException;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
 import se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionChecker;
 import se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionCheckerService;
+import se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsService;
+import se.vgregion.service.innovationsslussen.idea.settings.util.ExpandoConstants;
 import se.vgregion.service.innovationsslussen.ldap.LdapService;
 import se.vgregion.util.Util;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.PropsKeys;
-import com.liferay.portal.kernel.util.StringUtil;
+
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.Role;
-import com.liferay.portal.model.User;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
-import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.service.ServiceContextFactory;
-import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
-import com.liferay.portlet.messageboards.model.MBMessageDisplay;
-import com.liferay.portlet.messageboards.model.MBThread;
 import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 
 /**
@@ -103,6 +106,7 @@ public class IdeaViewController extends BaseController {
 
     private final IdeaService ideaService;
     private final IdeaPermissionCheckerService ideaPermissionCheckerService;
+    private final IdeaSettingsService ideaSettingsService;
     private LdapService ldapService;
 
     private final Set<String> rolesMayUploadFile = new HashSet<String>(
@@ -117,11 +121,14 @@ public class IdeaViewController extends BaseController {
      *
      * @param ideaService                  the idea service
      * @param ideaPermissionCheckerService the idea permission checker service
+     * @param ideaSettingsService the idea idea settings service
      */
     @Autowired
-    public IdeaViewController(IdeaService ideaService, IdeaPermissionCheckerService ideaPermissionCheckerService) {
+    public IdeaViewController(IdeaService ideaService, IdeaPermissionCheckerService ideaPermissionCheckerService,
+                              IdeaSettingsService ideaSettingsService) {
         this.ideaService = ideaService;
         this.ideaPermissionCheckerService = ideaPermissionCheckerService;
+        this.ideaSettingsService = ideaSettingsService;
         initDefaultCommentCount();
     }
 
@@ -277,73 +284,41 @@ public class IdeaViewController extends BaseController {
     public final void addComment(ActionRequest request, ActionResponse response, final ModelMap model) {
 
         LOGGER.info("addComment");
-
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
         long groupId = themeDisplay.getScopeGroupId();
         long userId = themeDisplay.getUserId();
-
         IdeaContentType ideaContentType = IdeaContentType.valueOf(ParamUtil.getString(request, "ideaContentType"));
         String urlTitle = ParamUtil.getString(request, "urlTitle", "");
         String comment = ParamUtil.getString(request, "comment", "");
 
         if (!comment.equals("")) {
 
+            Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
             try {
-                Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
-
-                long ideaCommentClassPK = -1;
-
+                //Add a mbMessage
                 if (ideaContentType == IdeaContentType.IDEA_CONTENT_TYPE_PUBLIC) {
-                    ideaCommentClassPK = idea.getIdeaContentPublic().getId();
+                    IdeaPortletUtil.addMBMessage(request, groupId, userId, comment, idea.getIdeaContentPublic().getId());
+                    //Send email notification.
+                    sendEmailNotification(idea, true);
                 } else if (ideaContentType == IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE) {
-                    ideaCommentClassPK = idea.getIdeaContentPrivate().getId();
+                    IdeaPortletUtil.addMBMessage(request, groupId, userId, comment, idea.getIdeaContentPrivate().getId());
+                    //Send email notification.
+                    sendEmailNotification(idea, false);
                 }
-
-                ServiceContext serviceContext = ServiceContextFactory.getInstance(Idea.class.getName(), request);
-
-                User user = UserLocalServiceUtil.getUser(userId);
-
-                String threadView = PropsKeys.DISCUSSION_THREAD_VIEW;
-
-                MBMessageDisplay messageDisplay = MBMessageLocalServiceUtil.getDiscussionMessageDisplay(
-                        userId, groupId, IdeaContent.class.getName(), ideaCommentClassPK,
-                        WorkflowConstants.STATUS_ANY, threadView);
-
-                MBThread thread = messageDisplay.getThread();
-
-                long threadId = thread.getThreadId();
-                long rootThreadId = thread.getRootMessageId();
-
-                String commentContentCleaned = comment;
-
-                final int maxLenghtCommentSubject = 50;
-
-                String commentSubject = comment;
-                commentSubject = StringUtil.shorten(commentSubject, maxLenghtCommentSubject);
-                commentSubject += "...";
-
-                // TODO - validate comment and preserve line breaks
-                MBMessageLocalServiceUtil.addDiscussionMessage(
-                        userId, user.getScreenName(), groupId,
-                        IdeaContent.class.getName(), ideaCommentClassPK, threadId,
-                        rootThreadId, commentSubject, commentContentCleaned,
-                        serviceContext);
-
             } catch (PortalException e) {
                 LOGGER.error(e.getMessage(), e);
             } catch (SystemException e) {
                 LOGGER.error(e.getMessage(), e);
             }
-
         }
 
         if (ideaContentType == IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE) {
             response.setRenderParameter("type", "private");
         }
-
         response.setRenderParameter("urlTitle", urlTitle);
-
     }
+
+
 
     /**
      * Method handling Action request.
@@ -702,5 +677,62 @@ public class IdeaViewController extends BaseController {
             Util.closeClosables(bos, pos, bis, is);
         }
     }
+
+    public void sendEmailNotification(Idea idea, boolean publicbody){
+
+        if (ideaSettingsService.getSettingBoolean(ExpandoConstants.NOTIFICATION_EMAIL_ACTIVE,
+                idea.getCompanyId(), idea.getGroupId())){
+
+            JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+            jsonObject.put("companyId", idea.getCompanyId());
+
+            LinkedList<String> toEmail = ideaService.getUsersToEmail(idea);
+            JSONArray emailTo = JSONFactoryUtil.createJSONArray();
+
+            for (String email : toEmail) {
+                emailTo.put(email);
+            }
+
+            jsonObject.put("emailTo", emailTo);
+            jsonObject.put("emailFrom",ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_FROM,
+                    idea.getCompanyId(), idea.getGroupId()));
+            jsonObject.put("subject",
+                    replaceTokens(ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_SUBJECT,
+                            idea.getCompanyId(), idea.getGroupId()), idea));
+            if (publicbody){
+                jsonObject.put("body",
+                        replaceTokens(ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_PUBLIC_BODY,
+                                idea.getCompanyId(), idea.getGroupId()), idea));
+            } else {
+                jsonObject.put("body",
+                        replaceTokens(ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_PRIVATE_BODY,
+                                idea.getCompanyId(), idea.getGroupId()), idea));
+            }
+
+            Message message = new Message();
+            message.setPayload(jsonObject);
+            MessageBusUtil.sendMessage("vgr/email/notification", message);
+        }
+
+    }
+
+    public String replaceTokens(String in, Idea idea){
+        String out = "";
+
+        String serverNameUrl = ideaSettingsService.getSetting(ExpandoConstants.SERVER_NAME_URL,
+                idea.getCompanyId(), idea.getGroupId());
+
+        in = in.replaceAll("\\[\\$PERSON_NAME\\$\\]",idea.getIdeaPerson().getName());
+
+        String link = "<a href=\"" + serverNameUrl + idea.getUrlTitle() + "\">" + idea.getTitle() +"</a>";
+        in = in.replaceAll("\\[\\$IDEA_NAME_AND_LINK\\$\\]", link);
+
+        String urlLink =  "<a href=\"" + serverNameUrl + idea.getUrlTitle() + "\">" + serverNameUrl + idea.getUrlTitle() + "</a>";
+        in = in.replaceAll("\\[\\$IDEA_URL\\$\\]",urlLink );
+        out = in.replaceAll("\\[\\$IDEA_NAME\\$\\]", idea.getTitle());
+
+        return out;
+    }
+
 }
 

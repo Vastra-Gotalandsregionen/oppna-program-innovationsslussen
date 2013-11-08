@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -1688,6 +1689,45 @@ public class IdeaServiceImpl implements IdeaService {
 
         return isUserPrioCouncilMember;
 
+    }
+
+    @Override
+    public LinkedList<String> getUsersToEmail(Idea idea) {
+
+
+        LinkedList<String> toEmail = new LinkedList<String>();
+
+        toEmail.add(idea.getIdeaPerson().getEmail());
+
+        try {
+            Role roleInnovationsslussen = roleLocalService.getRole(idea.getCompanyId(), IdeaServiceConstants.ROLE_NAME_COMMUNITY_INNOVATIONSSLUSSEN);
+            List<User> roleUsersInnovationsslussen = userLocalService.getRoleUsers(roleInnovationsslussen.getRoleId());
+
+            for (User user : roleUsersInnovationsslussen) {
+                toEmail.add(user.getEmailAddress());
+            }
+
+            Role rolePrioCouncil = roleLocalService.getRole(idea.getCompanyId(), IdeaServiceConstants.ROLE_NAME_COMMUNITY_PRIO_COUNCIL);
+            List<User> roleUsersPrioCouncil = userLocalService.getRoleUsers(rolePrioCouncil.getRoleId());
+
+            for (User user : roleUsersPrioCouncil) {
+                toEmail.add(user.getEmailAddress());
+            }
+
+            Role roleTransporter = roleLocalService.getRole(idea.getCompanyId(), IdeaServiceConstants.ROLE_NAME_COMMUNITY_IDEA_TRANSPORTER);
+            List<User> roleUsersTransporter = userLocalService.getRoleUsers(roleTransporter.getRoleId());
+
+            for (User user : roleUsersTransporter) {
+                toEmail.add(user.getEmailAddress());
+            }
+
+        } catch (PortalException e) {
+            e.printStackTrace();
+        } catch (SystemException e) {
+            e.printStackTrace();
+        }
+
+        return toEmail;
     }
 
     public void setTransactionManager(JpaTransactionManager transactionManager) {

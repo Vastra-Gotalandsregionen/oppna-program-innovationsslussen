@@ -19,8 +19,26 @@
 
 package se.vgregion.portal.innovationsslussen.util;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.messaging.Message;
+import com.liferay.portal.kernel.messaging.MessageBusUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.model.User;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextFactory;
+import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portlet.messageboards.model.MBMessageDisplay;
+import com.liferay.portlet.messageboards.model.MBThread;
+import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
+import javax.portlet.ActionRequest;
 import javax.portlet.PortletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import se.vgregion.portal.innovationsslussen.domain.IdeaContentType;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
@@ -29,11 +47,12 @@ import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaPerson;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
+import se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsService;
+import se.vgregion.service.innovationsslussen.idea.settings.util.ExpandoConstants;
 
 public final class IdeaPortletUtil {
 
-    private IdeaPortletUtil() {
-
+    private IdeaPortletUtil(IdeaSettingsService ideaSettingsService) {
     }
 
     /**
@@ -101,6 +120,38 @@ public final class IdeaPortletUtil {
         return idea;
     }
 
+    public static void addMBMessage(ActionRequest request, long groupId, long userId, String comment, long ideaCommentClassPK) throws PortalException, SystemException {
+
+        ServiceContext serviceContext = ServiceContextFactory.getInstance(Idea.class.getName(), request);
+
+        User user = UserLocalServiceUtil.getUser(userId);
+
+        String threadView = PropsKeys.DISCUSSION_THREAD_VIEW;
+
+        MBMessageDisplay messageDisplay = MBMessageLocalServiceUtil.getDiscussionMessageDisplay(
+                userId, groupId, IdeaContent.class.getName(), ideaCommentClassPK,
+                WorkflowConstants.STATUS_ANY, threadView);
+
+        MBThread thread = messageDisplay.getThread();
+
+        long threadId = thread.getThreadId();
+        long rootThreadId = thread.getRootMessageId();
+
+        String commentContentCleaned = comment;
+
+        final int maxLenghtCommentSubject = 50;
+
+        String commentSubject = comment;
+        commentSubject = StringUtil.shorten(commentSubject, maxLenghtCommentSubject);
+        commentSubject += "...";
+
+        // TODO - validate comment and preserve line breaks
+        MBMessageLocalServiceUtil.addDiscussionMessage(
+                userId, user.getScreenName(), groupId,
+                IdeaContent.class.getName(), ideaCommentClassPK, threadId,
+                rootThreadId, commentSubject, commentContentCleaned,
+                serviceContext);
+    }
 
 
 
