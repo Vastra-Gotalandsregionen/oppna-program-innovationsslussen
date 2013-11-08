@@ -18,6 +18,8 @@
  */
 
 package se.vgregion.service.innovationsslussen.idea;
+import com.liferay.portal.model.UserGroupRole;
+import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -204,7 +206,6 @@ public class IdeaServiceImpl implements IdeaService {
 
     @Autowired
     private LayoutSetLocalService layoutSetLocalService;
-
 
     private MessageCreateDateComparator messageComparator;
 
@@ -1700,33 +1701,27 @@ public class IdeaServiceImpl implements IdeaService {
         toEmail.add(idea.getIdeaPerson().getEmail());
 
         try {
-            Role roleInnovationsslussen = roleLocalService.getRole(idea.getCompanyId(), IdeaServiceConstants.ROLE_NAME_COMMUNITY_INNOVATIONSSLUSSEN);
-            List<User> roleUsersInnovationsslussen = userLocalService.getRoleUsers(roleInnovationsslussen.getRoleId());
-
-            for (User user : roleUsersInnovationsslussen) {
-                toEmail.add(user.getEmailAddress());
-            }
-
-            Role rolePrioCouncil = roleLocalService.getRole(idea.getCompanyId(), IdeaServiceConstants.ROLE_NAME_COMMUNITY_PRIO_COUNCIL);
-            List<User> roleUsersPrioCouncil = userLocalService.getRoleUsers(rolePrioCouncil.getRoleId());
-
-            for (User user : roleUsersPrioCouncil) {
-                toEmail.add(user.getEmailAddress());
-            }
-
-            Role roleTransporter = roleLocalService.getRole(idea.getCompanyId(), IdeaServiceConstants.ROLE_NAME_COMMUNITY_IDEA_TRANSPORTER);
-            List<User> roleUsersTransporter = userLocalService.getRoleUsers(roleTransporter.getRoleId());
-
-            for (User user : roleUsersTransporter) {
-                toEmail.add(user.getEmailAddress());
-            }
-
+            toEmail = getUserGroupRoleByRoleAndGroup(idea, toEmail, IdeaServiceConstants.ROLE_NAME_COMMUNITY_INNOVATIONSSLUSSEN);
+            toEmail = getUserGroupRoleByRoleAndGroup(idea, toEmail, IdeaServiceConstants.ROLE_NAME_COMMUNITY_IDEA_TRANSPORTER);
         } catch (PortalException e) {
             e.printStackTrace();
         } catch (SystemException e) {
             e.printStackTrace();
         }
 
+        return toEmail;
+    }
+
+    private LinkedList<String> getUserGroupRoleByRoleAndGroup(Idea idea, LinkedList<String> toEmail, String roleName) throws PortalException, SystemException {
+            Role roleInnovationsslussen = roleLocalService.getRole(idea.getCompanyId(), roleName);
+            List<UserGroupRole> roleUsersInnovationsslussen = userGroupRoleLocalService.getUserGroupRolesByGroupAndRole(idea.getGroupId(),roleInnovationsslussen.getRoleId());
+
+            for (UserGroupRole userGroupRole : roleUsersInnovationsslussen) {
+                String email = userGroupRole.getUser().getEmailAddress();
+                if (!toEmail.contains(email)){
+                    toEmail.add(email);
+                }
+            }
         return toEmail;
     }
 
