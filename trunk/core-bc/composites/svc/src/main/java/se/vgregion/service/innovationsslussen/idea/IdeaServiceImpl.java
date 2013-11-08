@@ -1730,7 +1730,7 @@ public class IdeaServiceImpl implements IdeaService {
     }
 
     public String generateIdeaSiteLink(String schemeServerNamePort, String urlTitle) {
-        return schemeServerNamePort + "/web/innovationsslussen/ide/-/idea/" + urlTitle;
+        return schemeServerNamePort + urlTitle;
     }
 
     @Override
