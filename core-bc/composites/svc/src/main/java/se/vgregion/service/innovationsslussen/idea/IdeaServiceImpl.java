@@ -1048,17 +1048,12 @@ public class IdeaServiceImpl implements IdeaService {
 
         result.setChanged(!isIdeasTheSame(idea, result.getOldIdea()));
 
-        String urlTitle = null;
-        if (!oldTitle.equals(idea.getTitle())) {
-            idea.setUrlTitle(urlTitle = generateIdeaSiteLink(schemeServerNameUrl, idea.getUrlTitle()));
-        }
-
         idea = ideaRepository.merge(idea);
         result.setNewIdea(idea);
 
-        if (urlTitle != null) {
+        if (!oldTitle.equals(idea.getTitle())) {
             final Idea finalIdea = idea;
-            final String finalUrlTitle =urlTitle;
+            final String finalUrlTitle = idea.getUrlTitle();
             // We may just as well do this asynchronously since we don't throw anything and don't return anything
             // from
             // here.
@@ -1066,15 +1061,12 @@ public class IdeaServiceImpl implements IdeaService {
                 @Override
                 public void run() {
                     // We need to update the ideaSiteLink in Barium.
-
-                    String ideaSiteLink = generateIdeaSiteLink(schemeServerNameUrl, finalIdea.getUrlTitle());
-
-                    String newIdeaSiteLink = replaceLastPart(ideaSiteLink, finalUrlTitle);
+                    String ideaSiteLink = generateIdeaSiteLink(schemeServerNameUrl, finalUrlTitle);
                     try {
-                        bariumService.updateIdea(finalIdea.getId(), "siteLank", newIdeaSiteLink);
+                        bariumService.updateIdea(finalIdea.getId(), "siteLank", ideaSiteLink);
                     } catch (BariumException e) {
                         LOGGER.error("Failed to update idea " + finalIdea.getId() + " with new site link: "
-                                + newIdeaSiteLink, e);
+                                + ideaSiteLink, e);
                     }
                 }
 
