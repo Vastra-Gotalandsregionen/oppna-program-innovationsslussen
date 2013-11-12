@@ -223,7 +223,7 @@
 							</div>
 							<div class="idea-content-item">
 								<div class="label">
-								    &Auml;r ni fler idid&eacute;givare?
+								    &Auml;r ni fler id&eacute;givare?
 								</div>
 								<p>
 									${idea.ideaContentPrivate.additionalIdeaOriginators}
