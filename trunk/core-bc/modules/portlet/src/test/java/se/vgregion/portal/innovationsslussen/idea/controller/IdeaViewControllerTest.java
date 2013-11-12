@@ -35,6 +35,7 @@ import org.mockito.Mockito;
 import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import se.vgregion.portal.innovationsslussen.domain.IdeaContentType;
 import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
@@ -114,7 +115,21 @@ public class IdeaViewControllerTest {
         Assert.assertEquals("idea_404", r);
 
         Idea idea = new Idea();
+        idea.setId("test-id");
         idea.setStatus(IdeaStatus.PUBLIC_IDEA);
+
+        IdeaContent ideaContentPublic = new IdeaContent();
+        IdeaContent ideaContentPrivate = new IdeaContent();
+
+        ideaContentPublic.setType(IdeaContentType.IDEA_CONTENT_TYPE_PUBLIC);
+        ideaContentPrivate.setType(IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE);
+
+        ideaContentPublic.setDescription("test test");
+        ideaContentPrivate.setDescription("test test");
+
+        idea.addIdeaContent(ideaContentPublic);
+        idea.addIdeaContent(ideaContentPrivate);
+
         Mockito.when(ideaService.findIdeaByUrlTitle(Mockito.anyString())).thenReturn(idea);
 
         r = controller.showIdea(request, response, modelMap);
