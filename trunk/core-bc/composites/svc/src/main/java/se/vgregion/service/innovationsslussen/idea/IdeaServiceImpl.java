@@ -18,6 +18,11 @@
  */
 
 package se.vgregion.service.innovationsslussen.idea;
+import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.messaging.Message;
+import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.model.UserGroupRole;
 import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
 import java.io.InputStream;
@@ -1090,15 +1095,18 @@ public class IdeaServiceImpl implements IdeaService {
     private void generateAutoComments(Idea idea, IdeaStatus oldStatus, int currentPhase, int bariumPhase) {
         if (currentPhase != bariumPhase){
             addAutoComment(idea, idea.getIdeaContentPrivate().getId(), autoCommentDefaultMessageNewPhase + " " + getIdeaPhaseString(bariumPhase));
+            sendEmailNotification(idea, false);
         }
 
         if (oldStatus.equals(IdeaStatus.PRIVATE_IDEA) && idea.getStatus().equals(IdeaStatus.PUBLIC_IDEA)) {
             addAutoComment(idea, idea.getIdeaContentPrivate().getId(), autoCommentDefaultMessageBecomePublic);
             addAutoComment(idea, idea.getIdeaContentPublic().getId(), autoCommentDefaultMessageBecomePublicPublic);
+            sendEmailNotification(idea, false);
         }
 
         if (oldStatus.equals(IdeaStatus.PUBLIC_IDEA) && idea.getStatus().equals(IdeaStatus.PRIVATE_IDEA)) {
             addAutoComment(idea, idea.getIdeaContentPrivate().getId(), autoCommentDefaultMessageBecomePrivate);
+            sendEmailNotification(idea, false);
         }
     }
 
@@ -1763,6 +1771,62 @@ public class IdeaServiceImpl implements IdeaService {
             thread.setDaemon(true); // We don't want these threads to block a shutdown of the JVM
             return thread;
         }
+    }
+
+    public void sendEmailNotification(Idea idea, boolean publicbody){
+
+        if (ideaSettingsService.getSettingBoolean(ExpandoConstants.NOTIFICATION_EMAIL_ACTIVE,
+                idea.getCompanyId(), idea.getGroupId())){
+
+            JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+            jsonObject.put("companyId", idea.getCompanyId());
+
+            LinkedList<String> toEmail = getUsersToEmail(idea);
+            JSONArray emailTo = JSONFactoryUtil.createJSONArray();
+
+            for (String email : toEmail) {
+                emailTo.put(email);
+            }
+
+            jsonObject.put("emailTo", emailTo);
+            jsonObject.put("emailFrom",ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_FROM,
+                    idea.getCompanyId(), idea.getGroupId()));
+            jsonObject.put("subject",
+                    replaceTokens(ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_SUBJECT,
+                            idea.getCompanyId(), idea.getGroupId()), idea));
+            if (publicbody){
+                jsonObject.put("body",
+                        replaceTokens(ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_PUBLIC_BODY,
+                                idea.getCompanyId(), idea.getGroupId()), idea));
+            } else {
+                jsonObject.put("body",
+                        replaceTokens(ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_PRIVATE_BODY,
+                                idea.getCompanyId(), idea.getGroupId()), idea));
+            }
+
+            Message message = new Message();
+            message.setPayload(jsonObject);
+            MessageBusUtil.sendMessage("vgr/email/notification", message);
+        }
+    }
+
+
+    private String replaceTokens(String in, Idea idea){
+        String out = "";
+
+        String serverNameUrl = ideaSettingsService.getSetting(ExpandoConstants.SERVER_NAME_URL,
+                idea.getCompanyId(), idea.getGroupId());
+
+        in = in.replaceAll("\\[\\$PERSON_NAME\\$\\]",idea.getIdeaPerson().getName());
+
+        String link = "<a href=\"" + serverNameUrl + idea.getUrlTitle() + "\">" + idea.getTitle() +"</a>";
+        in = in.replaceAll("\\[\\$IDEA_NAME_AND_LINK\\$\\]", link);
+
+        String urlLink =  "<a href=\"" + serverNameUrl + idea.getUrlTitle() + "\">" + serverNameUrl + idea.getUrlTitle() + "</a>";
+        in = in.replaceAll("\\[\\$IDEA_URL\\$\\]",urlLink );
+        out = in.replaceAll("\\[\\$IDEA_NAME\\$\\]", idea.getTitle());
+
+        return out;
     }
 
 }
