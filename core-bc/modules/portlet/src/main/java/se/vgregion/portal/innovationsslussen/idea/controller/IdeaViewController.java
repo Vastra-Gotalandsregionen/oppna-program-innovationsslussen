@@ -200,8 +200,7 @@ public class IdeaViewController extends BaseController {
                 model.addAttribute("commentCount", commentsList.size());
                 commentsList = commentsList.subList(0, Math.min(maxCommentCountDisplay, commentsList.size()));
 
-
-                idea.getIdeaContentPrivate().setDescription(idea.getIdeaContentPrivate().getDescription().replaceAll("/n", "</br>"));
+                idea = IdeaPortletUtil.replaceBreaklines(idea);
 
                 model.addAttribute("idea", idea);
                 model.addAttribute("commentsList", commentsList);

@@ -21,10 +21,6 @@ package se.vgregion.portal.innovationsslussen.util;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.messaging.Message;
-import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -38,7 +34,6 @@ import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 import javax.portlet.ActionRequest;
 import javax.portlet.PortletRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import se.vgregion.portal.innovationsslussen.domain.IdeaContentType;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
@@ -48,7 +43,6 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 import se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsService;
-import se.vgregion.service.innovationsslussen.idea.settings.util.ExpandoConstants;
 
 public final class IdeaPortletUtil {
 
@@ -154,5 +148,32 @@ public final class IdeaPortletUtil {
     }
 
 
+    public static Idea replaceBreaklines(Idea idea){
+
+        if (idea.getIdeaContentPrivate() != null){
+            idea.getIdeaContentPrivate().setDescription(replaceBreakline(idea.getIdeaContentPrivate().getDescription()));
+            idea.getIdeaContentPrivate().setIdeaTested(replaceBreakline(idea.getIdeaContentPrivate().getIdeaTested()));
+            idea.getIdeaContentPrivate().setSolvesProblem(replaceBreakline(idea.getIdeaContentPrivate().getSolvesProblem()));
+            idea.getIdeaContentPrivate().setWantsHelpWith(replaceBreakline(idea.getIdeaContentPrivate().getWantsHelpWith()));
+        }
+
+        if (idea.getIdeaContentPublic() != null){
+            idea.getIdeaContentPublic().setDescription(replaceBreakline(idea.getIdeaContentPublic().getDescription()));
+            idea.getIdeaContentPublic().setIdeaTested(replaceBreakline(idea.getIdeaContentPublic().getIdeaTested()));
+            idea.getIdeaContentPublic().setSolvesProblem(replaceBreakline(idea.getIdeaContentPublic().getSolvesProblem()));
+            idea.getIdeaContentPublic().setWantsHelpWith(replaceBreakline(idea.getIdeaContentPublic().getWantsHelpWith()));
+        }
+
+        return idea;
+
+    }
+
+    private static String replaceBreakline(String s){
+        if (s != null && !s.isEmpty()){
+            s = s.replaceAll("\\n", "</br></br>");
+        }
+
+        return s;
+    }
 
 }

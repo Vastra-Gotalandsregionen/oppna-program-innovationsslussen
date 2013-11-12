@@ -125,7 +125,14 @@ public class IdeaViewControllerTest {
         ideaContentPrivate.setType(IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE);
 
         ideaContentPublic.setDescription("test test");
+        ideaContentPublic.setIdeaTested("");
+        ideaContentPublic.setWantsHelpWith("");
+        ideaContentPublic.setSolvesProblem("");
+
         ideaContentPrivate.setDescription("test test");
+        ideaContentPrivate.setIdeaTested("");
+        ideaContentPrivate.setWantsHelpWith("");
+        ideaContentPrivate.setSolvesProblem("");
 
         idea.addIdeaContent(ideaContentPublic);
         idea.addIdeaContent(ideaContentPrivate);
