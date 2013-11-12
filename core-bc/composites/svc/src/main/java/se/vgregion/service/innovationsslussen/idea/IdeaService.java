@@ -414,6 +414,8 @@ public interface IdeaService {
 
     LinkedList<String> getUsersToEmail(Idea idea);
 
+    void sendEmailNotification(Idea idea, boolean b);
+
     public static class UpdateFromBariumResult implements Serializable {
 
         private boolean changed;

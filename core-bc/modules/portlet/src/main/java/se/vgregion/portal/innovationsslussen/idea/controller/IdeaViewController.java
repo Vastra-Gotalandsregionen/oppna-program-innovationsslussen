@@ -19,13 +19,7 @@
 
 package se.vgregion.portal.innovationsslussen.idea.controller;
 
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.messaging.Message;
-import com.liferay.portal.kernel.messaging.MessageBusUtil;
-import com.liferay.portal.model.Group;
-import com.liferay.portal.service.UserLocalServiceUtil;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -34,11 +28,8 @@ import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -51,11 +42,9 @@ import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.portlet.PortletFileUpload;
-import org.codehaus.jackson.annotate.JsonValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -78,7 +67,6 @@ import se.vgregion.service.innovationsslussen.idea.IdeaService;
 import se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionChecker;
 import se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionCheckerService;
 import se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsService;
-import se.vgregion.service.innovationsslussen.idea.settings.util.ExpandoConstants;
 import se.vgregion.service.innovationsslussen.ldap.LdapService;
 import se.vgregion.util.Util;
 
@@ -88,9 +76,7 @@ import com.liferay.portal.kernel.util.ParamUtil;
 
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Layout;
-import com.liferay.portal.model.Role;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
-import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
@@ -302,11 +288,11 @@ public class IdeaViewController extends BaseController {
                 if (ideaContentType == IdeaContentType.IDEA_CONTENT_TYPE_PUBLIC) {
                     IdeaPortletUtil.addMBMessage(request, groupId, userId, comment, idea.getIdeaContentPublic().getId());
                     //Send email notification.
-                    sendEmailNotification(idea, true);
+                    ideaService.sendEmailNotification(idea, true);
                 } else if (ideaContentType == IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE) {
                     IdeaPortletUtil.addMBMessage(request, groupId, userId, comment, idea.getIdeaContentPrivate().getId());
                     //Send email notification.
-                    sendEmailNotification(idea, false);
+                    ideaService.sendEmailNotification(idea, false);
                 }
             } catch (PortalException e) {
                 LOGGER.error(e.getMessage(), e);
@@ -677,62 +663,6 @@ public class IdeaViewController extends BaseController {
         } finally {
             Util.closeClosables(bos, pos, bis, is);
         }
-    }
-
-    public void sendEmailNotification(Idea idea, boolean publicbody){
-
-        if (ideaSettingsService.getSettingBoolean(ExpandoConstants.NOTIFICATION_EMAIL_ACTIVE,
-                idea.getCompanyId(), idea.getGroupId())){
-
-            JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
-            jsonObject.put("companyId", idea.getCompanyId());
-
-            LinkedList<String> toEmail = ideaService.getUsersToEmail(idea);
-            JSONArray emailTo = JSONFactoryUtil.createJSONArray();
-
-            for (String email : toEmail) {
-                emailTo.put(email);
-            }
-
-            jsonObject.put("emailTo", emailTo);
-            jsonObject.put("emailFrom",ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_FROM,
-                    idea.getCompanyId(), idea.getGroupId()));
-            jsonObject.put("subject",
-                    replaceTokens(ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_SUBJECT,
-                            idea.getCompanyId(), idea.getGroupId()), idea));
-            if (publicbody){
-                jsonObject.put("body",
-                        replaceTokens(ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_PUBLIC_BODY,
-                                idea.getCompanyId(), idea.getGroupId()), idea));
-            } else {
-                jsonObject.put("body",
-                        replaceTokens(ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_PRIVATE_BODY,
-                                idea.getCompanyId(), idea.getGroupId()), idea));
-            }
-
-            Message message = new Message();
-            message.setPayload(jsonObject);
-            MessageBusUtil.sendMessage("vgr/email/notification", message);
-        }
-
-    }
-
-    public String replaceTokens(String in, Idea idea){
-        String out = "";
-
-        String serverNameUrl = ideaSettingsService.getSetting(ExpandoConstants.SERVER_NAME_URL,
-                idea.getCompanyId(), idea.getGroupId());
-
-        in = in.replaceAll("\\[\\$PERSON_NAME\\$\\]",idea.getIdeaPerson().getName());
-
-        String link = "<a href=\"" + serverNameUrl + idea.getUrlTitle() + "\">" + idea.getTitle() +"</a>";
-        in = in.replaceAll("\\[\\$IDEA_NAME_AND_LINK\\$\\]", link);
-
-        String urlLink =  "<a href=\"" + serverNameUrl + idea.getUrlTitle() + "\">" + serverNameUrl + idea.getUrlTitle() + "</a>";
-        in = in.replaceAll("\\[\\$IDEA_URL\\$\\]",urlLink );
-        out = in.replaceAll("\\[\\$IDEA_NAME\\$\\]", idea.getTitle());
-
-        return out;
     }
 
 }
