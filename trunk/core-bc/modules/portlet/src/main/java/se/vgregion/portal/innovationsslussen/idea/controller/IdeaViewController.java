@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
+import com.liferay.portal.model.Group;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -198,6 +199,9 @@ public class IdeaViewController extends BaseController {
 
                 model.addAttribute("commentCount", commentsList.size());
                 commentsList = commentsList.subList(0, Math.min(maxCommentCountDisplay, commentsList.size()));
+
+
+                idea.getIdeaContentPrivate().setDescription(idea.getIdeaContentPrivate().getDescription().replaceAll("/n", "</br>"));
 
                 model.addAttribute("idea", idea);
                 model.addAttribute("commentsList", commentsList);
@@ -538,6 +542,7 @@ public class IdeaViewController extends BaseController {
     @ActionMapping(params = "action=uploadFile")
     public void uploadFile(ActionRequest request, ActionResponse response, Model model) throws FileUploadException, SystemException, PortalException {
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+        long scopeGroupId = themeDisplay.getScopeGroupId();
         long userId = themeDisplay.getUserId();
 
         String urlTitle = request.getParameter("urlTitle");
@@ -559,65 +564,62 @@ public class IdeaViewController extends BaseController {
 
         boolean mayUploadFile = idea.getUserId() == userId;
 
-        List<Role> roles = RoleLocalServiceUtil.getUserRoles(themeDisplay.getUserId());
+        IdeaPermissionChecker ideaPermissionChecker = ideaPermissionCheckerService.getIdeaPermissionChecker(
+                scopeGroupId, userId, idea);
+
         if (!mayUploadFile) {
-            for (Role role : roles) {
-                if (rolesMayUploadFile.contains(role.getName())) {
-                    mayUploadFile = true;
-                    break;
-                }
+            if (publicIdea){
+                mayUploadFile = ideaPermissionChecker.isHasPermissionAddDocumentPublic();
+            } else {
+                mayUploadFile = ideaPermissionChecker.isHasPermissionAddDocumentPrivate();
             }
         }
 
-        if (!mayUploadFile) {
-            SortedSet ss = new TreeSet();
-            for (Role role : roles) {
-                ss.add(role.getName());
-            }
 
-            throw new FileUploadException("The user is not authorized to upload to this idea instance. User have roles: " + ss);
-        }
+        if (mayUploadFile){
+            response.setRenderParameter("urlTitle", urlTitle);
 
-        response.setRenderParameter("urlTitle", urlTitle);
+            PortletFileUpload p = new PortletFileUpload();
 
-        PortletFileUpload p = new PortletFileUpload();
+            try {
+                FileItemIterator itemIterator = p.getItemIterator(request);
 
-        try {
-            FileItemIterator itemIterator = p.getItemIterator(request);
+                while (itemIterator.hasNext()) {
+                    FileItemStream fileItemStream = itemIterator.next();
 
-            while (itemIterator.hasNext()) {
-                FileItemStream fileItemStream = itemIterator.next();
+                    if (fileItemStream.getFieldName().equals("file")) {
 
-                if (fileItemStream.getFieldName().equals("file")) {
+                        InputStream is = fileItemStream.openStream();
+                        BufferedInputStream bis = new BufferedInputStream(is);
 
-                    InputStream is = fileItemStream.openStream();
-                    BufferedInputStream bis = new BufferedInputStream(is);
+                        String fileName = fileItemStream.getName();
+                        String contentType = fileItemStream.getContentType();
 
-                    String fileName = fileItemStream.getName();
-                    String contentType = fileItemStream.getContentType();
-
-                    ideaService.uploadFile(idea, publicIdea, fileName, contentType, bis);
+                        ideaService.uploadFile(idea, publicIdea, fileName, contentType, bis);
+                    }
                 }
-            }
-        } catch (FileUploadException e) {
-            doExceptionStuff(e, response, model);
-            return;
-        } catch (IOException e) {
-            doExceptionStuff(e, response, model);
-            return;
-        } catch (se.vgregion.service.innovationsslussen.exception.FileUploadException e) {
-            doExceptionStuff(e, response, model);
-            return;
-        } catch (RuntimeException e) {
-            Throwable lastCause = Util.getLastCause(e);
-            if (lastCause instanceof SQLException) {
-                SQLException nextException = ((SQLException) lastCause).getNextException();
-                if (nextException != null) {
-                    LOGGER.error(nextException.getMessage(), nextException);
+            } catch (FileUploadException e) {
+                doExceptionStuff(e, response, model);
+                return;
+            } catch (IOException e) {
+                doExceptionStuff(e, response, model);
+                return;
+            } catch (se.vgregion.service.innovationsslussen.exception.FileUploadException e) {
+                doExceptionStuff(e, response, model);
+                return;
+            } catch (RuntimeException e) {
+                Throwable lastCause = Util.getLastCause(e);
+                if (lastCause instanceof SQLException) {
+                    SQLException nextException = ((SQLException) lastCause).getNextException();
+                    if (nextException != null) {
+                        LOGGER.error(nextException.getMessage(), nextException);
+                    }
                 }
+            } finally {
+                response.setRenderParameter("ideaType", fileType);
             }
-        } finally {
-            response.setRenderParameter("ideaType", fileType);
+        } else {
+            throw new FileUploadException("The user is not authorized to upload to this idea instance.");
         }
 
         response.setRenderParameter("urlTitle", urlTitle);
