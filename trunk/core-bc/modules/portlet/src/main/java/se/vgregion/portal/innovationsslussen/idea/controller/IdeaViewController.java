@@ -144,89 +144,95 @@ public class IdeaViewController extends BaseController {
     public String showIdea(RenderRequest request, RenderResponse response, final ModelMap model) throws PortalException, SystemException {
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-        long scopeGroupId = themeDisplay.getScopeGroupId();
-        long companyId = themeDisplay.getCompanyId();
-        long userId = themeDisplay.getUserId();
-        boolean isSignedIn = themeDisplay.isSignedIn();
         String ideaType = ParamUtil.getString(request, "type", "public");
-        String urlTitle = ParamUtil.getString(request, "urlTitle", "");
-
-        Layout ideaLayout = getFriendlyURLLayout(scopeGroupId,
-                themeDisplay.getLayout().isPrivateLayout());
-        long ideaPlid = ideaLayout.getPlid();
-        model.addAttribute("ideaPlid", ideaPlid);
-
-        int maxCommentCountDisplay = ParamUtil.getInteger(request, "maxCommentCountDisplay", defaultCommentCount);
-        boolean moreComments = ParamUtil.getString(request, "moreComments") != null;
-        if (moreComments) {
-            maxCommentCountDisplay += defaultCommentCount;
-        }
 
         String returnView = "view_public";
 
-        if (!urlTitle.equals("")) {
-            Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
-            if (idea != null) {
+        //If a user trying to accsess the private part of an idea when not sign in.
+        if (ideaType.equals("private") && !themeDisplay.isSignedIn()){
+            returnView = "idea_not_sign_in";
+        } else {
 
-                boolean isIdeaUserLiked = ideaService.getIsIdeaUserLiked(companyId, scopeGroupId, userId, urlTitle);
-                boolean isIdeaUserFavorite = ideaService.getIsIdeaUserFavorite(companyId, scopeGroupId,
-                        userId, urlTitle);
+            long scopeGroupId = themeDisplay.getScopeGroupId();
+            long companyId = themeDisplay.getCompanyId();
+            long userId = themeDisplay.getUserId();
+            boolean isSignedIn = themeDisplay.isSignedIn();
+            String urlTitle = ParamUtil.getString(request, "urlTitle", "");
 
-                List<CommentItemVO> commentsList = null;
+            Layout ideaLayout = getFriendlyURLLayout(scopeGroupId,
+                    themeDisplay.getLayout().isPrivateLayout());
+            long ideaPlid = ideaLayout.getPlid();
+            model.addAttribute("ideaPlid", ideaPlid);
 
-                if (ideaType.equals("private")) {
-					commentsList = ideaService.getPrivateComments(idea);
+            int maxCommentCountDisplay = ParamUtil.getInteger(request, "maxCommentCountDisplay", defaultCommentCount);
+            boolean moreComments = ParamUtil.getString(request, "moreComments") != null;
+            if (moreComments) {
+                maxCommentCountDisplay += defaultCommentCount;
+            }
+
+            if (!urlTitle.equals("")) {
+                Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
+                if (idea != null) {
+
+                    boolean isIdeaUserLiked = ideaService.getIsIdeaUserLiked(companyId, scopeGroupId, userId, urlTitle);
+                    boolean isIdeaUserFavorite = ideaService.getIsIdeaUserFavorite(companyId, scopeGroupId,
+                            userId, urlTitle);
+
+                    List<CommentItemVO> commentsList = null;
+
+                    if (ideaType.equals("private")) {
+                        commentsList = ideaService.getPrivateComments(idea);
+                    } else {
+                        commentsList = ideaService.getPublicComments(idea);
+                    }
+
+                    IdeaPermissionChecker ideaPermissionChecker = ideaPermissionCheckerService.getIdeaPermissionChecker(
+                            scopeGroupId, userId, idea);
+
+                    model.addAttribute("commentCount", commentsList.size());
+                    commentsList = commentsList.subList(0, Math.min(maxCommentCountDisplay, commentsList.size()));
+
+                    idea = IdeaPortletUtil.replaceBreaklines(idea);
+
+                    model.addAttribute("idea", idea);
+                    model.addAttribute("commentsList", commentsList);
+                    model.addAttribute("commentsDelta", 1);
+                    model.addAttribute("isIdeaUserFavorite", isIdeaUserFavorite);
+                    model.addAttribute("isIdeaUserLiked", isIdeaUserLiked);
+                    model.addAttribute("urlTitle", urlTitle);
+                    model.addAttribute("userId", userId);
+
+                    model.addAttribute("isSignedIn", isSignedIn);
+                    model.addAttribute("ideaPermissionChecker", ideaPermissionChecker);
+
+                    model.addAttribute("ideaType", ideaType);
+
+                    model.addAttribute("maxCommentCountDisplay", maxCommentCountDisplay);
+                    model.addAttribute("defaultCommentCount", defaultCommentCount);
+
+                    model.addAttribute("ideaPortletName", IdeaPortletsConstants.PORTLET_NAME_IDEA_PORTLET);
+
+                    if (ideaType.equals("private") && (ideaPermissionChecker.getHasPermissionViewIdeaPrivate()
+                            || idea.getUserId() == userId)) {
+                        returnView = "view_private";
+                    }
+
+                    // If a user trying to access the public or private part of an idea that still is private.
+                    // The user dose not have premmisions and is not the creator of the idea.
+                    // Showing 404 view.
+                    if (!idea.isPublic() && !(ideaPermissionChecker.getHasPermissionViewIdeaPrivate()
+                            || idea.getUserId() == userId)) {
+                        HttpServletResponse httpServletResponse = PortalUtil.getHttpServletResponse(response);
+                        httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                        returnView = "idea_404";
+                    }
                 } else {
-					commentsList = ideaService.getPublicComments(idea);
-                }
-
-                IdeaPermissionChecker ideaPermissionChecker = ideaPermissionCheckerService.getIdeaPermissionChecker(
-                        scopeGroupId, userId, idea);
-
-                model.addAttribute("commentCount", commentsList.size());
-                commentsList = commentsList.subList(0, Math.min(maxCommentCountDisplay, commentsList.size()));
-
-                idea = IdeaPortletUtil.replaceBreaklines(idea);
-
-                model.addAttribute("idea", idea);
-                model.addAttribute("commentsList", commentsList);
-                model.addAttribute("commentsDelta", 1);
-                model.addAttribute("isIdeaUserFavorite", isIdeaUserFavorite);
-                model.addAttribute("isIdeaUserLiked", isIdeaUserLiked);
-                model.addAttribute("urlTitle", urlTitle);
-                model.addAttribute("userId", userId);
-
-                model.addAttribute("isSignedIn", isSignedIn);
-                model.addAttribute("ideaPermissionChecker", ideaPermissionChecker);
-
-                model.addAttribute("ideaType", ideaType);
-
-                model.addAttribute("maxCommentCountDisplay", maxCommentCountDisplay);
-                model.addAttribute("defaultCommentCount", defaultCommentCount);
-
-                model.addAttribute("ideaPortletName", IdeaPortletsConstants.PORTLET_NAME_IDEA_PORTLET);
-
-                if (ideaType.equals("private") && (ideaPermissionChecker.getHasPermissionViewIdeaPrivate()
-                        || idea.getUserId() == userId)) {
-                    returnView = "view_private";
-                }
-
-                // If a user trying to access the public or private part of an idea that still is private.
-                // The user dose not have premmisions and is not the creator of the idea.
-                // Showing 404 view.
-                if (!idea.isPublic() && !(ideaPermissionChecker.getHasPermissionViewIdeaPrivate()
-                        || idea.getUserId() == userId)) {
-                    HttpServletResponse httpServletResponse = PortalUtil.getHttpServletResponse(response);
+                    HttpServletResponse httpServletResponse = getHttpServletResponse(response);
                     httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
                     returnView = "idea_404";
                 }
-            } else {
-                HttpServletResponse httpServletResponse = getHttpServletResponse(response);
-                httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                returnView = "idea_404";
             }
         }
-
         return returnView;
     }
 
