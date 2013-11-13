@@ -170,7 +170,7 @@ public final class IdeaPortletUtil {
 
     private static String replaceBreakline(String s){
         if (s != null && !s.isEmpty()){
-            s = s.replaceAll("\\n", "</br></br>");
+            s = s.replaceAll("\\n", "</br>");
         }
 
         return s;
