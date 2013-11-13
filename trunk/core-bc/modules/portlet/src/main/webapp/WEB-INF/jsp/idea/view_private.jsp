@@ -194,7 +194,7 @@
 									L&ouml;ser behov
 								</div>
 								<p>
-									${vgrutil:escapeHtmlWithLineBreaks(idea.ideaContentPrivate.solvesProblem)}
+									${idea.ideaContentPrivate.solvesProblem}
 								</p>
 							</div>
 							<div class="idea-content-item">
