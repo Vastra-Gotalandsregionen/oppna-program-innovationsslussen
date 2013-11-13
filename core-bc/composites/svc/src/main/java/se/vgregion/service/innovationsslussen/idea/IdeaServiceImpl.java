@@ -1050,12 +1050,13 @@ public class IdeaServiceImpl implements IdeaService {
         }
 
         result.setChanged(!isIdeasTheSame(idea, result.getOldIdea()));
-        final String finalUrlTitle;
 
+        final String finalUrlTitle;
         if (!oldTitle.equals(idea.getTitle())) {
             finalUrlTitle = generateNewUrlTitle(idea.getTitle());
             idea.setUrlTitle(finalUrlTitle);
         } else {
+            idea.setUrlTitle(result.getOldIdea().getUrlTitle());
             finalUrlTitle = null;
         }
 
