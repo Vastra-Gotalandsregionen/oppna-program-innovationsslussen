@@ -501,8 +501,9 @@ public class IdeaViewController extends BaseController {
         if (themeDisplay.isSignedIn()) {
             try {
                 Idea idea = ideaService.find(id);
-                boolean updated = ideaService.updateFromBarium(idea).isChanged();
-                model.put("updateFromBariumOutcome", updated);
+                IdeaService.UpdateFromBariumResult result = ideaService.updateFromBarium(idea);
+                urlTitle = result.getNewIdea().getUrlTitle();
+                model.put("updateFromBariumOutcome", result.isChanged());
             } catch (UpdateIdeaException e) {
                 LOGGER.error(e.getMessage(), e);
                 throw new RuntimeException(e);

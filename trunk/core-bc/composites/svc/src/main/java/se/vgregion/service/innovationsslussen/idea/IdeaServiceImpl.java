@@ -18,6 +18,7 @@
  */
 
 package se.vgregion.service.innovationsslussen.idea;
+
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -25,6 +26,7 @@ import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.model.UserGroupRole;
 import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
+
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -215,7 +217,6 @@ public class IdeaServiceImpl implements IdeaService {
     private MessageCreateDateComparator messageComparator;
 
 
-
     /**
      * Instantiates a new idea service impl.
      */
@@ -226,27 +227,27 @@ public class IdeaServiceImpl implements IdeaService {
     /**
      * Instantiates a new idea service impl.
      *
-     * @param ideaRepository the idea repository
-     * @param ideaFileRepository the idea file repository
-     * @param ideaUserLikeRepository the idea user like repository
+     * @param ideaRepository             the idea repository
+     * @param ideaFileRepository         the idea file repository
+     * @param ideaUserLikeRepository     the idea user like repository
      * @param ideaUserFavoriteRepository the idea user favorite repository
-     * @param bariumService the barium service
-     * @param ideaSettingsService the idea settings service
-     * @param mbMessageLocalService the mb message local service
-     * @param userLocalService the user local service
-     * @param userGroupRoleLocalService the user group role local service
-     * @param resourceLocalService the resource local service
+     * @param bariumService              the barium service
+     * @param ideaSettingsService        the idea settings service
+     * @param mbMessageLocalService      the mb message local service
+     * @param userLocalService           the user local service
+     * @param userGroupRoleLocalService  the user group role local service
+     * @param resourceLocalService       the resource local service
      */
     @Autowired
     public IdeaServiceImpl(IdeaRepository ideaRepository, IdeaFileRepository ideaFileRepository,
-            IdeaUserLikeRepository ideaUserLikeRepository, IdeaUserFavoriteRepository ideaUserFavoriteRepository,
-            BariumService bariumService, IdeaSettingsService ideaSettingsService,
-            MBMessageLocalService mbMessageLocalService, UserLocalService userLocalService,
-            UserGroupRoleLocalService userGroupRoleLocalService, ResourceLocalService resourceLocalService,
-            CounterLocalService counterLocalService, ContactLocalService contactLocalService,
-            AssetEntryLocalService assetEntryLocalService, GroupLocalService groupLocalService,
-            ClassNameLocalService classNameLocalService, ResourcePermissionLocalService resourcePermissionLocalService,
-            RoleLocalService roleLocalService, LayoutSetLocalService layoutSetLocalService) {
+                           IdeaUserLikeRepository ideaUserLikeRepository, IdeaUserFavoriteRepository ideaUserFavoriteRepository,
+                           BariumService bariumService, IdeaSettingsService ideaSettingsService,
+                           MBMessageLocalService mbMessageLocalService, UserLocalService userLocalService,
+                           UserGroupRoleLocalService userGroupRoleLocalService, ResourceLocalService resourceLocalService,
+                           CounterLocalService counterLocalService, ContactLocalService contactLocalService,
+                           AssetEntryLocalService assetEntryLocalService, GroupLocalService groupLocalService,
+                           ClassNameLocalService classNameLocalService, ResourcePermissionLocalService resourcePermissionLocalService,
+                           RoleLocalService roleLocalService, LayoutSetLocalService layoutSetLocalService) {
         this.ideaRepository = ideaRepository;
         this.ideaFileRepository = ideaFileRepository;
         this.ideaUserLikeRepository = ideaUserLikeRepository;
@@ -258,7 +259,7 @@ public class IdeaServiceImpl implements IdeaService {
         this.userGroupRoleLocalService = userGroupRoleLocalService;
         this.resourceLocalService = resourceLocalService;
         this.counterLocalService = counterLocalService;
-        this.contactLocalService= contactLocalService;
+        this.contactLocalService = contactLocalService;
         this.assetEntryLocalService = assetEntryLocalService;
         this.groupLocalService = groupLocalService;
         this.classNameLocalService = classNameLocalService;
@@ -424,51 +425,51 @@ public class IdeaServiceImpl implements IdeaService {
 
     private Idea checkIfIdeaIsForAnotherPerson(Idea idea) throws SystemException, PortalException {
 
-            String ideaUserScreenName = userLocalService.getUser(idea.getUserId()).getScreenName();
-            String ideaPersonVgrId = idea.getIdeaPerson().getVgrId();
+        String ideaUserScreenName = userLocalService.getUser(idea.getUserId()).getScreenName();
+        String ideaPersonVgrId = idea.getIdeaPerson().getVgrId();
 
-            if (!ideaUserScreenName.equals(ideaPersonVgrId)){
+        if (!ideaUserScreenName.equals(ideaPersonVgrId)) {
 
-                idea.getUserId();
+            idea.getUserId();
 
-                User ideaOriginatorUser;
+            User ideaOriginatorUser;
 
-                try{
-                    ideaOriginatorUser = userLocalService.getUserByScreenName(idea.getCompanyId(),ideaPersonVgrId);
-                }catch (NoSuchUserException e){
-                    ideaOriginatorUser = createUser(idea, ideaPersonVgrId);
-                }
-
-                Long ideaOriginatorUserId = ideaOriginatorUser.getUserId();
-
-                idea.setUserId(ideaOriginatorUserId);
-                idea.getIdeaPerson().setUserId(ideaOriginatorUserId);
-                idea.getIdeaContentPrivate().setUserId(ideaOriginatorUserId);
-                idea.getIdeaContentPublic().setUserId(ideaOriginatorUserId);
+            try {
+                ideaOriginatorUser = userLocalService.getUserByScreenName(idea.getCompanyId(), ideaPersonVgrId);
+            } catch (NoSuchUserException e) {
+                ideaOriginatorUser = createUser(idea, ideaPersonVgrId);
             }
+
+            Long ideaOriginatorUserId = ideaOriginatorUser.getUserId();
+
+            idea.setUserId(ideaOriginatorUserId);
+            idea.getIdeaPerson().setUserId(ideaOriginatorUserId);
+            idea.getIdeaContentPrivate().setUserId(ideaOriginatorUserId);
+            idea.getIdeaContentPublic().setUserId(ideaOriginatorUserId);
+        }
 
         return idea;
 
     }
 
-    private User createUser(Idea idea , String ideaPersonVgrId) {
+    private User createUser(Idea idea, String ideaPersonVgrId) {
 
         try {
             long companyId = idea.getCompanyId();
-            long groupId= idea.getGroupId();
-            String password1= "qUqP5cyxm6YcTAhz05Hph5gvu9M="; //test
+            long groupId = idea.getGroupId();
+            String password1 = "qUqP5cyxm6YcTAhz05Hph5gvu9M="; //test
             String domainName = null;
-            long facebookId=0;
-            String openId=null;
-            String firstName= idea.getIdeaPerson().getName();
-            String lastName="";
-            int prefixId=0;
-            int suffixId=0;
-            String jobTitle="";
+            long facebookId = 0;
+            String openId = null;
+            String firstName = idea.getIdeaPerson().getName();
+            String lastName = "";
+            int prefixId = 0;
+            int suffixId = 0;
+            String jobTitle = "";
 
             String emailAddress = idea.getIdeaPerson().getEmail();
 
-            String greeting="Welcome "+ ideaPersonVgrId;
+            String greeting = "Welcome " + ideaPersonVgrId;
 
             long idContact = counterLocalService.increment();
 
@@ -486,7 +487,7 @@ public class IdeaServiceImpl implements IdeaService {
             user.setFirstName(firstName);
             user.setLastName(lastName);
             user.setJobTitle(jobTitle);
-            user.setCreateDate(new Date ());
+            user.setCreateDate(new Date());
             user.setContactId(idContact);
             user.setCreateDate(new Date());
             user.setModifiedDate(new Date());
@@ -506,13 +507,13 @@ public class IdeaServiceImpl implements IdeaService {
             contact.setUserName(ideaPersonVgrId);
             contact.setUserId(user.getUserId());
             contact.setModifiedDate(new Date());
-            contact.setFirstName("contact-"+contact.getContactId());
-            contact.setLastName("contact-"+contact.getContactId());
-            contact.setMiddleName("contact-"+contact.getContactId());
+            contact.setFirstName("contact-" + contact.getContactId());
+            contact.setLastName("contact-" + contact.getContactId());
+            contact.setMiddleName("contact-" + contact.getContactId());
             contact.setPrefixId(prefixId);
             contact.setBirthday(new Date());
             contact.setSuffixId(suffixId);
-            contact.setJobTitle(jobTitle+contact.getContactId());
+            contact.setJobTitle(jobTitle + contact.getContactId());
 
             contactLocalService.addContact(contact);
 
@@ -521,10 +522,10 @@ public class IdeaServiceImpl implements IdeaService {
             long userIds[] = {userid};
             Role role = roleLocalService.getRole(companyId, "User");
             userLocalService.addRoleUsers(role.getRoleId(), userIds);
-            long roleids[]= {role.getRoleId()};
+            long roleids[] = {role.getRoleId()};
             userGroupRoleLocalService.addUserGroupRoles(user.getUserId(), groupId, roleids);
             ClassName clsNameUser = classNameLocalService.getClassName("com.liferay.portal.model.User");
-            long classNameId=clsNameUser.getClassNameId();
+            long classNameId = clsNameUser.getClassNameId();
 
             //Insert Group for a user
             long gpId = counterLocalService.increment();
@@ -532,13 +533,13 @@ public class IdeaServiceImpl implements IdeaService {
             userGrp.setClassNameId(classNameId);
             userGrp.setClassPK(userid);
             userGrp.setCompanyId(companyId);
-            userGrp.setName("group"+String.valueOf(userid));
-            userGrp.setFriendlyURL("/group"+gpId);
+            userGrp.setName("group" + String.valueOf(userid));
+            userGrp.setFriendlyURL("/group" + gpId);
             userGrp.setCreatorUserId(userid);
             userGrp.setActive(true);
             groupLocalService.addGroup(userGrp);
 
-    //Create AssetEntry
+            //Create AssetEntry
             long assetEntryId = counterLocalService.increment();
             AssetEntry ae = assetEntryLocalService.createAssetEntry(assetEntryId);
             ae.setCompanyId(companyId);
@@ -559,7 +560,6 @@ public class IdeaServiceImpl implements IdeaService {
             resourcePermissionLocalService.addResourcePermission(rpEntry);
 
 
-
             //Insert Layoutset for public and private
             long layoutSetIdPub = counterLocalService.increment();
             LayoutSet layoutSetPub = layoutSetLocalService.createLayoutSet(layoutSetIdPub);
@@ -567,21 +567,21 @@ public class IdeaServiceImpl implements IdeaService {
             layoutSetPub.setPrivateLayout(false);
             layoutSetPub.setGroupId(userGrp.getGroupId());
             layoutSetPub.setThemeId("classic");
-            try{
+            try {
                 layoutSetLocalService.addLayoutSet(layoutSetPub);
-            }catch(SystemException se){
+            } catch (SystemException se) {
 
             }
 
-            long layoutSetIdPriv= counterLocalService.increment();
-            LayoutSet layoutSetPriv=layoutSetLocalService.createLayoutSet(layoutSetIdPriv);
+            long layoutSetIdPriv = counterLocalService.increment();
+            LayoutSet layoutSetPriv = layoutSetLocalService.createLayoutSet(layoutSetIdPriv);
             layoutSetPriv.setCompanyId(companyId);
             layoutSetPriv.setPrivateLayout(true);
             layoutSetPriv.setThemeId("classic");
             layoutSetPriv.setGroupId(userGrp.getGroupId());
-            try{
+            try {
                 layoutSetLocalService.addLayoutSet(layoutSetPriv);
-            }catch(SystemException se){
+            } catch (SystemException se) {
             }
 
             return user;
@@ -684,7 +684,7 @@ public class IdeaServiceImpl implements IdeaService {
      */
     @Override
     public List<Idea> findIdeasByGroupId(long companyId, long groupId, IdeaStatus status, int start,
-            int offset) {
+                                         int offset) {
         return ideaRepository.findIdeasByGroupId(companyId, groupId, status, start, offset);
     }
 
@@ -710,7 +710,7 @@ public class IdeaServiceImpl implements IdeaService {
      */
     @Override
     public List<Idea> findIdeasByGroupIdAndUserId(long companyId, long groupId, long userId, int start,
-            int offset) {
+                                                  int offset) {
         return ideaRepository.findIdeasByGroupIdAndUserId(companyId, groupId, userId, start, offset);
     }
 
@@ -773,8 +773,8 @@ public class IdeaServiceImpl implements IdeaService {
      * .IdeaService#getPublicComments(se.vgregion.portal.innovationsslussen.domain.jpa.Idea)
      */
     @Override
-	public List<CommentItemVO> getPublicComments(Idea idea) {
-		return getComments(idea.getIdeaContentPublic());
+    public List<CommentItemVO> getPublicComments(Idea idea) {
+        return getComments(idea.getIdeaContentPublic());
     }
 
     /* (non-Javadoc)
@@ -782,33 +782,33 @@ public class IdeaServiceImpl implements IdeaService {
      * .IdeaService#getPrivateComments(se.vgregion.portal.innovationsslussen.domain.jpa.Idea)
      */
     @Override
-	public List<CommentItemVO> getPrivateComments(Idea idea) {
-		return getComments(idea.getIdeaContentPrivate());
+    public List<CommentItemVO> getPrivateComments(Idea idea) {
+        return getComments(idea.getIdeaContentPrivate());
     }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see se.vgregion.service.innovationsslussen.idea
-	 * .IdeaService#getPublicComments
-	 * (se.vgregion.portal.innovationsslussen.domain.jpa.Idea)
-	 */
-	@Override
-	public int getPublicCommentsCount(Idea idea) {
-		return getCommentsCount(idea.getIdeaContentPublic());
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see se.vgregion.service.innovationsslussen.idea
+     * .IdeaService#getPublicComments
+     * (se.vgregion.portal.innovationsslussen.domain.jpa.Idea)
+     */
+    @Override
+    public int getPublicCommentsCount(Idea idea) {
+        return getCommentsCount(idea.getIdeaContentPublic());
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see se.vgregion.service.innovationsslussen.idea
-	 * .IdeaService#getPrivateComments
-	 * (se.vgregion.portal.innovationsslussen.domain.jpa.Idea)
-	 */
-	@Override
-	public int getPrivateCommentsCount(Idea idea) {
-		return getCommentsCount(idea.getIdeaContentPrivate());
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see se.vgregion.service.innovationsslussen.idea
+     * .IdeaService#getPrivateComments
+     * (se.vgregion.portal.innovationsslussen.domain.jpa.Idea)
+     */
+    @Override
+    public int getPrivateCommentsCount(Idea idea) {
+        return getCommentsCount(idea.getIdeaContentPrivate());
+    }
 
     /* (non-Javadoc)
      * @see se.vgregion.service.innovationsslussen.idea
@@ -1034,17 +1034,15 @@ public class IdeaServiceImpl implements IdeaService {
 
         try {
             bariumPhase = Integer.parseInt(bariumIdeaPhase.get());
-
             populateIdea(ideaObjectFieldsFuture.get(), idea);
 
-            if (idea.getIdeaContentPrivate() != null){
-                populateFile(idea ,idea.getIdeaContentPrivate(), LIFERAY_CLOSED_DOCUMENTS);
+            if (idea.getIdeaContentPrivate() != null) {
+                populateFile(idea, idea.getIdeaContentPrivate(), LIFERAY_CLOSED_DOCUMENTS);
             }
 
-            if (idea.getIdeaContentPublic() != null){
-                populateFile(idea ,idea.getIdeaContentPublic(), LIFERAY_OPEN_DOCUMENTS);
+            if (idea.getIdeaContentPublic() != null) {
+                populateFile(idea, idea.getIdeaContentPublic(), LIFERAY_OPEN_DOCUMENTS);
             }
-
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -1052,13 +1050,20 @@ public class IdeaServiceImpl implements IdeaService {
         }
 
         result.setChanged(!isIdeasTheSame(idea, result.getOldIdea()));
+        final String finalUrlTitle;
+
+        if (!oldTitle.equals(idea.getTitle())) {
+            finalUrlTitle = generateNewUrlTitle(idea.getTitle());
+            idea.setUrlTitle(finalUrlTitle);
+        } else {
+            finalUrlTitle = null;
+        }
 
         idea = ideaRepository.merge(idea);
         result.setNewIdea(idea);
 
-        if (!oldTitle.equals(idea.getTitle())) {
+        if (finalUrlTitle != null) {
             final Idea finalIdea = idea;
-            final String finalUrlTitle = idea.getUrlTitle();
             // We may just as well do this asynchronously since we don't throw anything and don't return anything
             // from
             // here.
@@ -1078,9 +1083,9 @@ public class IdeaServiceImpl implements IdeaService {
             });
         }
 
-        if (currentPhase != bariumPhase){
-          idea.setPhase("" + (bariumPhase));
-          result.setChanged(true);
+        if (currentPhase != bariumPhase) {
+            idea.setPhase("" + (bariumPhase));
+            result.setChanged(true);
         }
 
         transactionManager.commit(transaction);
@@ -1093,7 +1098,7 @@ public class IdeaServiceImpl implements IdeaService {
     }
 
     private void generateAutoComments(Idea idea, IdeaStatus oldStatus, int currentPhase, int bariumPhase) {
-        if (currentPhase != bariumPhase){
+        if (currentPhase != bariumPhase) {
             addAutoComment(idea, idea.getIdeaContentPrivate().getId(), autoCommentDefaultMessageNewPhase + " " + getIdeaPhaseString(bariumPhase));
             sendEmailNotification(idea, false);
         }
@@ -1154,26 +1159,26 @@ public class IdeaServiceImpl implements IdeaService {
             for (IdeaFile ideaFile : new HashSet<IdeaFile>(ideaFiles)) {
                 boolean matched = false;
                 for (ObjectEntry bariumFile : bariumFiles) {
-                    if (bariumFile.getId().equals(ideaFile.getBariumId())){
+                    if (bariumFile.getId().equals(ideaFile.getBariumId())) {
                         matched = true;
                         break;
                     }
                 }
                 if (!matched) {
-                     ideaFiles.remove(ideaFile);
+                    ideaFiles.remove(ideaFile);
                 }
             }
 
-            for(ObjectEntry bariumFile : bariumFiles){
+            for (ObjectEntry bariumFile : bariumFiles) {
                 IdeaFile ideaFile = null;
 
-                for (IdeaFile file: ideaFiles){
-                    if (file.getBariumId().equals(bariumFile.getId())){
+                for (IdeaFile file : ideaFiles) {
+                    if (file.getBariumId().equals(bariumFile.getId())) {
                         ideaFile = file;
                     }
                 }
 
-                if (ideaFile == null){
+                if (ideaFile == null) {
                     ideaFile = new IdeaFile();
                     ideaFiles.add(ideaFile);
                 }
@@ -1189,7 +1194,6 @@ public class IdeaServiceImpl implements IdeaService {
         } catch (BariumException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-
 
 
     }
@@ -1242,7 +1246,7 @@ public class IdeaServiceImpl implements IdeaService {
      * Replace last part.
      *
      * @param ideaSiteLink the idea site link
-     * @param newUrlTitle the new url title
+     * @param newUrlTitle  the new url title
      * @return the string
      */
     String replaceLastPart(String ideaSiteLink, String newUrlTitle) {
@@ -1342,8 +1346,8 @@ public class IdeaServiceImpl implements IdeaService {
     }
 
     private static String headString(String ideaTransporterComment) {
-        if (ideaTransporterComment != null && ideaTransporterComment.length() > 250){
-            ideaTransporterComment = ideaTransporterComment.substring(0,250);
+        if (ideaTransporterComment != null && ideaTransporterComment.length() > 250) {
+            ideaTransporterComment = ideaTransporterComment.substring(0, 250);
         }
         return ideaTransporterComment;
     }
@@ -1370,8 +1374,8 @@ public class IdeaServiceImpl implements IdeaService {
     @Override
     @Transactional
     public IdeaFile uploadFile(Idea idea, boolean publicIdea, String fileName, String contentType,
-            InputStream inputStream)
-                    throws FileUploadException {
+                               InputStream inputStream)
+            throws FileUploadException {
 
         String folderName;
         IdeaContent ideaContent;
@@ -1407,7 +1411,7 @@ public class IdeaServiceImpl implements IdeaService {
 
         int length = nameArray.length;
 
-        if (length > 0){
+        if (length > 0) {
             return nameArray[length - 1];
         }
         return "";
@@ -1486,7 +1490,7 @@ public class IdeaServiceImpl implements IdeaService {
         return bariumUrl;
     }
 
-	protected List<CommentItemVO> getComments(IdeaContent ideaContent) {
+    protected List<CommentItemVO> getComments(IdeaContent ideaContent) {
 
         ArrayList<CommentItemVO> commentsList = new ArrayList<CommentItemVO>();
 
@@ -1514,8 +1518,8 @@ public class IdeaServiceImpl implements IdeaService {
 
             @SuppressWarnings("unchecked")
             List<MBMessage> mbMessages =
-            mbMessageLocalService.getThreadMessages(threadId, WorkflowConstants.STATUS_ANY,
-                    messageComparator);
+                    mbMessageLocalService.getThreadMessages(threadId, WorkflowConstants.STATUS_ANY,
+                            messageComparator);
 
             for (MBMessage mbMessage : mbMessages) {
 
@@ -1558,54 +1562,54 @@ public class IdeaServiceImpl implements IdeaService {
         return commentsList;
     }
 
-	protected int getCommentsCount(IdeaContent ideaContent) {
+    protected int getCommentsCount(IdeaContent ideaContent) {
 
-		int commentsCount = 0;
+        int commentsCount = 0;
 
-		try {
+        try {
 
-			MBMessageDisplay messageDisplay = null;
+            MBMessageDisplay messageDisplay = null;
 
-			try {
-				messageDisplay = mbMessageLocalService
-						.getDiscussionMessageDisplay(ideaContent.getUserId(),
+            try {
+                messageDisplay = mbMessageLocalService
+                        .getDiscussionMessageDisplay(ideaContent.getUserId(),
                                 ideaContent.getGroupId(),
                                 IdeaContent.class.getName(),
                                 ideaContent.getId(),
                                 WorkflowConstants.STATUS_ANY);
-			} catch (NullPointerException e) {
-				return commentsCount;
-			}
+            } catch (NullPointerException e) {
+                return commentsCount;
+            }
 
-			MBThread thread = messageDisplay.getThread();
+            MBThread thread = messageDisplay.getThread();
 
-			long threadId = thread.getThreadId();
-			long rootMessageId = thread.getRootMessageId();
+            long threadId = thread.getThreadId();
+            long rootMessageId = thread.getRootMessageId();
 
-			messageComparator = new MessageCreateDateComparator(false);
+            messageComparator = new MessageCreateDateComparator(false);
 
-			@SuppressWarnings("unchecked")
-			List<MBMessage> mbMessages = mbMessageLocalService
-					.getThreadMessages(threadId, WorkflowConstants.STATUS_ANY,
-							messageComparator);
+            @SuppressWarnings("unchecked")
+            List<MBMessage> mbMessages = mbMessageLocalService
+                    .getThreadMessages(threadId, WorkflowConstants.STATUS_ANY,
+                            messageComparator);
 
-			for (MBMessage mbMessage : mbMessages) {
+            for (MBMessage mbMessage : mbMessages) {
 
-				long commentId = mbMessage.getMessageId();
+                long commentId = mbMessage.getMessageId();
 
-				if (commentId != rootMessageId) {
-					commentsCount++;
-				}
-			}
+                if (commentId != rootMessageId) {
+                    commentsCount++;
+                }
+            }
 
-		} catch (PortalException e) {
-			LOGGER.error(e.getMessage(), e);
-		} catch (SystemException e) {
-			LOGGER.error(e.getMessage(), e);
-		}
+        } catch (PortalException e) {
+            LOGGER.error(e.getMessage(), e);
+        } catch (SystemException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
 
-		return commentsCount;
-	}
+        return commentsCount;
+    }
 
     protected boolean isUniqueUrlTitle(String urlTitle) {
         boolean isUnique = false;
@@ -1649,7 +1653,7 @@ public class IdeaServiceImpl implements IdeaService {
         return isUserIdeaTransporter;
 
     }
-    
+
     @Override
     public boolean isUserInnovationsslussenEmployee(long userId, long groupId) {
 
@@ -1713,15 +1717,15 @@ public class IdeaServiceImpl implements IdeaService {
     }
 
     private LinkedList<String> getUserGroupRoleByRoleAndGroup(Idea idea, LinkedList<String> toEmail, String roleName) throws PortalException, SystemException {
-            Role roleInnovationsslussen = roleLocalService.getRole(idea.getCompanyId(), roleName);
-            List<UserGroupRole> roleUsersInnovationsslussen = userGroupRoleLocalService.getUserGroupRolesByGroupAndRole(idea.getGroupId(),roleInnovationsslussen.getRoleId());
+        Role roleInnovationsslussen = roleLocalService.getRole(idea.getCompanyId(), roleName);
+        List<UserGroupRole> roleUsersInnovationsslussen = userGroupRoleLocalService.getUserGroupRolesByGroupAndRole(idea.getGroupId(), roleInnovationsslussen.getRoleId());
 
-            for (UserGroupRole userGroupRole : roleUsersInnovationsslussen) {
-                String email = userGroupRole.getUser().getEmailAddress();
-                if (!toEmail.contains(email)){
-                    toEmail.add(email);
-                }
+        for (UserGroupRole userGroupRole : roleUsersInnovationsslussen) {
+            String email = userGroupRole.getUser().getEmailAddress();
+            if (!toEmail.contains(email)) {
+                toEmail.add(email);
             }
+        }
         return toEmail;
     }
 
@@ -1773,10 +1777,10 @@ public class IdeaServiceImpl implements IdeaService {
         }
     }
 
-    public void sendEmailNotification(Idea idea, boolean publicbody){
+    public void sendEmailNotification(Idea idea, boolean publicbody) {
 
         if (ideaSettingsService.getSettingBoolean(ExpandoConstants.NOTIFICATION_EMAIL_ACTIVE,
-                idea.getCompanyId(), idea.getGroupId())){
+                idea.getCompanyId(), idea.getGroupId())) {
 
             JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
             jsonObject.put("companyId", idea.getCompanyId());
@@ -1789,12 +1793,12 @@ public class IdeaServiceImpl implements IdeaService {
             }
 
             jsonObject.put("emailTo", emailTo);
-            jsonObject.put("emailFrom",ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_FROM,
+            jsonObject.put("emailFrom", ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_FROM,
                     idea.getCompanyId(), idea.getGroupId()));
             jsonObject.put("subject",
                     replaceTokens(ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_SUBJECT,
                             idea.getCompanyId(), idea.getGroupId()), idea));
-            if (publicbody){
+            if (publicbody) {
                 jsonObject.put("body",
                         replaceTokens(ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_PUBLIC_BODY,
                                 idea.getCompanyId(), idea.getGroupId()), idea));
@@ -1811,19 +1815,19 @@ public class IdeaServiceImpl implements IdeaService {
     }
 
 
-    private String replaceTokens(String in, Idea idea){
+    private String replaceTokens(String in, Idea idea) {
         String out = "";
 
         String serverNameUrl = ideaSettingsService.getSetting(ExpandoConstants.SERVER_NAME_URL,
                 idea.getCompanyId(), idea.getGroupId());
 
-        in = in.replaceAll("\\[\\$PERSON_NAME\\$\\]",idea.getIdeaPerson().getName());
+        in = in.replaceAll("\\[\\$PERSON_NAME\\$\\]", idea.getIdeaPerson().getName());
 
-        String link = "<a href=\"" + serverNameUrl + idea.getUrlTitle() + "\">" + idea.getTitle() +"</a>";
+        String link = "<a href=\"" + serverNameUrl + idea.getUrlTitle() + "\">" + idea.getTitle() + "</a>";
         in = in.replaceAll("\\[\\$IDEA_NAME_AND_LINK\\$\\]", link);
 
-        String urlLink =  "<a href=\"" + serverNameUrl + idea.getUrlTitle() + "\">" + serverNameUrl + idea.getUrlTitle() + "</a>";
-        in = in.replaceAll("\\[\\$IDEA_URL\\$\\]",urlLink );
+        String urlLink = "<a href=\"" + serverNameUrl + idea.getUrlTitle() + "\">" + serverNameUrl + idea.getUrlTitle() + "</a>";
+        in = in.replaceAll("\\[\\$IDEA_URL\\$\\]", urlLink);
         out = in.replaceAll("\\[\\$IDEA_NAME\\$\\]", idea.getTitle());
 
         return out;
