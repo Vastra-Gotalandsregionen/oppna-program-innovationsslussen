@@ -11,12 +11,12 @@ Generation time : 2013-05-08 10:10:47 CEST
   <parent>
     <groupId>se.vgregion.innovationsslussen</groupId>
     <artifactId>innovationsslussen-system</artifactId>
-    <version>1.4</version>
+    <version>1.5-SNAPSHOT</version>
   </parent>
   <groupId>se.vgregion.innovationsslussen</groupId>
   <artifactId>innovationsslussen-core-bc</artifactId>
   <packaging>pom</packaging>
-  <version>1.4</version>
+  <version>1.5-SNAPSHOT</version>
   <name>${project.artifactId}</name>
 
     <dependencies>
