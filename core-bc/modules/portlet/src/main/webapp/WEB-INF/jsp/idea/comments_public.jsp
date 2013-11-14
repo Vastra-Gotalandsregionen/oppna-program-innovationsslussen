@@ -25,7 +25,7 @@
 	
 		<c:set var="textareaCssClass" scope="page" value="innovationsslussen-signin-prompt" />
 		<c:set var="addCommentUrl" scope="page" value="#" />
-		<c:set var="signinPromptMsg" scope="page" value="Du m&aring;ste vara inloggad f&ouml;r att f&aring; kommentera p&aring; en id&eacute;" />
+		<c:set var="signinPromptMsg" scope="page" value="Du m&aring;ste vara inloggad f&ouml;r att f&aring; kommentera p&aring; en id&eacute;, information om inloggning finns p&aring; sidan Fr&aring;gor och Svar." />
 		
 		<c:if test="${ideaPermissionChecker.hasPermissionAddCommentPublic}">
 			<c:set var="textareaCssClass" scope="page" value="" />

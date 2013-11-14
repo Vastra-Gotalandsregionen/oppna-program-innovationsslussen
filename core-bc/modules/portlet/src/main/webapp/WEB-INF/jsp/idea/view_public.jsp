@@ -20,6 +20,8 @@
 <portlet:defineObjects />
 <liferay-theme:defineObjects />
 
+<c:set var="signinPromptMsgInfo" scope="page" value="Information om inloggning finns på sidan Fr&aring;gor och Svar." />
+
 <c:set var="ideaItemCssClass" scope="page" value="" />
 
 <c:choose>
@@ -82,7 +84,7 @@
 							
 								<li class="icon comment">
 									<c:set var="linkCssClass" scope="page" value="innovationsslussen-signin-prompt" />
-									<c:set var="signinPromptMsg" scope="page" value="Du m&aring;ste vara inloggad f&ouml;r att f&aring; kommentera p&aring; en id&eacute;" />
+									<c:set var="signinPromptMsg" scope="page" value="Du m&aring;ste vara inloggad f&ouml;r att f&aring; kommentera p&aring; en id&eacute;. ${signinPromptMsgInfo}" />
 									
 									<c:if test="${ideaPermissionChecker.hasPermissionAddCommentPublic}">
 										<c:set var="linkCssClass" scope="page" value="" />
@@ -100,7 +102,7 @@
 											
 											<c:set var="linkCssClass" scope="page" value="innovationsslussen-signin-prompt" />
 											<c:set var="removeLikeUrl" scope="page" value="#" />
-											<c:set var="signinPromptMsg" scope="page" value="Du m&aring;ste vara inloggad f&ouml;r att f&aring; sluta gilla en id&eacute;" />
+											<c:set var="signinPromptMsg" scope="page" value="Du m&aring;ste vara inloggad f&ouml;r att f&aring; sluta gilla en id&eacute;. ${signinPromptMsgInfo}" />
 											
 											<c:if test="${ideaPermissionChecker.hasPermissionDeleteLike}">
 												<c:set var="linkCssClass" scope="page" value="" />
@@ -120,7 +122,7 @@
 										<c:otherwise>
 											<c:set var="linkCssClass" scope="page" value="innovationsslussen-signin-prompt" />
 											<c:set var="addLikeUrl" scope="page" value="#" />
-											<c:set var="signinPromptMsg" scope="page" value="Du m&aring;ste vara inloggad f&ouml;r att f&aring; gilla en id&eacute;" />
+											<c:set var="signinPromptMsg" scope="page" value="Du m&aring;ste vara inloggad f&ouml;r att f&aring; gilla en id&eacute;. ${signinPromptMsgInfo}" />
 											
 											<c:if test="${ideaPermissionChecker.hasPermissionAddLike}">
 												<c:set var="linkCssClass" scope="page" value="" />
@@ -146,7 +148,7 @@
 										
 											<c:set var="linkCssClass" scope="page" value="innovationsslussen-signin-prompt" />
 											<c:set var="removeFavoriteUrl" scope="page" value="#" />
-											<c:set var="signinPromptMsg" scope="page" value="Du m&aring;ste vara inloggad f&ouml;r att f&aring; ta bort en id&eacute; som favorit" />
+											<c:set var="signinPromptMsg" scope="page" value="Du m&aring;ste vara inloggad f&ouml;r att f&aring; ta bort en id&eacute; som favorit. ${signinPromptMsgInfo}" />
 											
 											<c:if test="${ideaPermissionChecker.hasPermissionDeleteFavorite}">
 												<c:set var="linkCssClass" scope="page" value="" />
@@ -167,7 +169,7 @@
 										
 											<c:set var="linkCssClass" scope="page" value="innovationsslussen-signin-prompt" />
 											<c:set var="addFavoriteUrl" scope="page" value="#" />
-											<c:set var="signinPromptMsg" scope="page" value="Du m&aring;ste vara inloggad f&ouml;r att f&aring; l&auml;gga till en id&eacute; som favorit" />
+											<c:set var="signinPromptMsg" scope="page" value="Du m&aring;ste vara inloggad f&ouml;r att f&aring; l&auml;gga till en id&eacute; som favorit. ${signinPromptMsgInfo}" />
 											
 											<c:if test="${ideaPermissionChecker.hasPermissionAddFavorite}">
 												<c:set var="linkCssClass" scope="page" value="" />
