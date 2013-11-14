@@ -252,6 +252,10 @@
 <liferay-util:html-bottom>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/innovationsslussen-idea.js"></script>
 	<script type="text/javascript">
+
+	   // Add css class to document body
+	   document.body.className += ' ' + 'idea-private-view';
+	
 		AUI().ready('aui-base','innovationsslussen-idea', function (A) {
 			var innovationsslussenIdea = new A.InnovationsslussenIdea({
 				commentsInput: '#<portlet:namespace />comment',
