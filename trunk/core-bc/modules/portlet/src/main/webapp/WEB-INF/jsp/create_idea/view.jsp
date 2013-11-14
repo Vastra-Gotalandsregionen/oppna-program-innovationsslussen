@@ -344,7 +344,7 @@
 				</c:when>
 				<c:otherwise>
 					<div class="portlet-msg-error">
-						Du m&aring;ste vara inloggad f&ouml;r att f&aring; skapa en id&eacute;.
+						Du m&aring;ste vara inloggad f&ouml;r att f&aring; skicka in en id&eacute;, information om inloggning finns p&aring; sidan Fr&aring;gor och Svar.
 					</div>
 				</c:otherwise>
 			</c:choose>

@@ -35,7 +35,8 @@
 		</c:when>
 		<c:otherwise>
 			<div class="portlet-msg-error">
-				Du m&aring;ste vara inloggad f&ouml;r att kunna se st&auml;ngda id&eacute;er.
+	a			Du m&aring;ste vara inloggad f&ouml;r att kunna se st&auml;ngda id&eacute;er.
+				Information om inloggning finns på sidan Fr&aring;gor och Svar.
 			</div>		
 		</c:otherwise>
 	</c:choose>
