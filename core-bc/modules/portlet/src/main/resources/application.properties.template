@@ -46,3 +46,7 @@ comment.page.size=
 
 # Message queue
 activemq.broker.url=
+
+
+# Solr
+solr.server=http://localhost:8983/solr/

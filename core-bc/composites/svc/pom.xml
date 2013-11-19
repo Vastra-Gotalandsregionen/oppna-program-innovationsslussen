@@ -23,6 +23,7 @@
       <version>${project.version}</version>
     </dependency>
 
+    <!-- Liferay -->
     <dependency>
       <groupId>com.liferay.portal</groupId>
       <artifactId>portal-service</artifactId>
@@ -33,18 +34,14 @@
       <artifactId>util-java</artifactId>
     </dependency>
 
+    <!-- se.vgregion -->
     <dependency>
       <groupId>se.vgregion.daoframework</groupId>
       <artifactId>dao-framework-jpa</artifactId>
       <version>3.5</version>
     </dependency>
 
-    <dependency>
-      <groupId>icu4j</groupId>
-      <artifactId>icu4j</artifactId>
-      <version>2.6.1</version>
-    </dependency>
-
+    <!-- Spring -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
@@ -75,6 +72,32 @@
           <artifactId>commons-logging</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+
+    <!-- Spring AOP + AspectJ -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-aop</artifactId>
+      <version>${spring.fw.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjrt</artifactId>
+      <version>1.6.11</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjweaver</artifactId>
+    </dependency>
+
+
+    <!-- Others -->
+    <dependency>
+      <groupId>icu4j</groupId>
+      <artifactId>icu4j</artifactId>
+      <version>2.6.1</version>
     </dependency>
 
     <dependency>
@@ -131,6 +154,12 @@
       <artifactId>spring-test</artifactId>
     </dependency>
 
+      <dependency>
+          <artifactId>solr-solrj</artifactId>
+          <groupId>org.apache.solr</groupId>
+          <version>1.4.1</version>
+      </dependency>
+
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-all</artifactId>
@@ -157,6 +186,11 @@
       <classifier>standalone</classifier>
       <scope>test</scope>
     </dependency>
+      <dependency>
+          <groupId>javax.portlet</groupId>
+          <artifactId>portlet-api</artifactId>
+          <version>2.0</version>
+      </dependency>
 
   </dependencies>
 </project>
