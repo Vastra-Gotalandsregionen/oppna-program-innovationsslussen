@@ -22,6 +22,9 @@
 
 	<c:choose>
 		<c:when test="${not empty ideaList}">
+		     <%-- 
+                <%@ include file="filter_toolbar.jsp" %>
+            --%>
 			<%@ include file="list_ideas.jsp" %>
 		</c:when>
 		<c:otherwise>
