@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
-import se.vgregion.service.search.indexer.util.Field;
+import se.vgregion.service.search.indexer.util.IdeaField;
 import se.vgregion.service.spring.ContextUtil;
 
 /**
@@ -62,7 +62,7 @@ public class IdeaIndexer extends BaseIndexer {
         Document document = new DocumentImpl();
         document.addUID(PORTLET_ID, idea.getId());
 
-        SearchEngineUtil.deleteDocument(idea.getCompanyId(), document.get(Field.UID));
+        SearchEngineUtil.deleteDocument(idea.getCompanyId(), document.get(IdeaField.UID));
     }
 
     @Override
@@ -74,45 +74,45 @@ public class IdeaIndexer extends BaseIndexer {
 
         //General
         document.addUID(PORTLET_ID, idea.getId());
-        document.addKeyword(Field.PORTLET_ID, PORTLET_ID);
-        document.addKeyword(Field.ENTRY_CLASS_NAME, Idea.class.getName());
-        document.addKeyword(Field.COMPANY_ID, idea.getCompanyId());
-        document.addKeyword(Field.GROUP_ID, idea.getGroupId());
-        document.addKeyword(Field.USER_ID, idea.getUserId());
+        document.addKeyword(IdeaField.PORTLET_ID, PORTLET_ID);
+        document.addKeyword(IdeaField.ENTRY_CLASS_NAME, Idea.class.getName());
+        document.addKeyword(IdeaField.COMPANY_ID, idea.getCompanyId());
+        document.addKeyword(IdeaField.GROUP_ID, idea.getGroupId());
+        document.addKeyword(IdeaField.USER_ID, idea.getUserId());
 
         //Idea
-        document.addKeyword(Field.IDEA_ID, idea.getId());
-        document.addText(Field.TITLE, idea.getTitle());
-        document.addText(Field.URL_TITLE, idea.getUrlTitle());
-        document.addKeyword(Field.PHASE, idea.getPhase());
-        document.addKeyword(Field.STATUS, idea.getStatus().toString());
+        document.addKeyword(IdeaField.IDEA_ID, idea.getId());
+        document.addText(IdeaField.TITLE, idea.getTitle());
+        document.addText(IdeaField.URL_TITLE, idea.getUrlTitle());
+        document.addKeyword(IdeaField.PHASE, idea.getPhase());
+        document.addKeyword(IdeaField.STATUS, idea.getStatus().toString());
 
         //Idea Person
-        document.addKeyword(Field.VGRID, idea.getIdeaPerson().getVgrId());
-        document.addKeyword(Field.USER_NAME, idea.getIdeaPerson().getName());
-        document.addKeyword(Field.EMAIL, idea.getIdeaPerson().getEmail());
+        document.addKeyword(IdeaField.VGRID, idea.getIdeaPerson().getVgrId());
+        document.addKeyword(IdeaField.USER_NAME, idea.getIdeaPerson().getName());
+        document.addKeyword(IdeaField.EMAIL, idea.getIdeaPerson().getEmail());
 
 
         //Idea Content
-        document.addText(Field.PUBLIC_INTRO, idea.getIdeaContentPublic().getIntro());
-        document.addText(Field.PUBLIC_DESCRIPTION, idea.getIdeaContentPublic().getDescription());
-        document.addText(Field.PUBLIC_SOLVES_PROBLEM, idea.getIdeaContentPublic().getSolvesProblem());
-        document.addText(Field.PUBLIC_WANTS_HELP_WITH, idea.getIdeaContentPublic().getWantsHelpWith());
-        document.addText(Field.PUBLIC_IDEA_TESTED, idea.getIdeaContentPublic().getIdeaTested());
+        document.addText(IdeaField.PUBLIC_INTRO, idea.getIdeaContentPublic().getIntro());
+        document.addText(IdeaField.PUBLIC_DESCRIPTION, idea.getIdeaContentPublic().getDescription());
+        document.addText(IdeaField.PUBLIC_SOLVES_PROBLEM, idea.getIdeaContentPublic().getSolvesProblem());
+        document.addText(IdeaField.PUBLIC_WANTS_HELP_WITH, idea.getIdeaContentPublic().getWantsHelpWith());
+        document.addText(IdeaField.PUBLIC_IDEA_TESTED, idea.getIdeaContentPublic().getIdeaTested());
 
-        document.addText(Field.PRIVATE_INTRO, idea.getIdeaContentPrivate().getIntro());
-        document.addText(Field.PRIVATE_DESCRIPTION, idea.getIdeaContentPrivate().getDescription());
-        document.addText(Field.PRIVATE_SOLVES_PROBLEM, idea.getIdeaContentPrivate().getSolvesProblem());
-        document.addText(Field.PRIVATE_WANTS_HELP_WITH, idea.getIdeaContentPrivate().getWantsHelpWith());
-        document.addText(Field.PRIVATE_IDEA_TESTED, idea.getIdeaContentPrivate().getIdeaTested());
+        document.addText(IdeaField.PRIVATE_INTRO, idea.getIdeaContentPrivate().getIntro());
+        document.addText(IdeaField.PRIVATE_DESCRIPTION, idea.getIdeaContentPrivate().getDescription());
+        document.addText(IdeaField.PRIVATE_SOLVES_PROBLEM, idea.getIdeaContentPrivate().getSolvesProblem());
+        document.addText(IdeaField.PRIVATE_WANTS_HELP_WITH, idea.getIdeaContentPrivate().getWantsHelpWith());
+        document.addText(IdeaField.PRIVATE_IDEA_TESTED, idea.getIdeaContentPrivate().getIdeaTested());
 
         //Count
-        document.addKeyword(Field.PUBLIC_LIKES_COUNT, idea.getLikes().size());
-        document.addKeyword(Field.FAVOURITES_COUNT, idea.getFavorites().size());
-        document.addKeyword(Field.PUBLIC_COMMENT_COUNT, idea.getCommentsCount());
+        document.addKeyword(IdeaField.PUBLIC_LIKES_COUNT, idea.getLikes().size());
+        document.addKeyword(IdeaField.FAVOURITES_COUNT, idea.getFavorites().size());
+        document.addKeyword(IdeaField.PUBLIC_COMMENT_COUNT, idea.getCommentsCount());
 
         //Date
-        document.addDate(Field.CREATE_DATE, idea.getCreated());
+        document.addDate(IdeaField.CREATE_DATE, idea.getCreated());
 
         //Comments
         document = indexComments(idea.getIdeaContentPublic(), document);
@@ -179,14 +179,14 @@ public class IdeaIndexer extends BaseIndexer {
             }
             String lastCommentDateStr = df.format(lastCommentDate);
 
-            document.addKeyword(Field.PUBLIC_COMMENT_COUNT, messages.size());
-            document.addKeyword(Field.PUBLIC_LAST_COMMENT_DATE, lastCommentDateStr);
+            document.addKeyword(IdeaField.PUBLIC_COMMENT_COUNT, messages.size());
+            document.addKeyword(IdeaField.PUBLIC_LAST_COMMENT_DATE, lastCommentDateStr);
 
-            document.addKeyword(Field.PUBLIC_COMMENT_AUTHOR_IDS, commentAuthorIds);
-            document.addKeyword(Field.PUBLIC_COMMENT_AUTHOR_SCREEN_NAMES, commentAuthorScreenNames);
-            document.addKeyword(Field.PUBLIC_COMMENT_CREATE_DATES, commentCreateDates);
-            document.addKeyword(Field.PUBLIC_COMMENT_IDS, commentIds);
-            document.addKeyword(Field.PUBLIC_COMMENT_TEXTS, commentTexts);
+            document.addKeyword(IdeaField.PUBLIC_COMMENT_AUTHOR_IDS, commentAuthorIds);
+            document.addKeyword(IdeaField.PUBLIC_COMMENT_AUTHOR_SCREEN_NAMES, commentAuthorScreenNames);
+            document.addKeyword(IdeaField.PUBLIC_COMMENT_CREATE_DATES, commentCreateDates);
+            document.addKeyword(IdeaField.PUBLIC_COMMENT_IDS, commentIds);
+            document.addKeyword(IdeaField.PUBLIC_COMMENT_TEXTS, commentTexts);
 
         }
 

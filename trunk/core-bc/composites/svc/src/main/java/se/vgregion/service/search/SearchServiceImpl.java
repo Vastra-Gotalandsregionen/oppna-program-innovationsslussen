@@ -14,7 +14,7 @@ import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserLike;
-import se.vgregion.service.search.indexer.util.Field;
+import se.vgregion.service.search.indexer.util.IdeaField;
 
 /**
  * Created with IntelliJ IDEA.
@@ -47,13 +47,13 @@ public class SearchServiceImpl implements SearchService{
         }
 
         switch (sort) {
-            case 0: ideaSolrQuery.addSortField(Field.CREATE_DATE, SolrQuery.ORDER.desc);
+            case 0: ideaSolrQuery.addSortField(IdeaField.CREATE_DATE, SolrQuery.ORDER.desc);
                 break;
-            case 1: ideaSolrQuery.addSortField(Field.PUBLIC_COMMENT_COUNT, SolrQuery.ORDER.desc);
+            case 1: ideaSolrQuery.addSortField(IdeaField.PUBLIC_COMMENT_COUNT, SolrQuery.ORDER.desc);
                 break;
-            case 2: ideaSolrQuery.addSortField(Field.PUBLIC_LAST_COMMENT_DATE, SolrQuery.ORDER.desc);
+            case 2: ideaSolrQuery.addSortField(IdeaField.PUBLIC_LAST_COMMENT_DATE, SolrQuery.ORDER.desc);
                 break;
-            case 3: ideaSolrQuery.addSortField(Field.PUBLIC_LIKES_COUNT, SolrQuery.ORDER.desc);
+            case 3: ideaSolrQuery.addSortField(IdeaField.PUBLIC_LIKES_COUNT, SolrQuery.ORDER.desc);
                 break;
         }
 
@@ -61,16 +61,16 @@ public class SearchServiceImpl implements SearchService{
         SolrDocumentList solrDocumentList = queryResponse.getResults();
 
         for (SolrDocument entries : solrDocumentList) {
-            entries.get(Field.UID);
+            entries.get(IdeaField.UID);
 
             Idea idea = new Idea();
 
-            idea.setId((String) entries.getFieldValue(Field.IDEA_ID));
-            idea.setTitle((String) entries.getFieldValue(Field.TITLE));
-            idea.setUrlTitle((String) entries.getFieldValue(Field.URL_TITLE));
-            idea.setPhase((String) entries.getFieldValue(Field.PHASE));
+            idea.setId((String) entries.getFieldValue(IdeaField.IDEA_ID));
+            idea.setTitle((String) entries.getFieldValue(IdeaField.TITLE));
+            idea.setUrlTitle((String) entries.getFieldValue(IdeaField.URL_TITLE));
+            idea.setPhase((String) entries.getFieldValue(IdeaField.PHASE));
 
-            String status = (String) entries.getFieldValue(Field.STATUS);
+            String status = (String) entries.getFieldValue(IdeaField.STATUS);
             IdeaStatus ideaStatus = IdeaStatus.PRIVATE_IDEA;
 
             if (status.equals("PUBLIC_IDEA")) {
@@ -79,18 +79,18 @@ public class SearchServiceImpl implements SearchService{
 
             idea.setStatus(ideaStatus);
             IdeaContent ideaContent = new IdeaContent();
-            ideaContent.setIntro((String) entries.getFieldValue(Field.PUBLIC_INTRO));
+            ideaContent.setIntro((String) entries.getFieldValue(IdeaField.PUBLIC_INTRO));
 
             Set<IdeaUserLike> likes = idea.getLikes();
 
-            String likeCountStr = (String) entries.getFieldValue(Field.PUBLIC_LIKES_COUNT);
+            String likeCountStr = (String) entries.getFieldValue(IdeaField.PUBLIC_LIKES_COUNT);
             int likeCount = Integer.parseInt(likeCountStr);
 
             for (int i = 0; i < likeCount; i++) {
                 likes.add(new IdeaUserLike());
             }
 
-            String commentCountStr = (String) entries.getFieldValue(Field.PUBLIC_COMMENT_COUNT);
+            String commentCountStr = (String) entries.getFieldValue(IdeaField.PUBLIC_COMMENT_COUNT);
 
             if (commentCountStr != null && !commentCountStr.isEmpty()){
                 idea.setCommentsCount(Integer.parseInt(commentCountStr));
