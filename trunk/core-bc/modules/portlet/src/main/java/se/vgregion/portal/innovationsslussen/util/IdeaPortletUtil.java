@@ -114,40 +114,6 @@ public final class IdeaPortletUtil {
         return idea;
     }
 
-    public static void addMBMessage(ActionRequest request, long groupId, long userId, String comment, long ideaCommentClassPK) throws PortalException, SystemException {
-
-        ServiceContext serviceContext = ServiceContextFactory.getInstance(Idea.class.getName(), request);
-
-        User user = UserLocalServiceUtil.getUser(userId);
-
-        String threadView = PropsKeys.DISCUSSION_THREAD_VIEW;
-
-        MBMessageDisplay messageDisplay = MBMessageLocalServiceUtil.getDiscussionMessageDisplay(
-                userId, groupId, IdeaContent.class.getName(), ideaCommentClassPK,
-                WorkflowConstants.STATUS_ANY, threadView);
-
-        MBThread thread = messageDisplay.getThread();
-
-        long threadId = thread.getThreadId();
-        long rootThreadId = thread.getRootMessageId();
-
-        String commentContentCleaned = comment;
-
-        final int maxLenghtCommentSubject = 50;
-
-        String commentSubject = comment;
-        commentSubject = StringUtil.shorten(commentSubject, maxLenghtCommentSubject);
-        commentSubject += "...";
-
-        // TODO - validate comment and preserve line breaks
-        MBMessageLocalServiceUtil.addDiscussionMessage(
-                userId, user.getScreenName(), groupId,
-                IdeaContent.class.getName(), ideaCommentClassPK, threadId,
-                rootThreadId, commentSubject, commentContentCleaned,
-                serviceContext);
-    }
-
-
     public static Idea replaceBreaklines(Idea idea){
 
         if (idea.getIdeaContentPrivate() != null){

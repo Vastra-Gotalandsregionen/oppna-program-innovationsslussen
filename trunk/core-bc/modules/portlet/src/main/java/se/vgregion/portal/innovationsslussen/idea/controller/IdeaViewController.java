@@ -20,6 +20,8 @@
 package se.vgregion.portal.innovationsslussen.idea.controller;
 
 
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextFactory;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -290,13 +292,14 @@ public class IdeaViewController extends BaseController {
 
             Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
             try {
+                ServiceContext serviceContext = ServiceContextFactory.getInstance(Idea.class.getName(), request);
                 //Add a mbMessage
                 if (ideaContentType == IdeaContentType.IDEA_CONTENT_TYPE_PUBLIC) {
-                    IdeaPortletUtil.addMBMessage(request, groupId, userId, comment, idea.getIdeaContentPublic().getId());
+                    ideaService.addMBMessage(idea, serviceContext, groupId, userId, comment, idea.getIdeaContentPublic().getId());
                     //Send email notification.
                     ideaService.sendEmailNotification(idea, true);
                 } else if (ideaContentType == IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE) {
-                    IdeaPortletUtil.addMBMessage(request, groupId, userId, comment, idea.getIdeaContentPrivate().getId());
+                    ideaService.addMBMessage(idea, serviceContext, groupId, userId, comment, idea.getIdeaContentPrivate().getId());
                     //Send email notification.
                     ideaService.sendEmailNotification(idea, false);
                 }

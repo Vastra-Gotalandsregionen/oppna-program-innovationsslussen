@@ -16,12 +16,14 @@
 <%@ taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 
 <portlet:defineObjects />
-<liferay-theme:defineObjects />	
+
+<liferay-theme:defineObjects />
 
 <c:if test="${not empty ideaList}">
+
 	<ul class="idea-list">
 		<c:forEach items="${ideaList}" var="idea" varStatus="index">
-		
+
 			<liferay-portlet:renderURL var="ideaUrl" plid="${ideaPlid}" portletName="${ideaPortletName}">
 				<liferay-portlet:param name="showView" value="showIdea" />
 				<c:if test="${not idea.public}">
