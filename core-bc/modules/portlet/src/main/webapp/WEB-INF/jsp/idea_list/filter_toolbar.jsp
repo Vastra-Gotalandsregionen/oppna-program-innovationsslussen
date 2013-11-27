@@ -22,7 +22,7 @@
                </span>
 
 	           <span class="filter-item-element">
-	                <select id="<portlet:namespace />ideaPhase" name="<portlet:namespace />ideaPhase" class="select-to-dropdown_">
+	                <select id="<portlet:namespace />ideaPhase" name="<portlet:namespace />ideaPhase" class="select-to-dropdown">
 	                   <option value="0" ${ideaPhase == '0' ? 'selected="selected"' : ''}>Alla id&eacute;er</option>
 	                   <option value="2" ${ideaPhase == '2' ? 'selected="selected"' : ''}>Id&eacute;</option>
 	                   <option value="3" ${ideaPhase == '3' ? 'selected="selected"' : ''}>Mognad</option>
@@ -30,12 +30,12 @@
 	                </select>
                </span>
 	       </div>
-           <div class="filter-item">
+           <div class="filter-item filter-item-last">
                <span class="filter-item-label">
                     Ordna efter:
                </span>
                <span class="filter-item-element">
-                    <select id="<portlet:namespace />ideaSort" name="<portlet:namespace />ideaSort" class="select-to-dropdown_">
+                    <select id="<portlet:namespace />ideaSort" name="<portlet:namespace />ideaSort" class="select-to-dropdown">
                        <option value="0" ${ideaSort == '0' ? 'selected="selected"' : ''}>Senast skapade</option>
                        <option value="1" ${ideaSort == '1' ? 'selected="selected"' : ''}>Mest kommenterade</option>
                        <option value="2" ${ideaSort == '2' ? 'selected="selected"' : ''}>Senast kommenterade</option>
@@ -50,3 +50,15 @@
 	    </div>
 	</aui:form>
 </div>
+
+<%--
+    Trigger form submit when search filter selects are changed
+--%>
+<aui:script use="aui-base">
+    var filterForm = A.one('#<portlet:namespace />filterForm');
+    
+    filterForm.delegate('change', function(e) {
+        submitForm(filterForm);    
+    }, 'select');
+    
+</aui:script>
