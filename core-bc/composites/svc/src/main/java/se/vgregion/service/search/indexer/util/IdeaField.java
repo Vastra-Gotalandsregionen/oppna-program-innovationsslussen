@@ -2,6 +2,7 @@ package se.vgregion.service.search.indexer.util;
 
 import java.util.Locale;
 import java.util.Map;
+import com.liferay.portal.kernel.search.Field;
 
 /**
  *
@@ -9,7 +10,7 @@ import java.util.Map;
  * @company Monator Technologies AB
  */
 
-public class Field extends com.liferay.portal.kernel.search.Field {
+public class IdeaField extends Field {
 
 	//Date
     public static final String CREATED = "created";
@@ -67,7 +68,7 @@ public class Field extends com.liferay.portal.kernel.search.Field {
     public static final String PRIVATE_COMMENT_COUNT = "privateCommentCount";
 
 
-    public Field(String name, Map<Locale, String> localizedValues) {
+    public IdeaField(String name, Map<Locale, String> localizedValues) {
         super(name, localizedValues);
     }
 }

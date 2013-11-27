@@ -118,7 +118,7 @@ public class IdeaServiceImplIT {
             //
             //            when(ideaSettingsService.getSetting(Mockito.anyString(), Mockito.anyLong(), Mockito.anyLong())).thenReturn("");
             //
-            //            Field ideaSettingsServiceField = IdeaServiceImpl.class.getDeclaredField("ideaSettingsService");
+            //            IdeaField ideaSettingsServiceField = IdeaServiceImpl.class.getDeclaredField("ideaSettingsService");
             //
             //            ideaSettingsServiceField.setAccessible(true);
             //            ideaSettingsServiceField.set(service, ideaSettingsService);
