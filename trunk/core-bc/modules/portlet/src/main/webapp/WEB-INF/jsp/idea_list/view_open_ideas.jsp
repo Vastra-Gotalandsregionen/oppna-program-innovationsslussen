@@ -20,6 +20,7 @@
 
 <div class="idea-list-wrap">
     <%@ include file="filter_toolbar.jsp" %>
+    
 	<c:choose>
 		<c:when test="${not empty ideaList}">
 			<%@ include file="list_ideas.jsp" %>
