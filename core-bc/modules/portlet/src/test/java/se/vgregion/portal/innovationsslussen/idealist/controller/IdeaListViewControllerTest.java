@@ -27,13 +27,13 @@ import com.liferay.portal.theme.ThemeDisplay;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
 
 import javax.portlet.PortletPreferences;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import se.vgregion.service.search.SearchService;
 
 /**
  * Created with IntelliJ IDEA.
@@ -46,6 +46,7 @@ public class IdeaListViewControllerTest {
 
     IdeaListViewController controller;
     private IdeaService idesService;
+    private SearchService searchService;
     private RenderRequest renderReq;
     private RenderResponse renderRes;
     private ModelMap model;
@@ -56,6 +57,7 @@ public class IdeaListViewControllerTest {
     @Before
     public void setUp() {
         idesService = Mockito.mock(IdeaService.class);
+        searchService = Mockito.mock(SearchService.class);
         renderReq = Mockito.mock(RenderRequest.class);
         renderRes = Mockito.mock(RenderResponse.class);
 
@@ -76,7 +78,7 @@ public class IdeaListViewControllerTest {
 
         model = Mockito.mock(ModelMap.class);
 
-        controller = new IdeaListViewController(idesService) {
+        controller = new IdeaListViewController(idesService, searchService) {
             @Override
             protected Layout getFriendlyURLLayout(long scopeGroupId, boolean priv) throws SystemException, PortalException {
                 return Mockito.mock(Layout.class);

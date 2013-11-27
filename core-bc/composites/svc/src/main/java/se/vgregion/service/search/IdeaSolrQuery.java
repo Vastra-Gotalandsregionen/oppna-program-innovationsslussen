@@ -45,7 +45,7 @@ public class IdeaSolrQuery extends SolrQuery {
     private SolrServer solrServer;
 
     /**
-     * Instantiates a new ActroSolrQuery.
+     * Instantiates a new IdeaSolrQuery.
      * 
      * @param solrServer the solr server
      */
@@ -54,14 +54,14 @@ public class IdeaSolrQuery extends SolrQuery {
     }
 
     /**
-     * Instantiates a new ActroSolrQuery.
+     * Instantiates a new IdeaSolrQuery.
      */
     public IdeaSolrQuery() {
         super();
     }
 
     /**
-     * Instantiates a new ActroSolrQuery.
+     * Instantiates a new IdeaSolrQuery.
      * 
      * @param s
      *            a search query.
@@ -75,15 +75,53 @@ public class IdeaSolrQuery extends SolrQuery {
      * 
      * @return it self.
      */
-    public IdeaSolrQuery findAllActorQuery() {
-        this.setQuery("entryClassName:com.liferay.portlet.journal.model.JournalArticle");
-        // this.addSortField("title", ORDER.asc);
-        this.addSortField("titleSort", ORDER.asc);
+    public IdeaSolrQuery findAllPublicIdeasQuery(long companyId, long groupId, int start, int rows) {
+        this.setQuery("groupId:" + groupId + " AND companyId:" + companyId + " AND status:PUBLIC_IDEA");
+        this.setStart(start); //0
+        this.setRows(rows);
+        return this;
+    }
+
+
+    /**
+     * Filters on entryClassName = com.liferay.portlet.journal.model.JournalArticle.
+     *
+     * @return the actro solr query
+     */
+    public IdeaSolrQuery filterIdeas() {
+        String filterEntryClassName = "entryClassName:se.vgregion.portal.innovationsslussen.domain.jpa.Idea";
+        this.addFilterQuery(filterEntryClassName);
         return this;
     }
 
     /**
-     * Use this method to perform a weighted search for an actor.
+     * Filters on entryClassName = com.liferay.portlet.journal.model.JournalArticle and phase.
+     *
+     * @return the actro solr query
+     */
+    public IdeaSolrQuery filterIdeasOnPhase(int phase) {
+        String filterEntryClassName = "entryClassName:se.vgregion.portal.innovationsslussen.domain.jpa.Idea";
+        String filterPhase = "and phase:" + phase;
+        this.addFilterQuery(filterEntryClassName + filterPhase);
+        return this;
+    }
+
+    /**
+     * Filters on entryClassName = com.liferay.portlet.journal.model.JournalArticle and phase.
+     *
+     * @return the actro solr query
+     */
+    public IdeaSolrQuery filterIdeasOnTwoPhases(int phase1, int phase2) {
+        String filterEntryClassName = "entryClassName:se.vgregion.portal.innovationsslussen.domain.jpa.Idea";
+        String filterPhase = "and phase:" + phase1 + " or phase:" + phase2;
+        this.addFilterQuery(filterEntryClassName + filterPhase);
+        return this;
+    }
+
+    //************************ OLD ******************************************
+
+    /**
+     * Use this method to perform a weighted search for an idea.
      * 
      * @param q
      *            the search term.
@@ -101,7 +139,7 @@ public class IdeaSolrQuery extends SolrQuery {
 
     private void setHighlightingParameters() {
         this.set("hl", true);
-        this.set("hl.fl", "assetTagNames title actor-name org-name intro description");
+        this.set("hl.fl", "assetTagNames title intro description");
         this.set("hl.snippets", 3);
         this.set("hl.mergeContiguous", true);
         this.set("hl.simple.pre", "<span class=\"hit\">");
@@ -119,7 +157,6 @@ public class IdeaSolrQuery extends SolrQuery {
      */
     public IdeaSolrQuery moreLikeThis(String text) {
         this.setQuery("entryClassPK:" + text);
-        this.filterActors();
         this.moreLikeThis();
         return this;
     }
@@ -153,23 +190,6 @@ public class IdeaSolrQuery extends SolrQuery {
 
         String filter = "Category" + ":" + category;
         this.addFilterQuery(filter);
-
-        return this;
-    }
-
-    /**
-     * Filters on entryClassName = com.liferay.portlet.journal.model.JournalArticle and type = actor.
-     * 
-     * @return the actro solr query
-     */
-    public IdeaSolrQuery filterActors() {
-        String filterBase = "entryClassName:com.liferay.portlet.journal.model.JournalArticle";
-
-        String filterType = "";
-
-        filterType += " AND " + Field.TYPE + ":actor";
-
-        this.addFilterQuery(filterBase + filterType);
 
         return this;
     }

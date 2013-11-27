@@ -21,6 +21,7 @@ package se.vgregion.service.innovationsslussen.idea;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.service.ServiceContext;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Collection;
@@ -69,9 +70,19 @@ public interface IdeaService {
      * @param userId the user id
      * @param urlTitle the url title
      */
-    void addLike(long companyId, long groupId, long userId, String urlTitle);
+    Idea addLike(long companyId, long groupId, long userId, String urlTitle);
 
-
+    /**
+     * Add an comment to the idea.
+     *
+     * @param idea the idea
+     * @param serviceContext the service context
+     * @param groupId the group id
+     * @param userId the user id
+     * @param comment the comment
+     * @param ideaCommentClassPK the class primary key
+     */
+    Idea addMBMessage(Idea idea, ServiceContext serviceContext, long groupId, long userId, String comment, long ideaCommentClassPK) throws PortalException, SystemException;
 
     /**
      * Add a {@link Idea}.

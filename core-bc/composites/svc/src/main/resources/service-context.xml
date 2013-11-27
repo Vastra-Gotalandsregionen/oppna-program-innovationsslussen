@@ -120,6 +120,8 @@
         <constructor-arg ref="solrServer" />
     </bean>
 
+    <bean id="searchService" class="se.vgregion.service.search.SearchServiceImpl" />
+
     <bean id="ContextUtil" class="se.vgregion.service.spring.ContextUtil"/>
 
     <aop:aspectj-autoproxy />

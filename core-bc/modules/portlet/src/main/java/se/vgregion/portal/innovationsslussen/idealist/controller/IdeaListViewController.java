@@ -22,6 +22,9 @@ package se.vgregion.portal.innovationsslussen.idealist.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.Map;
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
 import javax.portlet.PortletPreferences;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
@@ -32,6 +35,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import se.vgregion.portal.innovationsslussen.BaseController;
@@ -49,6 +54,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
+import se.vgregion.service.search.SearchService;
 
 /**
  * Controller class for the view mode in idealist portlet.
@@ -63,16 +69,19 @@ public class IdeaListViewController extends BaseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(IdeaListViewController.class.getName());
 
     private final IdeaService ideaService;
+    private final SearchService searchService;
 
 
     /**
      * Instantiates a new idea list view controller.
      *
      * @param ideaService the idea service
+     * @param searchService
      */
     @Autowired
-    public IdeaListViewController(IdeaService ideaService) {
+    public IdeaListViewController(IdeaService ideaService, SearchService searchService) {
         this.ideaService = ideaService;
+        this.searchService = searchService;
     }
 
 
@@ -116,18 +125,32 @@ public class IdeaListViewController extends BaseController {
 
             int currentPage = ParamUtil.getInteger(request, "pageNumber",
                     PageIteratorConstants.PAGINATOR_START_DEFAULT);
+
+            int ideaPhase = ParamUtil.getInteger(request, "ideaPhase", 0);
+            int ideaSort = ParamUtil.getInteger(request, "ideaSort", 0);
+
             int maxPages = PageIteratorConstants.MAX_PAGES_DEFAULT;
-            int totalCount = 0;
+            long totalCount = 0;
 
             int start = (currentPage - 1) * entryCount;
 
             if (ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_OPEN_IDEAS)) {
 
+                Map<String,Object> map = searchService.getPublicIdeas(companyId, scopeGroupId, start, entryCount,
+                        ideaSort, ideaPhase);
+
+                ideasFromService = (List<Idea>) map.get("ideas");
+                totalCount = (Long) map.get("totalIdeasCount");
+
+
+                /* OLD
 				ideasFromService = ideaService
 						.findIdeasByGroupId(companyId,
                         scopeGroupId, IdeaStatus.PUBLIC_IDEA, start, entryCount);
 
                 totalCount = ideaService.findIdeaCountByGroupId(companyId, scopeGroupId, IdeaStatus.PUBLIC_IDEA);
+                */
+
             } else if (ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_USER_IDEAS)) {
 
                 if (isSignedIn) {
@@ -163,7 +186,7 @@ public class IdeaListViewController extends BaseController {
             }
 
 			for (Idea idea : ideasFromService) {
-				int commentsCount = 0;
+				/*int commentsCount = 0;
 
 				if (idea.isPublic()) {
 					commentsCount = ideaService.getPublicCommentsCount(idea);
@@ -171,7 +194,7 @@ public class IdeaListViewController extends BaseController {
 					commentsCount = ideaService.getPrivateCommentsCount(idea);
 				}
 
-				idea.setCommentsCount(commentsCount);
+				idea.setCommentsCount(commentsCount);*/
 
 				ideaList.add(idea);
 			}
@@ -194,6 +217,17 @@ public class IdeaListViewController extends BaseController {
         }
 
         return returnView;
+    }
+
+    @ActionMapping()
+    public void search(ActionRequest actionRequest, ActionResponse actionResponse,
+                       @RequestParam("ideaPhase") String  ideaPhase,
+                       @RequestParam("ideaSort") String ideaSort){
+
+        actionResponse.setRenderParameter("ideaPhase", ideaPhase);
+        actionResponse.setRenderParameter("ideaSort", ideaSort);
+
+
     }
 
 }

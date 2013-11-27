@@ -1,11 +1,23 @@
 package se.vgregion.service.search.indexer;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.search.BaseIndexer;
 import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.model.User;
+import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portlet.messageboards.model.MBMessage;
+import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -17,8 +29,8 @@ import javax.portlet.PortletURL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
+import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
-import se.vgregion.service.innovationsslussen.idea.IdeaServiceImpl;
 import se.vgregion.service.search.indexer.util.Field;
 import se.vgregion.service.spring.ContextUtil;
 
@@ -60,20 +72,125 @@ public class IdeaIndexer extends BaseIndexer {
 
         Document document = new DocumentImpl();
 
+        //General
         document.addUID(PORTLET_ID, idea.getId());
-        document.addDate(Field.CREATED, idea.getCreated());
-        document.addKeyword(Field.COMPANY_ID, idea.getCompanyId());
         document.addKeyword(Field.PORTLET_ID, PORTLET_ID);
+        document.addKeyword(Field.ENTRY_CLASS_NAME, Idea.class.getName());
+        document.addKeyword(Field.COMPANY_ID, idea.getCompanyId());
         document.addKeyword(Field.GROUP_ID, idea.getGroupId());
         document.addKeyword(Field.USER_ID, idea.getUserId());
-        document.addText(Field.USER_NAME, idea.getIdeaPerson().getName());
-        document.addText(Field.URL_TITLE, idea.getUrlTitle());
+
+        //Idea
+        document.addKeyword(Field.IDEA_ID, idea.getId());
         document.addText(Field.TITLE, idea.getTitle());
-        document.addText(Field.CONTENT, idea.getIdeaContentPrivate().getDescription());
-        document.addKeyword(Field.ENTRY_CLASS_NAME, Idea.class.getName());
+        document.addText(Field.URL_TITLE, idea.getUrlTitle());
+        document.addKeyword(Field.PHASE, idea.getPhase());
+        document.addKeyword(Field.STATUS, idea.getStatus().toString());
+
+        //Idea Person
+        document.addKeyword(Field.VGRID, idea.getIdeaPerson().getVgrId());
+        document.addKeyword(Field.USER_NAME, idea.getIdeaPerson().getName());
+        document.addKeyword(Field.EMAIL, idea.getIdeaPerson().getEmail());
+
+
+        //Idea Content
+        document.addText(Field.PUBLIC_INTRO, idea.getIdeaContentPublic().getIntro());
+        document.addText(Field.PUBLIC_DESCRIPTION, idea.getIdeaContentPublic().getDescription());
+        document.addText(Field.PUBLIC_SOLVES_PROBLEM, idea.getIdeaContentPublic().getSolvesProblem());
+        document.addText(Field.PUBLIC_WANTS_HELP_WITH, idea.getIdeaContentPublic().getWantsHelpWith());
+        document.addText(Field.PUBLIC_IDEA_TESTED, idea.getIdeaContentPublic().getIdeaTested());
+
+        document.addText(Field.PRIVATE_INTRO, idea.getIdeaContentPrivate().getIntro());
+        document.addText(Field.PRIVATE_DESCRIPTION, idea.getIdeaContentPrivate().getDescription());
+        document.addText(Field.PRIVATE_SOLVES_PROBLEM, idea.getIdeaContentPrivate().getSolvesProblem());
+        document.addText(Field.PRIVATE_WANTS_HELP_WITH, idea.getIdeaContentPrivate().getWantsHelpWith());
+        document.addText(Field.PRIVATE_IDEA_TESTED, idea.getIdeaContentPrivate().getIdeaTested());
+
+        //Count
+        document.addKeyword(Field.PUBLIC_LIKES_COUNT, idea.getLikes().size());
+        document.addKeyword(Field.FAVOURITES_COUNT, idea.getFavorites().size());
+        document.addKeyword(Field.PUBLIC_COMMENT_COUNT, idea.getCommentsCount());
+
+        //Date
+        document.addDate(Field.CREATE_DATE, idea.getCreated());
+
+        //Comments
+        document = indexComments(idea.getIdeaContentPublic(), document);
 
         return document;
 
+    }
+
+    private Document indexComments(IdeaContent ideaContent, Document document) throws PortalException, SystemException {
+
+        if (ideaContent != null){
+
+            HashMap<String, String[]> commentsMap = new HashMap<String, String[]>();
+
+            List<MBMessage> messages = MBMessageLocalServiceUtil.getMessages(IdeaContent.class.getName(), ideaContent.getId(),
+                    WorkflowConstants.STATUS_APPROVED);
+
+            DateFormat df = new SimpleDateFormat(_DATE_FORMAT_PATTERN);
+
+            int messagesCount = messages.size();
+
+            if (messagesCount <= 1) {
+                return document;
+            }
+
+            // The first comment in all discussions have ClassPK
+            // as subject and body
+            String[] commentAuthorIds = new String[messagesCount - 1];
+            String[] commentAuthorScreenNames = new String[messagesCount - 1];
+            String[] commentCreateDates = new String[messagesCount - 1];
+            String[] commentIds = new String[messagesCount - 1];
+            String[] commentTexts = new String[messagesCount - 1];
+
+            Date lastCommentDate = new Date(0);
+
+            int i = 0;
+
+            for (MBMessage message : messages) {
+                if (i != 0) {
+                    long userId = message.getUserId();
+
+                    User user = UserLocalServiceUtil.getUser(userId);
+                    String userScreenName = message.getUserName();
+                    long messageId = message.getMessageId();
+
+                    String messageBody = message.getBody();
+
+                    Date messageCreateDate = message.getCreateDate();
+
+                    if (messageCreateDate.after(lastCommentDate)){
+                        lastCommentDate = messageCreateDate;
+                    }
+
+                    String messageCreateDateStr = df.format(messageCreateDate);
+
+                    commentAuthorIds[i - 1] = String.valueOf(userId);
+                    commentAuthorScreenNames[i - 1] = userScreenName;
+                    commentCreateDates[i - 1] = String.valueOf(messageCreateDateStr);
+                    commentIds[i - 1] = String.valueOf(messageId);
+                    commentTexts[i - 1] = HtmlUtil.extractText(messageBody);
+
+                }
+                i++;
+            }
+            String lastCommentDateStr = df.format(lastCommentDate);
+
+            document.addKeyword(Field.PUBLIC_COMMENT_COUNT, messages.size());
+            document.addKeyword(Field.PUBLIC_LAST_COMMENT_DATE, lastCommentDateStr);
+
+            document.addKeyword(Field.PUBLIC_COMMENT_AUTHOR_IDS, commentAuthorIds);
+            document.addKeyword(Field.PUBLIC_COMMENT_AUTHOR_SCREEN_NAMES, commentAuthorScreenNames);
+            document.addKeyword(Field.PUBLIC_COMMENT_CREATE_DATES, commentCreateDates);
+            document.addKeyword(Field.PUBLIC_COMMENT_IDS, commentIds);
+            document.addKeyword(Field.PUBLIC_COMMENT_TEXTS, commentTexts);
+
+        }
+
+        return document;
     }
 
     @Override
@@ -145,6 +262,7 @@ public class IdeaIndexer extends BaseIndexer {
 
     @Override
     public String[] getClassNames() {
+        System.out.println("IdeaIndexer - CLASS_NAMES " + CLASS_NAMES[0]);
         return CLASS_NAMES;
     }
 }

@@ -32,7 +32,7 @@ import java.util.List;
 public class PageIterator {
 
     /** The total hits. */
-    private int totalHits;
+    private long totalHits;
 
     /** The current page. */
     private int currentPage;
@@ -93,7 +93,7 @@ public class PageIterator {
      * @param maxPages
      *            the max pages
      */
-    public PageIterator(int totalHits, int currentPage, int pageSize, int maxPages) {
+    public PageIterator(long totalHits, int currentPage, int pageSize, int maxPages) {
         this.totalHits = totalHits;
         this.currentPage = currentPage;
         this.pageSize = pageSize;
@@ -184,7 +184,7 @@ public class PageIterator {
      * 
      * @return the total hits
      */
-    public int getTotalHits() {
+    public long getTotalHits() {
         return totalHits;
     }
 
@@ -194,7 +194,7 @@ public class PageIterator {
      * @param totalHits
      *            the new total hits
      */
-    public void setTotalHits(int totalHits) {
+    public void setTotalHits(long totalHits) {
         this.totalHits = totalHits;
     }
 

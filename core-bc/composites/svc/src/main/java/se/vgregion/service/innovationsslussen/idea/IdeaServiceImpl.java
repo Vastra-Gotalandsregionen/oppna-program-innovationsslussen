@@ -24,9 +24,11 @@ import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.model.UserGroupRole;
-import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
 
+import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -38,7 +40,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -60,6 +61,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
 
@@ -312,22 +315,31 @@ public class IdeaServiceImpl implements IdeaService {
      * @see se.vgregion.service.innovationsslussen.idea.IdeaService#addLike(long, long, long, java.lang.String)
      */
     @Override
-    @Transactional(rollbackFor = LikeException.class)
-    public void addLike(long companyId, long groupId, long userId, String urlTitle) {
+    public Idea addLike(long companyId, long groupId, long userId, String urlTitle) {
+
+        TransactionStatus transaction =
+                transactionManager.getTransaction(new DefaultTransactionAttribute(
+                        TransactionDefinition.PROPAGATION_REQUIRED));
+
+
 
         boolean isIdeaUserLiked = getIsIdeaUserLiked(companyId, groupId, userId, urlTitle);
+        Idea idea = findIdeaByUrlTitle(urlTitle);
 
         if (isIdeaUserLiked) {
             // User already likes the idea
-            return;
+            return idea;
         }
-
-        Idea idea = findIdeaByUrlTitle(urlTitle);
 
         IdeaUserLike ideaUserLike = new IdeaUserLike(companyId, groupId, userId);
         ideaUserLike.setIdea(idea);
 
         ideaUserLikeRepository.merge(ideaUserLike);
+        ideaUserLikeRepository.flush();
+
+        transactionManager.commit(transaction);
+
+        return ideaRepository.find(idea.getId());
     }
 
     /* (non-Javadoc)
@@ -1241,6 +1253,35 @@ public class IdeaServiceImpl implements IdeaService {
         } catch (SystemException e) {
             e.printStackTrace();
         }
+    }
+
+    public Idea addMBMessage(Idea idea, ServiceContext serviceContext, long groupId, long userId, String comment, long ideaCommentClassPK) throws PortalException, SystemException {
+
+        User user = UserLocalServiceUtil.getUser(userId);
+        String threadView = PropsKeys.DISCUSSION_THREAD_VIEW;
+
+        MBMessageDisplay messageDisplay = MBMessageLocalServiceUtil.getDiscussionMessageDisplay(
+                userId, groupId, IdeaContent.class.getName(), ideaCommentClassPK,
+                WorkflowConstants.STATUS_ANY, threadView);
+
+        MBThread thread = messageDisplay.getThread();
+        long threadId = thread.getThreadId();
+        long rootThreadId = thread.getRootMessageId();
+
+        String commentContentCleaned = comment;
+        final int maxLenghtCommentSubject = 50;
+        String commentSubject = comment;
+        commentSubject = StringUtil.shorten(commentSubject, maxLenghtCommentSubject);
+        commentSubject += "...";
+
+        // TODO - validate comment and preserve line breaks
+        MBMessageLocalServiceUtil.addDiscussionMessage(
+                userId, user.getScreenName(), groupId,
+                IdeaContent.class.getName(), ideaCommentClassPK, threadId,
+                rootThreadId, commentSubject, commentContentCleaned,
+                serviceContext);
+
+        return idea;
     }
 
     /**
