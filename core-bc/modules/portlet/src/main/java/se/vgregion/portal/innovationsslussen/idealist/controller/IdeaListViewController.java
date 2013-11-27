@@ -207,6 +207,8 @@ public class IdeaListViewController extends BaseController {
             model.addAttribute("ideaPortletName", IdeaPortletsConstants.PORTLET_NAME_IDEA_PORTLET);
             model.addAttribute("ideaList", ideaList);
             model.addAttribute("ideaListType", ideaListType);
+            model.addAttribute("ideaPhase", ideaPhase);
+            model.addAttribute("ideaSort", ideaSort);
             model.addAttribute("isSignedIn", isSignedIn);
             model.addAttribute("pageIterator", pageIterator);
 
@@ -221,8 +223,8 @@ public class IdeaListViewController extends BaseController {
 
     @ActionMapping()
     public void search(ActionRequest actionRequest, ActionResponse actionResponse,
-                       @RequestParam("ideaPhase") String  ideaPhase,
-                       @RequestParam("ideaSort") String ideaSort){
+                       @RequestParam(value = "ideaPhase") String  ideaPhase,
+                       @RequestParam(value = "ideaSort") String ideaSort){
 
         actionResponse.setRenderParameter("ideaPhase", ideaPhase);
         actionResponse.setRenderParameter("ideaSort", ideaSort);
