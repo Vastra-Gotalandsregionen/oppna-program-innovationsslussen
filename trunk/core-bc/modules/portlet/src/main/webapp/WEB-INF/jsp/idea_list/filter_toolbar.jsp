@@ -11,19 +11,22 @@
 <portlet:defineObjects />
 <liferay-theme:defineObjects /> 
 
+<portlet:actionURL name="requestSearch" var="requestSearchURL" />
+
 <div class="idea-filters-wrap">
-	<div class="idea-filters">
+	<aui:form action="${requestSearchURL}" name="filterForm" method="post" cssClass="idea-filters">
 	   <div class="idea-filters-toolbar clearfix">
 	       <div class="filter-item clearfix">
 	           <span class="filter-item-label">
 	               Visa:
                </span>
+
 	           <span class="filter-item-element">
-	                <select id="<portlet:namespace />filterBy" class="select-to-dropdown_">
-	                   <option value="0_">Alla id&eacute;er</option>
-	                   <option value="1">Id&eacute;</option>
-	                   <option value="2">Mognad</option>
-	                   <option value="3">Genomf&ouml;rd</option>
+	                <select id="<portlet:namespace />ideaPhase" name="<portlet:namespace />ideaPhase" class="select-to-dropdown_">
+	                   <option value="0" ${ideaPhase == '0' ? 'selected="selected"' : ''}>Alla id&eacute;er</option>
+	                   <option value="2" ${ideaPhase == '2' ? 'selected="selected"' : ''}>Id&eacute;</option>
+	                   <option value="3" ${ideaPhase == '3' ? 'selected="selected"' : ''}>Mognad</option>
+	                   <option value="5" ${ideaPhase == '5' ? 'selected="selected"' : ''}>Genomf&ouml;rd</option>
 	                </select>
                </span>
 	       </div>
@@ -32,14 +35,18 @@
                     Ordna efter:
                </span>
                <span class="filter-item-element">
-                    <select id="<portlet:namespace />sortBy" class="select-to-dropdown_">
-                       <option value="0">Senast skapade</option>
-                       <option value="1">Mest kommenterade</option>
-                       <option value="2">Senast kommenterade</option>
-                       <option value="3">Mest gillade</option>
+                    <select id="<portlet:namespace />ideaSort" name="<portlet:namespace />ideaSort" class="select-to-dropdown_">
+                       <option value="0" ${ideaSort == '0' ? 'selected="selected"' : ''}>Senast skapade</option>
+                       <option value="1" ${ideaSort == '1' ? 'selected="selected"' : ''}>Mest kommenterade</option>
+                       <option value="2" ${ideaSort == '2' ? 'selected="selected"' : ''}>Senast kommenterade</option>
+                       <option value="3" ${ideaSort == '3' ? 'selected="selected"' : ''}>Mest gillade</option>
+
                     </select>
                </span>
            </div>
+
+           <input type="submit" class="grey" value="<liferay-ui:message key="search" />" />
+
 	    </div>
-	</div>
+	</aui:form>
 </div>

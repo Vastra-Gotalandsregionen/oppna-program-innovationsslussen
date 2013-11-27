@@ -49,11 +49,11 @@ public class SearchServiceImpl implements SearchService{
         switch (sort) {
             case 0: ideaSolrQuery.addSortField(Field.CREATE_DATE, SolrQuery.ORDER.desc);
                 break;
-            case 1: ideaSolrQuery.addSortField(Field.PUBLIC_LIKES_COUNT, SolrQuery.ORDER.desc);
+            case 1: ideaSolrQuery.addSortField(Field.PUBLIC_COMMENT_COUNT, SolrQuery.ORDER.desc);
                 break;
-            case 2: ideaSolrQuery.addSortField(Field.PUBLIC_COMMENT_COUNT, SolrQuery.ORDER.desc);
+            case 2: ideaSolrQuery.addSortField(Field.PUBLIC_LAST_COMMENT_DATE, SolrQuery.ORDER.desc);
                 break;
-            case 3: ideaSolrQuery.addSortField(Field.PUBLIC_LAST_COMMENT_DATE, SolrQuery.ORDER.desc);
+            case 3: ideaSolrQuery.addSortField(Field.PUBLIC_LIKES_COUNT, SolrQuery.ORDER.desc);
                 break;
         }
 
