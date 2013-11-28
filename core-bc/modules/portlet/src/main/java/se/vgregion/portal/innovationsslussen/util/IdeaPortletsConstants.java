@@ -34,5 +34,6 @@ public final class IdeaPortletsConstants {
     public static final String IDEA_LIST_PORTLET_VIEW_USER_IDEAS = "1";
     public static final String IDEA_LIST_PORTLET_VIEW_USER_FAVORITED_IDEAS = "2";
     public static final String IDEA_LIST_PORTLET_VIEW_CLOSED_IDEAS = "3";
+    public static final String IDEA_LIST_PORTLET_VIEW_IDEAS_FOR_IDEATRANSPORTER = "4";
 
 }

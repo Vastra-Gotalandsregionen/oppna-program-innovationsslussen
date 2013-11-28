@@ -183,6 +183,18 @@ public class IdeaListViewController extends BaseController {
                 }
 
                 returnView = "view_closed_ideas";
+            } else if (ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_IDEAS_FOR_IDEATRANSPORTER)) {
+
+                if (isSignedIn) {
+                    ideasFromService = ideaService.findIdeasByGroupId(
+                            companyId, scopeGroupId,
+                            IdeaStatus.PRIVATE_IDEA, start, entryCount);
+
+                    totalCount = ideaService.findIdeaCountByGroupId(companyId, scopeGroupId, IdeaStatus.PRIVATE_IDEA);
+                }
+
+                returnView = "view_closed_ideas";
+
             }
 
 			for (Idea idea : ideasFromService) {
