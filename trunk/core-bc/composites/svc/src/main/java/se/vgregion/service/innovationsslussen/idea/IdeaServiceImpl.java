@@ -24,6 +24,8 @@ import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
+import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.model.UserGroupRole;
 
@@ -1324,6 +1326,12 @@ public class IdeaServiceImpl implements IdeaService {
                 }
             }
 
+            Indexer indexer = IndexerRegistryUtil.getIndexer(IDEA_CLASS);
+
+            for (Idea ideaToIndex : allIdeas) {
+                indexer.reindex(ideaToIndex);
+            }
+
             LOGGER.info("Finished updating all ideas from Barium.");
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
@@ -1874,5 +1882,8 @@ public class IdeaServiceImpl implements IdeaService {
 
         return out;
     }
+
+
+    private static String IDEA_CLASS = "se.vgregion.portal.innovationsslussen.domain.jpa.Idea";
 
 }

@@ -74,11 +74,11 @@
 
 <div>
   <h1>Synkronisering</h1>
-  <portlet:actionURL var="syncAllFromBarium">
+  <portlet:actionURL name="syncAllFromBarium" var="syncAllFromBariumURL">
     <portlet:param name="action" value="syncAllFromBarium"/>
   </portlet:actionURL>
 
-  <form action="${syncFromBarium}" method="post">
+  <form action="${syncAllFromBariumURL}" method="post">
     <input type="submit" value="Synkronisera"/><span>Gör detta för att uppdatera alla idéer i Liferay med information från Barium</span>
   </form>
 
