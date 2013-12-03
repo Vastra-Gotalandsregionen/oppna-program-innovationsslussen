@@ -994,7 +994,7 @@ public class IdeaServiceImpl implements IdeaService {
      * @see se.vgregion.service.innovationsslussen.idea.IdeaService#updateFromBarium(java.lang.String)
      */
     @Override
-    @Transactional
+    //@Transactional
     public Idea updateFromBarium(String ideaId) {
 
         Idea idea = ideaRepository.find(ideaId);
@@ -1014,12 +1014,14 @@ public class IdeaServiceImpl implements IdeaService {
      * .innovationsslussen.domain.jpa.Idea)
      */
     @Override
+    //@Transactional(rollbackFor = BariumException.class)
     public UpdateFromBariumResult updateFromBarium(Idea idea) {
 
+        System.out.println("Syncing idea: " + idea.getTitle()  );
         // Do the transaction manually since we may run this in a separate thread.
         TransactionStatus transaction =
                 transactionManager.getTransaction(new DefaultTransactionAttribute(
-                        TransactionDefinition.PROPAGATION_REQUIRED));
+                        TransactionDefinition.PROPAGATION_REQUIRES_NEW));
 
         UpdateFromBariumResult result = new UpdateFromBariumResult();
         result.setOldIdea(find(idea.getId()));
@@ -1069,6 +1071,10 @@ public class IdeaServiceImpl implements IdeaService {
             finalUrlTitle = null;
         }
 
+        if (idea.getOriginalUserId() == null){
+            idea.setOriginalUserId(0L);
+        }
+
         idea = ideaRepository.merge(idea);
         result.setNewIdea(idea);
 
@@ -1098,11 +1104,12 @@ public class IdeaServiceImpl implements IdeaService {
             result.setChanged(true);
         }
 
-        transactionManager.commit(transaction);
+        if (transaction.isNewTransaction()){
+            transactionManager.commit(transaction);
+        }
 
         // Add auto-comments to the idea.
         generateAutoComments(idea, oldStatus, currentPhase, bariumPhase);
-
 
         return result;
     }
@@ -1300,8 +1307,8 @@ public class IdeaServiceImpl implements IdeaService {
      * @see se.vgregion.service.innovationsslussen.idea.IdeaService#updateAllIdeasFromBarium()
      */
     @Override
-    @Transactional
     @Scheduled(cron = "* 15 6 * * ?")
+    @Transactional
     public void updateAllIdeasFromBarium() {
         LOGGER.info("Updating all ideas from Barium...");
 
@@ -1311,22 +1318,16 @@ public class IdeaServiceImpl implements IdeaService {
             for (Idea idea : allIdeas) {
                 try {
                     // Do the transaction manually since we may run this in a separate thread.
-                    TransactionStatus transaction =
-                            transactionManager.getTransaction(new DefaultTransactionAttribute(
-                                    TransactionDefinition.PROPAGATION_REQUIRED));
+                 //   TransactionStatus transaction =
+                 //           transactionManager.getTransaction(new DefaultTransactionAttribute(
+                 //                   TransactionDefinition.PROPAGATION_REQUIRED));
                     updateFromBarium(idea);
-                    transactionManager.commit(transaction);
+                //    transactionManager.commit(transaction);
                     LOGGER.info("Updated idea with id=" + idea.getId());
                 } catch (RuntimeException e) {
                     LOGGER.error("Failed to update idea: " + idea.toString(), e);
                     logIfNextExceptionExists(e);
                 }
-            }
-
-            Indexer indexer = IndexerRegistryUtil.getIndexer(IDEA_CLASS);
-
-            for (Idea ideaToIndex : allIdeas) {
-                indexer.reindex(ideaToIndex);
             }
 
             LOGGER.info("Finished updating all ideas from Barium.");
@@ -1879,8 +1880,5 @@ public class IdeaServiceImpl implements IdeaService {
 
         return out;
     }
-
-
-    private static String IDEA_CLASS = "se.vgregion.portal.innovationsslussen.domain.jpa.Idea";
 
 }

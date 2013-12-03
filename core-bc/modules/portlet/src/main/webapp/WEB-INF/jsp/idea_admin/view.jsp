@@ -74,12 +74,23 @@
 
 <div>
   <h1>Synkronisering</h1>
+
   <portlet:actionURL name="syncAllFromBarium" var="syncAllFromBariumURL">
     <portlet:param name="action" value="syncAllFromBarium"/>
   </portlet:actionURL>
 
-  <form action="${syncAllFromBariumURL}" method="post">
+  <form name="sync" action="${syncAllFromBariumURL}" method="post">
     <input type="submit" value="Synkronisera"/><span>Gör detta för att uppdatera alla idéer i Liferay med information från Barium</span>
   </form>
+</div>
+<div>
+   <h1>Indexering</h1>
+   <portlet:actionURL name="indexAllIdeas" var="indexAllIdeasURL">
+      <portlet:param name="action" value="indexAllIdeas"/>
+    </portlet:actionURL>
+
+    <form name="index" action="${indexAllIdeasURL}" method="post">
+      <input type="submit" value="Indexera"/><span>Gör detta för att indexers alla idéer i Liferay till Apache Solr</span>
+    </form>
 
 </div>
