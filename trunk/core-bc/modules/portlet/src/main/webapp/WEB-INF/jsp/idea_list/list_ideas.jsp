@@ -42,7 +42,7 @@
 							<c:set var="ideaItemCssClass" scope="page" value="active-innovationsslussen" />
 							<c:set var="ideaPhaseLabel" scope="page" value="Mognad" />
 						</c:when>
-						<c:when test="${idea.phase eq '5'}">
+						<c:when test="${idea.phase eq '5' or idea.phase eq '6'}">
 							<c:set var="ideaItemCssClass" scope="page" value="done" />
 							<c:set var="ideaPhaseLabel" scope="page" value="F&auml;rdig" />
 						</c:when>
