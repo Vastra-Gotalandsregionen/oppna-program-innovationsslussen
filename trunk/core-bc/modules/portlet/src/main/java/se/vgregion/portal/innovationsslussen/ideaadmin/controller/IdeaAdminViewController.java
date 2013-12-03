@@ -19,6 +19,10 @@
 
 package se.vgregion.portal.innovationsslussen.ideaadmin.controller;
 
+import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.search.SearchException;
+import java.util.Collection;
 import java.util.List;
 
 import javax.portlet.ActionRequest;
@@ -185,11 +189,38 @@ public class IdeaAdminViewController extends BaseController {
         String ideaId = ParamUtil.getString(request, "entryId");
 
         try {
-            ideaService.updateFromBarium(ideaId);
+            Idea idea = ideaService.find(ideaId);
+            ideaService.updateFromBarium(idea);
         } catch (UpdateIdeaException e) {
             LOGGER.error(e.getMessage(), e);
         }
     }
+
+
+    /**
+     * Index all ideas
+     *
+     * @param request the request
+     * @param response the response
+     * @param model the model
+     */
+    @ActionMapping(params = "action=indexAllIdeas")
+    public void indexAllIdeas(ActionRequest request, ActionResponse response, final ModelMap model) {
+
+        Collection<Idea> ideas = ideaService.findAll();
+
+        Indexer indexer = IndexerRegistryUtil.getIndexer(IDEA_CLASS);
+
+        for (Idea ideaToIndex : ideas) {
+            try {
+                indexer.reindex(ideaToIndex);
+            } catch (SearchException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static String IDEA_CLASS = "se.vgregion.portal.innovationsslussen.domain.jpa.Idea";
 
 
 }

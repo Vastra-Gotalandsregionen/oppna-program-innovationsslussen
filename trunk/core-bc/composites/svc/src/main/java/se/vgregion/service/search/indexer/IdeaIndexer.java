@@ -207,7 +207,7 @@ public class IdeaIndexer extends BaseIndexer {
 
     @Override
     protected void doReindex(String className, long classPK) throws Exception {
-        throw new Exception("Indexing not supported for Idea with String className and long classPK ");
+       //We don´t use this.
     }
 
     @Override
