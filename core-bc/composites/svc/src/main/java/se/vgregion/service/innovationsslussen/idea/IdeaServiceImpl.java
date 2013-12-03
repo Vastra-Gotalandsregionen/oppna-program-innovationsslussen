@@ -19,18 +19,6 @@
 
 package se.vgregion.service.innovationsslussen.idea;
 
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.messaging.Message;
-import com.liferay.portal.kernel.messaging.MessageBusUtil;
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.kernel.search.IndexerRegistryUtil;
-import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.model.UserGroupRole;
-
-import com.liferay.portal.service.UserLocalServiceUtil;
-import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -63,8 +51,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
 
@@ -84,7 +70,6 @@ import se.vgregion.service.barium.BariumService;
 import se.vgregion.service.innovationsslussen.exception.CreateIdeaException;
 import se.vgregion.service.innovationsslussen.exception.FavoriteException;
 import se.vgregion.service.innovationsslussen.exception.FileUploadException;
-import se.vgregion.service.innovationsslussen.exception.LikeException;
 import se.vgregion.service.innovationsslussen.exception.RemoveIdeaException;
 import se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsService;
 import se.vgregion.service.innovationsslussen.idea.settings.util.ExpandoConstants;
@@ -96,38 +81,48 @@ import se.vgregion.service.innovationsslussen.util.FriendlyURLNormalizer;
 import se.vgregion.service.innovationsslussen.util.IdeaServiceConstants;
 import se.vgregion.util.Util;
 
-
+import com.liferay.counter.service.CounterLocalService;
 import com.liferay.portal.NoSuchUserException;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.messaging.Message;
+import com.liferay.portal.kernel.messaging.MessageBusUtil;
+import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.ClassName;
 import com.liferay.portal.model.Contact;
 import com.liferay.portal.model.Group;
-import com.liferay.portal.model.ResourcePermission;
 import com.liferay.portal.model.LayoutSet;
-import com.liferay.portal.service.LayoutSetLocalService;
+import com.liferay.portal.model.ResourceConstants;
+import com.liferay.portal.model.ResourcePermission;
 import com.liferay.portal.model.Role;
+import com.liferay.portal.model.User;
+import com.liferay.portal.model.UserGroupRole;
 import com.liferay.portal.service.ClassNameLocalService;
 import com.liferay.portal.service.ContactLocalService;
 import com.liferay.portal.service.GroupLocalService;
+import com.liferay.portal.service.LayoutSetLocalService;
+import com.liferay.portal.service.ResourceLocalService;
 import com.liferay.portal.service.ResourcePermissionLocalService;
 import com.liferay.portal.service.RoleLocalService;
-import com.liferay.portlet.asset.model.AssetEntry;
-import com.liferay.portlet.asset.service.AssetEntryLocalService;
-import com.liferay.counter.service.CounterLocalService;
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.PropsKeys;
-import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portal.model.ResourceConstants;
-import com.liferay.portal.model.User;
-import com.liferay.portal.service.ResourceLocalService;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserGroupRoleLocalService;
 import com.liferay.portal.service.UserLocalService;
+import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portlet.asset.model.AssetEntry;
+import com.liferay.portlet.asset.service.AssetEntryLocalService;
 import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.messageboards.model.MBMessageDisplay;
 import com.liferay.portlet.messageboards.model.MBThread;
 import com.liferay.portlet.messageboards.service.MBMessageLocalService;
+import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 import com.liferay.portlet.messageboards.util.comparator.MessageCreateDateComparator;
 
 /**
@@ -1223,6 +1218,8 @@ public class IdeaServiceImpl implements IdeaService {
         list.add("koncept");
         list.add("prövning");
         list.add("kommersialisering");
+		// step 5 and 6 in barium are the same (?)
+		list.add("kommersialisering");
 
         return list.get(i);
 

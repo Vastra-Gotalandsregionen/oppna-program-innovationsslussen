@@ -28,7 +28,7 @@
 	<c:when test="${idea.phase eq '3' or idea.phase eq '4'}">
 		<c:set var="ideaItemCssClass" scope="page" value="active-innovationsslussen" />
 	</c:when>
-	<c:when test="${idea.phase eq '5'}">
+	<c:when test="${idea.phase eq '5' or idea.phase eq '6'}">
 		<c:set var="ideaItemCssClass" scope="page" value="done" />
 	</c:when>
 </c:choose>
