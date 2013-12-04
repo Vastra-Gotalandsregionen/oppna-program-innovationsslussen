@@ -50,3 +50,5 @@ activemq.broker.url=
 
 # Solr
 solr.server=http://localhost:8983/solr/
+solr.user=guset
+solr.password=guest

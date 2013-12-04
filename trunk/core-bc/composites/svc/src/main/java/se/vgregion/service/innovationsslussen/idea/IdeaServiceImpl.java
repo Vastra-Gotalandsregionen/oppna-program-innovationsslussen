@@ -1023,95 +1023,106 @@ public class IdeaServiceImpl implements IdeaService {
                 transactionManager.getTransaction(new DefaultTransactionAttribute(
                         TransactionDefinition.PROPAGATION_REQUIRES_NEW));
 
-        UpdateFromBariumResult result = new UpdateFromBariumResult();
-        result.setOldIdea(find(idea.getId()));
-        result.getOldIdea().getIdeaContentPrivate();
-        result.getOldIdea().getIdeaContentPublic();
-
-        LOGGER.info(" Update from Barium, idea: " + idea.getTitle());
-
-        // Idea idea = findIdeaByBariumId(id);
-        final String ideaId = idea.getId();
-
-        String oldTitle = idea.getTitle(); // To know whether it has changed, in case we need to update in Barium
-
-        // Make two calls asynchronously and simultaneously to speed up.
-        Future<IdeaObjectFields> ideaObjectFieldsFuture = bariumService.asyncGetIdeaObjectFields(ideaId);
-        Future<String> bariumIdeaPhase = bariumService.asyncGetIdeaPhaseFuture(ideaId);
-
-        int bariumPhase = 0;
-        int currentPhase = Integer.parseInt(idea.getPhase() == null ? "0" : idea.getPhase());
-        IdeaStatus oldStatus = idea.getStatus();
-
         try {
-            bariumPhase = Integer.parseInt(bariumIdeaPhase.get());
-            populateIdea(ideaObjectFieldsFuture.get(), idea);
 
-            if (idea.getIdeaContentPrivate() != null) {
-                populateFile(idea, idea.getIdeaContentPrivate(), LIFERAY_CLOSED_DOCUMENTS);
-            }
+            UpdateFromBariumResult result = new UpdateFromBariumResult();
+            result.setOldIdea(find(idea.getId()));
+            result.getOldIdea().getIdeaContentPrivate();
+            result.getOldIdea().getIdeaContentPublic();
 
-            if (idea.getIdeaContentPublic() != null) {
-                populateFile(idea, idea.getIdeaContentPublic(), LIFERAY_OPEN_DOCUMENTS);
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
+            LOGGER.info(" Update from Barium, idea: " + idea.getTitle());
 
-        result.setChanged(!isIdeasTheSame(idea, result.getOldIdea()));
+            // Idea idea = findIdeaByBariumId(id);
+            final String ideaId = idea.getId();
 
-        final String finalUrlTitle;
-        if (!oldTitle.equals(idea.getTitle())) {
-            finalUrlTitle = generateNewUrlTitle(idea.getTitle());
-            idea.setUrlTitle(finalUrlTitle);
-        } else {
-            idea.setUrlTitle(result.getOldIdea().getUrlTitle());
-            finalUrlTitle = null;
-        }
+            String oldTitle = idea.getTitle(); // To know whether it has changed, in case we need to update in Barium
 
-        if (idea.getOriginalUserId() == null){
-            idea.setOriginalUserId(0L);
-        }
+            // Make two calls asynchronously and simultaneously to speed up.
+            Future<IdeaObjectFields> ideaObjectFieldsFuture = bariumService.asyncGetIdeaObjectFields(ideaId);
+            Future<String> bariumIdeaPhase = bariumService.asyncGetIdeaPhaseFuture(ideaId);
 
-        idea = ideaRepository.merge(idea);
-        result.setNewIdea(idea);
+            int bariumPhase = 0;
+            int currentPhase = Integer.parseInt(idea.getPhase() == null ? "0" : idea.getPhase());
+            IdeaStatus oldStatus = idea.getStatus();
 
-        if (finalUrlTitle != null) {
-            final Idea finalIdea = idea;
-            // We may just as well do this asynchronously since we don't throw anything and don't return anything
-            // from
-            // here.
-            executor.submit(new Runnable() {
-                @Override
-                public void run() {
-                    // We need to update the ideaSiteLink in Barium.
-                    String ideaSiteLink = generateIdeaSiteLink(schemeServerNameUrl, finalUrlTitle);
-                    try {
-                        bariumService.updateIdea(finalIdea.getId(), "siteLank", ideaSiteLink);
-                    } catch (BariumException e) {
-                        LOGGER.error("Failed to update idea " + finalIdea.getId() + " with new site link: "
-                                + ideaSiteLink, e);
-                    }
+            try {
+                if (bariumIdeaPhase.get()!= null){
+                    bariumPhase = Integer.parseInt(bariumIdeaPhase.get());
+                }
+                populateIdea(ideaObjectFieldsFuture.get(), idea);
+
+                if (idea.getIdeaContentPrivate() != null) {
+                    populateFile(idea, idea.getIdeaContentPrivate(), LIFERAY_CLOSED_DOCUMENTS);
                 }
 
-            });
+                if (idea.getIdeaContentPublic() != null) {
+                    populateFile(idea, idea.getIdeaContentPublic(), LIFERAY_OPEN_DOCUMENTS);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
+            result.setChanged(!isIdeasTheSame(idea, result.getOldIdea()));
+
+            final String finalUrlTitle;
+            if (!oldTitle.equals(idea.getTitle())) {
+                finalUrlTitle = generateNewUrlTitle(idea.getTitle());
+                idea.setUrlTitle(finalUrlTitle);
+            } else {
+                idea.setUrlTitle(result.getOldIdea().getUrlTitle());
+                finalUrlTitle = null;
+            }
+
+            if (idea.getOriginalUserId() == null){
+                idea.setOriginalUserId(0L);
+            }
+
+            idea = ideaRepository.merge(idea);
+            result.setNewIdea(idea);
+
+            if (finalUrlTitle != null) {
+                final Idea finalIdea = idea;
+                // We may just as well do this asynchronously since we don't throw anything and don't return anything
+                // from
+                // here.
+                executor.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        // We need to update the ideaSiteLink in Barium.
+                        String ideaSiteLink = generateIdeaSiteLink(schemeServerNameUrl, finalUrlTitle);
+                        try {
+                            bariumService.updateIdea(finalIdea.getId(), "siteLank", ideaSiteLink);
+                        } catch (BariumException e) {
+                            LOGGER.error("Failed to update idea " + finalIdea.getId() + " with new site link: "
+                                    + ideaSiteLink, e);
+                        }
+                    }
+
+                });
+            }
+
+            if (currentPhase != bariumPhase) {
+                idea.setPhase("" + (bariumPhase));
+                result.setChanged(true);
+            }
+
+            if (transaction.isNewTransaction()){
+                transactionManager.commit(transaction);
+            }
+
+            // Add auto-comments to the idea.
+            generateAutoComments(idea, oldStatus, currentPhase, bariumPhase);
+
+            return result;
+        }finally {
+            if (!transaction.isCompleted()){
+                //If this happens, a runtimeexception has likley occurred.
+                transactionManager.rollback(transaction);
+                LOGGER.warn("Rolledback transaction because of likely RunTimeException");
+            }
         }
-
-        if (currentPhase != bariumPhase) {
-            idea.setPhase("" + (bariumPhase));
-            result.setChanged(true);
-        }
-
-        if (transaction.isNewTransaction()){
-            transactionManager.commit(transaction);
-        }
-
-        // Add auto-comments to the idea.
-        generateAutoComments(idea, oldStatus, currentPhase, bariumPhase);
-
-        return result;
     }
 
     private void generateAutoComments(Idea idea, IdeaStatus oldStatus, int currentPhase, int bariumPhase) {

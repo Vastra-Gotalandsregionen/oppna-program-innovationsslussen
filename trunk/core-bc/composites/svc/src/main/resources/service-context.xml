@@ -109,11 +109,10 @@
 
   <import resource="ldap-config.xml" />
 
-    <bean id="solrServer" class="org.apache.solr.client.solrj.impl.CommonsHttpSolrServer">
+    <bean id="solrServer" class="se.vgregion.service.search.BasicAuthSolrServer">
+        <constructor-arg type="java.lang.String" value="${solr.user}" />
+        <constructor-arg type="java.lang.String" value="${solr.password}" />
         <constructor-arg type="java.lang.String" value="${solr.server}" />
-        <property name="requestWriter">
-            <bean class="org.apache.solr.client.solrj.impl.BinaryRequestWriter" />
-        </property>
     </bean>
 
     <bean id="ideaSolrQuery" class="se.vgregion.service.search.IdeaSolrQuery" scope="prototype">
