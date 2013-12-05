@@ -10,6 +10,7 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.springframework.beans.factory.annotation.Autowired;
+import se.vgregion.portal.innovationsslussen.domain.IdeaContentType;
 import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
@@ -80,6 +81,7 @@ public class SearchServiceImpl implements SearchService{
             idea.setStatus(ideaStatus);
             IdeaContent ideaContent = new IdeaContent();
             ideaContent.setIntro((String) entries.getFieldValue(IdeaField.PUBLIC_INTRO));
+            ideaContent.setDescription((String) entries.getFieldValue(IdeaField.PUBLIC_DESCRIPTION));
 
             Set<IdeaUserLike> likes = idea.getLikes();
 
@@ -98,8 +100,10 @@ public class SearchServiceImpl implements SearchService{
                 idea.setCommentsCount(0);
             }
 
+            ideaContent.setType(IdeaContentType.IDEA_CONTENT_TYPE_PUBLIC);
+            idea.getIdeaContents().add(ideaContent);
 
-            idea.setIdeaContentPublic(ideaContent);
+           // idea.setIdeaContentPublic();
             ideaList.add(idea);
         }
 
