@@ -1126,7 +1126,7 @@ public class IdeaServiceImpl implements IdeaService {
     }
 
     private void generateAutoComments(Idea idea, IdeaStatus oldStatus, int currentPhase, int bariumPhase) {
-        if (currentPhase != bariumPhase) {
+        if (currentPhase != bariumPhase && bariumPhase != 6 && !(currentPhase == 5 && bariumPhase == 6 )) {
             addAutoComment(idea, idea.getIdeaContentPrivate().getId(), autoCommentDefaultMessageNewPhase + " " + getIdeaPhaseString(bariumPhase));
             sendEmailNotification(idea, false);
         }
