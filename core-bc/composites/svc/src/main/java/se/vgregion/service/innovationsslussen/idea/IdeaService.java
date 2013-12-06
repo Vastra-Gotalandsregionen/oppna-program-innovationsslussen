@@ -423,7 +423,7 @@ public interface IdeaService {
 
     boolean isUserPrioCouncilMember(long userId, long groupId);
 
-    LinkedList<String> getUsersToEmail(Idea idea);
+    LinkedList<String> getInternalIdeaUsersToEmail(Idea idea);
 
     void sendEmailNotification(Idea idea, boolean b);
 

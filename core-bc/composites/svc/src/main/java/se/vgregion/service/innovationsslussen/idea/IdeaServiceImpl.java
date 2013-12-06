@@ -90,8 +90,6 @@ import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -1756,12 +1754,12 @@ public class IdeaServiceImpl implements IdeaService {
     }
 
     @Override
-    public LinkedList<String> getUsersToEmail(Idea idea) {
+    public LinkedList<String> getInternalIdeaUsersToEmail(Idea idea) {
 
 
         LinkedList<String> toEmail = new LinkedList<String>();
 
-        toEmail.add(idea.getIdeaPerson().getEmail());
+       // toEmail.add(idea.getIdeaPerson().getEmail());
 
         try {
             toEmail = getUserGroupRoleByRoleAndGroup(idea, toEmail, IdeaServiceConstants.ROLE_NAME_COMMUNITY_INNOVATIONSSLUSSEN);
@@ -1841,39 +1839,89 @@ public class IdeaServiceImpl implements IdeaService {
         if (ideaSettingsService.getSettingBoolean(ExpandoConstants.NOTIFICATION_EMAIL_ACTIVE,
                 idea.getCompanyId(), idea.getGroupId())) {
 
-            JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
-            jsonObject.put("companyId", idea.getCompanyId());
+            //Creat json messages.
+            JSONObject mailToIdeaOwner = JSONFactoryUtil.createJSONObject();
+            JSONObject mailToInternalIdeaUsers = JSONFactoryUtil.createJSONObject();
 
-            LinkedList<String> toEmail = getUsersToEmail(idea);
-            JSONArray emailTo = JSONFactoryUtil.createJSONArray();
+            //Add company ids.
+            mailToIdeaOwner.put("companyId", idea.getCompanyId());
+            mailToInternalIdeaUsers.put("companyId", idea.getCompanyId());
 
-            for (String email : toEmail) {
-                emailTo.put(email);
+            //To
+            //Add owner to email.
+            JSONArray ownerToEmailArray = JSONFactoryUtil.createJSONArray();
+            ownerToEmailArray.put(idea.getIdeaPerson().getEmail());
+            mailToIdeaOwner.put("emailTo", ownerToEmailArray);
+
+            //Add others to email.
+            LinkedList<String> internalIdeaUsersToEmail = getInternalIdeaUsersToEmail(idea);
+            JSONArray internalIdeaUsersToEmailArray = JSONFactoryUtil.createJSONArray();
+
+            for (String email : internalIdeaUsersToEmail) {
+                internalIdeaUsersToEmailArray.put(email);
             }
+            mailToInternalIdeaUsers.put("emailTo", internalIdeaUsersToEmailArray);
 
-            jsonObject.put("emailTo", emailTo);
-            jsonObject.put("emailFrom", ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_FROM,
+            //From
+            mailToIdeaOwner.put("emailFrom", ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_FROM,
                     idea.getCompanyId(), idea.getGroupId()));
-            jsonObject.put("subject",
+            mailToInternalIdeaUsers.put("emailFrom", ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_FROM,
+                    idea.getCompanyId(), idea.getGroupId()));
+
+            //Subject
+            mailToIdeaOwner.put("subject",
                     replaceTokens(ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_SUBJECT,
                             idea.getCompanyId(), idea.getGroupId()), idea));
+
+            mailToInternalIdeaUsers.put("subject",
+                    replaceTokens(ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_SUBJECT,
+                            idea.getCompanyId(), idea.getGroupId()), idea));
+
+            //Body
+            //Owner body
             if (publicbody) {
-                jsonObject.put("body",
+                mailToIdeaOwner.put("body",
                         replaceTokens(ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_PUBLIC_BODY,
                                 idea.getCompanyId(), idea.getGroupId()), idea));
             } else {
-                jsonObject.put("body",
+                mailToIdeaOwner.put("body",
                         replaceTokens(ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_PRIVATE_BODY,
                                 idea.getCompanyId(), idea.getGroupId()), idea));
             }
 
-            Message message = new Message();
-            message.setPayload(jsonObject);
-            MessageBusUtil.sendMessage("vgr/email/notification", message);
+            //Body for other
+            if (publicbody) {
+                //Remove the owner name for other receivers
+                idea.getIdeaPerson().setName("");
+                mailToInternalIdeaUsers.put("body",
+                        replaceTokens(ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_PUBLIC_BODY,
+                                idea.getCompanyId(), idea.getGroupId()), idea));
+            } else {
+                //Remove the owner name for other receivers
+                idea.getIdeaPerson().setName("");
+                mailToInternalIdeaUsers.put("body",
+                        replaceTokens(ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_PRIVATE_BODY,
+                                idea.getCompanyId(), idea.getGroupId()), idea));
+            }
+
+            //Idea owner
+            Message messageToIdeaOwner = new Message();
+            messageToIdeaOwner.setPayload(mailToIdeaOwner);
+            MessageBusUtil.sendMessage("vgr/email/notification", messageToIdeaOwner);
+
+            //Internal idea users (role Inovationsslussen and Idea transporter).
+            Message messageToInternalIdeaUsers = new Message();
+            messageToInternalIdeaUsers.setPayload(mailToInternalIdeaUsers);
+            MessageBusUtil.sendMessage("vgr/email/notification", messageToInternalIdeaUsers);
         }
     }
 
-
+    /**
+     * This method replaces tokens in the message text to the real value from an idea.
+     * @param in the message to replace tokens in.
+     * @param idea the idea to get values from.
+     * @return the text with the token replaced by the values.
+     */
     private String replaceTokens(String in, Idea idea) {
         String out = "";
 
