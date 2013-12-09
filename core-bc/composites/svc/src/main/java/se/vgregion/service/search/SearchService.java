@@ -15,4 +15,6 @@ public interface SearchService {
 
     public Map<String, Object> getPublicIdeas(long companyId, long groupId, int start, int rows, int sort, int phase);
 
+    public Map<String, Object> getIdeasForIdeaTransporters(long companyId, long groupId, int start, int rows, int sort, int phase, String transporter);
+
 }

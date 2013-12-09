@@ -142,15 +142,6 @@ public class IdeaListViewController extends BaseController {
                 ideasFromService = (List<Idea>) map.get("ideas");
                 totalCount = (Long) map.get("totalIdeasCount");
 
-
-                /* OLD
-				ideasFromService = ideaService
-						.findIdeasByGroupId(companyId,
-                        scopeGroupId, IdeaStatus.PUBLIC_IDEA, start, entryCount);
-
-                totalCount = ideaService.findIdeaCountByGroupId(companyId, scopeGroupId, IdeaStatus.PUBLIC_IDEA);
-                */
-
             } else if (ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_USER_IDEAS)) {
 
                 if (isSignedIn) {
@@ -185,15 +176,21 @@ public class IdeaListViewController extends BaseController {
                 returnView = "view_closed_ideas";
             } else if (ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_IDEAS_FOR_IDEATRANSPORTER)) {
 
-                if (isSignedIn) {
-                    ideasFromService = ideaService.findIdeasByGroupId(
-                            companyId, scopeGroupId,
-                            IdeaStatus.PRIVATE_IDEA, start, entryCount);
+                Map<String,Object> map = searchService.getIdeasForIdeaTransporters(companyId, scopeGroupId, start, entryCount,
+                        ideaSort, ideaPhase, "");
 
-                    totalCount = ideaService.findIdeaCountByGroupId(companyId, scopeGroupId, IdeaStatus.PRIVATE_IDEA);
-                }
+                ideasFromService = (List<Idea>) map.get("ideas");
+                totalCount = (Long) map.get("totalIdeasCount");
 
-                returnView = "view_closed_ideas";
+//                if (isSignedIn) {
+//                    ideasFromService = ideaService.findIdeasByGroupId(
+//                            companyId, scopeGroupId,
+//                            IdeaStatus.PRIVATE_IDEA, start, entryCount);
+//
+//                    totalCount = ideaService.findIdeaCountByGroupId(companyId, scopeGroupId, IdeaStatus.PRIVATE_IDEA);
+//                }
+
+                returnView = "view_transporter_ideas";
 
             }
 
