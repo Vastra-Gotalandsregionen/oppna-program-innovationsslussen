@@ -32,8 +32,6 @@ public class SearchServiceImpl implements SearchService{
 
     public Map<String, Object> getPublicIdeas(long companyId, long groupId, int start, int rows, int sort, int phase){
 
-        Map<String,Object> returnMap = new HashMap<String, Object>();
-        List<Idea> ideaList = new ArrayList<Idea>();
         ideaSolrQuery.findAllPublicIdeasQuery(companyId, groupId, start, rows);
 
         switch (phase) {
@@ -59,6 +57,52 @@ public class SearchServiceImpl implements SearchService{
         }
 
         QueryResponse queryResponse = ideaSolrQuery.query();
+        Map<String,Object> returnMap = parseSolrResponse(queryResponse);
+        return returnMap;
+
+    }
+
+
+    public Map<String, Object> getIdeasForIdeaTransporters(long companyId, long groupId, int start, int rows, int sort, int phase, String transporter){
+
+        ideaSolrQuery.findAllIdeasForTransporterQuery(companyId, groupId, start, rows);
+
+        switch (phase) {
+            case 0: ideaSolrQuery.filterIdeas();
+                break;
+            case 2: ideaSolrQuery.filterIdeasOnTwoPhases(0,2);
+                break;
+            case 3: ideaSolrQuery.filterIdeasOnTwoPhases(3,4);
+                break;
+            case 5:  ideaSolrQuery.filterIdeasOnPhase(5);
+                break;
+            case 10:  ideaSolrQuery.filterIdeasOnClosed();
+                break;
+        }
+
+        switch (sort) {
+            case 0: ideaSolrQuery.addSortField(IdeaField.CREATE_DATE, SolrQuery.ORDER.desc);
+                break;
+            case 1: ideaSolrQuery.addSortField(IdeaField.PUBLIC_COMMENT_COUNT, SolrQuery.ORDER.desc);
+                break;
+            case 2: ideaSolrQuery.addSortField(IdeaField.PUBLIC_LAST_COMMENT_DATE, SolrQuery.ORDER.desc);
+                break;
+            case 3: ideaSolrQuery.addSortField(IdeaField.PUBLIC_LIKES_COUNT, SolrQuery.ORDER.desc);
+                break;
+        }
+
+        QueryResponse queryResponse = ideaSolrQuery.query();
+        Map<String,Object> returnMap = parseSolrResponse(queryResponse);
+        return returnMap;
+
+    }
+
+
+    private Map<String,Object> parseSolrResponse(QueryResponse queryResponse) {
+
+        Map<String,Object> returnMap = new HashMap<String, Object>();
+        List<Idea> ideaList = new ArrayList<Idea>();
+
         SolrDocumentList solrDocumentList = queryResponse.getResults();
 
         for (SolrDocument entries : solrDocumentList) {
@@ -111,8 +155,5 @@ public class SearchServiceImpl implements SearchService{
         returnMap.put("totalIdeasCount", queryResponse.getResults().getNumFound());
 
         return returnMap;
-
     }
-
-
 }

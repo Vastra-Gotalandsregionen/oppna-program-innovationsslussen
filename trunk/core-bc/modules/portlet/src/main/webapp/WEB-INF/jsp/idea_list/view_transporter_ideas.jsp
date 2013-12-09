@@ -20,10 +20,11 @@
 
 <div class="idea-list-wrap">
 
-	<h2 class="title">St&auml;ngda id&eacute;er</h2>
+	<h2 class="title">Id&eacute;er f&ouml;r id&eacute;transpot&ouml;rer </h2>
 	
 	<c:choose>
 		<c:when test="${isSignedIn}">
+		    <%@ include file="filter_toolbar_closed.jsp" %>
 			<c:choose>
 				<c:when test="${not empty ideaList}">
 					<%@ include file="list_ideas.jsp" %>				
