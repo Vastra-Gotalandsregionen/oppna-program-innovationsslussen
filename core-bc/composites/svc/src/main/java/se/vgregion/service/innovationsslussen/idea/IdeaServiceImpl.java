@@ -1044,9 +1044,11 @@ public class IdeaServiceImpl implements IdeaService {
             IdeaStatus oldStatus = idea.getStatus();
 
             try {
-                if (bariumIdeaPhase.get()!= null){
-                    bariumPhase = Integer.parseInt(bariumIdeaPhase.get());
+                if (bariumIdeaPhase.get() == null){
+                    throw new BariumException("bariumIdeaPhase is null");
                 }
+                bariumPhase = Integer.parseInt(bariumIdeaPhase.get());
+
                 populateIdea(ideaObjectFieldsFuture.get(), idea);
 
                 if (idea.getIdeaContentPrivate() != null) {
@@ -1114,13 +1116,17 @@ public class IdeaServiceImpl implements IdeaService {
             generateAutoComments(idea, oldStatus, currentPhase, bariumPhase);
 
             return result;
-        }finally {
+        } catch (BariumException be){
+            transactionManager.rollback(transaction);
+            LOGGER.warn(be.getMessage());
+        } finally {
             if (!transaction.isCompleted()){
                 //If this happens, a runtimeexception has likley occurred.
                 transactionManager.rollback(transaction);
                 LOGGER.warn("Rolledback transaction because of likely RunTimeException");
             }
         }
+        return null;
     }
 
     private void generateAutoComments(Idea idea, IdeaStatus oldStatus, int currentPhase, int bariumPhase) {
