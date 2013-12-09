@@ -130,7 +130,7 @@ public class BariumRestClientImpl implements BariumRestClient {
      * @throws BariumException the barium exception
      */
     public String doGet(String uri) throws BariumException {
-        return doRequest("GET", uri, null);
+        return doRequest("GET", uri, null, 1);
     }
 
     /**
@@ -141,7 +141,7 @@ public class BariumRestClientImpl implements BariumRestClient {
      * @throws BariumException the barium exception
      */
     public String doDelete(String uri) throws BariumException {
-        return doRequest("DELETE", uri, null);
+        return doRequest("DELETE", uri, null, 1);
     }
 
     /**
@@ -154,7 +154,7 @@ public class BariumRestClientImpl implements BariumRestClient {
      */
     public String doPost(String uri, String requestBody) throws BariumException {
         try {
-            return doRequest("POST", uri, requestBody.getBytes("UTF-8"));
+            return doRequest("POST", uri, requestBody.getBytes("UTF-8"), 1);
         } catch (UnsupportedEncodingException e) {
             // won't happen
             throw new RuntimeException(e);
@@ -428,7 +428,7 @@ public class BariumRestClientImpl implements BariumRestClient {
         }
     }
 
-    private String doRequest(String method, String uri, byte[] data) throws BariumException {
+    private String doRequest(String method, String uri, byte[] data, int methodCallCount) throws BariumException {
 
         URL url;
         HttpURLConnection conn = null;
@@ -477,6 +477,12 @@ public class BariumRestClientImpl implements BariumRestClient {
             int responseCode = conn.getResponseCode();
             if (responseCode == HttpStatus.SC_UNAUTHORIZED) {
                 ticket = null; // We weren't authorized, possibly due to an old ticket.
+            } else if (responseCode == HttpStatus.SC_INTERNAL_SERVER_ERROR){
+                if (methodCallCount <= 3){
+                    return doRequest(method, uri, data, methodCallCount++ );
+                } else {
+                    System.out.println("Error - Interna Server Error - From Barium - for idea: " + uri);
+                }
             }
 
             inputStream = conn.getInputStream();
