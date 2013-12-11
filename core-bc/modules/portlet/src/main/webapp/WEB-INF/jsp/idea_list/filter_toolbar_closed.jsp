@@ -24,7 +24,7 @@
 	           <span class="filter-item-element">
 	                <select id="<portlet:namespace />ideaPhase" name="<portlet:namespace />ideaPhase" class="select-to-dropdown">
 	                   <option value="0" ${ideaPhase == '0' ? 'selected="selected"' : ''}>Alla id&eacute;er</option>
-	                   <option value="0" ${ideaPhase == '10' ? 'selected="selected"' : ''}>St&auml;ngda id&eacute;er</option>
+	                   <option value="10" ${ideaPhase == '10' ? 'selected="selected"' : ''}>St&auml;ngda id&eacute;er</option>
 	                   <option value="2" ${ideaPhase == '2' ? 'selected="selected"' : ''}>Id&eacute;</option>
 	                   <option value="3" ${ideaPhase == '3' ? 'selected="selected"' : ''}>Mognad</option>
 	                   <option value="5" ${ideaPhase == '5' ? 'selected="selected"' : ''}>Genomf&ouml;rd</option>

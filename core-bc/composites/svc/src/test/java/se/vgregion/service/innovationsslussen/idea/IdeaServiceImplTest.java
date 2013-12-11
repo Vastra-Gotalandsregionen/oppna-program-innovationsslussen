@@ -220,7 +220,7 @@ public class IdeaServiceImplTest {
         Mockito.when(bariumResponse.getSuccess()).thenReturn(true);
         Mockito.when(bariumService.deleteBariumIdea(Mockito.anyString())).thenReturn(bariumResponse);
 
-        service.remove("foo");
+        service.remove(idea);
     }
 
     @Test

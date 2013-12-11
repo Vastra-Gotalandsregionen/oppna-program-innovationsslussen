@@ -160,7 +160,8 @@ public class IdeaAdminViewController extends BaseController {
         model.addAttribute("hasErrorMessage", false);
 
         try {
-            ideaService.remove(ideaId);
+            Idea idea = ideaService.find(ideaId);
+            ideaService.remove(idea);
         } catch (RemoveIdeaException e) {
             model.addAttribute("errorMessage", e.getMessage());
         }
