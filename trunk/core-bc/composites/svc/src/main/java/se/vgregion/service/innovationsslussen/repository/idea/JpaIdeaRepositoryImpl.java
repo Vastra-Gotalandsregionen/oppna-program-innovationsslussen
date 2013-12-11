@@ -22,6 +22,7 @@ package se.vgregion.service.innovationsslussen.repository.idea;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import se.vgregion.dao.domain.patterns.repository.db.jpa.DefaultJpaRepository;
@@ -400,10 +401,14 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> im
 
     @Override
     public void remove(String ideaId) {
+        Idea reference = entityManager.getReference(Idea.class, ideaId);
+        remove(reference);
+    }
 
-        Idea idea = find(ideaId);
-
-        remove(idea);
+    @Override
+    public void remove(Idea idea){
+        Idea reference = entityManager.getReference(Idea.class, idea.getId());
+        entityManager.remove(reference);
     }
 
     private List<Idea> findByPagedQuery(String queryString, Object[] queryObject, int firstResult, int maxResult) {

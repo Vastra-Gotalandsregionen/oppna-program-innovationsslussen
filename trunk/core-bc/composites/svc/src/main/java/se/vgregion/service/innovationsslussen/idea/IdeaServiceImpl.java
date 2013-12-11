@@ -41,6 +41,7 @@ import java.util.concurrent.ThreadFactory;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import javax.persistence.EntityManager;
 import org.apache.commons.collections.BeanMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -862,20 +863,20 @@ public class IdeaServiceImpl implements IdeaService {
     /* (non-Javadoc)
      * @see se.vgregion.service.innovationsslussen.idea.IdeaService#remove(java.lang.String)
      */
-    @Override
-    @Transactional
-    public void remove(String ideaId) throws RemoveIdeaException {
-        Idea idea = ideaRepository.find(ideaId);
-
-        remove(idea);
-    }
+  //  @Override
+  //  @Transactional
+  //  public void remove(String ideaId) throws RemoveIdeaException {
+  //      Idea idea = ideaRepository.find(ideaId);
+ //
+ //       remove(idea);
+  //  }
 
     /* (non-Javadoc)
      * @see se.vgregion.service.innovationsslussen.idea.IdeaService#remove(se.vgregion.portal
      * .innovationsslussen.domain.jpa.Idea)
      */
     @Override
-    @Transactional
+    @Transactional()
     public void remove(Idea idea) throws RemoveIdeaException {
 
         if (idea != null) {

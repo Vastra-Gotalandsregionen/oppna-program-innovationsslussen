@@ -76,32 +76,21 @@ public class IdeaSolrQuery extends SolrQuery {
      * @return it self.
      */
     public IdeaSolrQuery findAllPublicIdeasQuery(long companyId, long groupId, int start, int rows) {
-        this.setQuery("groupId:" + groupId + " AND companyId:" + companyId + " AND status:PUBLIC_IDEA");
+        this.setQuery("groupId:" + groupId + " AND companyId:" + companyId + " AND entryClassName:se.vgregion.portal.innovationsslussen.domain.jpa.Idea" + " AND status:PUBLIC_IDEA");
         this.setStart(start); //0
         this.setRows(rows);
         return this;
     }
 
-    public IdeaSolrQuery findAllIdeasForTransporterQuery(long companyId, long groupId, int start, int rows) {
-        this.setQuery("groupId:" + groupId + " AND companyId:" + companyId);
+    public IdeaSolrQuery findAllIdeasQuery(long companyId, long groupId, int start, int rows) {
+        this.setQuery("groupId:" + groupId + " AND companyId:" + companyId + " AND entryClassName:se.vgregion.portal.innovationsslussen.domain.jpa.Idea");
         this.setStart(start); //0
         this.setRows(rows);
-        return this;
-    }
-
-    /**
-     * Filters on entryClassName = com.liferay.portlet.journal.model.JournalArticle.
-     *
-     * @return the actro solr query
-     */
-    public IdeaSolrQuery filterIdeas() {
-        String filterEntryClassName = "entryClassName:se.vgregion.portal.innovationsslussen.domain.jpa.Idea";
-        this.addFilterQuery(filterEntryClassName);
         return this;
     }
 
     public IdeaSolrQuery filterIdeasOnClosed() {
-        String filterEntryClassName = "entryClassName:se.vgregion.portal.innovationsslussen.domain.jpa.Idea AND status:PRIVATE_IDEA";
+        String filterEntryClassName = "status:PRIVATE_IDEA";
         this.addFilterQuery(filterEntryClassName);
         return this;
     }
@@ -126,6 +115,30 @@ public class IdeaSolrQuery extends SolrQuery {
     public IdeaSolrQuery filterIdeasOnTwoPhases(int phase1, int phase2) {
         String filterEntryClassName = "entryClassName:se.vgregion.portal.innovationsslussen.domain.jpa.Idea";
         String filterPhase = "and phase:" + phase1 + " or phase:" + phase2;
+        this.addFilterQuery(filterEntryClassName + filterPhase);
+        return this;
+    }
+
+    /**
+     * Filters on entryClassName = com.liferay.portlet.journal.model.JournalArticle and phase.
+     *
+     * @return the actro solr query
+     */
+    public IdeaSolrQuery filterIdeasOnFourPhases(int phase1, int phase2, int phase3, int phase4) {
+        String filterEntryClassName = "entryClassName:se.vgregion.portal.innovationsslussen.domain.jpa.Idea";
+        String filterPhase = "and phase:" + phase1 + " or phase:" + phase2 + " or phase:" + phase3 + " or phase:" + phase4;
+        this.addFilterQuery(filterEntryClassName + filterPhase);
+        return this;
+    }
+
+    /**
+     * Filters on entryClassName = com.liferay.portlet.journal.model.JournalArticle and phase.
+     *
+     * @return the actro solr query
+     */
+    public IdeaSolrQuery filterIdeasOnThreePhases(int phase1, int phase2, int phase3) {
+        String filterEntryClassName = "entryClassName:se.vgregion.portal.innovationsslussen.domain.jpa.Idea";
+        String filterPhase = "and phase:" + phase1 + " or phase:" + phase2 + " or phase:" + phase3;
         this.addFilterQuery(filterEntryClassName + filterPhase);
         return this;
     }

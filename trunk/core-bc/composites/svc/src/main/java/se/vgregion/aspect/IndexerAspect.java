@@ -4,8 +4,11 @@ import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.SearchException;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
 
@@ -84,22 +87,38 @@ public class IndexerAspect {
         }
     }
 
+    @Around(value = "execution(* se.vgregion.service.innovationsslussen.idea.IdeaServiceImpl.remove(..))", argNames = "idea")
+    public void indexRemoveIdea(ProceedingJoinPoint joinPoint){
 
+        Object[] args = joinPoint.getArgs();
 
-    /*
-    @AfterReturning( pointcut = "execution(* se.vgregion.service.innovationsslussen.idea.IdeaServiceImpl.remove(..))" ,
-            returning= "result")
-    public void indexRemoveIdea(JoinPoint joinPoint, Object result){
+        if (args.length > 0){
+            Object arg1 = args[0];
+            if (arg1.getClass().equals(Idea.class)){
 
-        try {
-            IdeaService.UpdateFromBariumResult br = (IdeaService.UpdateFromBariumResult) result;
-            Indexer indexer = IndexerRegistryUtil.getIndexer(IDEA_CLASS);
-            indexer.delete(((IdeaService.UpdateFromBariumResult) result).getNewIdea());
-        } catch (SearchException e) {
-            e.printStackTrace();
+                Idea idea = (Idea) arg1;
+
+                try {
+                    Indexer indexer = IndexerRegistryUtil.getIndexer(IDEA_CLASS);
+                    indexer.delete(idea);
+                } catch (SearchException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    joinPoint.proceed();
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            }else {
+                try {
+                    joinPoint.proceed();
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            }
         }
     }
-    */
 
     private static String IDEA_CLASS = "se.vgregion.portal.innovationsslussen.domain.jpa.Idea";
 }

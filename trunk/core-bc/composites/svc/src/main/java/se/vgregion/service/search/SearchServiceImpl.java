@@ -32,16 +32,18 @@ public class SearchServiceImpl implements SearchService{
 
     public Map<String, Object> getPublicIdeas(long companyId, long groupId, int start, int rows, int sort, int phase){
 
+        //Find all public ideas.
         ideaSolrQuery.findAllPublicIdeasQuery(companyId, groupId, start, rows);
 
+        // Filter ideas on phase.
         switch (phase) {
-            case 0: ideaSolrQuery.filterIdeas();
+            case 0: //No filter needed.
                 break;
             case 2: ideaSolrQuery.filterIdeasOnTwoPhases(0,2);
                 break;
             case 3: ideaSolrQuery.filterIdeasOnTwoPhases(3,4);
                 break;
-            case 5:  ideaSolrQuery.filterIdeasOnPhase(5);
+            case 5:  ideaSolrQuery.filterIdeasOnTwoPhases(5, 6);
                 break;
         }
 
@@ -65,18 +67,18 @@ public class SearchServiceImpl implements SearchService{
 
     public Map<String, Object> getIdeasForIdeaTransporters(long companyId, long groupId, int start, int rows, int sort, int phase, String transporter){
 
-        ideaSolrQuery.findAllIdeasForTransporterQuery(companyId, groupId, start, rows);
+        ideaSolrQuery.findAllIdeasQuery(companyId, groupId, start, rows);
 
         switch (phase) {
-            case 0: ideaSolrQuery.filterIdeas();
+            case 0: //No filter needed.
                 break;
-            case 2: ideaSolrQuery.filterIdeasOnTwoPhases(0,2);
+            case 2: ideaSolrQuery.filterIdeasOnTwoPhases(0,2); //Idé
+               break;
+            case 3: ideaSolrQuery.filterIdeasOnTwoPhases(3,4); //Mognad
                 break;
-            case 3: ideaSolrQuery.filterIdeasOnTwoPhases(3,4);
+            case 5:  ideaSolrQuery.filterIdeasOnTwoPhases(5,6); //Färdig
                 break;
-            case 5:  ideaSolrQuery.filterIdeasOnPhase(5);
-                break;
-            case 10:  ideaSolrQuery.filterIdeasOnClosed();
+            case 10:  ideaSolrQuery.filterIdeasOnClosed(); //Stängd
                 break;
         }
 

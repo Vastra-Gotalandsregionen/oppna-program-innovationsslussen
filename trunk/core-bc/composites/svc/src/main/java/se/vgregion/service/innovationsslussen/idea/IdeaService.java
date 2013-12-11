@@ -347,15 +347,6 @@ public interface IdeaService {
      */
     boolean getIsIdeaUserLiked(long companyId, long groupId, long userId, String urlTitle);
 
-
-    /**
-     * Remove an {@link Idea} from both Liferay and Barium.
-     *
-     * @param ideaId the primaryKey (id) of the {@link Idea} to remove
-     * @throws RemoveIdeaException the remove idea exception
-     */
-    void remove(String ideaId) throws RemoveIdeaException;
-
     /**
      * Remove an {@link Idea} from both Liferay and Barium.
      *
