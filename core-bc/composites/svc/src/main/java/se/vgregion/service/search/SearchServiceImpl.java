@@ -118,10 +118,22 @@ public class SearchServiceImpl implements SearchService{
             idea.setPhase((String) entries.getFieldValue(IdeaField.PHASE));
 
             String status = (String) entries.getFieldValue(IdeaField.STATUS);
-            IdeaStatus ideaStatus = IdeaStatus.PRIVATE_IDEA;
+
+            IdeaStatus ideaStatus;
+            String commentCountStr;
 
             if (status.equals("PUBLIC_IDEA")) {
                 ideaStatus = IdeaStatus.PUBLIC_IDEA;
+                commentCountStr = (String) entries.getFieldValue(IdeaField.PUBLIC_COMMENT_COUNT);
+            } else {
+                ideaStatus = IdeaStatus.PRIVATE_IDEA;
+                commentCountStr = (String) entries.getFieldValue(IdeaField.PRIVATE_COMMENT_COUNT);
+            }
+
+            if (commentCountStr != null && !commentCountStr.isEmpty()){
+                idea.setCommentsCount(Integer.parseInt(commentCountStr));
+            } else {
+                idea.setCommentsCount(0);
             }
 
             idea.setStatus(ideaStatus);
@@ -138,13 +150,7 @@ public class SearchServiceImpl implements SearchService{
                 likes.add(new IdeaUserLike());
             }
 
-            String commentCountStr = (String) entries.getFieldValue(IdeaField.PUBLIC_COMMENT_COUNT);
 
-            if (commentCountStr != null && !commentCountStr.isEmpty()){
-                idea.setCommentsCount(Integer.parseInt(commentCountStr));
-            } else {
-                idea.setCommentsCount(0);
-            }
 
             ideaContent.setType(IdeaContentType.IDEA_CONTENT_TYPE_PUBLIC);
             idea.getIdeaContents().add(ideaContent);

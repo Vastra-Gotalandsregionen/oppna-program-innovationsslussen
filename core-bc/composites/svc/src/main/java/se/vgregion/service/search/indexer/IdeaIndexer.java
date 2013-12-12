@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
+import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
 import se.vgregion.service.search.indexer.util.IdeaField;
 import se.vgregion.service.spring.ContextUtil;
@@ -115,24 +116,30 @@ public class IdeaIndexer extends BaseIndexer {
         document.addDate(IdeaField.CREATE_DATE, idea.getCreated());
 
         //Comments
-        document = indexComments(idea.getIdeaContentPublic(), document);
+        document = indexPublicComments(idea, document);
+        document = indexPrivateComments(idea, document);
+
+        List<CommentItemVO> commentsList = null;
 
         return document;
 
     }
 
-    private Document indexComments(IdeaContent ideaContent, Document document) throws PortalException, SystemException {
+    private Document indexPrivateComments(Idea idea, Document document) throws SystemException {
+        List<CommentItemVO> commentsList = ideaService.getPrivateComments(idea);
+        document.addKeyword(IdeaField.PRIVATE_COMMENT_COUNT, commentsList.size());
+        return document;
+    }
 
-        if (ideaContent != null){
+    private Document indexPublicComments(Idea idea, Document document) throws PortalException, SystemException {
 
-            HashMap<String, String[]> commentsMap = new HashMap<String, String[]>();
+        if (idea.getIdeaContentPublic() != null){
 
-            List<MBMessage> messages = MBMessageLocalServiceUtil.getMessages(IdeaContent.class.getName(), ideaContent.getId(),
-                    WorkflowConstants.STATUS_APPROVED);
+            List<CommentItemVO> commentsList = ideaService.getPublicComments(idea);
 
             DateFormat df = new SimpleDateFormat(_DATE_FORMAT_PATTERN);
 
-            int messagesCount = messages.size();
+            int messagesCount = commentsList.size();
 
             if (messagesCount <= 1) {
                 return document;
@@ -150,15 +157,15 @@ public class IdeaIndexer extends BaseIndexer {
 
             int i = 0;
 
-            for (MBMessage message : messages) {
+            for (CommentItemVO message : commentsList) {
                 if (i != 0) {
                     long userId = message.getUserId();
 
                     User user = UserLocalServiceUtil.getUser(userId);
-                    String userScreenName = message.getUserName();
+                    String userScreenName = message.getName();
                     long messageId = message.getMessageId();
 
-                    String messageBody = message.getBody();
+                    String messageBody = message.getCommentText();
 
                     Date messageCreateDate = message.getCreateDate();
 
@@ -179,7 +186,7 @@ public class IdeaIndexer extends BaseIndexer {
             }
             String lastCommentDateStr = df.format(lastCommentDate);
 
-            document.addKeyword(IdeaField.PUBLIC_COMMENT_COUNT, messages.size());
+            document.addKeyword(IdeaField.PUBLIC_COMMENT_COUNT, commentsList.size());
             document.addKeyword(IdeaField.PUBLIC_LAST_COMMENT_DATE, lastCommentDateStr);
 
             document.addKeyword(IdeaField.PUBLIC_COMMENT_AUTHOR_IDS, commentAuthorIds);

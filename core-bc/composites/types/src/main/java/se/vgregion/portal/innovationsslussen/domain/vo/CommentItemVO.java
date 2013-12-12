@@ -53,6 +53,7 @@ public class CommentItemVO {
     private boolean userPrioCouncilMember;
     private String name;
     private long userId;
+    private long messageId;
 
     public long getId() {
         return id;
@@ -118,4 +119,12 @@ public class CommentItemVO {
 	public void setUserId(long userId) {
 		this.userId = userId;
 	}
+
+    public long getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(long messageId) {
+        this.messageId = messageId;
+    }
 }
