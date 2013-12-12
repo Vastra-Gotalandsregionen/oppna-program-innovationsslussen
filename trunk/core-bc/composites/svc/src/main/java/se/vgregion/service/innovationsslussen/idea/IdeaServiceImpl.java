@@ -1114,7 +1114,13 @@ public class IdeaServiceImpl implements IdeaService {
             }
 
             // Add auto-comments to the idea.
-            generateAutoComments(idea, oldStatus, currentPhase, bariumPhase);
+            idea = generateAutoComments(idea, oldStatus, currentPhase, bariumPhase);
+
+            ideaRepository.merge(idea);
+
+            if (transaction.isNewTransaction()){
+                transactionManager.commit(transaction);
+            }
 
             return result;
         } catch (BariumException be){
@@ -1130,7 +1136,7 @@ public class IdeaServiceImpl implements IdeaService {
         return null;
     }
 
-    private void generateAutoComments(Idea idea, IdeaStatus oldStatus, int currentPhase, int bariumPhase) {
+    private Idea generateAutoComments(Idea idea, IdeaStatus oldStatus, int currentPhase, int bariumPhase) {
         if (currentPhase != bariumPhase && bariumPhase != 6 && !(currentPhase == 5 && bariumPhase == 6 )) {
             addAutoComment(idea, idea.getIdeaContentPrivate().getId(), autoCommentDefaultMessageNewPhase + " " + getIdeaPhaseString(bariumPhase));
             sendEmailNotification(idea, false);
@@ -1144,8 +1150,12 @@ public class IdeaServiceImpl implements IdeaService {
 
         if (oldStatus.equals(IdeaStatus.PUBLIC_IDEA) && idea.getStatus().equals(IdeaStatus.PRIVATE_IDEA)) {
             addAutoComment(idea, idea.getIdeaContentPrivate().getId(), autoCommentDefaultMessageBecomePrivate);
+            int commentsCount = idea.getCommentsCount();
+            commentsCount++;
+            idea.setCommentsCount(commentsCount);
             sendEmailNotification(idea, false);
         }
+        return idea;
     }
 
     boolean isIdeasTheSame(Idea i1, Idea i2) {
@@ -1612,6 +1622,7 @@ public class IdeaServiceImpl implements IdeaService {
                     commentItem.setUserPrioCouncilMember(isUserPrioCouncilMember);
                     commentItem.setUserInnovationsslussenEmployee(isUserInnovationsslussenEmployee);
                     commentItem.setUserId(curCommentUserId);
+                    commentItem.setMessageId(mbMessage.getMessageId());
 
                     commentsList.add(commentItem);
                 }

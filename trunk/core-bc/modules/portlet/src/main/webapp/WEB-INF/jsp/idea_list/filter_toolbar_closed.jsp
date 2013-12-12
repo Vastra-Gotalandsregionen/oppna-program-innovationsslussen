@@ -45,7 +45,7 @@
                     </select>
                </span>
            </div>
-           <div class="filter-item filter-item-last">
+       <!--    <div class="filter-item filter-item-last">
               <span class="filter-item-label">
                    Id&eacute;transpot&ouml;r:
               </span>
@@ -57,7 +57,7 @@
                       <option value="3" ${ideaSort == '3' ? 'selected="selected"' : ''}>Arvid</option>
                    </select>
               </span>
-          </div>
+          </div>-->
 
            <input type="submit" class="grey" value="<liferay-ui:message key="search" />" />
 
