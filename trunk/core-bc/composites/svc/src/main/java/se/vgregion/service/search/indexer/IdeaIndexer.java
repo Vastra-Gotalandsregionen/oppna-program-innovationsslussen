@@ -141,7 +141,7 @@ public class IdeaIndexer extends BaseIndexer {
 
             int messagesCount = commentsList.size();
 
-            if (messagesCount <= 1) {
+            if (messagesCount < 1) {
                 return document;
             }
 
