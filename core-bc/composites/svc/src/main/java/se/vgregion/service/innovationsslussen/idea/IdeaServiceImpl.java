@@ -1116,12 +1116,6 @@ public class IdeaServiceImpl implements IdeaService {
             // Add auto-comments to the idea.
             idea = generateAutoComments(idea, oldStatus, currentPhase, bariumPhase);
 
-            ideaRepository.merge(idea);
-
-            if (transaction.isNewTransaction()){
-                transactionManager.commit(transaction);
-            }
-
             return result;
         } catch (BariumException be){
             transactionManager.rollback(transaction);
@@ -1151,9 +1145,6 @@ public class IdeaServiceImpl implements IdeaService {
         if (oldStatus.equals(IdeaStatus.PUBLIC_IDEA) && idea.getStatus().equals(IdeaStatus.PRIVATE_IDEA)) {
             addAutoComment(idea, idea.getIdeaContentPrivate().getId(), autoCommentDefaultMessageBecomePrivate);
             int commentsCount = idea.getCommentsCount();
-            commentsCount++;
-            idea.setCommentsCount(commentsCount);
-            sendEmailNotification(idea, false);
         }
         return idea;
     }

@@ -20,8 +20,6 @@
 
 <div class="idea-list-wrap">
 
-	<h2 class="title">Id&eacute;er f&ouml;r id&eacute;transpot&ouml;rer </h2>
-	
 	<c:choose>
 		<c:when test="${isSignedIn}">
 		    <%@ include file="filter_toolbar_closed.jsp" %>
