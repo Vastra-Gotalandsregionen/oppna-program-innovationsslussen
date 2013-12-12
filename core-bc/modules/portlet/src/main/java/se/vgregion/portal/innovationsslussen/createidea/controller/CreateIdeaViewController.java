@@ -330,6 +330,7 @@ public class CreateIdeaViewController extends BaseController {
             }
 
         } else {
+            model.addAttribute("otherUserVgrId", idea.getIdeaPerson().getVgrId());
             model.addAttribute("errors", result);
             model.addAttribute("idea", idea);
 
