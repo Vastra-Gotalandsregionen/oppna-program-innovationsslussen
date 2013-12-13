@@ -46,7 +46,6 @@ import com.liferay.portal.theme.ThemeDisplay;
 /**
  * Controller class for the view mode in the settings portlet.
  *
- * @author Erik Andersson
  * @author Simon Göransson
  * @company Monator Technologies AB
  */
