@@ -41,7 +41,7 @@ public final class ExpandoConstants {
     
 
     // Barium
-    public static final String BARIUM_DETAILS_VIEW_URL_PREFIX = "innovationsslussenBariumDetailsViewUrlPrefix";
+    public static final String BARIUM_DETAILS_VIEW_URL_PREFIX = "bariumDetailsViewUrlPrefix";
     
     // Pages
     public static final String FRIENDLY_URL_FAQ = "faqFriendlyURL";
