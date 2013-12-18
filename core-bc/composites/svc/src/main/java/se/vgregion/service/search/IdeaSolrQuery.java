@@ -26,8 +26,6 @@ import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
-import com.liferay.portal.kernel.search.Field;
-
 /**
  * The Class IdeaSolrQuery is a extension of SolrQuery, so it is a query. IdeaSolrQuery holds an connection to
  * the solr server and therefore it can preform a search in it self and return the search result.
@@ -63,8 +61,7 @@ public class IdeaSolrQuery extends SolrQuery {
     /**
      * Instantiates a new IdeaSolrQuery.
      *
-     * @param s
-     *            a search query.
+     * @param s a search query.
      */
     public IdeaSolrQuery(String s) {
         super(s);
@@ -86,6 +83,9 @@ public class IdeaSolrQuery extends SolrQuery {
         this.setQuery("groupId:" + groupId + " AND companyId:" + companyId + " AND entryClassName:se.vgregion.portal.innovationsslussen.domain.jpa.Idea");
         this.setStart(start); //0
         this.setRows(rows);
+        this.setFacet(true);
+        this.addFacetField("privateIdeaTransporter");
+        this.setFacetMinCount(1);
         return this;
     }
 
@@ -101,9 +101,8 @@ public class IdeaSolrQuery extends SolrQuery {
      * @return the actro solr query
      */
     public IdeaSolrQuery filterIdeasOnPhase(int phase) {
-        String filterEntryClassName = "entryClassName:se.vgregion.portal.innovationsslussen.domain.jpa.Idea";
-        String filterPhase = "and phase:" + phase;
-        this.addFilterQuery(filterEntryClassName + filterPhase);
+        String filterPhase = "phase:" + phase;
+        this.addFilterQuery(filterPhase);
         return this;
     }
 
@@ -113,21 +112,8 @@ public class IdeaSolrQuery extends SolrQuery {
      * @return the actro solr query
      */
     public IdeaSolrQuery filterIdeasOnTwoPhases(int phase1, int phase2) {
-        String filterEntryClassName = "entryClassName:se.vgregion.portal.innovationsslussen.domain.jpa.Idea";
-        String filterPhase = "and phase:" + phase1 + " or phase:" + phase2;
-        this.addFilterQuery(filterEntryClassName + filterPhase);
-        return this;
-    }
-
-    /**
-     * Filters on entryClassName = com.liferay.portlet.journal.model.JournalArticle and phase.
-     *
-     * @return the actro solr query
-     */
-    public IdeaSolrQuery filterIdeasOnFourPhases(int phase1, int phase2, int phase3, int phase4) {
-        String filterEntryClassName = "entryClassName:se.vgregion.portal.innovationsslussen.domain.jpa.Idea";
-        String filterPhase = "and phase:" + phase1 + " or phase:" + phase2 + " or phase:" + phase3 + " or phase:" + phase4;
-        this.addFilterQuery(filterEntryClassName + filterPhase);
+        String filterPhase = "phase:" + phase1 + " OR phase:" + phase2;
+        this.addFilterQuery( filterPhase);
         return this;
     }
 
@@ -137,9 +123,29 @@ public class IdeaSolrQuery extends SolrQuery {
      * @return the actro solr query
      */
     public IdeaSolrQuery filterIdeasOnThreePhases(int phase1, int phase2, int phase3) {
-        String filterEntryClassName = "entryClassName:se.vgregion.portal.innovationsslussen.domain.jpa.Idea";
-        String filterPhase = "and phase:" + phase1 + " or phase:" + phase2 + " or phase:" + phase3;
-        this.addFilterQuery(filterEntryClassName + filterPhase);
+        String filterPhase = "phase:" + phase1 + " OR phase:" + phase2 + " OR phase:" + phase3;
+        this.addFilterQuery(filterPhase);
+        return this;
+    }
+
+    /**
+     * Filters on entryClassName = com.liferay.portlet.journal.model.JournalArticle and phase.
+     *
+     * @return the actro solr query
+     */
+    public IdeaSolrQuery filterIdeasOnFourPhases(int phase1, int phase2, int phase3, int phase4) {
+        String filterPhase = "phase:" + phase1 + " OR phase:" + phase2 + " OR phase:" + phase3 + " OR phase:" + phase4;
+        this.addFilterQuery(filterPhase);
+        return this;
+    }
+
+    /**
+     * Filters on transporter
+     *
+     * @return the actro solr query
+     */
+    public IdeaSolrQuery filterIdeasOnTransporter(String transporter) {
+        this.addFilterQuery("privateIdeaTransporter:\"" + transporter + "\"");
         return this;
     }
 

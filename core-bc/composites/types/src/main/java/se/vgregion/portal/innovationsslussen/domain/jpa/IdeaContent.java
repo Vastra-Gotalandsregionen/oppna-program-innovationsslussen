@@ -85,6 +85,9 @@ public class IdeaContent extends AbstractEntity<Long> {
     @Column(name = "state")
     private String state;
 
+    @Column(name = "IdeTransportor")
+    private String IdeTansportor;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "id", name = "idea_conten")
     private final Set<IdeaFile> ideaFiles = new HashSet<IdeaFile>();
@@ -256,5 +259,13 @@ public class IdeaContent extends AbstractEntity<Long> {
 
     public void setPrioritizationCouncilMeetingTime(Date prioritizationCouncilMeetingTime) {
         this.prioritizationCouncilMeetingTime = prioritizationCouncilMeetingTime;
+    }
+
+    public String getIdeTansportor() {
+        return IdeTansportor;
+    }
+
+    public void setIdeTansportor(String ideTansportor) {
+        IdeTansportor = ideTansportor;
     }
 }

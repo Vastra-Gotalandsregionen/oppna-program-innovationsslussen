@@ -67,6 +67,7 @@ public class IdeaObjectFields {
     private String state;
     private String telefonnummer; // VGR-ID.hsapublictelephonenumber
     private String testat;
+    private String Idetransportor; //Idetransportör
 
     /** The vgr id fullname. */
     private String vgrIdFullname; // VGR-ID.fullname
@@ -93,6 +94,7 @@ public class IdeaObjectFields {
         SPECIAL_FIELD_MAPPINGS.put("VGR-ID.mobiletelephonenumber", "mobiletelephonenumber");
         SPECIAL_FIELD_MAPPINGS.put("VGR-ID.titel", "vgrIdTitel");
         SPECIAL_FIELD_MAPPINGS.put("VGR-ID", "vgrId");
+        SPECIAL_FIELD_MAPPINGS.put("Field3", "Idetransportor");
 
         for (String key : SPECIAL_FIELD_MAPPINGS.keySet()) {
             String value = SPECIAL_FIELD_MAPPINGS.get(key);
@@ -423,5 +425,13 @@ public class IdeaObjectFields {
 
     public void setVgrStrukturPerson(String vgrStrukturPerson) {
         this.vgrStrukturPerson = vgrStrukturPerson;
+    }
+
+    public String getIdetransportor() {
+        return Idetransportor;
+    }
+
+    public void setIdetransportor(String idetransportor) {
+        Idetransportor = idetransportor;
     }
 }

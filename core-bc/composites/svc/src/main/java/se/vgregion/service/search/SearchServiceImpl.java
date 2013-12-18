@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
@@ -93,8 +94,15 @@ public class SearchServiceImpl implements SearchService{
                 break;
         }
 
+        if (!transporter.equals("0")) {
+            String[] split = transporter.split("\\(");
+            String ideaTranspoterFilter = split[0].substring(0, split[0].length() - 1);
+            ideaSolrQuery.filterIdeasOnTransporter(ideaTranspoterFilter);
+        }
+
         QueryResponse queryResponse = ideaSolrQuery.query();
         Map<String,Object> returnMap = parseSolrResponse(queryResponse);
+
         return returnMap;
 
     }
@@ -152,6 +160,7 @@ public class SearchServiceImpl implements SearchService{
 
 
 
+
             ideaContent.setType(IdeaContentType.IDEA_CONTENT_TYPE_PUBLIC);
             idea.getIdeaContents().add(ideaContent);
 
@@ -159,6 +168,13 @@ public class SearchServiceImpl implements SearchService{
             ideaList.add(idea);
         }
 
+
+        List<FacetField> limitingFacets = queryResponse.getLimitingFacets();
+        if (limitingFacets != null && limitingFacets.isEmpty()){
+            limitingFacets = queryResponse.getFacetFields();
+        }
+
+        returnMap.put("ideaTranspoterFacets", limitingFacets);
         returnMap.put("ideas", ideaList);
         returnMap.put("totalIdeasCount", queryResponse.getResults().getNumFound());
 
