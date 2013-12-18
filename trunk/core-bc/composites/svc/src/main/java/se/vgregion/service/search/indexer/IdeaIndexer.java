@@ -106,6 +106,7 @@ public class IdeaIndexer extends BaseIndexer {
         document.addText(IdeaField.PRIVATE_SOLVES_PROBLEM, idea.getIdeaContentPrivate().getSolvesProblem());
         document.addText(IdeaField.PRIVATE_WANTS_HELP_WITH, idea.getIdeaContentPrivate().getWantsHelpWith());
         document.addText(IdeaField.PRIVATE_IDEA_TESTED, idea.getIdeaContentPrivate().getIdeaTested());
+        document.addText(IdeaField.PRIVATE_IDEA_TRANSPORTER, idea.getIdeaContentPrivate().getIdeTansportor());
 
         //Count
         document.addKeyword(IdeaField.PUBLIC_LIKES_COUNT, idea.getLikes().size());

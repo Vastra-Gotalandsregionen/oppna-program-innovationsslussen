@@ -1016,7 +1016,6 @@ public class IdeaServiceImpl implements IdeaService {
     //@Transactional(rollbackFor = BariumException.class)
     public UpdateFromBariumResult updateFromBarium(Idea idea) {
 
-        System.out.println("Syncing idea: " + idea.getTitle()  );
         // Do the transaction manually since we may run this in a separate thread.
         TransactionStatus transaction =
                 transactionManager.getTransaction(new DefaultTransactionAttribute(
@@ -1401,6 +1400,7 @@ public class IdeaServiceImpl implements IdeaService {
             ideaContentPrivate.setDescription(ideaObjectFields.getIde());
             ideaContentPrivate.setIdeaTested(ideaObjectFields.getTestat());
             ideaContentPrivate.setWantsHelpWith(ideaObjectFields.getKommavidare());
+            ideaContentPrivate.setIdeTansportor(ideaObjectFields.getIdetransportor());
 
             ideaContentPrivate.setIdeaTransporterComment(headString(ideaObjectFields.getIdetranportorensKommentar()));
 
@@ -1408,6 +1408,9 @@ public class IdeaServiceImpl implements IdeaService {
 
             ideaContentPrivate.setAdditionalIdeaOriginators(headString(ideaObjectFields.getKomplnamn()));
         }
+
+
+
     }
 
     private static String headString(String ideaTransporterComment) {

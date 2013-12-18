@@ -41,24 +41,25 @@ public class IndexerAspect {
             returning= "result")
     public void indexUpdateIdea(JoinPoint joinPoint, Object result){
 
-        if (result.getClass().equals(Idea.class)){
-            try {
-                Idea idea = (Idea) result;
-                Indexer indexer = IndexerRegistryUtil.getIndexer(IDEA_CLASS);
-                indexer.reindex(idea);
-            } catch (SearchException e) {
-                e.printStackTrace();
-            }
-        } else if(result.getClass().equals(IdeaService.UpdateFromBariumResult.class)) {
-            try {
-                IdeaService.UpdateFromBariumResult br = (IdeaService.UpdateFromBariumResult) result;
-                Indexer indexer = IndexerRegistryUtil.getIndexer(IDEA_CLASS);
-                indexer.reindex(((IdeaService.UpdateFromBariumResult) result).getNewIdea());
-            } catch (SearchException e) {
-                e.printStackTrace();
+        if(result != null){
+            if (result.getClass().equals(Idea.class)){
+                try {
+                    Idea idea = (Idea) result;
+                    Indexer indexer = IndexerRegistryUtil.getIndexer(IDEA_CLASS);
+                    indexer.reindex(idea);
+                } catch (SearchException e) {
+                    e.printStackTrace();
+                }
+            } else if(result.getClass().equals(IdeaService.UpdateFromBariumResult.class)) {
+                try {
+                    IdeaService.UpdateFromBariumResult br = (IdeaService.UpdateFromBariumResult) result;
+                    Indexer indexer = IndexerRegistryUtil.getIndexer(IDEA_CLASS);
+                    indexer.reindex(((IdeaService.UpdateFromBariumResult) result).getNewIdea());
+                } catch (SearchException e) {
+                    e.printStackTrace();
+                }
             }
         }
-
     }
 
     @AfterReturning( pointcut = "execution(* se.vgregion.service.innovationsslussen.idea.IdeaServiceImpl.addLike(..))" ,

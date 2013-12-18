@@ -46,6 +46,7 @@ public class IdeaField extends Field {
     public static final String PRIVATE_STATE = "privateState";
     public static final String PRIVATE_LAST_COMMENT_DATE = "privateLastCommentDate";
 	public static final String PRIVATE_LIKES_COUNT = "privateLikesCount";
+	public static final String PRIVATE_IDEA_TRANSPORTER = "privateIdeaTransporter";
 
     //Idea person
     public static final String VGRID = "vgrId";

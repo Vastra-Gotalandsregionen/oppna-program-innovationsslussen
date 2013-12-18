@@ -45,19 +45,20 @@
                     </select>
                </span>
            </div>
-       <!--    <div class="filter-item filter-item-last">
+
+          <div class="filter-item filter-item-last">
               <span class="filter-item-label">
                    Id&eacute;transpot&ouml;r:
               </span>
               <span class="filter-item-element">
-                   <select id="<portlet:namespace />ideaSort" name="<portlet:namespace />ideaSort" class="select-to-dropdown">
-                      <option value="0" ${ideaSort == '0' ? 'selected="selected"' : ''}>Alla id&eacute;transpot&ouml;rer </option>
-                      <option value="1" ${ideaSort == '1' ? 'selected="selected"' : ''}>Kalle</option>
-                      <option value="2" ${ideaSort == '2' ? 'selected="selected"' : ''}>Olle</option>
-                      <option value="3" ${ideaSort == '3' ? 'selected="selected"' : ''}>Arvid</option>
+                   <select id="<portlet:namespace />transporter" name="<portlet:namespace />transporter" class="select-to-dropdown">
+                      <option value="0" ${transporter == '0' ? 'selected="selected"' : ''}>Alla id&eacute;transpot&ouml;rer </option>
+                       <c:forEach var="facet" items="${ideaTranspoterFacets}">
+                           <option value="${facet}" ${transporter == facet ? 'selected="selected"' : ''}>${facet}</option>
+                       </c:forEach>
                    </select>
               </span>
-          </div>-->
+          </div>
 
            <input type="submit" class="grey" value="<liferay-ui:message key="search" />" />
 

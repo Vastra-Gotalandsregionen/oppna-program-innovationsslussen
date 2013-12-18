@@ -29,6 +29,7 @@ import javax.portlet.PortletPreferences;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import org.apache.solr.client.solrj.response.FacetField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,6 +129,7 @@ public class IdeaListViewController extends BaseController {
 
             int ideaPhase = ParamUtil.getInteger(request, "ideaPhase", 0);
             int ideaSort = ParamUtil.getInteger(request, "ideaSort", 0);
+            String transporter = ParamUtil.getString(request, "transporter", "0");
 
             int maxPages = PageIteratorConstants.MAX_PAGES_DEFAULT;
             long totalCount = 0;
@@ -177,19 +179,18 @@ public class IdeaListViewController extends BaseController {
             } else if (ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_IDEAS_FOR_IDEATRANSPORTER)) {
 
                 Map<String,Object> map = searchService.getIdeasForIdeaTransporters(companyId, scopeGroupId, start, entryCount,
-                        ideaSort, ideaPhase, "");
+                        ideaSort, ideaPhase, transporter);
 
                 ideasFromService = (List<Idea>) map.get("ideas");
                 totalCount = (Long) map.get("totalIdeasCount");
 
-//                if (isSignedIn) {
-//                    ideasFromService = ideaService.findIdeasByGroupId(
-//                            companyId, scopeGroupId,
-//                            IdeaStatus.PRIVATE_IDEA, start, entryCount);
-//
-//                    totalCount = ideaService.findIdeaCountByGroupId(companyId, scopeGroupId, IdeaStatus.PRIVATE_IDEA);
-//                }
+                List<FacetField>  ideaTranspoterFacets = (List<FacetField>) map.get("ideaTranspoterFacets");
 
+                if (ideaTranspoterFacets != null && ideaTranspoterFacets.size() > 0){
+                    model.addAttribute("ideaTranspoterFacets",ideaTranspoterFacets.get(0).getValues());
+                }
+
+                model.addAttribute("transporter", transporter);
                 returnView = "view_transporter_ideas";
 
             }
@@ -233,10 +234,12 @@ public class IdeaListViewController extends BaseController {
     @ActionMapping()
     public void search(ActionRequest actionRequest, ActionResponse actionResponse,
                        @RequestParam(value = "ideaPhase") String  ideaPhase,
-                       @RequestParam(value = "ideaSort") String ideaSort){
+                       @RequestParam(value = "ideaSort") String ideaSort,
+                       @RequestParam(value = "transporter") String transporter){
 
         actionResponse.setRenderParameter("ideaPhase", ideaPhase);
         actionResponse.setRenderParameter("ideaSort", ideaSort);
+        actionResponse.setRenderParameter("transporter", transporter);
 
 
     }
