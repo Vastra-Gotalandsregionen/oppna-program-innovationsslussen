@@ -235,12 +235,13 @@ public class IdeaListViewController extends BaseController {
     public void search(ActionRequest actionRequest, ActionResponse actionResponse,
                        @RequestParam(value = "ideaPhase") String  ideaPhase,
                        @RequestParam(value = "ideaSort") String ideaSort,
-                       @RequestParam(value = "transporter") String transporter){
+                       @RequestParam(value = "transporter", required = false) String transporter){
 
         actionResponse.setRenderParameter("ideaPhase", ideaPhase);
         actionResponse.setRenderParameter("ideaSort", ideaSort);
-        actionResponse.setRenderParameter("transporter", transporter);
-
+        if (transporter != null){
+            actionResponse.setRenderParameter("transporter", transporter);
+        }
 
     }
 

@@ -20,8 +20,17 @@
 package se.vgregion.portal.innovationsslussen.idea.controller;
 
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -32,14 +41,12 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceResponse;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
@@ -55,7 +62,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
-
 import se.vgregion.portal.innovationsslussen.BaseController;
 import se.vgregion.portal.innovationsslussen.domain.IdeaContentType;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
@@ -71,17 +77,6 @@ import se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionChec
 import se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsService;
 import se.vgregion.service.innovationsslussen.ldap.LdapService;
 import se.vgregion.util.Util;
-
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.ParamUtil;
-
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.model.Layout;
-import com.liferay.portal.service.LayoutLocalServiceUtil;
-import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portal.util.PortalUtil;
-import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 
 /**
  * Controller class for the view mode in idea portlet.
@@ -188,12 +183,12 @@ public class IdeaViewController extends BaseController {
                         commentsList = ideaService.getPublicComments(idea);
                     }
 
-
-                    String ideTansportor = idea.getIdeaContentPrivate().getIdeTansportor();
-                    if (ideTansportor != null || !ideTansportor.isEmpty()){
-                        model.addAttribute("tansportor", ideTansportor);
+                    if (idea.getIdeaContentPrivate() != null){
+                        String ideTansportor = idea.getIdeaContentPrivate().getIdeTansportor();
+                        if (ideTansportor != null && !ideTansportor.isEmpty()){
+                            model.addAttribute("tansportor", ideTansportor);
+                        }
                     }
-
 
                     IdeaPermissionChecker ideaPermissionChecker = ideaPermissionCheckerService.getIdeaPermissionChecker(
                             scopeGroupId, userId, idea);
