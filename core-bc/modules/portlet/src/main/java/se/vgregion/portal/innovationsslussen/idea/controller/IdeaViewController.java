@@ -188,6 +188,13 @@ public class IdeaViewController extends BaseController {
                         commentsList = ideaService.getPublicComments(idea);
                     }
 
+
+                    String ideTansportor = idea.getIdeaContentPrivate().getIdeTansportor();
+                    if (ideTansportor != null || !ideTansportor.isEmpty()){
+                        model.addAttribute("tansportor", ideTansportor);
+                    }
+
+
                     IdeaPermissionChecker ideaPermissionChecker = ideaPermissionCheckerService.getIdeaPermissionChecker(
                             scopeGroupId, userId, idea);
 

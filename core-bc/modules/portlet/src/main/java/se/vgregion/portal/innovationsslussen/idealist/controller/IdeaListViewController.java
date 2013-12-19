@@ -190,7 +190,6 @@ public class IdeaListViewController extends BaseController {
                     model.addAttribute("ideaTranspoterFacets",ideaTranspoterFacets.get(0).getValues());
                 }
 
-                model.addAttribute("transporter", transporter);
                 returnView = "view_transporter_ideas";
 
             }
@@ -219,6 +218,7 @@ public class IdeaListViewController extends BaseController {
             model.addAttribute("ideaListType", ideaListType);
             model.addAttribute("ideaPhase", ideaPhase);
             model.addAttribute("ideaSort", ideaSort);
+            model.addAttribute("transporter", transporter);
             model.addAttribute("isSignedIn", isSignedIn);
             model.addAttribute("pageIterator", pageIterator);
 

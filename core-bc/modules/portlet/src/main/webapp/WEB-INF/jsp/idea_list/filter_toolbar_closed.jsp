@@ -48,11 +48,11 @@
 
           <div class="filter-item filter-item-last">
               <span class="filter-item-label">
-                   Id&eacute;transpot&ouml;r:
+                   Id&eacute;transport&ouml;r:
               </span>
               <span class="filter-item-element">
                    <select id="<portlet:namespace />transporter" name="<portlet:namespace />transporter" class="select-to-dropdown">
-                      <option value="0" ${transporter == '0' ? 'selected="selected"' : ''}>Alla id&eacute;transpot&ouml;rer </option>
+                      <option value="0" ${transporter == '0' ? 'selected="selected"' : ''}>Alla id&eacute;transport&ouml;rer </option>
                        <c:forEach var="facet" items="${ideaTranspoterFacets}">
                            <option value="${facet}" ${transporter == facet ? 'selected="selected"' : ''}>${facet}</option>
                        </c:forEach>

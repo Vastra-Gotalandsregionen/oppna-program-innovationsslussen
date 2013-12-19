@@ -177,7 +177,13 @@
 					<div class="idea-creator">
 						Skapad av <span class="idea-creator-name">${idea.ideaPerson.name}</span> <span class="idea-create-date"><fmt:formatDate value="${idea.created}" pattern="yyyy-MM-dd"  /></span>
 					</div>
-					
+
+					<c:if test="${not empty tansportor}">
+                        <div class="idea-creator">
+                            Id&eacute;transport&ouml;r <span class="idea-creator-name">${tansportor}</span>
+                        </div>
+                    </c:if>
+
 					<aui:layout>
 						<aui:column first="true" columnWidth="60" cssClass="idea-content">
 						
