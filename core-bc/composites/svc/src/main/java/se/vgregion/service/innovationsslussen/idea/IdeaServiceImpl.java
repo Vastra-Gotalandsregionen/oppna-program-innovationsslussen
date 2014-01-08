@@ -19,29 +19,29 @@
 
 package se.vgregion.service.innovationsslussen.idea;
 
-import java.io.InputStream;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ThreadFactory;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-
-import javax.persistence.EntityManager;
+import com.liferay.counter.service.CounterLocalService;
+import com.liferay.portal.NoSuchUserException;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.messaging.Message;
+import com.liferay.portal.kernel.messaging.MessageBusUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.model.*;
+import com.liferay.portal.service.*;
+import com.liferay.portlet.asset.model.AssetEntry;
+import com.liferay.portlet.asset.service.AssetEntryLocalService;
+import com.liferay.portlet.messageboards.model.MBMessage;
+import com.liferay.portlet.messageboards.model.MBMessageDisplay;
+import com.liferay.portlet.messageboards.model.MBThread;
+import com.liferay.portlet.messageboards.service.MBMessageLocalService;
+import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
+import com.liferay.portlet.messageboards.util.comparator.MessageCreateDateComparator;
 import org.apache.commons.collections.BeanMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,15 +54,10 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
-
 import se.vgregion.portal.innovationsslussen.domain.BariumResponse;
 import se.vgregion.portal.innovationsslussen.domain.IdeaObjectFields;
 import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
-import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
-import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
-import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaFile;
-import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserFavorite;
-import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaUserLike;
+import se.vgregion.portal.innovationsslussen.domain.jpa.*;
 import se.vgregion.portal.innovationsslussen.domain.json.FileEntry;
 import se.vgregion.portal.innovationsslussen.domain.json.ObjectEntry;
 import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
@@ -82,47 +77,14 @@ import se.vgregion.service.innovationsslussen.util.FriendlyURLNormalizer;
 import se.vgregion.service.innovationsslussen.util.IdeaServiceConstants;
 import se.vgregion.util.Util;
 
-import com.liferay.counter.service.CounterLocalService;
-import com.liferay.portal.NoSuchUserException;
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.messaging.Message;
-import com.liferay.portal.kernel.messaging.MessageBusUtil;
-import com.liferay.portal.kernel.util.PropsKeys;
-import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portal.model.ClassName;
-import com.liferay.portal.model.Contact;
-import com.liferay.portal.model.Group;
-import com.liferay.portal.model.LayoutSet;
-import com.liferay.portal.model.ResourceConstants;
-import com.liferay.portal.model.ResourcePermission;
-import com.liferay.portal.model.Role;
-import com.liferay.portal.model.User;
-import com.liferay.portal.model.UserGroupRole;
-import com.liferay.portal.service.ClassNameLocalService;
-import com.liferay.portal.service.ContactLocalService;
-import com.liferay.portal.service.GroupLocalService;
-import com.liferay.portal.service.LayoutSetLocalService;
-import com.liferay.portal.service.ResourceLocalService;
-import com.liferay.portal.service.ResourcePermissionLocalService;
-import com.liferay.portal.service.RoleLocalService;
-import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.service.UserGroupRoleLocalService;
-import com.liferay.portal.service.UserLocalService;
-import com.liferay.portal.service.UserLocalServiceUtil;
-import com.liferay.portlet.asset.model.AssetEntry;
-import com.liferay.portlet.asset.service.AssetEntryLocalService;
-import com.liferay.portlet.messageboards.model.MBMessage;
-import com.liferay.portlet.messageboards.model.MBMessageDisplay;
-import com.liferay.portlet.messageboards.model.MBThread;
-import com.liferay.portlet.messageboards.service.MBMessageLocalService;
-import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
-import com.liferay.portlet.messageboards.util.comparator.MessageCreateDateComparator;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import java.io.InputStream;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.*;
 
 /**
  * Implementation of {@link IdeaService}.
@@ -164,6 +126,9 @@ public class IdeaServiceImpl implements IdeaService {
 
     @Value("${scheme.server.name.url}")
     private String schemeServerNameUrl;
+
+    @Value("${node.is.sync.responsible}")
+    private Boolean isSyncResponsible;
 
     private IdeaRepository ideaRepository;
     private IdeaFileRepository ideaFileRepository;
@@ -316,7 +281,6 @@ public class IdeaServiceImpl implements IdeaService {
         TransactionStatus transaction =
                 transactionManager.getTransaction(new DefaultTransactionAttribute(
                         TransactionDefinition.PROPAGATION_REQUIRED));
-
 
 
         boolean isIdeaUserLiked = getIsIdeaUserLiked(companyId, groupId, userId, urlTitle);
@@ -863,13 +827,13 @@ public class IdeaServiceImpl implements IdeaService {
     /* (non-Javadoc)
      * @see se.vgregion.service.innovationsslussen.idea.IdeaService#remove(java.lang.String)
      */
-  //  @Override
-  //  @Transactional
-  //  public void remove(String ideaId) throws RemoveIdeaException {
-  //      Idea idea = ideaRepository.find(ideaId);
- //
- //       remove(idea);
-  //  }
+    //  @Override
+    //  @Transactional
+    //  public void remove(String ideaId) throws RemoveIdeaException {
+    //      Idea idea = ideaRepository.find(ideaId);
+    //
+    //       remove(idea);
+    //  }
 
     /* (non-Javadoc)
      * @see se.vgregion.service.innovationsslussen.idea.IdeaService#remove(se.vgregion.portal
@@ -1044,7 +1008,7 @@ public class IdeaServiceImpl implements IdeaService {
             IdeaStatus oldStatus = idea.getStatus();
 
             try {
-                if (bariumIdeaPhase.get() == null){
+                if (bariumIdeaPhase.get() == null) {
                     throw new BariumException("bariumIdeaPhase is null");
                 }
                 bariumPhase = Integer.parseInt(bariumIdeaPhase.get());
@@ -1075,7 +1039,7 @@ public class IdeaServiceImpl implements IdeaService {
                 finalUrlTitle = null;
             }
 
-            if (idea.getOriginalUserId() == null){
+            if (idea.getOriginalUserId() == null) {
                 idea.setOriginalUserId(0L);
             }
 
@@ -1108,7 +1072,7 @@ public class IdeaServiceImpl implements IdeaService {
                 result.setChanged(true);
             }
 
-            if (transaction.isNewTransaction()){
+            if (transaction.isNewTransaction()) {
                 transactionManager.commit(transaction);
             }
 
@@ -1116,11 +1080,11 @@ public class IdeaServiceImpl implements IdeaService {
             idea = generateAutoComments(idea, oldStatus, currentPhase, bariumPhase);
 
             return result;
-        } catch (BariumException be){
+        } catch (BariumException be) {
             transactionManager.rollback(transaction);
             LOGGER.warn(be.getMessage());
         } finally {
-            if (!transaction.isCompleted()){
+            if (!transaction.isCompleted()) {
                 //If this happens, a runtimeexception has likley occurred.
                 transactionManager.rollback(transaction);
                 LOGGER.warn("Rolledback transaction because of likely RunTimeException");
@@ -1130,7 +1094,7 @@ public class IdeaServiceImpl implements IdeaService {
     }
 
     private Idea generateAutoComments(Idea idea, IdeaStatus oldStatus, int currentPhase, int bariumPhase) {
-        if (currentPhase != bariumPhase && bariumPhase != 6 && !(currentPhase == 5 && bariumPhase == 6 )) {
+        if (currentPhase != bariumPhase && bariumPhase != 6 && !(currentPhase == 5 && bariumPhase == 6)) {
             addAutoComment(idea, idea.getIdeaContentPrivate().getId(), autoCommentDefaultMessageNewPhase + " " + getIdeaPhaseString(bariumPhase));
             sendEmailNotification(idea, false);
         }
@@ -1241,8 +1205,8 @@ public class IdeaServiceImpl implements IdeaService {
         list.add("koncept");
         list.add("prövning");
         list.add("kommersialisering");
-		// step 5 and 6 in barium are the same (?)
-		list.add("kommersialisering");
+        // step 5 and 6 in barium are the same (?)
+        list.add("kommersialisering");
 
         return list.get(i);
 
@@ -1328,17 +1292,22 @@ public class IdeaServiceImpl implements IdeaService {
     public void updateAllIdeasFromBarium() {
         LOGGER.info("Updating all ideas from Barium...");
 
+        if (!shouldRunUpdate()) {
+            LOGGER.info("Skipping update...");
+            return;
+        }
+//        ClusterGroupLocalServiceUtil.getClusterGroup(3l).getClusterNodeIdsArray();
         try {
             Collection<Idea> allIdeas = findAll();
 
             for (Idea idea : allIdeas) {
                 try {
                     // Do the transaction manually since we may run this in a separate thread.
-                 //   TransactionStatus transaction =
-                 //           transactionManager.getTransaction(new DefaultTransactionAttribute(
-                 //                   TransactionDefinition.PROPAGATION_REQUIRED));
+                    //   TransactionStatus transaction =
+                    //           transactionManager.getTransaction(new DefaultTransactionAttribute(
+                    //                   TransactionDefinition.PROPAGATION_REQUIRED));
                     updateFromBarium(idea);
-                //    transactionManager.commit(transaction);
+                    //    transactionManager.commit(transaction);
                     LOGGER.info("Updated idea with id=" + idea.getId());
                 } catch (RuntimeException e) {
                     LOGGER.error("Failed to update idea: " + idea.toString(), e);
@@ -1408,7 +1377,6 @@ public class IdeaServiceImpl implements IdeaService {
 
             ideaContentPrivate.setAdditionalIdeaOriginators(headString(ideaObjectFields.getKomplnamn()));
         }
-
 
 
     }
@@ -1771,7 +1739,7 @@ public class IdeaServiceImpl implements IdeaService {
 
         LinkedList<String> toEmail = new LinkedList<String>();
 
-       // toEmail.add(idea.getIdeaPerson().getEmail());
+        // toEmail.add(idea.getIdeaPerson().getEmail());
 
         try {
             toEmail = getUserGroupRoleByRoleAndGroup(idea, toEmail, IdeaServiceConstants.ROLE_NAME_COMMUNITY_INNOVATIONSSLUSSEN);
@@ -1930,7 +1898,8 @@ public class IdeaServiceImpl implements IdeaService {
 
     /**
      * This method replaces tokens in the message text to the real value from an idea.
-     * @param in the message to replace tokens in.
+     *
+     * @param in   the message to replace tokens in.
      * @param idea the idea to get values from.
      * @return the text with the token replaced by the values.
      */
@@ -1950,6 +1919,10 @@ public class IdeaServiceImpl implements IdeaService {
         out = in.replaceAll("\\[\\$IDEA_NAME\\$\\]", idea.getTitle());
 
         return out;
+    }
+
+    private boolean shouldRunUpdate() {
+        return isSyncResponsible;
     }
 
 }

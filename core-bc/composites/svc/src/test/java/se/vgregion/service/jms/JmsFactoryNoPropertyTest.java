@@ -33,7 +33,8 @@ import static org.junit.Assert.assertNull;
  * @author Patrik Bergström
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({"classpath:messaging-context.xml", "classpath:mock-context.xml", "classpath:test-jpa-infrastructure-configuration.xml"})
+@ContextConfiguration({"classpath:messaging-context.xml", "classpath:mock-context.xml",
+        "classpath:test-jpa-infrastructure-configuration.xml", "classpath:applicationContext-test.xml"})
 public class JmsFactoryNoPropertyTest {
 
     @Autowired
