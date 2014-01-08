@@ -34,7 +34,8 @@ import static org.junit.Assert.assertNotNull;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"classpath:messaging-context.xml", "classpath:mock-context.xml",
-        "classpath:test-jpa-infrastructure-configuration.xml", "classpath:broker-url-property.xml"})
+        "classpath:test-jpa-infrastructure-configuration.xml", "classpath:broker-url-property.xml",
+        "classpath:applicationContext-test.xml"})
 public class JmsFactoryWithPropertyTest {
 
     @Autowired
