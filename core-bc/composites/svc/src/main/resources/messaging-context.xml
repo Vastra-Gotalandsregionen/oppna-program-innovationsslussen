@@ -29,6 +29,15 @@
         http://activemq.apache.org/schema/core/activemq-core.xsd"
         >
 
+  <context:mbean-export registration="replaceExisting"/>
+
+  <!--  lets create an embedded ActiveMQ Broker -->
+  <amq:broker useJmx="true" persistent="false">
+    <amq:transportConnectors>
+      <amq:transportConnector uri="tcp://0.0.0.0:61616"/>
+    </amq:transportConnectors>
+  </amq:broker>
+
   <bean id="jmsFactory" class="se.vgregion.service.jms.factory.JmsFactory">
     <property name="brokerUrl" value="${activemq.broker.url}"/>
   </bean>
