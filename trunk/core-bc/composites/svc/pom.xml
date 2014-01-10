@@ -92,6 +92,11 @@
       <artifactId>aspectjweaver</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.xbean</groupId>
+      <artifactId>xbean-spring</artifactId>
+      <version>3.7</version>
+    </dependency>
 
     <!-- Others -->
     <dependency>
