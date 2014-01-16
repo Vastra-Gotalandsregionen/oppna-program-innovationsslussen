@@ -30,6 +30,8 @@
 							<liferay-portlet:renderURL portletMode="VIEW" var="firstUrl" windowState="normal">
 								<portlet:param name="renderType" value="isPaginatorCall" />
 								<portlet:param name="pageNumber" value="1" />
+								<portlet:param name="ideaPhase" value="${ideaPhase}" />
+                                <portlet:param name="ideaSort" value="${ideaSort}" />
 							</liferay-portlet:renderURL>
 							<a href="${firstUrl}" title="F&ouml;rsta">F&ouml;rsta</a>
 						</li>
@@ -40,6 +42,8 @@
 							<liferay-portlet:renderURL portletMode="VIEW" var="previousUrl" windowState="normal">
 								<portlet:param name="renderType" value="isPaginatorCall" />
 								<portlet:param name="pageNumber" value="${pageIterator.previous}" />
+								<portlet:param name="ideaPhase" value="${ideaPhase}" />
+                                <portlet:param name="ideaSort" value="${ideaSort}" />
 							</liferay-portlet:renderURL>
 							<a href="${previousUrl}" title="F&ouml;reg&aring;ende">F&ouml;reg&aring;ende</a>
 						</li>
@@ -64,6 +68,8 @@
 									<liferay-portlet:renderURL portletMode="VIEW" var="url" windowState="normal">
 										<portlet:param name="renderType" value="isPaginatorCall" />
 										<portlet:param name="pageNumber" value="${page.pagenumber}" />
+										<portlet:param name="ideaPhase" value="${ideaPhase}" />
+										<portlet:param name="ideaSort" value="${ideaSort}" />
 									</liferay-portlet:renderURL>
 									<a href="${url}">${page.pagenumber}</a>
 								</c:otherwise>
@@ -79,6 +85,8 @@
 							<liferay-portlet:renderURL portletMode="VIEW" var="nextUrl" windowState="normal">
 								<portlet:param name="renderType" value="isPaginatorCall" />
 								<portlet:param name="pageNumber" value="${pageIterator.next}" />
+								<portlet:param name="ideaPhase" value="${ideaPhase}" />
+                                <portlet:param name="ideaSort" value="${ideaSort}" />
 							</liferay-portlet:renderURL>
 							<a href="${nextUrl}" title="N&auml;sta">N&auml;sta</a>
 						</li>
@@ -89,6 +97,8 @@
 							<liferay-portlet:renderURL portletMode="VIEW" var="lastUrl" windowState="normal">
 								<portlet:param name="renderType" value="isPaginatorCall" />
 								<portlet:param name="pageNumber" value="${pageIterator.last}" />
+								<portlet:param name="ideaPhase" value="${ideaPhase}" />
+                                <portlet:param name="ideaSort" value="${ideaSort}" />
 							</liferay-portlet:renderURL>
 							<a href="${lastUrl}" title="Sista">Sista</a>
 						</li>
