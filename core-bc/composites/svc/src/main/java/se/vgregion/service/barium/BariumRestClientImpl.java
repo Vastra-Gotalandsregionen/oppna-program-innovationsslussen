@@ -95,16 +95,16 @@ public class BariumRestClientImpl implements BariumRestClient {
     /**
      * Instantiates a new barium rest client impl.
      *
-     * @param apiLocation the api location
-     * @param apiKey the api key
-     * @param username the username
-     * @param password the password
+     * @param apiLocation   the api location
+     * @param apiKey        the api key
+     * @param username      the username
+     * @param password      the password
      * @param applicationId the application id
      * @throws BariumException the barium exception
      */
     public BariumRestClientImpl(String apiLocation, String apiKey, String username, String password,
-            String applicationId)
-                    throws BariumException {
+                                String applicationId)
+            throws BariumException {
 
         this.apiLocation = apiLocation;
         this.apiKey = apiKey;
@@ -147,7 +147,7 @@ public class BariumRestClientImpl implements BariumRestClient {
     /**
      * Do post.
      *
-     * @param uri the uri
+     * @param uri         the uri
      * @param requestBody the request body
      * @return the string
      * @throws BariumException the barium exception
@@ -171,7 +171,7 @@ public class BariumRestClientImpl implements BariumRestClient {
         try {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(instancesJson, ApplicationInstances.class);
-        }  catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -301,8 +301,8 @@ public class BariumRestClientImpl implements BariumRestClient {
     /**
      * Do post multipart.
      *
-     * @param endpoint the endpoint
-     * @param fileName the file name
+     * @param endpoint    the endpoint
+     * @param fileName    the file name
      * @param inputStream the input stream
      * @return the string
      * @throws BariumException the barium exception
@@ -359,7 +359,7 @@ public class BariumRestClientImpl implements BariumRestClient {
 
             InputStream content = response.getEntity().getContent();
 
-             return toString(content);
+            return toString(content);
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         } catch (ClientProtocolException e) {
@@ -477,9 +477,9 @@ public class BariumRestClientImpl implements BariumRestClient {
             int responseCode = conn.getResponseCode();
             if (responseCode == HttpStatus.SC_UNAUTHORIZED) {
                 ticket = null; // We weren't authorized, possibly due to an old ticket.
-            } else if (responseCode == HttpStatus.SC_INTERNAL_SERVER_ERROR){
-                if (methodCallCount <= 3){
-                    return doRequest(method, uri, data, methodCallCount++ );
+            } else if (responseCode == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+                if (methodCallCount <= 3) {
+                    return doRequest(method, uri, data, ++methodCallCount);
                 } else {
                     System.out.println("Error - Interna Server Error - From Barium - for idea: " + uri);
                 }
