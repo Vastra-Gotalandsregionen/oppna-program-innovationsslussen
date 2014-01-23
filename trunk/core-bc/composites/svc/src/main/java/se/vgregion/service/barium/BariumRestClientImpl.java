@@ -481,7 +481,13 @@ public class BariumRestClientImpl implements BariumRestClient {
                 if (methodCallCount <= 3) {
                     return doRequest(method, uri, data, ++methodCallCount);
                 } else {
-                    System.out.println("Error - Interna Server Error - From Barium - for idea: " + uri);
+                    LOGGER.error("Error - Internal Server Error - From Barium - for idea: " + uri);
+                    if (conn != null) {
+                        inputStream = conn.getErrorStream();
+                        bis = new BufferedInputStream(inputStream);
+                        response = toString(bis);
+                        throw new BariumException(response);
+                    }
                 }
             }
 
