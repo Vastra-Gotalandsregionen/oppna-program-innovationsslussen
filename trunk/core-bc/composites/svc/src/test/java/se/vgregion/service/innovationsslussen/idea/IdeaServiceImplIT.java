@@ -21,6 +21,7 @@ package se.vgregion.service.innovationsslussen.idea;
 
 import java.util.concurrent.Future;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -209,6 +210,7 @@ public class IdeaServiceImplIT {
     }
 
     @Test
+    @Ignore
     public void testuploadFile() {
 
         Idea idea = ideaService.findIdeaByUrlTitle("stora-titeln");
