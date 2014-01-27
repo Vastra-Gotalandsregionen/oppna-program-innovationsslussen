@@ -36,12 +36,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.apache.commons.collections.BeanMap;
-import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ContentBody;
@@ -477,17 +475,19 @@ public class BariumRestClientImpl implements BariumRestClient {
             int responseCode = conn.getResponseCode();
             if (responseCode == HttpStatus.SC_UNAUTHORIZED) {
                 ticket = null; // We weren't authorized, possibly due to an old ticket.
+                this.connect();
+                if (methodCallCount <= 3) {
+                    return doRequest(method, uri, data, ++methodCallCount);
+                } else {
+                    String msg = "Error - Unable to authenticate to Barium: " + uri;
+                    readResponseAndThrowBariumException(conn, msg);
+                }
             } else if (responseCode == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
                 if (methodCallCount <= 3) {
                     return doRequest(method, uri, data, ++methodCallCount);
                 } else {
-                    LOGGER.error("Error - Internal Server Error - From Barium - for idea: " + uri);
-                    if (conn != null) {
-                        inputStream = conn.getErrorStream();
-                        bis = new BufferedInputStream(inputStream);
-                        response = toString(bis);
-                        throw new BariumException(response);
-                    }
+                    String msg = "Error - Internal Server Error - From Barium - for idea: " + uri;
+                    readResponseAndThrowBariumException(conn, msg);
                 }
             }
 
@@ -507,6 +507,24 @@ public class BariumRestClientImpl implements BariumRestClient {
             Util.closeClosables(bis, inputStream, bos, outputStream);
         }
         return response;
+    }
+
+    private void readResponseAndThrowBariumException(HttpURLConnection conn, String msg) throws BariumException {
+        LOGGER.error(msg);
+        if (conn != null) {
+            BufferedInputStream bis = null;
+            InputStream inputStream = null;
+            try {
+                inputStream = conn.getErrorStream();
+                bis = new BufferedInputStream(inputStream);
+                String errorBody = toString(bis);
+                throw new BariumException(errorBody);
+            } finally {
+                Util.closeClosables(bis, inputStream);
+            }
+        } else {
+            throw new BariumException(msg);
+        }
     }
 
     /**
