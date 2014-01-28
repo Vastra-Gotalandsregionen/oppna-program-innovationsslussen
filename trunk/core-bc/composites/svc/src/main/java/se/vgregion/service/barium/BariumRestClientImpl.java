@@ -450,8 +450,8 @@ public class BariumRestClientImpl implements BariumRestClient {
 
             //            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(8888));
             conn = (HttpURLConnection) url.openConnection(/*proxy*/);
-            conn.setConnectTimeout(20000);
-            conn.setReadTimeout(20000);
+            conn.setConnectTimeout(120000);
+            conn.setReadTimeout(120000);
             if (ticket != null) {
                 conn.setRequestProperty("ticket", ticket);
             } else if (!uri.contains("authenticate")) {
