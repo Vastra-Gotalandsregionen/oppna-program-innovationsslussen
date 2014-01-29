@@ -28,22 +28,16 @@
             location="file:${user.home}/.innovationsslussen/application.properties"
             ignore-resource-not-found="true" ignore-unresolvable="true" />
 
-  <bean id="vgr.org.contextSource" class="org.springframework.ldap.pool.factory.PoolingContextSource">
-    <property name="contextSource" ref="vgr.org.contextSourceTarget" />
-    <property name="dirContextValidator" ref="vgr.org.dirContextValidator" />
-    <property name="testOnBorrow" value="true" />
-    <property name="testWhileIdle" value="true" />
+  <!-- Spring ldap -->
+  <bean id="vgr.org.contextSource" class="org.springframework.ldap.core.support.LdapContextSource">
+    <property name="url" value="${ldap.org.authentication.java.naming.provider.url}"/>
+    <property name="base" value="${ldap.org.synchronization.userSearchBase}"/>
+    <property name="userDn" value="${ldap.org.synchronization.java.naming.security.principal}"/>
+    <property name="password" value="${ldap.org.synchronization.java.naming.security.credentials}"/>
+    <property name="pooled" value="true"/>
   </bean>
 
   <bean id="vgr.org.dirContextValidator" class="org.springframework.ldap.pool.validation.DefaultDirContextValidator" />
-
-  <bean id="vgr.org.contextSourceTarget" class="org.springframework.ldap.core.support.LdapContextSource">
-    <property name="url" value="${ldap.org.authentication.java.naming.provider.url}" />
-    <property name="userDn" value="${ldap.org.synchronization.java.naming.security.principal}" />
-    <property name="password" value="${ldap.org.synchronization.java.naming.security.credentials}" />
-    <property name="base" value="${ldap.org.synchronization.userSearchBase}" />
-    <property name="pooled" value="false" />
-  </bean>
 
   <bean id="vgr.org.ldapTemplate" class="org.springframework.ldap.core.LdapTemplate">
     <property name="contextSource" ref="vgr.org.contextSource" />
