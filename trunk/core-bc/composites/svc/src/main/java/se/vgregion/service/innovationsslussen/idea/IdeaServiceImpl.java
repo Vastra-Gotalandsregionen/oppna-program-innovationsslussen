@@ -1287,7 +1287,7 @@ public class IdeaServiceImpl implements IdeaService {
      * @see se.vgregion.service.innovationsslussen.idea.IdeaService#updateAllIdeasFromBarium()
      */
     @Override
-    @Scheduled(cron = "* 15 6 * * ?")
+    @Scheduled(cron = "0 15 6 * * ?")
     @Transactional
     public void updateAllIdeasFromBarium() {
         LOGGER.info("Updating all ideas from Barium...");
