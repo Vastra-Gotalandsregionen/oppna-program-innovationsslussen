@@ -18,17 +18,17 @@
 <%@ taglib uri="http://portalen.vgregion.se/util" prefix="vgrutil" %>
 
 <portlet:defineObjects />
-<liferay-theme:defineObjects />	
+<liferay-theme:defineObjects />
 
 <div class="idea-outer idea-outer-private">
 	<div class="idea">
 		<div class="idea-inner">
-		
+
 			<c:choose>
 				<c:when test="${not empty idea}">
 
 					<div class="idea-hd clearfix">
-					
+
 					<c:if test="${not idea.public}">
 						<div class="portlet-msg-info">
 							Denna id&eacute; &auml;r inte publik &auml;nnu. Detta inneb&auml;r att id&eacute;en inte kan ses av andra sajtmedlemmar.
@@ -49,7 +49,7 @@
                             </c:otherwise>
                         </c:choose>
                     </c:if>
-					
+
 						<div class="idea-toolbar-wrap">
 							<ul class="rp-toolbar clearfix">
 								<li class="icon open">
@@ -61,7 +61,7 @@
 										<span class="label">Visa &ouml;ppen beskrivning</span>
 									</a>
 								</li>
-							
+
 								<c:if test="${ideaPermissionChecker.hasPermissionAddCommentPrivate}">
 									<li class="icon comment">
 										<a class="" href="#">
@@ -69,7 +69,7 @@
 										</a>
 									</li>
 								</c:if>
-								
+								<%--
 								<li class="icon like">
 									<c:choose>
 										<c:when test="${isIdeaUserLiked}">
@@ -94,7 +94,7 @@
 										</c:otherwise>
 									</c:choose>
 								</li>
-								
+								--%>
 								<li class="icon favorite">
 									<c:choose>
 										<c:when test="${isIdeaUserFavorite}">
@@ -118,8 +118,8 @@
 											</a>
 										</c:otherwise>
 									</c:choose>
-								</li>								
-								
+								</li>
+
 							</ul>
 							<ul class="rp-toolbar clearfix">
 								<c:if test="${ideaPermissionChecker.hasPermissionViewInBarium}">
@@ -129,7 +129,7 @@
 									  </a>
 									</li>
 								</c:if>
-								
+
 								<c:if test="${ideaPermissionChecker.hasPermissionUpdateFromBarium}">
 									<li class="icon reload">
 										<portlet:actionURL name="updateFromBarium" var="updateFromBariumUrl">
@@ -143,11 +143,11 @@
 									   </a>
 									</li>
 								</c:if>
-							</ul>							
+							</ul>
 						</div>
-						
-						
-						
+
+
+
 						<div class="idea-flow-wrap">
 							<ul class="idea-flow-list">
 								<li class="${idea.phase >= 1 ? 'done' : ''}" title="<div><strong><liferay-ui:message key='innovationsslussen.idea.tooltip.step-1.title' /></strong></div><liferay-ui:message key='innovationsslussen.idea.tooltip.step-1.content' />">
@@ -167,13 +167,13 @@
 								</li>
 							</ul>
 						</div>
-					
+
 					</div>
-				
+
 					<h1>
             			<c:out value="${idea.title}"/> <span>(st&auml;ngd beskrivning)</span>
 					</h1>
-					
+
 					<div class="idea-creator">
 						Skapad av <span class="idea-creator-name">${idea.ideaPerson.name}</span> <span class="idea-create-date"><fmt:formatDate value="${idea.created}" pattern="yyyy-MM-dd"  /></span>
 					</div>
@@ -186,7 +186,7 @@
 
 					<aui:layout>
 						<aui:column first="true" columnWidth="60" cssClass="idea-content">
-						
+
 							<div class="idea-content-item">
 								<div class="label">
 									Beskrivning
@@ -240,9 +240,9 @@
               				<%@ include file="document_list.jsp" %>
 						</aui:column>
 					</aui:layout>
-					
+
 					<%@ include file="comments_private.jsp" %>
-				
+
 				</c:when>
 				<c:otherwise>
 					<div class="portlet-msg-error">
@@ -250,7 +250,7 @@
 					</div>
 				</c:otherwise>
 			</c:choose>
-			
+
 		</div>
 	</div>
 </div>
@@ -261,7 +261,7 @@
 
 	   // Add css class to document body
 	   document.body.className += ' ' + 'idea-private-view';
-	
+
 		AUI().ready('aui-base','innovationsslussen-idea', function (A) {
 			var innovationsslussenIdea = new A.InnovationsslussenIdea({
 				commentsInput: '#<portlet:namespace />comment',

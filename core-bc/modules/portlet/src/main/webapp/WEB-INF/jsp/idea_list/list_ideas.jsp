@@ -31,10 +31,10 @@
 				</c:if>
 				<liferay-portlet:param name="urlTitle" value="${idea.urlTitle}" />
 			</liferay-portlet:renderURL>
-			
+
 			<c:set var="ideaItemCssClass" scope="page" value="" />
 			<c:set var="ideaPhaseLabel" scope="page" value="Id&eacute;" />
-			
+
 			<c:choose>
 				<c:when test="${idea.public}">
 					<c:choose>
@@ -53,12 +53,12 @@
 					<c:set var="ideaPhaseLabel" scope="page" value="St&auml;ngd" />
 				</c:otherwise>
 			</c:choose>
-			
-			
+
+
 			<c:if test="${not idea.public}">
 				<c:set var="ideaItemCssClass" scope="page" value="private" />
 			</c:if>
-		
+
 			<li class="${ideaItemCssClass}">
 				<div class="idea-item">
 					<a href="${ideaUrl}">
@@ -68,9 +68,12 @@
 									<h3>${idea.title}</h3>
 								</div>
 								<ul class="idea-stats clearfix">
-									<li class="likes">
-										${fn:length(idea.likes)}
-									</li>
+                                    <c:if test="${idea.public}">
+                                        <li class="likes">
+                                            ${fn:length(idea.likes)}
+                                        </li>
+                                    </c:if>
+
 									<li class="comments">
 										${idea.commentsCount}
 									</li>
@@ -98,7 +101,7 @@
 						</div>
 						<div class="idea-label">
 							${ideaPhaseLabel}
-						</div>				
+						</div>
 					</a>
 				</div>
 			</li>

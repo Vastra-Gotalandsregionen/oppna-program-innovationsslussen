@@ -24,10 +24,10 @@ import java.util.List;
 
 /**
  * The Class PageIterator.
- * 
+ *
  * @author Erik Andersson
  * @company Monator Technologies AB
- * 
+ *
  */
 public class PageIterator {
 
@@ -83,7 +83,7 @@ public class PageIterator {
 
     /**
      * Instantiates a new page iterator.
-     * 
+     *
      * @param totalHits
      *            the total hits
      * @param currentPage
@@ -176,12 +176,16 @@ public class PageIterator {
 
         int currentHitsEnd = currentPage * pageSize;
 
+        if (totalHits < currentHitsEnd) {
+            currentHitsEnd = (int) totalHits;
+        }
+
         this.setCurrentHitsEnd(currentHitsEnd);
     }
 
     /**
      * Gets the total hits.
-     * 
+     *
      * @return the total hits
      */
     public long getTotalHits() {
@@ -190,7 +194,7 @@ public class PageIterator {
 
     /**
      * Sets the total hits.
-     * 
+     *
      * @param totalHits
      *            the new total hits
      */
@@ -200,7 +204,7 @@ public class PageIterator {
 
     /**
      * Gets the current page.
-     * 
+     *
      * @return the current page
      */
     public int getCurrentPage() {
@@ -209,7 +213,7 @@ public class PageIterator {
 
     /**
      * Sets the current page.
-     * 
+     *
      * @param currentPage
      *            the new current page
      */
@@ -219,7 +223,7 @@ public class PageIterator {
 
     /**
      * Gets the page size.
-     * 
+     *
      * @return the page size
      */
     public int getPageSize() {
@@ -228,7 +232,7 @@ public class PageIterator {
 
     /**
      * Sets the page size.
-     * 
+     *
      * @param pageSize
      *            the new page size
      */
@@ -238,7 +242,7 @@ public class PageIterator {
 
     /**
      * Gets the max pages.
-     * 
+     *
      * @return the max pages
      */
     public int getMaxPages() {
@@ -247,7 +251,7 @@ public class PageIterator {
 
     /**
      * Sets the max pages.
-     * 
+     *
      * @param maxPages
      *            the new max pages
      */
@@ -257,7 +261,7 @@ public class PageIterator {
 
     /**
      * Gets the show first.
-     * 
+     *
      * @return the show first
      */
     public boolean getShowFirst() {
@@ -266,7 +270,7 @@ public class PageIterator {
 
     /**
      * Sets the show first.
-     * 
+     *
      * @param showFirst
      *            the new show first
      */
@@ -276,7 +280,7 @@ public class PageIterator {
 
     /**
      * Gets the show previous.
-     * 
+     *
      * @return the show previous
      */
     public boolean getShowPrevious() {
@@ -285,7 +289,7 @@ public class PageIterator {
 
     /**
      * Sets the show previous.
-     * 
+     *
      * @param showPrevious
      *            the new show previous
      */
@@ -295,7 +299,7 @@ public class PageIterator {
 
     /**
      * Gets the show next.
-     * 
+     *
      * @return the show next
      */
     public boolean getShowNext() {
@@ -304,7 +308,7 @@ public class PageIterator {
 
     /**
      * Sets the show next.
-     * 
+     *
      * @param showNext
      *            the new show next
      */
@@ -314,7 +318,7 @@ public class PageIterator {
 
     /**
      * Gets the show last.
-     * 
+     *
      * @return the show last
      */
     public boolean getShowLast() {
@@ -323,7 +327,7 @@ public class PageIterator {
 
     /**
      * Sets the show last.
-     * 
+     *
      * @param showLast
      *            the new show last
      */
@@ -333,7 +337,7 @@ public class PageIterator {
 
     /**
      * Gets the pages.
-     * 
+     *
      * @return the pages
      */
     public List<PageIteratorPage> getPages() {
@@ -342,7 +346,7 @@ public class PageIterator {
 
     /**
      * Sets the pages.
-     * 
+     *
      * @param pages
      *            the new pages
      */
@@ -352,7 +356,7 @@ public class PageIterator {
 
     /**
      * Gets the previous.
-     * 
+     *
      * @return the previous
      */
     public int getPrevious() {
@@ -361,7 +365,7 @@ public class PageIterator {
 
     /**
      * Gets the next.
-     * 
+     *
      * @return the next
      */
     public int getNext() {

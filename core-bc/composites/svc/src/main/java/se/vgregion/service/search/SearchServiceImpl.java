@@ -57,6 +57,8 @@ public class SearchServiceImpl implements SearchService{
                 break;
             case 3: ideaSolrQuery.addSortField(IdeaField.PUBLIC_LIKES_COUNT, SolrQuery.ORDER.desc);
                 break;
+            case 4: ideaSolrQuery.addSortField(IdeaField.PRIVATE_LIKES_COUNT, SolrQuery.ORDER.desc);
+                break;
         }
 
         QueryResponse queryResponse = ideaSolrQuery.query();
@@ -74,7 +76,7 @@ public class SearchServiceImpl implements SearchService{
             case 0: //No filter needed.
                 break;
             case 2: ideaSolrQuery.filterIdeasOnTwoPhases(0,2); //Idé
-               break;
+                break;
             case 3: ideaSolrQuery.filterIdeasOnTwoPhases(3,4); //Mognad
                 break;
             case 5:  ideaSolrQuery.filterIdeasOnTwoPhases(5,6); //Färdig
@@ -91,6 +93,8 @@ public class SearchServiceImpl implements SearchService{
             case 2: ideaSolrQuery.addSortField(IdeaField.PUBLIC_LAST_COMMENT_DATE, SolrQuery.ORDER.desc);
                 break;
             case 3: ideaSolrQuery.addSortField(IdeaField.PUBLIC_LIKES_COUNT, SolrQuery.ORDER.desc);
+                break;
+            case 4: ideaSolrQuery.addSortField(IdeaField.PRIVATE_COMMENT_COUNT, SolrQuery.ORDER.desc);
                 break;
         }
 
@@ -164,7 +168,7 @@ public class SearchServiceImpl implements SearchService{
             ideaContent.setType(IdeaContentType.IDEA_CONTENT_TYPE_PUBLIC);
             idea.getIdeaContents().add(ideaContent);
 
-           // idea.setIdeaContentPublic();
+            // idea.setIdeaContentPublic();
             ideaList.add(idea);
         }
 
