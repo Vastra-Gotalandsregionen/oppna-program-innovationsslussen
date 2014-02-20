@@ -12,12 +12,12 @@ import com.liferay.portal.kernel.search.Field;
 
 public class IdeaField extends Field {
 
-	//Date
+    //Date
     public static final String CREATED = "created";
-	public static final String LAST_UPDATED = "lastUpdated";
+    public static final String LAST_UPDATED = "lastUpdated";
 
     //Count
-	public static final String FAVOURITES_COUNT = "favouritesCount";
+    public static final String FAVOURITES_COUNT = "favouritesCount";
 
     //Basic
     public static final String IDEA_ID = "ideaId‘";
@@ -36,7 +36,7 @@ public class IdeaField extends Field {
     public static final String PUBLIC_IDEA_TESTED = "publicIdeaTested";
     public static final String PUBLIC_STATE = "publicState";
     public static final String PUBLIC_LAST_COMMENT_DATE = "publicLastCommentDate";
-	public static final String PUBLIC_LIKES_COUNT = "publicLikesCount";
+    public static final String PUBLIC_LIKES_COUNT = "publicLikesCount";
 
     public static final String PRIVATE_INTRO = "privateIntro";
     public static final String PRIVATE_DESCRIPTION = "privateDescription";
@@ -45,8 +45,8 @@ public class IdeaField extends Field {
     public static final String PRIVATE_IDEA_TESTED = "privateIdeaTested";
     public static final String PRIVATE_STATE = "privateState";
     public static final String PRIVATE_LAST_COMMENT_DATE = "privateLastCommentDate";
-	public static final String PRIVATE_LIKES_COUNT = "privateLikesCount";
-	public static final String PRIVATE_IDEA_TRANSPORTER = "privateIdeaTransporter";
+    public static final String PRIVATE_LIKES_COUNT = "privateLikesCount";
+    public static final String PRIVATE_IDEA_TRANSPORTER = "privateIdeaTransporter";
 
     //Idea person
     public static final String VGRID = "vgrId";

@@ -121,7 +121,7 @@ public class IdeaListViewController extends BaseController {
 
             long ideaPlid = ideaLayout.getPlid();
 
-			List<Idea> ideasFromService = new ArrayList<Idea>();
+            List<Idea> ideasFromService = new ArrayList<Idea>();
             List<Idea> ideaList = new ArrayList<Idea>();
 
             int currentPage = ParamUtil.getInteger(request, "pageNumber",
@@ -147,8 +147,8 @@ public class IdeaListViewController extends BaseController {
             } else if (ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_USER_IDEAS)) {
 
                 if (isSignedIn) {
-					ideasFromService = ideaService.findIdeasByGroupIdAndUserId(
-							companyId,
+                    ideasFromService = ideaService.findIdeasByGroupIdAndUserId(
+                            companyId,
                             scopeGroupId, userId, start, entryCount);
 
                     totalCount = ideaService.findIdeasCountByGroupIdAndUserId(companyId, scopeGroupId, userId);
@@ -158,8 +158,8 @@ public class IdeaListViewController extends BaseController {
             } else if (ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_USER_FAVORITED_IDEAS)) {
 
                 if (isSignedIn) {
-					ideasFromService = ideaService.findUserFavoritedIdeas(
-							companyId, scopeGroupId, userId, start, entryCount);
+                    ideasFromService = ideaService.findUserFavoritedIdeas(
+                            companyId, scopeGroupId, userId, start, entryCount);
 
                     totalCount = ideaService.findUserFavoritedIdeasCount(companyId, scopeGroupId, userId);
                 }
@@ -168,8 +168,8 @@ public class IdeaListViewController extends BaseController {
             } else if (ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_CLOSED_IDEAS)) {
 
                 if (isSignedIn) {
-					ideasFromService = ideaService.findIdeasByGroupId(
-							companyId, scopeGroupId,
+                    ideasFromService = ideaService.findIdeasByGroupId(
+                            companyId, scopeGroupId,
                             IdeaStatus.PRIVATE_IDEA, start, entryCount);
 
                     totalCount = ideaService.findIdeaCountByGroupId(companyId, scopeGroupId, IdeaStatus.PRIVATE_IDEA);
@@ -177,6 +177,12 @@ public class IdeaListViewController extends BaseController {
 
                 returnView = "view_closed_ideas";
             } else if (ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_IDEAS_FOR_IDEATRANSPORTER)) {
+
+                if (ideaSort == 1) {
+                    // If the user tries to sort on comment count then this should happen - the field should be set to
+                    // sort on the PRIVATE field instead of the public one.
+                    ideaSort = 4;
+                }
 
                 Map<String,Object> map = searchService.getIdeasForIdeaTransporters(companyId, scopeGroupId, start, entryCount,
                         ideaSort, ideaPhase, transporter);
@@ -194,7 +200,7 @@ public class IdeaListViewController extends BaseController {
 
             }
 
-			for (Idea idea : ideasFromService) {
+            for (Idea idea : ideasFromService) {
 				/*int commentsCount = 0;
 
 				if (idea.isPublic()) {
@@ -205,8 +211,8 @@ public class IdeaListViewController extends BaseController {
 
 				idea.setCommentsCount(commentsCount);*/
 
-				ideaList.add(idea);
-			}
+                ideaList.add(idea);
+            }
 
             PageIterator pageIterator = new PageIterator(totalCount, currentPage, entryCount, maxPages);
             pageIterator.setShowFirst(false);
