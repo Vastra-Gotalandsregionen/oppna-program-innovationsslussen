@@ -22,6 +22,8 @@ package se.vgregion.portal.innovationsslussen.idea.controller;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Layout;
@@ -412,6 +414,9 @@ public class IdeaViewController extends BaseController {
 
                 MBMessageLocalServiceUtil.deleteDiscussionMessage(commentId);
 
+                Indexer indexer = IndexerRegistryUtil.getIndexer(IDEA_CLASS);
+                indexer.reindex(idea);
+
             } catch (PortalException e) {
                 LOGGER.error(e.getMessage(), e);
             } catch (SystemException e) {
@@ -676,6 +681,8 @@ public class IdeaViewController extends BaseController {
             Util.closeClosables(bos, pos, bis, is);
         }
     }
+
+    private static String IDEA_CLASS = "se.vgregion.portal.innovationsslussen.domain.jpa.Idea";
 
 }
 
