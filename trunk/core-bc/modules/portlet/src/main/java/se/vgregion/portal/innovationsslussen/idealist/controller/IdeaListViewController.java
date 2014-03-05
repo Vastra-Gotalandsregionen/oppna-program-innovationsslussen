@@ -128,7 +128,9 @@ public class IdeaListViewController extends BaseController {
                     PageIteratorConstants.PAGINATOR_START_DEFAULT);
 
             int ideaPhase = ParamUtil.getInteger(request, "ideaPhase", 0);
+            int ideaVisible = ParamUtil.getInteger(request, "ideaVisible", 0);
             int ideaSort = ParamUtil.getInteger(request, "ideaSort", 0);
+
             String transporter = ParamUtil.getString(request, "transporter", "0");
 
             int maxPages = PageIteratorConstants.MAX_PAGES_DEFAULT;
@@ -178,23 +180,14 @@ public class IdeaListViewController extends BaseController {
                 returnView = "view_closed_ideas";
             } else if (ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_IDEAS_FOR_IDEATRANSPORTER)) {
 
-                if (ideaSort == 1) {
-                    // If the user tries to sort on comment count then this should happen - the field should be set to
-                    // sort on the PRIVATE field instead of the public one.
-                    ideaSort = 4;
-                }
-
                 Map<String,Object> map = searchService.getIdeasForIdeaTransporters(companyId, scopeGroupId, start, entryCount,
-                        ideaSort, ideaPhase, transporter);
+                        ideaSort, ideaPhase, ideaVisible, transporter);
 
                 ideasFromService = (List<Idea>) map.get("ideas");
                 totalCount = (Long) map.get("totalIdeasCount");
 
-                List<FacetField>  ideaTranspoterFacets = (List<FacetField>) map.get("ideaTranspoterFacets");
-
-                if (ideaTranspoterFacets != null && ideaTranspoterFacets.size() > 0){
-                    model.addAttribute("ideaTranspoterFacets",ideaTranspoterFacets.get(0).getValues());
-                }
+               // Collect all Idea transporters
+                setIdeaTransporters(model, scopeGroupId, companyId, entryCount, start);
 
                 returnView = "view_transporter_ideas";
 
@@ -224,6 +217,7 @@ public class IdeaListViewController extends BaseController {
             model.addAttribute("ideaListType", ideaListType);
             model.addAttribute("ideaPhase", ideaPhase);
             model.addAttribute("ideaSort", ideaSort);
+            model.addAttribute("ideaVisible", ideaVisible);
             model.addAttribute("transporter", transporter);
             model.addAttribute("isSignedIn", isSignedIn);
             model.addAttribute("pageIterator", pageIterator);
@@ -237,14 +231,30 @@ public class IdeaListViewController extends BaseController {
         return returnView;
     }
 
+    private void setIdeaTransporters(ModelMap model, long scopeGroupId, long companyId, int entryCount, int start) {
+        Map<String,Object> map2 = searchService.getIdeasForIdeaTransporters(companyId, scopeGroupId, start, entryCount,
+                0, 0, 0, "0");
+
+        List<FacetField> ideaTranspoterFacets = (List<FacetField>) map2.get("ideaTranspoterFacets");
+
+        if (ideaTranspoterFacets != null && ideaTranspoterFacets.size() > 0){
+            model.addAttribute("ideaTranspoterFacets",ideaTranspoterFacets.get(0).getValues());
+        }
+    }
+
     @ActionMapping()
     public void search(ActionRequest actionRequest, ActionResponse actionResponse,
                        @RequestParam(value = "ideaPhase") String  ideaPhase,
                        @RequestParam(value = "ideaSort") String ideaSort,
+                       @RequestParam(value = "ideaVisible", required = false) String ideaVisible,
                        @RequestParam(value = "transporter", required = false) String transporter){
 
         actionResponse.setRenderParameter("ideaPhase", ideaPhase);
         actionResponse.setRenderParameter("ideaSort", ideaSort);
+
+        if (ideaVisible != null){
+            actionResponse.setRenderParameter("ideaVisible", ideaVisible);
+        }
         if (transporter != null){
             actionResponse.setRenderParameter("transporter", transporter);
         }

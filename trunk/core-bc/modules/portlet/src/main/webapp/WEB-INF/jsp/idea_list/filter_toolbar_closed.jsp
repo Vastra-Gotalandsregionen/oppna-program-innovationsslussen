@@ -16,51 +16,62 @@
 <div class="idea-filters-wrap">
 	<aui:form action="${requestSearchURL}" name="filterForm" method="post" cssClass="idea-filters">
 	   <div class="idea-filters-toolbar clearfix">
-	       <div class="filter-item clearfix">
-	           <span class="filter-item-label">
-	               Visa:
-               </span>
 
-	           <span class="filter-item-element">
-	                <select id="<portlet:namespace />ideaPhase" name="<portlet:namespace />ideaPhase" class="select-to-dropdown">
-	                   <option value="0" ${ideaPhase == '0' ? 'selected="selected"' : ''}>Alla id&eacute;er</option>
-	                   <option value="10" ${ideaPhase == '10' ? 'selected="selected"' : ''}>St&auml;ngda id&eacute;er</option>
-	                   <option value="2" ${ideaPhase == '2' ? 'selected="selected"' : ''}>Id&eacute;</option>
-	                   <option value="3" ${ideaPhase == '3' ? 'selected="selected"' : ''}>Mognad</option>
-	                   <option value="5" ${ideaPhase == '5' ? 'selected="selected"' : ''}>Genomf&ouml;rd</option>
-	                </select>
-               </span>
-	       </div>
-           <div class="filter-item filter-item-last">
+           <div class="filter-item clearfix">
                <span class="filter-item-label">
-                    Ordna efter:
+                   Visa:
                </span>
                <span class="filter-item-element">
-                    <select id="<portlet:namespace />ideaSort" name="<portlet:namespace />ideaSort" class="select-to-dropdown">
-                       <option value="0" ${ideaSort == '0' ? 'selected="selected"' : ''}>Senast skapade</option>
-                       <option value="1" ${ideaSort == '1' ? 'selected="selected"' : ''}>Mest kommenterade</option>
-                       <option value="2" ${ideaSort == '2' ? 'selected="selected"' : ''}>Senast kommenterade</option>
-                       <option value="3" ${ideaSort == '3' ? 'selected="selected"' : ''}>Mest gillade</option>
-
+                    <select id="<portlet:namespace />ideaPhase" name="<portlet:namespace />ideaPhase" class="select-to-dropdown">
+                       <option value="1" ${ideaPhase == '1' ? 'selected="selected"' : ''}>Id&eacute;</option>
+                       <option value="2" ${ideaPhase == '2' ? 'selected="selected"' : ''}>Mognad</option>
+                       <option value="3" ${ideaPhase == '3' ? 'selected="selected"' : ''}>Genomf&ouml;rd</option>
+                       <option value="0" ${ideaPhase == '0' ? 'selected="selected"' : ''}>Id&eacute;er i alla faser</option>
                     </select>
                </span>
            </div>
 
-          <div class="filter-item filter-item-last">
-              <span class="filter-item-label">
+           <div class="filter-item filter-item">
+               <span class="filter-item-label">
+                   Visa:
+               </span>
+               <span class="filter-item-element">
+                    <select id="<portlet:namespace />ideaVisible" name="<portlet:namespace />ideaVisible" class="select-to-dropdown">
+                       <option value="1" ${ideaVisible == '1' ? 'selected="selected"' : ''}>St&auml;ngda id&eacute;er</option>
+                       <option value="2" ${ideaVisible == '2' ? 'selected="selected"' : ''}>&Ouml;ppna id&eacute;er</option>
+                       <option value="0" ${ideaVisible == '0' ? 'selected="selected"' : ''}>St&auml;ngda och &ouml;ppna id&eacute;er</option>
+                    </select>
+               </span>
+           </div>
+
+           <div class="filter-item filter-item">
+               <span class="filter-item-label">
                    Id&eacute;transport&ouml;r:
-              </span>
-              <span class="filter-item-element">
+               </span>
+               <span class="filter-item-element">
                    <select id="<portlet:namespace />transporter" name="<portlet:namespace />transporter" class="select-to-dropdown">
                       <option value="0" ${transporter == '0' ? 'selected="selected"' : ''}>Alla id&eacute;transport&ouml;rer </option>
                        <c:forEach var="facet" items="${ideaTranspoterFacets}">
                            <option value="${facet}" ${transporter == facet ? 'selected="selected"' : ''}>${facet}</option>
                        </c:forEach>
                    </select>
+               </span>
+           </div>
+
+          <div class="filter-item filter-item-last">
+              <span class="filter-item-label">
+                   Ordna efter:
+              </span>
+              <span class="filter-item-element">
+                   <select id="<portlet:namespace />ideaSort" name="<portlet:namespace />ideaSort" class="select-to-dropdown">
+                      <option value="0" ${ideaSort == '0' ? 'selected="selected"' : ''}>Senast skapade</option>
+                      <option value="1" ${ideaSort == '1' ? 'selected="selected"' : ''}>Mest kommenterade</option>
+                      <option value="2" ${ideaSort == '2' ? 'selected="selected"' : ''}>Senast kommenterade</option>
+                   </select>
               </span>
           </div>
 
-           <input type="submit" class="grey" value="<liferay-ui:message key="search" />" />
+          <input type="submit" class="grey" value="<liferay-ui:message key="search" />" />
 
 	    </div>
 	</aui:form>

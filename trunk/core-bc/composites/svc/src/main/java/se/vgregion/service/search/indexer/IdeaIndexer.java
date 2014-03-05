@@ -3,33 +3,26 @@ package se.vgregion.service.search.indexer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.search.BaseIndexer;
+import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.DocumentImpl;
+import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
+import com.liferay.portal.kernel.search.Summary;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
-import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.UserLocalServiceUtil;
-import com.liferay.portlet.messageboards.model.MBMessage;
-import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-
-
-import com.liferay.portal.kernel.search.Document;
-import com.liferay.portal.kernel.search.SearchContext;
-import com.liferay.portal.kernel.search.Summary;
 import javax.portlet.PortletURL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
-import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.portal.innovationsslussen.domain.vo.CommentItemVO;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
 import se.vgregion.service.search.indexer.util.IdeaField;
@@ -109,9 +102,9 @@ public class IdeaIndexer extends BaseIndexer {
         document.addText(IdeaField.PRIVATE_IDEA_TRANSPORTER, idea.getIdeaContentPrivate().getIdeTansportor());
 
         //Count
-        document.addKeyword(IdeaField.PUBLIC_LIKES_COUNT, idea.getLikes().size());
-        document.addKeyword(IdeaField.FAVOURITES_COUNT, idea.getFavorites().size());
-        document.addKeyword(IdeaField.PUBLIC_COMMENT_COUNT, idea.getCommentsCount());
+        document.addNumber(IdeaField.PUBLIC_LIKES_COUNT, idea.getLikes().size());
+        document.addNumber(IdeaField.FAVOURITES_COUNT, idea.getFavorites().size());
+        document.addNumber(IdeaField.PUBLIC_COMMENT_COUNT, idea.getCommentsCount());
 
         //Date
         document.addDate(IdeaField.CREATE_DATE, idea.getCreated());
@@ -128,7 +121,20 @@ public class IdeaIndexer extends BaseIndexer {
 
     private Document indexPrivateComments(Idea idea, Document document) throws SystemException {
         List<CommentItemVO> commentsList = ideaService.getPrivateComments(idea);
+
         document.addKeyword(IdeaField.PRIVATE_COMMENT_COUNT, commentsList.size());
+
+        if (commentsList.size() > 0){
+            Date lastCommentDate = commentsList.get(0).getCreateDate();
+            for (int i = 1; i < commentsList.size(); i++) {
+                if (lastCommentDate.before(commentsList.get(i).getCreateDate())){
+                    lastCommentDate = commentsList.get(i).getCreateDate();
+                }
+            }
+            document.addDate(IdeaField.PRIVATE_LAST_COMMENT_DATE, lastCommentDate);
+        }
+
+
         return document;
     }
 
@@ -142,6 +148,7 @@ public class IdeaIndexer extends BaseIndexer {
 
             int messagesCount = commentsList.size();
 
+            // If idea has no comment then return.
             if (messagesCount < 1) {
                 return document;
             }
@@ -154,7 +161,7 @@ public class IdeaIndexer extends BaseIndexer {
             String[] commentIds = new String[messagesCount - 1];
             String[] commentTexts = new String[messagesCount - 1];
 
-            Date lastCommentDate = new Date(0);
+            Date lastCommentDate = commentsList.get(0).getCreateDate();
 
             int i = 0;
 

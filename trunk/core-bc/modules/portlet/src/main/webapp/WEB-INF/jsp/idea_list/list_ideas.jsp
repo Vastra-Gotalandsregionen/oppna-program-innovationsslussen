@@ -21,43 +21,42 @@
 
 <c:if test="${not empty ideaList}">
 
-	<ul class="idea-list">
-		<c:forEach items="${ideaList}" var="idea" varStatus="index">
+    <c:choose>
+        <c:when test="${openView}">
+            <c:set var="ideaListClass" scope="page" value="idea-list idea-list-open" />
+        </c:when>
+        <c:otherwise>
+            <c:set var="ideaListClass" scope="page" value="idea-list idea-list-closed" />
+        </c:otherwise>
+    </c:choose>
+
+    <ul class="${ideaListClass}">
+        <c:forEach items="${ideaList}" var="idea" varStatus="index">
 
 			<liferay-portlet:renderURL var="ideaUrl" plid="${ideaPlid}" portletName="${ideaPortletName}">
 				<liferay-portlet:param name="showView" value="showIdea" />
 				<c:if test="${not idea.public}">
 				    <liferay-portlet:param name="type" value="private" />
 				</c:if>
+                <c:if test="${not openView}">
+                    <liferay-portlet:param name="type" value="private" />
+                </c:if>
 				<liferay-portlet:param name="urlTitle" value="${idea.urlTitle}" />
 			</liferay-portlet:renderURL>
 
 			<c:set var="ideaItemCssClass" scope="page" value="" />
 			<c:set var="ideaPhaseLabel" scope="page" value="Id&eacute;" />
 
-			<c:choose>
-				<c:when test="${idea.public}">
-					<c:choose>
-						<c:when test="${idea.phase eq '3' or idea.phase eq '4'}">
-							<c:set var="ideaItemCssClass" scope="page" value="active-innovationsslussen" />
-							<c:set var="ideaPhaseLabel" scope="page" value="Mognad" />
-						</c:when>
-						<c:when test="${idea.phase eq '5' or idea.phase eq '6'}">
-							<c:set var="ideaItemCssClass" scope="page" value="done" />
-							<c:set var="ideaPhaseLabel" scope="page" value="F&auml;rdig" />
-						</c:when>
-					</c:choose>
-				</c:when>
-				<c:otherwise>
-					<c:set var="ideaItemCssClass" scope="page" value="private" />
-					<c:set var="ideaPhaseLabel" scope="page" value="St&auml;ngd" />
-				</c:otherwise>
-			</c:choose>
-
-
-			<c:if test="${not idea.public}">
-				<c:set var="ideaItemCssClass" scope="page" value="private" />
-			</c:if>
+            <c:choose>
+                <c:when test="${idea.phase eq '3' or idea.phase eq '4'}">
+                    <c:set var="ideaItemCssClass" scope="page" value="active-innovationsslussen" />
+                    <c:set var="ideaPhaseLabel" scope="page" value="Mognad" />
+                </c:when>
+                <c:when test="${idea.phase eq '5' or idea.phase eq '6'}">
+                    <c:set var="ideaItemCssClass" scope="page" value="done" />
+                    <c:set var="ideaPhaseLabel" scope="page" value="F&auml;rdig" />
+                </c:when>
+            </c:choose>
 
 			<li class="${ideaItemCssClass}">
 				<div class="idea-item">
@@ -67,17 +66,31 @@
 								<div class="idea-content-inner">
 									<h3>${idea.title}</h3>
 								</div>
-								<ul class="idea-stats clearfix">
-                                    <c:if test="${idea.public}">
+
+                                <c:if test="${not openView}">
+                                   <ul class="idea-stats idea-stats-state clearfix">
+                                        <c:choose>
+                                            <c:when test="${idea.public}">
+                                                <li class="first open"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <li class="first closed"/>
+                                            </c:otherwise>
+                                        </c:choose>
+							    	</ul>
+                                </c:if>
+
+                                <ul class="idea-stats clearfix">
+                                    <c:if test="${openView}">
                                         <li class="likes">
                                             ${fn:length(idea.likes)}
                                         </li>
                                     </c:if>
-
 									<li class="comments">
 										${idea.commentsCount}
 									</li>
 								</ul>
+
 							</div>
 							<div class="idea-content-2">
 								<div class="idea-content-inner">

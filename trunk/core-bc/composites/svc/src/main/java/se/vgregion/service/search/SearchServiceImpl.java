@@ -11,6 +11,7 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import se.vgregion.portal.innovationsslussen.domain.IdeaContentType;
 import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
@@ -25,6 +26,7 @@ import se.vgregion.service.search.indexer.util.IdeaField;
  * Time: 10:50
  * To change this template use File | Settings | File Templates.
  */
+@Service
 public class SearchServiceImpl implements SearchService{
 
     @Autowired
@@ -57,44 +59,45 @@ public class SearchServiceImpl implements SearchService{
                 break;
             case 3: ideaSolrQuery.addSortField(IdeaField.PUBLIC_LIKES_COUNT, SolrQuery.ORDER.desc);
                 break;
-            case 4: ideaSolrQuery.addSortField(IdeaField.PRIVATE_LIKES_COUNT, SolrQuery.ORDER.desc);
-                break;
         }
 
         QueryResponse queryResponse = ideaSolrQuery.query();
-        Map<String,Object> returnMap = parseSolrResponse(queryResponse);
+        Map<String,Object> returnMap = parseSolrResponse(queryResponse, true);
         return returnMap;
 
     }
 
 
-    public Map<String, Object> getIdeasForIdeaTransporters(long companyId, long groupId, int start, int rows, int sort, int phase, String transporter){
+    public Map<String, Object> getIdeasForIdeaTransporters(long companyId, long groupId, int start, int rows, int sort, int phase, int visible, String transporter){
 
         ideaSolrQuery.findAllIdeasQuery(companyId, groupId, start, rows);
 
         switch (phase) {
             case 0: //No filter needed.
                 break;
-            case 2: ideaSolrQuery.filterIdeasOnTwoPhases(0,2); //Idé
+            case 1: ideaSolrQuery.filterIdeasOnTwoPhases(0,2); //Idé
                 break;
-            case 3: ideaSolrQuery.filterIdeasOnTwoPhases(3,4); //Mognad
+            case 2: ideaSolrQuery.filterIdeasOnTwoPhases(3,4); //Mognad
                 break;
-            case 5:  ideaSolrQuery.filterIdeasOnTwoPhases(5,6); //Färdig
+            case 3:  ideaSolrQuery.filterIdeasOnTwoPhases(5,6); //Färdig
                 break;
-            case 10:  ideaSolrQuery.filterIdeasOnClosed(); //Stängd
+        }
+
+        switch (visible) {
+            case 0: //No filter needed.
+                break;
+            case 1: ideaSolrQuery.filterIdeasOnClosed(); //Öppna idéer
+                break;
+            case 2: ideaSolrQuery.filterIdeasOnOpen(); //Stängda idéer
                 break;
         }
 
         switch (sort) {
             case 0: ideaSolrQuery.addSortField(IdeaField.CREATE_DATE, SolrQuery.ORDER.desc);
                 break;
-            case 1: ideaSolrQuery.addSortField(IdeaField.PUBLIC_COMMENT_COUNT, SolrQuery.ORDER.desc);
+            case 1: ideaSolrQuery.addSortField(IdeaField.PRIVATE_COMMENT_COUNT, SolrQuery.ORDER.desc);
                 break;
-            case 2: ideaSolrQuery.addSortField(IdeaField.PUBLIC_LAST_COMMENT_DATE, SolrQuery.ORDER.desc);
-                break;
-            case 3: ideaSolrQuery.addSortField(IdeaField.PUBLIC_LIKES_COUNT, SolrQuery.ORDER.desc);
-                break;
-            case 4: ideaSolrQuery.addSortField(IdeaField.PRIVATE_COMMENT_COUNT, SolrQuery.ORDER.desc);
+            case 2: ideaSolrQuery.addSortField(IdeaField.PRIVATE_LAST_COMMENT_DATE, SolrQuery.ORDER.desc);
                 break;
         }
 
@@ -105,14 +108,14 @@ public class SearchServiceImpl implements SearchService{
         }
 
         QueryResponse queryResponse = ideaSolrQuery.query();
-        Map<String,Object> returnMap = parseSolrResponse(queryResponse);
+        Map<String,Object> returnMap = parseSolrResponse(queryResponse, false);
 
         return returnMap;
 
     }
 
 
-    private Map<String,Object> parseSolrResponse(QueryResponse queryResponse) {
+    private Map<String,Object> parseSolrResponse(QueryResponse queryResponse, boolean getForPublicView) {
 
         Map<String,Object> returnMap = new HashMap<String, Object>();
         List<Idea> ideaList = new ArrayList<Idea>();
@@ -132,20 +135,18 @@ public class SearchServiceImpl implements SearchService{
             String status = (String) entries.getFieldValue(IdeaField.STATUS);
 
             IdeaStatus ideaStatus;
-            String commentCountStr;
 
             if (status.equals("PUBLIC_IDEA")) {
                 ideaStatus = IdeaStatus.PUBLIC_IDEA;
-                commentCountStr = (String) entries.getFieldValue(IdeaField.PUBLIC_COMMENT_COUNT);
             } else {
                 ideaStatus = IdeaStatus.PRIVATE_IDEA;
-                commentCountStr = (String) entries.getFieldValue(IdeaField.PRIVATE_COMMENT_COUNT);
             }
 
-            if (commentCountStr != null && !commentCountStr.isEmpty()){
-                idea.setCommentsCount(Integer.parseInt(commentCountStr));
+            //Comment count.
+            if (getForPublicView){
+                idea.setCommentsCount((Integer) entries.getFieldValue(IdeaField.PUBLIC_COMMENT_COUNT));
             } else {
-                idea.setCommentsCount(0);
+                idea.setCommentsCount((Integer) entries.getFieldValue(IdeaField.PRIVATE_COMMENT_COUNT));
             }
 
             idea.setStatus(ideaStatus);
@@ -155,15 +156,11 @@ public class SearchServiceImpl implements SearchService{
 
             Set<IdeaUserLike> likes = idea.getLikes();
 
-            String likeCountStr = (String) entries.getFieldValue(IdeaField.PUBLIC_LIKES_COUNT);
-            int likeCount = Integer.parseInt(likeCountStr);
+            int likeCount = (Integer) entries.getFieldValue(IdeaField.PUBLIC_LIKES_COUNT);
 
             for (int i = 0; i < likeCount; i++) {
                 likes.add(new IdeaUserLike());
             }
-
-
-
 
             ideaContent.setType(IdeaContentType.IDEA_CONTENT_TYPE_PUBLIC);
             idea.getIdeaContents().add(ideaContent);
@@ -171,7 +168,6 @@ public class SearchServiceImpl implements SearchService{
             // idea.setIdeaContentPublic();
             ideaList.add(idea);
         }
-
 
         List<FacetField> limitingFacets = queryResponse.getLimitingFacets();
         if (limitingFacets != null && limitingFacets.isEmpty()){

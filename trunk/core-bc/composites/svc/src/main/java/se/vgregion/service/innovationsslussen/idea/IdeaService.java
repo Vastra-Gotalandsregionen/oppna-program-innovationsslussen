@@ -396,7 +396,7 @@ public interface IdeaService {
      * @param userId the user id
      * @param urlTitle the url title
      */
-    void removeLike(long companyId, long groupId, long userId, String urlTitle);
+    Idea removeLike(long companyId, long groupId, long userId, String urlTitle);
 
 
     /**

@@ -75,6 +75,19 @@ public class IndexerAspect {
         }
     }
 
+    @AfterReturning( pointcut = "execution(* se.vgregion.service.innovationsslussen.idea.IdeaServiceImpl.removeLike(..))" ,
+            returning= "result")
+    public void indexRemoveLike(JoinPoint joinPoint, Object result){
+
+        try {
+            Idea idea = (Idea) result;
+            Indexer indexer = IndexerRegistryUtil.getIndexer(IDEA_CLASS);
+            indexer.reindex(idea);
+        } catch (SearchException e) {
+            e.printStackTrace();
+        }
+    }
+
     @AfterReturning( pointcut = "execution(* se.vgregion.service.innovationsslussen.idea.IdeaService.addMBMessage(..))" ,
             returning= "result")
     public void indexAddComment(JoinPoint joinPoint, Object result){
