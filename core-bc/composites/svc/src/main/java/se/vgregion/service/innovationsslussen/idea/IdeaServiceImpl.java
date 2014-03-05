@@ -109,6 +109,7 @@ import se.vgregion.service.innovationsslussen.exception.CreateIdeaException;
 import se.vgregion.service.innovationsslussen.exception.FavoriteException;
 import se.vgregion.service.innovationsslussen.exception.FileUploadException;
 import se.vgregion.service.innovationsslussen.exception.RemoveIdeaException;
+import se.vgregion.service.innovationsslussen.exception.UpdateIdeaException;
 import se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsService;
 import se.vgregion.service.innovationsslussen.idea.settings.util.ExpandoConstants;
 import se.vgregion.service.innovationsslussen.repository.idea.IdeaRepository;
@@ -1000,7 +1001,7 @@ public class IdeaServiceImpl implements IdeaService {
      */
     @Override
     //@Transactional
-    public Idea updateFromBarium(String ideaId) {
+    public Idea updateFromBarium(String ideaId) throws UpdateIdeaException {
 
         Idea idea = ideaRepository.find(ideaId);
 
@@ -1020,7 +1021,7 @@ public class IdeaServiceImpl implements IdeaService {
      */
     @Override
     //@Transactional(rollbackFor = BariumException.class)
-    public UpdateFromBariumResult updateFromBarium(Idea idea) {
+    public UpdateFromBariumResult updateFromBarium(Idea idea) throws UpdateIdeaException {
 
         // Do the transaction manually since we may run this in a separate thread.
         TransactionStatus transaction =
@@ -1065,9 +1066,9 @@ public class IdeaServiceImpl implements IdeaService {
                     populateFile(idea, idea.getIdeaContentPublic(), LIFERAY_OPEN_DOCUMENTS);
                 }
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                throw  new UpdateIdeaException();
             } catch (ExecutionException e) {
-                e.printStackTrace();
+                throw  new UpdateIdeaException();
             }
 
             result.setChanged(!isIdeasTheSame(idea, result.getOldIdea()));
@@ -1354,6 +1355,8 @@ public class IdeaServiceImpl implements IdeaService {
                 } catch (RuntimeException e) {
                     LOGGER.error("Failed to update idea: " + idea.toString(), e);
                     logIfNextExceptionExists(e);
+                } catch (UpdateIdeaException e) {
+                    LOGGER.error("Failed to update idea: " + idea.toString(), e);
                 }
             }
 
@@ -1368,7 +1371,11 @@ public class IdeaServiceImpl implements IdeaService {
     @Transactional
     public void updateIdeasFromBarium(List<String> ideas) {
         for (String idea : ideas) {
-            updateFromBarium(idea);
+            try {
+                updateFromBarium(idea);
+            } catch (UpdateIdeaException e) {
+                LOGGER.error("Failed to update idea: " + idea.toString(), e);
+            }
         }
     }
 
