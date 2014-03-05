@@ -1,8 +1,6 @@
 package se.vgregion.service.search;
 
-import java.util.List;
 import java.util.Map;
-import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,6 +13,6 @@ public interface SearchService {
 
     public Map<String, Object> getPublicIdeas(long companyId, long groupId, int start, int rows, int sort, int phase);
 
-    public Map<String, Object> getIdeasForIdeaTransporters(long companyId, long groupId, int start, int rows, int sort, int phase, String transporter);
+    public Map<String, Object> getIdeasForIdeaTransporters(long companyId, long groupId, int start, int rows, int sort, int phase, int visible, String transporter);
 
 }

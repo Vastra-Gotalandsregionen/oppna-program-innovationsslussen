@@ -89,6 +89,12 @@ public class IdeaSolrQuery extends SolrQuery {
         return this;
     }
 
+    public IdeaSolrQuery filterIdeasOnOpen() {
+        String filterEntryClassName = "status:PUBLIC_IDEA";
+        this.addFilterQuery(filterEntryClassName);
+        return this;
+    }
+
     public IdeaSolrQuery filterIdeasOnClosed() {
         String filterEntryClassName = "status:PRIVATE_IDEA";
         this.addFilterQuery(filterEntryClassName);

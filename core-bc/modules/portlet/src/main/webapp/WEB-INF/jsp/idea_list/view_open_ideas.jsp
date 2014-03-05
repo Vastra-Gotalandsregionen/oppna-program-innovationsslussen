@@ -23,6 +23,7 @@
     
 	<c:choose>
 		<c:when test="${not empty ideaList}">
+            <c:set var="openView" scope="request" value="true" />
 			<%@ include file="list_ideas.jsp" %>
 		</c:when>
 		<c:otherwise>
