@@ -128,7 +128,7 @@ public class IdeaListViewController extends BaseController {
                     PageIteratorConstants.PAGINATOR_START_DEFAULT);
 
             int ideaPhase = ParamUtil.getInteger(request, "ideaPhase", 0);
-            int ideaVisible = ParamUtil.getInteger(request, "ideaVisible", 0);
+            int ideaVisible = ParamUtil.getInteger(request, "ideaVisible", 1);
             int ideaSort = ParamUtil.getInteger(request, "ideaSort", 0);
 
             String transporter = ParamUtil.getString(request, "transporter", "0");
