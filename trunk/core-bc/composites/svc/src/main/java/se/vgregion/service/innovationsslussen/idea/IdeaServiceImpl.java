@@ -1058,13 +1058,14 @@ public class IdeaServiceImpl implements IdeaService {
 
                 populateIdea(ideaObjectFieldsFuture.get(), idea);
 
+                //Sync files
                 if (idea.getIdeaContentPrivate() != null) {
                     populateFile(idea, idea.getIdeaContentPrivate(), LIFERAY_CLOSED_DOCUMENTS);
                 }
-
                 if (idea.getIdeaContentPublic() != null) {
                     populateFile(idea, idea.getIdeaContentPublic(), LIFERAY_OPEN_DOCUMENTS);
                 }
+
             } catch (InterruptedException e) {
                 throw  new UpdateIdeaException();
             } catch (ExecutionException e) {
