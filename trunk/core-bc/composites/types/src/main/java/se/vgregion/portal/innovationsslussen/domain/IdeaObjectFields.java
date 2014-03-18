@@ -94,7 +94,7 @@ public class IdeaObjectFields {
         SPECIAL_FIELD_MAPPINGS.put("VGR-ID.mobiletelephonenumber", "mobiletelephonenumber");
         SPECIAL_FIELD_MAPPINGS.put("VGR-ID.titel", "vgrIdTitel");
         SPECIAL_FIELD_MAPPINGS.put("VGR-ID", "vgrId");
-        SPECIAL_FIELD_MAPPINGS.put("Field3", "Idetransportor");
+        SPECIAL_FIELD_MAPPINGS.put("Idetransportorer", "Idetransportor");
 
         for (String key : SPECIAL_FIELD_MAPPINGS.keySet()) {
             String value = SPECIAL_FIELD_MAPPINGS.get(key);
