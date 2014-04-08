@@ -320,11 +320,11 @@ public class CreateIdeaViewController extends BaseController {
                 response.setRenderParameter("view", "view");
                 e.printStackTrace();
             } catch (SystemException e) {
-                result.addError(new ObjectError("", "Hoppsan nu gick något fel, användaren som du försöler skapa " +
+                result.addError(new ObjectError("", "Hoppsan nu gick något fel, användaren som du försöker skapa " +
                         "idén för finns inte eller går inte att skapa."));
                 e.printStackTrace();
             } catch (PortalException e) {
-                result.addError(new ObjectError("", "Hoppsan nu gick något fel, användaren som du försöler skapa " +
+                result.addError(new ObjectError("", "Hoppsan nu gick något fel, användaren som du försöker skapa " +
                         "idén för finns inte eller går inte att skapa."));
                 e.printStackTrace();
             }
