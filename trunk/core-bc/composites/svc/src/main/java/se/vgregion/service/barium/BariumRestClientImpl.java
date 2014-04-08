@@ -19,16 +19,12 @@
 
 package se.vgregion.service.barium;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
@@ -536,20 +532,20 @@ public class BariumRestClientImpl implements BariumRestClient {
      */
     private String toString(InputStream inputStream) throws BariumException {
         StringBuilder sb = new StringBuilder();
+        ByteArrayOutputStream baos;
         try {
-
             final int byteSize = 1024;
-
+            baos = new ByteArrayOutputStream();
             byte[] buf = new byte[byteSize];
             int n;
             while ((n = inputStream.read(buf)) != -1) {
-                sb.append(new String(buf, 0, n, "UTF-8"));
+                baos.write(buf, 0, n);
             }
+            return baos.toString("UTF-8");
         } catch (IOException e) {
             throw new BariumException("Error parsing response from server when authenticating (" + sb.toString() + ")",
                     e);
         }
-        return sb.toString();
     }
 
     private boolean connectInternal() throws BariumException {
