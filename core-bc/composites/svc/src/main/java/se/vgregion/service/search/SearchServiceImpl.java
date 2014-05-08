@@ -5,11 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.vgregion.portal.innovationsslussen.domain.IdeaContentType;
@@ -27,13 +30,15 @@ import se.vgregion.service.search.indexer.util.IdeaField;
  * To change this template use File | Settings | File Templates.
  */
 @Service
-public class SearchServiceImpl implements SearchService{
+public class SearchServiceImpl implements SearchService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImpl.class);
 
     @Autowired
     private IdeaSolrQuery ideaSolrQuery;
 
 
-    public Map<String, Object> getPublicIdeas(long companyId, long groupId, int start, int rows, int sort, int phase){
+    public Map<String, Object> getPublicIdeas(long companyId, long groupId, int start, int rows, int sort, int phase) {
 
         //Find all public ideas.
         ideaSolrQuery.findAllPublicIdeasQuery(companyId, groupId, start, rows);
@@ -42,62 +47,77 @@ public class SearchServiceImpl implements SearchService{
         switch (phase) {
             case 0: //No filter needed.
                 break;
-            case 2: ideaSolrQuery.filterIdeasOnTwoPhases(0,2);
+            case 2:
+                ideaSolrQuery.filterIdeasOnPhases(0, 1, 2);
                 break;
-            case 3: ideaSolrQuery.filterIdeasOnTwoPhases(3,4);
+            case 3:
+                ideaSolrQuery.filterIdeasOnTwoPhases(3, 4);
                 break;
-            case 5:  ideaSolrQuery.filterIdeasOnTwoPhases(5, 6);
+            case 5:
+                ideaSolrQuery.filterIdeasOnTwoPhases(5, 6);
                 break;
         }
 
         switch (sort) {
-            case 0: ideaSolrQuery.addSortField(IdeaField.CREATE_DATE, SolrQuery.ORDER.desc);
+            case 0:
+                ideaSolrQuery.addSortField(IdeaField.CREATE_DATE, SolrQuery.ORDER.desc);
                 break;
-            case 1: ideaSolrQuery.addSortField(IdeaField.PUBLIC_COMMENT_COUNT, SolrQuery.ORDER.desc);
+            case 1:
+                ideaSolrQuery.addSortField(IdeaField.PUBLIC_COMMENT_COUNT, SolrQuery.ORDER.desc);
                 break;
-            case 2: ideaSolrQuery.addSortField(IdeaField.PUBLIC_LAST_COMMENT_DATE, SolrQuery.ORDER.desc);
+            case 2:
+                ideaSolrQuery.addSortField(IdeaField.PUBLIC_LAST_COMMENT_DATE, SolrQuery.ORDER.desc);
                 break;
-            case 3: ideaSolrQuery.addSortField(IdeaField.PUBLIC_LIKES_COUNT, SolrQuery.ORDER.desc);
+            case 3:
+                ideaSolrQuery.addSortField(IdeaField.PUBLIC_LIKES_COUNT, SolrQuery.ORDER.desc);
                 break;
         }
 
         QueryResponse queryResponse = ideaSolrQuery.query();
-        Map<String,Object> returnMap = parseSolrResponse(queryResponse, true);
+        Map<String, Object> returnMap = parseSolrResponse(queryResponse, true);
         return returnMap;
 
     }
 
 
-    public Map<String, Object> getIdeasForIdeaTransporters(long companyId, long groupId, int start, int rows, int sort, int phase, int visible, String transporter){
+    public Map<String, Object> getIdeasForIdeaTransporters(long companyId, long groupId, int start, int rows, int sort, int phase, int visible, String transporter) {
 
         ideaSolrQuery.findAllIdeasQuery(companyId, groupId, start, rows);
 
         switch (phase) {
             case 0: //No filter needed.
                 break;
-            case 1: ideaSolrQuery.filterIdeasOnTwoPhases(0,2); //Idé
+            case 1:
+                ideaSolrQuery.filterIdeasOnPhases(0, 1, 2); //Idé
                 break;
-            case 2: ideaSolrQuery.filterIdeasOnTwoPhases(3,4); //Mognad
+            case 2:
+                ideaSolrQuery.filterIdeasOnTwoPhases(3, 4); //Mognad
                 break;
-            case 3:  ideaSolrQuery.filterIdeasOnTwoPhases(5,6); //Färdig
+            case 3:
+                ideaSolrQuery.filterIdeasOnTwoPhases(5, 6); //Färdig
                 break;
         }
 
         switch (visible) {
             case 0: //No filter needed.
                 break;
-            case 1: ideaSolrQuery.filterIdeasOnClosed(); //Öppna idéer
+            case 1:
+                ideaSolrQuery.filterIdeasOnClosed(); //Öppna idéer
                 break;
-            case 2: ideaSolrQuery.filterIdeasOnOpen(); //Stängda idéer
+            case 2:
+                ideaSolrQuery.filterIdeasOnOpen(); //Stängda idéer
                 break;
         }
 
         switch (sort) {
-            case 0: ideaSolrQuery.addSortField(IdeaField.CREATE_DATE, SolrQuery.ORDER.desc);
+            case 0:
+                ideaSolrQuery.addSortField(IdeaField.CREATE_DATE, SolrQuery.ORDER.desc);
                 break;
-            case 1: ideaSolrQuery.addSortField(IdeaField.PRIVATE_COMMENT_COUNT, SolrQuery.ORDER.desc);
+            case 1:
+                ideaSolrQuery.addSortField(IdeaField.PRIVATE_COMMENT_COUNT, SolrQuery.ORDER.desc);
                 break;
-            case 2: ideaSolrQuery.addSortField(IdeaField.PRIVATE_LAST_COMMENT_DATE, SolrQuery.ORDER.desc);
+            case 2:
+                ideaSolrQuery.addSortField(IdeaField.PRIVATE_LAST_COMMENT_DATE, SolrQuery.ORDER.desc);
                 break;
         }
 
@@ -108,16 +128,16 @@ public class SearchServiceImpl implements SearchService{
         }
 
         QueryResponse queryResponse = ideaSolrQuery.query();
-        Map<String,Object> returnMap = parseSolrResponse(queryResponse, false);
+        Map<String, Object> returnMap = parseSolrResponse(queryResponse, false);
 
         return returnMap;
 
     }
 
 
-    private Map<String,Object> parseSolrResponse(QueryResponse queryResponse, boolean getForPublicView) {
+    private Map<String, Object> parseSolrResponse(QueryResponse queryResponse, boolean getForPublicView) {
 
-        Map<String,Object> returnMap = new HashMap<String, Object>();
+        Map<String, Object> returnMap = new HashMap<String, Object>();
         List<Idea> ideaList = new ArrayList<Idea>();
 
         SolrDocumentList solrDocumentList = queryResponse.getResults();
@@ -143,7 +163,7 @@ public class SearchServiceImpl implements SearchService{
             }
 
             //Comment count.
-            if (getForPublicView){
+            if (getForPublicView) {
                 idea.setCommentsCount((Integer) entries.getFieldValue(IdeaField.PUBLIC_COMMENT_COUNT));
             } else {
                 idea.setCommentsCount((Integer) entries.getFieldValue(IdeaField.PRIVATE_COMMENT_COUNT));
@@ -170,7 +190,7 @@ public class SearchServiceImpl implements SearchService{
         }
 
         List<FacetField> limitingFacets = queryResponse.getLimitingFacets();
-        if (limitingFacets != null && limitingFacets.isEmpty()){
+        if (limitingFacets != null && limitingFacets.isEmpty()) {
             limitingFacets = queryResponse.getFacetFields();
         }
 

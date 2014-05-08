@@ -128,21 +128,28 @@ public class IdeaSolrQuery extends SolrQuery {
      *
      * @return the actro solr query
      */
-    public IdeaSolrQuery filterIdeasOnThreePhases(int phase1, int phase2, int phase3) {
-        String filterPhase = "phase:" + phase1 + " OR phase:" + phase2 + " OR phase:" + phase3;
-        this.addFilterQuery(filterPhase);
+    public IdeaSolrQuery filterIdeasOnPhases(int... phases) {
+        if (phases == null || phases.length == 0) {
+            throw new IllegalArgumentException("At least one phase must be given.");
+        }
+
+        String phaseOrFilterString = buildPhaseOrString(phases);
+
+        this.addFilterQuery(phaseOrFilterString);
         return this;
     }
 
-    /**
-     * Filters on entryClassName = com.liferay.portlet.journal.model.JournalArticle and phase.
-     *
-     * @return the actro solr query
-     */
-    public IdeaSolrQuery filterIdeasOnFourPhases(int phase1, int phase2, int phase3, int phase4) {
-        String filterPhase = "phase:" + phase1 + " OR phase:" + phase2 + " OR phase:" + phase3 + " OR phase:" + phase4;
-        this.addFilterQuery(filterPhase);
-        return this;
+    static String buildPhaseOrString(int... phases) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < phases.length; i++) {
+            if (i == 0) {
+                sb.append("phase:" + phases[i]);
+            } else {
+                sb.append(" OR phase:" + phases[i]);
+            }
+        }
+
+        return sb.toString();
     }
 
     /**
