@@ -13,7 +13,7 @@ import com.liferay.portal.kernel.search.Field;
 public class IdeaField extends Field {
 
     //Date
-    public static final String CREATED = "created";
+    public static final String CREATE_DATE = "createdDate";
     public static final String LAST_UPDATED = "lastUpdated";
 
     //Count
@@ -70,6 +70,6 @@ public class IdeaField extends Field {
 
 
     public IdeaField(String name, Map<Locale, String> localizedValues) {
-        super(name, localizedValues);
+        super(name, localizedValues.values().toArray(new String[]{}));
     }
 }

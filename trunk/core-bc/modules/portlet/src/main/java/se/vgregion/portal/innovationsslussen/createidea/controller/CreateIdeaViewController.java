@@ -20,6 +20,7 @@
 package se.vgregion.portal.innovationsslussen.createidea.controller;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import javax.portlet.ActionRequest;
@@ -250,6 +251,7 @@ public class CreateIdeaViewController extends BaseController {
         LOGGER.info("submitIdea");
 
         idea = IdeaPortletUtil.getIdeaFromRequest(request);
+        idea.setCreated(new Date());
 
         ideaValidator.validate(idea, result);
 

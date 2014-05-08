@@ -209,11 +209,6 @@ public class IdeaIndexer extends BaseIndexer {
     }
 
     @Override
-    protected Summary doGetSummary(Document document, Locale locale, String snippet, PortletURL portletURL) throws Exception {
-        return null;
-    }
-
-    @Override
     protected void doReindex(Object obj) throws Exception {
         Idea idea = (Idea) obj;
         Document document = getDocument(idea);
@@ -280,4 +275,10 @@ public class IdeaIndexer extends BaseIndexer {
         System.out.println("IdeaIndexer - CLASS_NAMES " + CLASS_NAMES[0]);
         return CLASS_NAMES;
     }
+
+    @Override
+    public Summary getSummary(Document document, String s, PortletURL portletURL) {
+        throw new UnsupportedOperationException();
+    }
+
 }

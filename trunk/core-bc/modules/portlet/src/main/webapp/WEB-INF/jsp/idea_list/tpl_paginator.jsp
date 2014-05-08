@@ -32,6 +32,7 @@
 								<portlet:param name="pageNumber" value="1" />
 								<portlet:param name="ideaPhase" value="${ideaPhase}" />
                                 <portlet:param name="ideaSort" value="${ideaSort}" />
+                                <portlet:param name="ideaVisible" value="${ideaVisible}" />
 							</liferay-portlet:renderURL>
 							<a href="${firstUrl}" title="F&ouml;rsta">F&ouml;rsta</a>
 						</li>
@@ -44,6 +45,7 @@
 								<portlet:param name="pageNumber" value="${pageIterator.previous}" />
 								<portlet:param name="ideaPhase" value="${ideaPhase}" />
                                 <portlet:param name="ideaSort" value="${ideaSort}" />
+                                <portlet:param name="ideaVisible" value="${ideaVisible}" />
 							</liferay-portlet:renderURL>
 							<a href="${previousUrl}" title="F&ouml;reg&aring;ende">F&ouml;reg&aring;ende</a>
 						</li>
@@ -70,6 +72,7 @@
 										<portlet:param name="pageNumber" value="${page.pagenumber}" />
 										<portlet:param name="ideaPhase" value="${ideaPhase}" />
 										<portlet:param name="ideaSort" value="${ideaSort}" />
+										<portlet:param name="ideaVisible" value="${ideaVisible}" />
 									</liferay-portlet:renderURL>
 									<a href="${url}">${page.pagenumber}</a>
 								</c:otherwise>
@@ -87,6 +90,7 @@
 								<portlet:param name="pageNumber" value="${pageIterator.next}" />
 								<portlet:param name="ideaPhase" value="${ideaPhase}" />
                                 <portlet:param name="ideaSort" value="${ideaSort}" />
+                                <portlet:param name="ideaVisible" value="${ideaVisible}" />
 							</liferay-portlet:renderURL>
 							<a href="${nextUrl}" title="N&auml;sta">N&auml;sta</a>
 						</li>
@@ -99,6 +103,7 @@
 								<portlet:param name="pageNumber" value="${pageIterator.last}" />
 								<portlet:param name="ideaPhase" value="${ideaPhase}" />
                                 <portlet:param name="ideaSort" value="${ideaSort}" />
+                                <portlet:param name="ideaVisible" value="${ideaVisible}" />
 							</liferay-portlet:renderURL>
 							<a href="${lastUrl}" title="Sista">Sista</a>
 						</li>
