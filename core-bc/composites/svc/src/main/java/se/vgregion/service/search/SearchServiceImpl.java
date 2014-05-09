@@ -38,10 +38,9 @@ public class SearchServiceImpl implements SearchService {
     private IdeaSolrQuery ideaSolrQuery;
 
 
-    public Map<String, Object> getPublicIdeas(long companyId, long groupId, int start, int rows, int sort, int phase) {
+    public Map<String, Object> getPublicVisibleIdeas(long companyId, long groupId, int start, int rows, int sort, int phase) {
 
-        //Find all public ideas.
-        ideaSolrQuery.findAllPublicIdeasQuery(companyId, groupId, start, rows);
+        ideaSolrQuery.findAllPublicVisibleIdeasQuery(companyId, groupId, start, rows);
 
         // Filter ideas on phase.
         switch (phase) {
@@ -76,13 +75,12 @@ public class SearchServiceImpl implements SearchService {
         QueryResponse queryResponse = ideaSolrQuery.query();
         Map<String, Object> returnMap = parseSolrResponse(queryResponse, true);
         return returnMap;
-
     }
 
 
-    public Map<String, Object> getIdeasForIdeaTransporters(long companyId, long groupId, int start, int rows, int sort, int phase, int visible, String transporter) {
+    public Map<String, Object> getVisibleIdeasForIdeaTransporters(long companyId, long groupId, int start, int rows, int sort, int phase, int visible, String transporter) {
 
-        ideaSolrQuery.findAllIdeasQuery(companyId, groupId, start, rows);
+        ideaSolrQuery.findAllVisibleIdeasQuery(companyId, groupId, start, rows);
 
         switch (phase) {
             case 0: //No filter needed.
@@ -131,7 +129,6 @@ public class SearchServiceImpl implements SearchService {
         Map<String, Object> returnMap = parseSolrResponse(queryResponse, false);
 
         return returnMap;
-
     }
 
 

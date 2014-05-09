@@ -80,12 +80,12 @@ public class IdeaIndexer extends BaseIndexer {
         document.addText(IdeaField.URL_TITLE, idea.getUrlTitle());
         document.addKeyword(IdeaField.PHASE, idea.getPhase());
         document.addKeyword(IdeaField.STATUS, idea.getStatus().toString());
+        document.addKeyword(IdeaField.HIDDEN, idea.getHidden());
 
         //Idea Person
         document.addKeyword(IdeaField.VGRID, idea.getIdeaPerson().getVgrId());
         document.addKeyword(IdeaField.USER_NAME, idea.getIdeaPerson().getName());
         document.addKeyword(IdeaField.EMAIL, idea.getIdeaPerson().getEmail());
-
 
         //Idea Content
         document.addText(IdeaField.PUBLIC_INTRO, idea.getIdeaContentPublic().getIntro());
@@ -113,10 +113,7 @@ public class IdeaIndexer extends BaseIndexer {
         document = indexPublicComments(idea, document);
         document = indexPrivateComments(idea, document);
 
-        List<CommentItemVO> commentsList = null;
-
         return document;
-
     }
 
     private Document indexPrivateComments(Idea idea, Document document) throws SystemException {
@@ -133,7 +130,6 @@ public class IdeaIndexer extends BaseIndexer {
             }
             document.addDate(IdeaField.PRIVATE_LAST_COMMENT_DATE, lastCommentDate);
         }
-
 
         return document;
     }
@@ -188,7 +184,6 @@ public class IdeaIndexer extends BaseIndexer {
                     commentCreateDates[i - 1] = String.valueOf(messageCreateDateStr);
                     commentIds[i - 1] = String.valueOf(messageId);
                     commentTexts[i - 1] = HtmlUtil.extractText(messageBody);
-
                 }
                 i++;
             }
@@ -202,7 +197,6 @@ public class IdeaIndexer extends BaseIndexer {
             document.addKeyword(IdeaField.PUBLIC_COMMENT_CREATE_DATES, commentCreateDates);
             document.addKeyword(IdeaField.PUBLIC_COMMENT_IDS, commentIds);
             document.addKeyword(IdeaField.PUBLIC_COMMENT_TEXTS, commentTexts);
-
         }
 
         return document;
@@ -211,6 +205,7 @@ public class IdeaIndexer extends BaseIndexer {
     @Override
     protected void doReindex(Object obj) throws Exception {
         Idea idea = (Idea) obj;
+        LOGGER.info("Reindexing idea: " + idea.getTitle());
         Document document = getDocument(idea);
         SearchEngineUtil.updateDocument(idea.getCompanyId(), document);
     }

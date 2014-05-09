@@ -175,7 +175,7 @@ public interface IdeaService {
      * @param status   the status of the idea (i.e. whether the idea is public or private)
      * @return an int with the number of Idea
      */
-    int findIdeaCountByGroupId(long companyId, long groupId, IdeaStatus status);
+    int findVisibleIdeaCountByGroupId(long companyId, long groupId, IdeaStatus status);
 
     /**
      * Find {@link Idea}s by company and group.
@@ -197,7 +197,7 @@ public interface IdeaService {
      * @param status   the status of the idea (i.e. whether the idea is public or private)
      * @return a {@link List} of {@link Idea}s
      */
-    List<Idea> findIdeasByGroupId(long companyId, long groupId, IdeaStatus status, int start, int offset);
+    List<Idea> findVisibleIdeasByGroupId(long companyId, long groupId, IdeaStatus status, int start, int offset);
 
     /**
      * Find the number of {@link Idea}s for a user in a group in a company.
@@ -239,7 +239,7 @@ public interface IdeaService {
      * @param userId   the userId
      * @return a {@link List} of {@link Idea}s
      */
-    int findUserFavoritedIdeasCount(long companyId, long groupId, long userId);
+    int findVisibleUserFavoritedIdeasCount(long companyId, long groupId, long userId);
 
     /**
      * Find {@link Idea}s by company, group and user that the user has favorited.
@@ -261,7 +261,7 @@ public interface IdeaService {
      * @param offset the offset
      * @return a {@link List} of {@link Idea}s
      */
-    List<Idea> findUserFavoritedIdeas(long companyId, long groupId, long userId, int start, int offset);
+    List<Idea> findVisibleUserFavoritedIdeas(long companyId, long groupId, long userId, int start, int offset);
 
     /**
      * Find {@link Idea} by urlTitle.
@@ -417,6 +417,22 @@ public interface IdeaService {
     LinkedList<String> getInternalIdeaUsersToEmail(Idea idea);
 
     void sendEmailNotification(Idea idea, boolean b);
+
+    /**
+     * Make the idea not show for users except when listing own ideas.
+     *
+     * @param ideaId the idea id
+     * @return the Idea
+     */
+    Idea hide(String ideaId);
+
+    /**
+     * Revert what the hide method does.
+     *
+     * @param ideaId the idea id
+     * @return the Idea
+     */
+    Idea unhide(String ideaId);
 
     public static class UpdateFromBariumResult implements Serializable {
 

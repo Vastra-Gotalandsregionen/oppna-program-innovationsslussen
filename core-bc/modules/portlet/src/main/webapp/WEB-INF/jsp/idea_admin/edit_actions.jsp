@@ -5,6 +5,7 @@
  You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the
  Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA -->
 
+<%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/portlet" prefix="portlet" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -37,12 +38,27 @@
 	</portlet:actionURL>
 	<liferay-ui:icon image="install_more" url="${syncIdeaFromBariumUrl}" message="Uppdatera fr&aring;n Barium" />
 
-
 	<portlet:actionURL name="deleteEntry" var="deleteEntryURL">
 		<portlet:param name="action" value="deleteEntry" />
 		<portlet:param name="entryId" value="${curIdea.id}" />
 	</portlet:actionURL>
-	<liferay-ui:icon-delete url="${deleteEntryURL}" confirmation="�r du s�ker p� att du vill ta bort denna id�?" />
-	
-	
+	<liferay-ui:icon-delete url="${deleteEntryURL}" confirmation="Är du säker på att du vill ta bort denna idé?" />
+
+    <c:choose>
+        <c:when test="${curIdea.hidden}">
+            <portlet:actionURL name="unhideEntry" var="unhideEntryURL">
+                <portlet:param name="action" value="unhideEntry" />
+                <portlet:param name="entryId" value="${curIdea.id}" />
+            </portlet:actionURL>
+            <liferay-ui:icon image="install_more" url="${unhideEntryURL}" message="Gör synlig" />
+        </c:when>
+        <c:otherwise>
+            <portlet:actionURL name="hideEntry" var="hideEntryURL">
+                <portlet:param name="action" value="hideEntry" />
+                <portlet:param name="entryId" value="${curIdea.id}" />
+            </portlet:actionURL>
+            <liferay-ui:icon image="install_more" url="${hideEntryURL}" message="Göm" />
+        </c:otherwise>
+    </c:choose>
+
 </liferay-ui:icon-menu>

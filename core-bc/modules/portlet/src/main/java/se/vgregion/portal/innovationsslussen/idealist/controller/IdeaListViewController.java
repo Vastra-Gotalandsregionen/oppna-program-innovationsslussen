@@ -140,7 +140,7 @@ public class IdeaListViewController extends BaseController {
 
             if (ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_OPEN_IDEAS)) {
 
-                Map<String,Object> map = searchService.getPublicIdeas(companyId, scopeGroupId, start, entryCount,
+                Map<String,Object> map = searchService.getPublicVisibleIdeas(companyId, scopeGroupId, start, entryCount,
                         ideaSort, ideaPhase);
 
                 ideasFromService = (List<Idea>) map.get("ideas");
@@ -160,27 +160,29 @@ public class IdeaListViewController extends BaseController {
             } else if (ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_USER_FAVORITED_IDEAS)) {
 
                 if (isSignedIn) {
-                    ideasFromService = ideaService.findUserFavoritedIdeas(
+                    ideasFromService = ideaService.findVisibleUserFavoritedIdeas(
                             companyId, scopeGroupId, userId, start, entryCount);
 
-                    totalCount = ideaService.findUserFavoritedIdeasCount(companyId, scopeGroupId, userId);
+                    totalCount = ideaService.findVisibleUserFavoritedIdeasCount(companyId, scopeGroupId, userId);
                 }
 
                 returnView = "view_user_favorites";
             } else if (ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_CLOSED_IDEAS)) {
 
                 if (isSignedIn) {
-                    ideasFromService = ideaService.findIdeasByGroupId(
+                    ideasFromService = ideaService.findVisibleIdeasByGroupId(
                             companyId, scopeGroupId,
                             IdeaStatus.PRIVATE_IDEA, start, entryCount);
 
-                    totalCount = ideaService.findIdeaCountByGroupId(companyId, scopeGroupId, IdeaStatus.PRIVATE_IDEA);
+                    totalCount = ideaService.findVisibleIdeaCountByGroupId(companyId, scopeGroupId,
+                            IdeaStatus.PRIVATE_IDEA);
                 }
 
                 returnView = "view_closed_ideas";
             } else if (ideaListType.equals(IdeaPortletsConstants.IDEA_LIST_PORTLET_VIEW_IDEAS_FOR_IDEATRANSPORTER)) {
 
-                Map<String,Object> map = searchService.getIdeasForIdeaTransporters(companyId, scopeGroupId, start, entryCount,
+                Map<String,Object> map = searchService.getVisibleIdeasForIdeaTransporters(companyId, scopeGroupId,
+                        start, entryCount,
                         ideaSort, ideaPhase, ideaVisible, transporter);
 
                 ideasFromService = (List<Idea>) map.get("ideas");
@@ -232,7 +234,7 @@ public class IdeaListViewController extends BaseController {
     }
 
     private void setIdeaTransporters(ModelMap model, long scopeGroupId, long companyId, int entryCount, int start) {
-        Map<String,Object> map2 = searchService.getIdeasForIdeaTransporters(companyId, scopeGroupId, start, entryCount,
+        Map<String,Object> map2 = searchService.getVisibleIdeasForIdeaTransporters(companyId, scopeGroupId, start, entryCount,
                 0, 0, 0, "0");
 
         List<FacetField> ideaTranspoterFacets = (List<FacetField>) map2.get("ideaTranspoterFacets");

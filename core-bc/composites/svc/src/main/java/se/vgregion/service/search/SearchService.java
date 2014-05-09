@@ -11,8 +11,8 @@ import java.util.Map;
  */
 public interface SearchService {
 
-    public Map<String, Object> getPublicIdeas(long companyId, long groupId, int start, int rows, int sort, int phase);
+    public Map<String, Object> getPublicVisibleIdeas(long companyId, long groupId, int start, int rows, int sort, int phase);
 
-    public Map<String, Object> getIdeasForIdeaTransporters(long companyId, long groupId, int start, int rows, int sort, int phase, int visible, String transporter);
+    public Map<String, Object> getVisibleIdeasForIdeaTransporters(long companyId, long groupId, int start, int rows, int sort, int phase, int visible, String transporter);
 
 }

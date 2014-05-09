@@ -98,7 +98,7 @@ public class Idea extends AbstractEntity<String> {
     @JoinColumn(name = "idea_id")
     private final Set<IdeaUserFavorite> favorites = new HashSet<IdeaUserFavorite>();
 
-    @Column(name = "created", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", insertable = false,
+    @Column(name = "created", columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP", insertable = false,
             updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
@@ -115,6 +115,8 @@ public class Idea extends AbstractEntity<String> {
 
 	@Transient
 	private int commentsCount;
+
+    private Boolean hidden;
 
     /**
      * Constructor.
@@ -382,5 +384,13 @@ public class Idea extends AbstractEntity<String> {
 
     public void setOriginalUserId(Long originalUserId) {
         this.originalUserId = originalUserId;
+    }
+
+    public Boolean getHidden() {
+        return hidden;
+    }
+
+    public void setHidden(Boolean hidden) {
+        this.hidden = hidden;
     }
 }

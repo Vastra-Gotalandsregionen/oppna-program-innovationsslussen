@@ -221,13 +221,14 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> im
     }
 
     @Override
-    public int findIdeaCountByGroupId(long companyId, long groupId, IdeaStatus status) {
+    public int findVisibleIdeaCountByGroupId(long companyId, long groupId, IdeaStatus status) {
 
         String queryString = ""
                 + " SELECT COUNT(DISTINCT n) FROM Idea n"
                 + " WHERE n.companyId = ?1"
                 + " AND n.groupId = ?2"
-                + " AND n.status = ?3";
+                + " AND n.status = ?3"
+                + " AND n.hidden = false";
 
         Object[] queryObject = new Object[]{companyId, groupId, status};
 
@@ -258,7 +259,7 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> im
     }
 
     @Override
-    public List<Idea> findIdeasByGroupId(long companyId, long groupId, IdeaStatus status, int start, int offset) {
+    public List<Idea> findVisibleIdeasByGroupId(long companyId, long groupId, IdeaStatus status, int start, int offset) {
 
         String queryString = ""
                 + " SELECT DISTINCT n FROM Idea n"
@@ -269,6 +270,7 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> im
                 + " WHERE n.companyId = ?1"
                 + " AND n.groupId = ?2"
                 + " AND n.status = ?3"
+                + " AND n.hidden = false"
                 + " ORDER BY n.created DESC";
 
         Object[] queryObject = new Object[]{companyId, groupId, status};
@@ -338,14 +340,15 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> im
     }
 
     @Override
-    public int findUserFavoritedIdeasCount(long companyId, long groupId, long userId) {
+    public int findVisibleUserFavoritedIdeasCount(long companyId, long groupId, long userId) {
 
         String queryString = ""
                 + " SELECT COUNT(DISTINCT n) FROM Idea n, IdeaUserFavorite f"
                 + " WHERE n.companyId = ?1"
                 + " AND n.groupId = ?2"
                 + " AND f.userId = ?3"
-                + " AND f.idea.id = n.id";
+                + " AND f.idea.id = n.id"
+                + " AND f.idea.hidden = false";
 
         Object[] queryObject = new Object[]{companyId, groupId, userId};
 
@@ -377,7 +380,7 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> im
     }
 
     @Override
-    public List<Idea> findUserFavoritedIdeas(long companyId, long groupId, long userId, int start, int offset) {
+    public List<Idea> findVisibleUserFavoritedIdeas(long companyId, long groupId, long userId, int start, int offset) {
 
         String queryString = ""
                 + " SELECT DISTINCT n FROM Idea n, IdeaUserFavorite f"
@@ -389,6 +392,7 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> im
                 + " AND n.groupId = ?2"
                 + " AND f.userId = ?3"
                 + " AND f.idea.id = n.id"
+                + " AND f.idea.hidden = false"
                 + " ORDER BY n.created DESC";
 
         Object[] queryObject = new Object[]{companyId, groupId, userId};
@@ -439,5 +443,10 @@ public class JpaIdeaRepositoryImpl extends DefaultJpaRepository<Idea, String> im
         }
 
         return query;
+    }
+
+    @Override
+    public Idea getReference(String ideaId) {
+        return entityManager.getReference(Idea.class, ideaId);
     }
 }
