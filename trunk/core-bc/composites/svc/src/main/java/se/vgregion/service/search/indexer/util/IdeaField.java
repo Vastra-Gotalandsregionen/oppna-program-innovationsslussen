@@ -13,7 +13,7 @@ import com.liferay.portal.kernel.search.Field;
 public class IdeaField extends Field {
 
     //Date
-    public static final String CREATE_DATE = "createdDate";
+    public static final String CREATE_DATE = "createDate";
     public static final String LAST_UPDATED = "lastUpdated";
 
     //Count
@@ -27,6 +27,7 @@ public class IdeaField extends Field {
 
     //Idea
     public static final String PHASE = "phase";
+    public static final String HIDDEN = "hidden";
 
     //Idea content
     public static final String PUBLIC_INTRO = "publicIntro";
@@ -67,7 +68,6 @@ public class IdeaField extends Field {
     public static final String PRIVATE_COMMENT_IDS = "privateCommentIds";
     public static final String PRIVATE_COMMENT_TEXTS = "privateCommentTexts";
     public static final String PRIVATE_COMMENT_COUNT = "privateCommentCount";
-
 
     public IdeaField(String name, Map<Locale, String> localizedValues) {
         super(name, localizedValues.values().toArray(new String[]{}));

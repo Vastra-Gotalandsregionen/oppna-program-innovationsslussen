@@ -136,7 +136,7 @@ public class IdeaObjectFields {
                     throw new RuntimeException(e);
                 }
             } else {
-                LOGGER.warn("Couldn't find a class field for Barium field with id=" + objectField.getId());
+//                LOGGER.warn("Couldn't find a class field for Barium field with id=" + objectField.getId());
             }
         }
 
@@ -146,7 +146,7 @@ public class IdeaObjectFields {
             df.setAccessible(true);
             try {
                 if (df.get(this) == null) {
-                    LOGGER.info("Field \"" + df.getName() + "\" wasn't set. May it be removed from the class?");
+//                    LOGGER.info("Field \"" + df.getName() + "\" wasn't set. May it be removed from the class?");
                 }
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);

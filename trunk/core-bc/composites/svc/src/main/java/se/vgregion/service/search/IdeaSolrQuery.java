@@ -72,15 +72,22 @@ public class IdeaSolrQuery extends SolrQuery {
      *
      * @return it self.
      */
-    public IdeaSolrQuery findAllPublicIdeasQuery(long companyId, long groupId, int start, int rows) {
-        this.setQuery("groupId:" + groupId + " AND companyId:" + companyId + " AND entryClassName:se.vgregion.portal.innovationsslussen.domain.jpa.Idea" + " AND status:PUBLIC_IDEA");
+    public IdeaSolrQuery findAllPublicVisibleIdeasQuery(long companyId, long groupId, int start, int rows) {
+        this.setQuery("groupId:" + groupId
+                + " AND companyId:" + companyId
+                + " AND entryClassName:se.vgregion.portal.innovationsslussen.domain.jpa.Idea"
+                + " AND status:PUBLIC_IDEA"
+                + " AND hidden:false");
         this.setStart(start); //0
         this.setRows(rows);
         return this;
     }
 
-    public IdeaSolrQuery findAllIdeasQuery(long companyId, long groupId, int start, int rows) {
-        this.setQuery("groupId:" + groupId + " AND companyId:" + companyId + " AND entryClassName:se.vgregion.portal.innovationsslussen.domain.jpa.Idea");
+    public IdeaSolrQuery findAllVisibleIdeasQuery(long companyId, long groupId, int start, int rows) {
+        this.setQuery("groupId:" + groupId
+                + " AND companyId:" + companyId
+                + " AND entryClassName:se.vgregion.portal.innovationsslussen.domain.jpa.Idea"
+                + " AND hidden:false");
         this.setStart(start); //0
         this.setRows(rows);
         this.setFacet(true);

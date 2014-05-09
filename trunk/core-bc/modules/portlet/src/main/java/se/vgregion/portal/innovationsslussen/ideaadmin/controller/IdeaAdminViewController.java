@@ -157,12 +157,55 @@ public class IdeaAdminViewController extends BaseController {
 
         String ideaId = ParamUtil.getString(request, "entryId");
 
-        model.addAttribute("hasErrorMessage", false);
-
         try {
             Idea idea = ideaService.find(ideaId);
             ideaService.remove(idea);
         } catch (RemoveIdeaException e) {
+            LOGGER.error(e.getMessage(), e);
+            model.addAttribute("errorMessage", e.getMessage());
+        }
+
+        response.setRenderParameter("view", "view");
+    }
+
+    /**
+     * Method handling Action request.
+     *
+     * @param request  the request
+     * @param response the response
+     * @param model    the model
+     */
+    @ActionMapping(params = "action=hideEntry")
+    public final void hideEntry(ActionRequest request, ActionResponse response, final ModelMap model) {
+
+        String ideaId = ParamUtil.getString(request, "entryId");
+
+        try {
+            ideaService.hide(ideaId);
+        } catch (RuntimeException e) {
+            LOGGER.error(e.getMessage(), e);
+            model.addAttribute("errorMessage", e.getMessage());
+        }
+
+        response.setRenderParameter("view", "view");
+    }
+
+    /**
+     * Method handling Action request.
+     *
+     * @param request  the request
+     * @param response the response
+     * @param model    the model
+     */
+    @ActionMapping(params = "action=unhideEntry")
+    public final void unhideEntry(ActionRequest request, ActionResponse response, final ModelMap model) {
+
+        String ideaId = ParamUtil.getString(request, "entryId");
+
+        try {
+            ideaService.unhide(ideaId);
+        } catch (RuntimeException e) {
+            LOGGER.error(e.getMessage(), e);
             model.addAttribute("errorMessage", e.getMessage());
         }
 
@@ -216,7 +259,9 @@ public class IdeaAdminViewController extends BaseController {
             try {
                 indexer.reindex(ideaToIndex);
             } catch (SearchException e) {
-                e.printStackTrace();
+                LOGGER.error(e.getMessage(), e);
+            } catch (RuntimeException e) {
+                LOGGER.error(e.getMessage(), e);
             }
         }
     }

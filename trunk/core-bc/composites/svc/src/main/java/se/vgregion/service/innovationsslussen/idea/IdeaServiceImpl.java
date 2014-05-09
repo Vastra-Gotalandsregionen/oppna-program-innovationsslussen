@@ -668,11 +668,11 @@ public class IdeaServiceImpl implements IdeaService {
 
     /* (non-Javadoc)
      * @see se.vgregion.service.innovationsslussen.idea
-     * .IdeaService#findIdeaCountByGroupId(long, long, se.vgregion.portal.innovationsslussen.domain.IdeaStatus)
+     * .IdeaService#findVisibleIdeaCountByGroupId(long, long, se.vgregion.portal.innovationsslussen.domain.IdeaStatus)
      */
     @Override
-    public int findIdeaCountByGroupId(long companyId, long groupId, IdeaStatus status) {
-        return ideaRepository.findIdeaCountByGroupId(companyId, groupId, status);
+    public int findVisibleIdeaCountByGroupId(long companyId, long groupId, IdeaStatus status) {
+        return ideaRepository.findVisibleIdeaCountByGroupId(companyId, groupId, status);
     }
 
     /* (non-Javadoc)
@@ -686,12 +686,12 @@ public class IdeaServiceImpl implements IdeaService {
 
     /* (non-Javadoc)
      * @see se.vgregion.service.innovationsslussen.idea
-     * .IdeaService#findIdeasByGroupId(long, long, se.vgregion.portal.innovationsslussen.domain.IdeaStatus, int, int)
+     * .IdeaService#findVisibleIdeasByGroupId(long, long, se.vgregion.portal.innovationsslussen.domain.IdeaStatus, int, int)
      */
     @Override
-    public List<Idea> findIdeasByGroupId(long companyId, long groupId, IdeaStatus status, int start,
-                                         int offset) {
-        return ideaRepository.findIdeasByGroupId(companyId, groupId, status, start, offset);
+    public List<Idea> findVisibleIdeasByGroupId(long companyId, long groupId, IdeaStatus status, int start,
+                                                int offset) {
+        return ideaRepository.findVisibleIdeasByGroupId(companyId, groupId, status, start, offset);
     }
 
     /* (non-Javadoc)
@@ -721,11 +721,11 @@ public class IdeaServiceImpl implements IdeaService {
     }
 
     /* (non-Javadoc)
-     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#findUserFavoritedIdeasCount(long, long, long)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#findVisibleUserFavoritedIdeasCount(long, long, long)
      */
     @Override
-    public int findUserFavoritedIdeasCount(long companyId, long groupId, long userId) {
-        return ideaRepository.findUserFavoritedIdeasCount(companyId, groupId, userId);
+    public int findVisibleUserFavoritedIdeasCount(long companyId, long groupId, long userId) {
+        return ideaRepository.findVisibleUserFavoritedIdeasCount(companyId, groupId, userId);
     }
 
     /* (non-Javadoc)
@@ -737,11 +737,11 @@ public class IdeaServiceImpl implements IdeaService {
     }
 
     /* (non-Javadoc)
-     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#findUserFavoritedIdeas(long, long, long, int, int)
+     * @see se.vgregion.service.innovationsslussen.idea.IdeaService#findVisibleUserFavoritedIdeas(long, long, long, int, int)
      */
     @Override
-    public List<Idea> findUserFavoritedIdeas(long companyId, long groupId, long userId, int start, int offset) {
-        return ideaRepository.findUserFavoritedIdeas(companyId, groupId, userId, start, offset);
+    public List<Idea> findVisibleUserFavoritedIdeas(long companyId, long groupId, long userId, int start, int offset) {
+        return ideaRepository.findVisibleUserFavoritedIdeas(companyId, groupId, userId, start, offset);
     }
 
     /* (non-Javadoc)
@@ -1340,18 +1340,15 @@ public class IdeaServiceImpl implements IdeaService {
             LOGGER.info("Skipping update...");
             return;
         }
-//        ClusterGroupLocalServiceUtil.getClusterGroup(3l).getClusterNodeIdsArray();
+
         try {
             Collection<Idea> allIdeas = findAll();
 
             for (Idea idea : allIdeas) {
+                idea = upgradeIfOldVersion(idea);
+
                 try {
-                    // Do the transaction manually since we may run this in a separate thread.
-                    //   TransactionStatus transaction =
-                    //           transactionManager.getTransaction(new DefaultTransactionAttribute(
-                    //                   TransactionDefinition.PROPAGATION_REQUIRED));
                     updateFromBarium(idea);
-                    //    transactionManager.commit(transaction);
                     LOGGER.info("Updated idea with id=" + idea.getId());
                 } catch (RuntimeException e) {
                     LOGGER.error("Failed to update idea: " + idea.toString(), e);
@@ -1366,6 +1363,26 @@ public class IdeaServiceImpl implements IdeaService {
             LOGGER.error(e.getMessage(), e);
             logIfNextExceptionExists(e);
         }
+    }
+
+    private Idea upgradeIfOldVersion(Idea idea) {
+        // Upgrade potentially old ideas without the hidden attribute set
+        if (idea.getHidden() == null) {
+            idea.setHidden(false);
+            TransactionStatus transaction = null;
+            try {
+                // Do the transaction manually since we may run this in a separate thread.
+                transaction = transactionManager.getTransaction(new DefaultTransactionAttribute(
+                        TransactionDefinition.PROPAGATION_REQUIRED));
+                // Merge here so we don't get unexpected consequences later when we will compare to decide whether
+                // the idea has changed. This should not cause a change.
+                ideaRepository.merge(idea);
+                transactionManager.commit(transaction);
+            } catch (RuntimeException e) {
+                transactionManager.rollback(transaction);
+            }
+        }
+        return idea;
     }
 
     @Override
@@ -1616,8 +1633,6 @@ public class IdeaServiceImpl implements IdeaService {
                 if (commentId != rootMessageId) {
                     long curCommentUserId = mbMessage.getUserId();
                     long scopeGroupId = mbMessage.getGroupId();
-                    User curCommentUser = userLocalService.getUser(curCommentUserId);
-                    String curCommentUserFullName = curCommentUser.getFullName();
 
                     boolean isUserIdeaCreator = isUserIdeaCreator(curCommentUserId, idea);
                     boolean isUserPrioCouncilMember = isUserPrioCouncilMember(curCommentUserId, scopeGroupId);
@@ -1628,13 +1643,20 @@ public class IdeaServiceImpl implements IdeaService {
                     commentItem.setCommentText(curCommentText);
                     commentItem.setCreateDate(createDate);
                     commentItem.setId(commentId);
-                    commentItem.setName(curCommentUserFullName);
                     commentItem.setUserCreator(isUserIdeaCreator);
                     commentItem.setUserIdeaTransporter(isUserIdeaTransporter);
                     commentItem.setUserPrioCouncilMember(isUserPrioCouncilMember);
                     commentItem.setUserInnovationsslussenEmployee(isUserInnovationsslussenEmployee);
                     commentItem.setUserId(curCommentUserId);
                     commentItem.setMessageId(mbMessage.getMessageId());
+
+                    try {
+                        User curCommentUser = userLocalService.getUser(curCommentUserId);
+                        String curCommentUserFullName = curCommentUser.getFullName();
+                        commentItem.setName(curCommentUserFullName);
+                    } catch (Exception e) {
+                        LOGGER.error(e.getMessage(), e);
+                    }
 
                     commentsList.add(commentItem);
                 }
@@ -1944,6 +1966,24 @@ public class IdeaServiceImpl implements IdeaService {
             messageToInternalIdeaUsers.setPayload(mailToInternalIdeaUsers);
             MessageBusUtil.sendMessage("vgr/email/notification", messageToInternalIdeaUsers);
         }
+    }
+
+    @Override
+    @Transactional
+    public Idea hide(String ideaId) {
+        Idea idea = ideaRepository.getReference(ideaId);
+        idea.setHidden(true);
+        idea = ideaRepository.merge(idea);
+        return idea;
+    }
+
+    @Override
+    @Transactional
+    public Idea unhide(String ideaId) {
+        Idea idea = ideaRepository.getReference(ideaId);
+        idea.setHidden(false);
+        idea = ideaRepository.merge(idea);
+        return idea;
     }
 
     /**

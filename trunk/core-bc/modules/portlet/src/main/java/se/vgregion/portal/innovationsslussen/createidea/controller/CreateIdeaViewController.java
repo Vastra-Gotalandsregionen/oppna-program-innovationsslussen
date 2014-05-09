@@ -252,6 +252,7 @@ public class CreateIdeaViewController extends BaseController {
 
         idea = IdeaPortletUtil.getIdeaFromRequest(request);
         idea.setCreated(new Date());
+        idea.setHidden(false);
 
         ideaValidator.validate(idea, result);
 

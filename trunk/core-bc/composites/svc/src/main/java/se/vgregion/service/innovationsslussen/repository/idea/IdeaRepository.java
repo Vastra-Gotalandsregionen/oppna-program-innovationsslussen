@@ -115,7 +115,7 @@ public interface IdeaRepository extends Repository<Idea, String> {
      * @param status   the status of the idea (i.e. whether the idea is public or private)
      * @return an int with the number of Idea
      */
-    int findIdeaCountByGroupId(long companyId, long groupId, IdeaStatus status);
+    int findVisibleIdeaCountByGroupId(long companyId, long groupId, IdeaStatus status);
 
     /**
      * Find all {@link Idea}s for a group in a company.
@@ -137,7 +137,7 @@ public interface IdeaRepository extends Repository<Idea, String> {
      * @param offset - the offset from start
      * @return a {@link List} of {@link Idea}s
      */
-    List<Idea> findIdeasByGroupId(long companyId, long groupId, IdeaStatus status, int start, int offset);
+    List<Idea> findVisibleIdeasByGroupId(long companyId, long groupId, IdeaStatus status, int start, int offset);
 
     /**
      * Find the number of {@link Idea}s for a user in a group in a company.
@@ -180,7 +180,7 @@ public interface IdeaRepository extends Repository<Idea, String> {
      * @param userId   the userId
      * @return a {@link List} of {@link Idea}s
      */
-    int findUserFavoritedIdeasCount(long companyId, long groupId, long userId);
+    int findVisibleUserFavoritedIdeasCount(long companyId, long groupId, long userId);
 
 
     /**
@@ -203,7 +203,7 @@ public interface IdeaRepository extends Repository<Idea, String> {
      * @param offset - the offset from start
      * @return a {@link List} of {@link Idea}s
      */
-    List<Idea> findUserFavoritedIdeas(long companyId, long groupId, long userId, int start, int offset);
+    List<Idea> findVisibleUserFavoritedIdeas(long companyId, long groupId, long userId, int start, int offset);
 
 
     /**
@@ -215,4 +215,5 @@ public interface IdeaRepository extends Repository<Idea, String> {
     void remove(String ideaId);
 
 
+    Idea getReference(String ideaId);
 }

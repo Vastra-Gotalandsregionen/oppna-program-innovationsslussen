@@ -64,6 +64,11 @@
            	property="userId"
            />
 
+		<liferay-ui:search-container-column-text
+           	name="Synlig/Gömd"
+           	value="${idea.hidden ? 'Gömd' : 'Synlig'}"
+           />
+
 		<liferay-ui:search-container-column-jsp
 			path="/WEB-INF/jsp/idea_admin/edit_actions.jsp"
       	/>
