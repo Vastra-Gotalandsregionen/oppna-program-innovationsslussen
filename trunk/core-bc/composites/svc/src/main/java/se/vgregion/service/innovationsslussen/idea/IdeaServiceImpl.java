@@ -599,7 +599,6 @@ public class IdeaServiceImpl implements IdeaService {
         }
 
         return null;
-
     }
 
     /* (non-Javadoc)

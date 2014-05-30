@@ -271,8 +271,11 @@ public class IdeaIndexer extends BaseIndexer {
         return CLASS_NAMES;
     }
 
-    @Override
     public Summary getSummary(Document document, String s, PortletURL portletURL) {
+        throw new UnsupportedOperationException();
+    }
+
+    protected Summary doGetSummary(Document document, Locale locale, String s, PortletURL portletURL) throws Exception {
         throw new UnsupportedOperationException();
     }
 
