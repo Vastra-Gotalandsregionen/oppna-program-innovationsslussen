@@ -31,6 +31,7 @@ import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.Portal;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 import java.io.BufferedInputStream;
@@ -95,11 +96,12 @@ public class IdeaViewController extends BaseController {
     private final IdeaSettingsService ideaSettingsService;
     private LdapService ldapService;
 
+    private Portal portal = PortalUtil.getPortal();
+
     private final Set<String> rolesMayUploadFile = new HashSet<String>(
             Arrays.asList("Idea Innovationsslussen", "Idea Priority Council", "Idea Transporter"));
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IdeaViewController.class.getName());
-
     private int defaultCommentCount;
 
     /**
@@ -284,17 +286,43 @@ public class IdeaViewController extends BaseController {
     @ActionMapping(params = "action=addComment")
     public final void addComment(ActionRequest request, ActionResponse response, final ModelMap model) {
 
-        LOGGER.info("addComment");
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-        long groupId = themeDisplay.getScopeGroupId();
-        long userId = themeDisplay.getUserId();
-        IdeaContentType ideaContentType = IdeaContentType.valueOf(ParamUtil.getString(request, "ideaContentType"));
+        HttpServletResponse servletResponse = portal.getHttpServletResponse(response);
+
+        // First check the user is signed in.
+        boolean isSignedIn = themeDisplay.isSignedIn();
+        if (!isSignedIn) {
+            sendRedirectToContextRoot(servletResponse);
+            return;
+        }
+
         String urlTitle = ParamUtil.getString(request, "urlTitle", "");
+        Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
+
+        long userId = themeDisplay.getUserId();
+
+        long groupId = themeDisplay.getScopeGroupId();
+        IdeaPermissionChecker ideaPermissionChecker = ideaPermissionCheckerService.getIdeaPermissionChecker(
+                groupId, userId, idea);
+
+        // Then check for necessary permissions.
+        boolean publicAndPublicPermission = idea.isPublic() && ideaPermissionChecker.getHasPermissionAddCommentPublic();
+        boolean privateAndPrivatePermission =
+                !idea.isPublic() && ideaPermissionChecker.getHasPermissionAddCommentPrivate();
+
+        boolean necessaryPermissions = publicAndPublicPermission || privateAndPrivatePermission;
+
+        if (!necessaryPermissions) {
+            sendRedirectToContextRoot(servletResponse);
+            return;
+        }
+
+        // Continue now that permissions are checked.
+        IdeaContentType ideaContentType = IdeaContentType.valueOf(ParamUtil.getString(request, "ideaContentType"));
         String comment = ParamUtil.getString(request, "comment", "");
 
         if (!comment.equals("")) {
 
-            Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
             try {
                 ServiceContext serviceContext = ServiceContextFactory.getInstance(Idea.class.getName(), request);
                 //Add a mbMessage
@@ -320,6 +348,13 @@ public class IdeaViewController extends BaseController {
         response.setRenderParameter("urlTitle", urlTitle);
     }
 
+    private void sendRedirectToContextRoot(HttpServletResponse servletResponse) {
+        try {
+            servletResponse.sendRedirect("/");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
     /**
@@ -680,6 +715,10 @@ public class IdeaViewController extends BaseController {
         } finally {
             Util.closeClosables(bos, pos, bis, is);
         }
+    }
+
+    public void setPortal(Portal portal) {
+        this.portal = portal;
     }
 
     private static String IDEA_CLASS = "se.vgregion.portal.innovationsslussen.domain.jpa.Idea";
