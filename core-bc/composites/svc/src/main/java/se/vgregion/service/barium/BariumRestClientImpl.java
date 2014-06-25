@@ -464,6 +464,7 @@ public class BariumRestClientImpl implements BariumRestClient {
 
                 outputStream = conn.getOutputStream();
                 bos = new BufferedOutputStream(outputStream);
+
                 bos.write(data);
                 bos.flush();
             }
@@ -502,6 +503,7 @@ public class BariumRestClientImpl implements BariumRestClient {
         } finally {
             Util.closeClosables(bis, inputStream, bos, outputStream);
         }
+        LOGGER.debug("Response: " + response);
         return response;
     }
 
@@ -531,11 +533,9 @@ public class BariumRestClientImpl implements BariumRestClient {
      * @throws BariumException the barium exception
      */
     private String toString(InputStream inputStream) throws BariumException {
-        StringBuilder sb = new StringBuilder();
-        ByteArrayOutputStream baos;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();;
         try {
             final int byteSize = 1024;
-            baos = new ByteArrayOutputStream();
             byte[] buf = new byte[byteSize];
             int n;
             while ((n = inputStream.read(buf)) != -1) {
@@ -543,7 +543,7 @@ public class BariumRestClientImpl implements BariumRestClient {
             }
             return baos.toString("UTF-8");
         } catch (IOException e) {
-            throw new BariumException("Error parsing response from server when authenticating (" + sb.toString() + ")",
+            throw new BariumException("Error parsing response from server when authenticating (" + baos.toString() + ")",
                     e);
         }
     }

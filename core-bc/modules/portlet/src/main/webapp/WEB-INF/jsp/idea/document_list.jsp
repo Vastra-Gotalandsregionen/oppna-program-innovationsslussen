@@ -74,6 +74,7 @@
 		<c:forEach items="${ideaFiles}" var="file" varStatus="counter">
 			<portlet:resourceURL id="downloadFile" var="downloadFileUrl">
 				<portlet:param name="id" value="${file.bariumId}"/>
+				<portlet:param name="ideaId" value="${idea.id}"/>
 			</portlet:resourceURL>
 	
 			<li id="<portlet:namespace />documentListItem-${counter.count}" class="${file.fileType}">

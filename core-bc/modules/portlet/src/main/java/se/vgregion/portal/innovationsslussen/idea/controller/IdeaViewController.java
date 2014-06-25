@@ -34,6 +34,7 @@ import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.Portal;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -46,10 +47,14 @@ import java.util.List;
 import java.util.Set;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
@@ -109,7 +114,7 @@ public class IdeaViewController extends BaseController {
      *
      * @param ideaService                  the idea service
      * @param ideaPermissionCheckerService the idea permission checker service
-     * @param ideaSettingsService the idea idea settings service
+     * @param ideaSettingsService          the idea idea settings service
      */
     @Autowired
     public IdeaViewController(IdeaService ideaService, IdeaPermissionCheckerService ideaPermissionCheckerService,
@@ -144,13 +149,13 @@ public class IdeaViewController extends BaseController {
     @RenderMapping()
     public String showIdea(RenderRequest request, RenderResponse response, final ModelMap model) throws PortalException, SystemException {
 
-        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+        ThemeDisplay themeDisplay = getThemeDisplay(request);
         String ideaType = ParamUtil.getString(request, "type", "public");
 
         String returnView = "view_public";
 
         //If a user trying to accsess the private part of an idea when not sign in.
-        if (ideaType.equals("private") && !themeDisplay.isSignedIn()){
+        if (ideaType.equals("private") && !themeDisplay.isSignedIn()) {
             returnView = "idea_not_sign_in";
         } else {
 
@@ -187,9 +192,9 @@ public class IdeaViewController extends BaseController {
                         commentsList = ideaService.getPublicComments(idea);
                     }
 
-                    if (idea.getIdeaContentPrivate() != null){
+                    if (idea.getIdeaContentPrivate() != null) {
                         String ideTansportor = idea.getIdeaContentPrivate().getIdeTansportor();
-                        if (ideTansportor != null && !ideTansportor.isEmpty()){
+                        if (ideTansportor != null && !ideTansportor.isEmpty()) {
                             model.addAttribute("tansportor", ideTansportor);
                         }
                     }
@@ -258,6 +263,9 @@ public class IdeaViewController extends BaseController {
      */
     @RenderMapping(params = "showView=showUploadFile")
     public String uploadFile(RenderRequest request, RenderResponse response, Model model) {
+        if (!getThemeDisplay(request).isSignedIn()) {
+            return "view";
+        }
         model.addAttribute("urlTitle", request.getParameter("urlTitle"));
         model.addAttribute("ideaType", request.getParameter("ideaType"));
         return "upload_file";
@@ -286,15 +294,7 @@ public class IdeaViewController extends BaseController {
     @ActionMapping(params = "action=addComment")
     public final void addComment(ActionRequest request, ActionResponse response, final ModelMap model) {
 
-        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-        HttpServletResponse servletResponse = portal.getHttpServletResponse(response);
-
-        // First check the user is signed in.
-        boolean isSignedIn = themeDisplay.isSignedIn();
-        if (!isSignedIn) {
-            sendRedirectToContextRoot(servletResponse);
-            return;
-        }
+        ThemeDisplay themeDisplay = getThemeDisplay(request);
 
         String urlTitle = ParamUtil.getString(request, "urlTitle", "");
         Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
@@ -302,24 +302,14 @@ public class IdeaViewController extends BaseController {
         long userId = themeDisplay.getUserId();
 
         long groupId = themeDisplay.getScopeGroupId();
-        IdeaPermissionChecker ideaPermissionChecker = ideaPermissionCheckerService.getIdeaPermissionChecker(
-                groupId, userId, idea);
 
-        // Then check for necessary permissions.
-        boolean publicAndPublicPermission = idea.isPublic() && ideaPermissionChecker.getHasPermissionAddCommentPublic();
-        boolean privateAndPrivatePermission =
-                !idea.isPublic() && ideaPermissionChecker.getHasPermissionAddCommentPrivate();
-
-        boolean necessaryPermissions = publicAndPublicPermission || privateAndPrivatePermission;
-
-        if (!necessaryPermissions) {
-            sendRedirectToContextRoot(servletResponse);
-            return;
-        }
-
-        // Continue now that permissions are checked.
         IdeaContentType ideaContentType = IdeaContentType.valueOf(ParamUtil.getString(request, "ideaContentType"));
         String comment = ParamUtil.getString(request, "comment", "");
+
+        if (!isAllowedToDoAction(request, idea, Action.ADD_COMMENT, ideaContentType)) {
+            sendRedirectToContextRoot(response);
+            return;
+        }
 
         if (!comment.equals("")) {
 
@@ -348,14 +338,77 @@ public class IdeaViewController extends BaseController {
         response.setRenderParameter("urlTitle", urlTitle);
     }
 
-    private void sendRedirectToContextRoot(HttpServletResponse servletResponse) {
+    private boolean isAllowedToDoAction(PortletRequest request, Idea idea, Action action, IdeaContentType ideaContentType) {
+        // Initialize variables
+        ThemeDisplay themeDisplay = getThemeDisplay(request);
+        long userId = themeDisplay.getUserId();
+        long groupId = themeDisplay.getScopeGroupId();
+
+        IdeaPermissionChecker ideaPermissionChecker = ideaPermissionCheckerService.getIdeaPermissionChecker(
+                groupId, userId, idea);
+
+        // Then check for necessary permissions.
+        boolean publicAndPublicPermission;
+        boolean privateAndPrivatePermission;
+        boolean isSignedIn;
+        boolean publicPart;
+
+        if (ideaContentType.equals(IdeaContentType.IDEA_CONTENT_TYPE_PUBLIC)) {
+            publicPart = true;
+        } else if (ideaContentType.equals(IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE)) {
+            publicPart = false;
+        } else {
+            throw new IllegalArgumentException("Unexpected IdeaContentType.");
+        }
+
+        switch (action) {
+            case ADD_COMMENT:
+                isSignedIn = themeDisplay.isSignedIn();
+                if (!isSignedIn) {
+                    return false;
+                }
+
+                publicAndPublicPermission = publicPart && ideaPermissionChecker.getHasPermissionAddCommentPublic();
+                privateAndPrivatePermission = !publicPart && ideaPermissionChecker.getHasPermissionAddCommentPrivate();
+                break;
+            case UPLOAD_FILE:
+                isSignedIn = themeDisplay.isSignedIn();
+                if (!isSignedIn) {
+                    return false;
+                }
+
+                publicAndPublicPermission = publicPart && ideaPermissionChecker.getHasPermissionAddCommentPublic();
+                privateAndPrivatePermission = !publicPart && ideaPermissionChecker.getHasPermissionAddCommentPrivate();
+                break;
+            case VIEW_IDEA:
+                publicAndPublicPermission = publicPart && ideaPermissionChecker.getHasPermissionViewIdeaPublic();
+                privateAndPrivatePermission = !publicPart && ideaPermissionChecker.getHasPermissionViewIdeaPrivate();
+                break;
+            default:
+                throw new IllegalArgumentException("Unexpected action: " + action);
+        }
+
+        boolean necessaryPermissions = publicAndPublicPermission || privateAndPrivatePermission;
+
+        return necessaryPermissions;
+    }
+
+    private ThemeDisplay getThemeDisplay(PortletRequest request) {
+        return (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+    }
+
+    private enum Action {
+        UPLOAD_FILE, VIEW_IDEA, ADD_COMMENT
+    }
+
+    private void sendRedirectToContextRoot(PortletResponse response) {
         try {
+            HttpServletResponse servletResponse = portal.getHttpServletResponse(response);
             servletResponse.sendRedirect("/");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-
 
     /**
      * Method handling Action request.
@@ -369,7 +422,7 @@ public class IdeaViewController extends BaseController {
 
         LOGGER.info("addFavorite");
 
-        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+        ThemeDisplay themeDisplay = getThemeDisplay(request);
         long companyId = themeDisplay.getCompanyId();
         long groupId = themeDisplay.getScopeGroupId();
         long userId = themeDisplay.getUserId();
@@ -401,7 +454,7 @@ public class IdeaViewController extends BaseController {
 
         LOGGER.info("addLike");
 
-        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+        ThemeDisplay themeDisplay = getThemeDisplay(request);
         long companyId = themeDisplay.getCompanyId();
         long groupId = themeDisplay.getScopeGroupId();
         long userId = themeDisplay.getUserId();
@@ -442,6 +495,11 @@ public class IdeaViewController extends BaseController {
             try {
                 Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
 
+                if (!isAllowedToDoAction(request, idea, Action.ADD_COMMENT, ideaContentType)) {
+                    sendRedirectToContextRoot(response);
+                    return;
+                }
+
                 // TODO use permission checker to verify that user has delete permissions
                 //IdeaPermissionChecker ideaPermissionChecker = ideaPermissionCheckerService.getIdeaPermissionChecker(
                 //        groupId, userId, idea);
@@ -480,7 +538,7 @@ public class IdeaViewController extends BaseController {
 
         LOGGER.info("removeFavorite");
 
-        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+        ThemeDisplay themeDisplay = getThemeDisplay(request);
         long companyId = themeDisplay.getCompanyId();
         long groupId = themeDisplay.getScopeGroupId();
         long userId = themeDisplay.getUserId();
@@ -512,7 +570,7 @@ public class IdeaViewController extends BaseController {
 
         LOGGER.info("removeLike");
 
-        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+        ThemeDisplay themeDisplay = getThemeDisplay(request);
         long companyId = themeDisplay.getCompanyId();
         long groupId = themeDisplay.getScopeGroupId();
         long userId = themeDisplay.getUserId();
@@ -543,7 +601,7 @@ public class IdeaViewController extends BaseController {
 
         LOGGER.info("updateFromBarium");
 
-        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+        ThemeDisplay themeDisplay = getThemeDisplay(request);
 
         IdeaContentType ideaContentType = IdeaContentType.valueOf(ParamUtil.getString(request, "ideaContentType"));
         String id = ParamUtil.getString(request, "id");
@@ -577,8 +635,10 @@ public class IdeaViewController extends BaseController {
      * @throws FileUploadException the file upload exception
      */
     @ActionMapping(params = "action=uploadFile")
-    public void uploadFile(ActionRequest request, ActionResponse response, Model model) throws FileUploadException, SystemException, PortalException {
-        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+    public void uploadFile(ActionRequest request, ActionResponse response, Model model) throws FileUploadException,
+            SystemException, PortalException {
+
+        ThemeDisplay themeDisplay = getThemeDisplay(request);
         long scopeGroupId = themeDisplay.getScopeGroupId();
         long userId = themeDisplay.getUserId();
 
@@ -591,7 +651,6 @@ public class IdeaViewController extends BaseController {
         } else if (fileType.equals("private")) {
             publicIdea = false;
         } else {
-
             throw new IllegalArgumentException("Unknown filetype: " + fileType);
         }
 
@@ -599,13 +658,21 @@ public class IdeaViewController extends BaseController {
         Idea idea = ideaService.findIdeaByUrlTitle(urlTitle);
         //TODO Kan det inte finnas flera med samma titel i olika communities?
 
+        IdeaContentType ideaContentType = publicIdea ?
+                IdeaContentType.IDEA_CONTENT_TYPE_PUBLIC : IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE;
+
+        if (!isAllowedToDoAction(request, idea, Action.UPLOAD_FILE, ideaContentType)) {
+            sendRedirectToContextRoot(response);
+            return;
+        }
+
         boolean mayUploadFile = idea.getUserId() == userId;
 
         IdeaPermissionChecker ideaPermissionChecker = ideaPermissionCheckerService.getIdeaPermissionChecker(
                 scopeGroupId, userId, idea);
 
         if (!mayUploadFile) {
-            if (publicIdea){
+            if (publicIdea) {
                 mayUploadFile = ideaPermissionChecker.isHasPermissionAddDocumentPublic();
             } else {
                 mayUploadFile = ideaPermissionChecker.isHasPermissionAddDocumentPrivate();
@@ -613,7 +680,7 @@ public class IdeaViewController extends BaseController {
         }
 
 
-        if (mayUploadFile){
+        if (mayUploadFile) {
             response.setRenderParameter("urlTitle", urlTitle);
 
             PortletFileUpload p = new PortletFileUpload();
@@ -679,10 +746,34 @@ public class IdeaViewController extends BaseController {
      * @throws IOException     Signals that an I/O exception has occurred.
      */
     @ResourceMapping("downloadFile")
-    public void downloadFile(@RequestParam("id") String id, ResourceResponse response) throws BariumException,
+    public void downloadFile(@RequestParam("id") String id, @RequestParam("ideaId") String ideaId,
+                             ResourceRequest request, ResourceResponse response) throws BariumException,
             IOException {
         ObjectEntry objectEntry = ideaService.getObject(id);
         String name = objectEntry.getName();
+
+        Idea idea = ideaService.find(ideaId);
+
+        IdeaContentType ideaContentType;
+        boolean ideaOpenPartContainsFile = ideaService.ideaOpenPartContainsFile(idea, id);
+        boolean ideaClosedPartContainsFile = ideaService.ideaClosedPartContainsFile(idea, id);
+        boolean ideaContainsFile = ideaOpenPartContainsFile || ideaClosedPartContainsFile;
+        if (!ideaContainsFile) {
+            throw new IllegalArgumentException("The idea doesn't contain the requested file.");
+        } else if (ideaOpenPartContainsFile && ideaClosedPartContainsFile) {
+            // Just an extra check to see that nothing unexpected is found.
+            throw new IllegalStateException("A specific file should never exist in both the open and closed part of an"
+                    + " idea.");
+        } else {
+            // We know that exactly one is true.
+            ideaContentType = ideaOpenPartContainsFile ?
+                    IdeaContentType.IDEA_CONTENT_TYPE_PUBLIC : IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE;
+        }
+
+        if (!isAllowedToDoAction(request, idea, Action.VIEW_IDEA, ideaContentType)) {
+            sendRedirectToContextRoot(response);
+            return;
+        }
 
         //set http headers to instruct the browser how it should deliver the content
         String fileType = objectEntry.getFileType();

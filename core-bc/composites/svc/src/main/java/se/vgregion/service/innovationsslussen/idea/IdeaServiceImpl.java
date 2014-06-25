@@ -1014,6 +1014,37 @@ public class IdeaServiceImpl implements IdeaService {
         return idea;
     }
 
+    @Override
+    public boolean ideaOpenPartContainsFile(Idea idea, String fileId) {
+        try {
+            List<ObjectEntry> bariumFiles = bariumService.getIdeaFiles(idea, LIFERAY_OPEN_DOCUMENTS);
+            return anyMatch(fileId, bariumFiles);
+        } catch (BariumException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean ideaClosedPartContainsFile(Idea idea, String fileId) {
+        try {
+            List<ObjectEntry> bariumFiles = bariumService.getIdeaFiles(idea, LIFERAY_CLOSED_DOCUMENTS);
+            return anyMatch(fileId, bariumFiles);
+        } catch (BariumException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private boolean anyMatch(String fileId, List<ObjectEntry> bariumFiles) {
+        for (ObjectEntry bariumFile : bariumFiles) {
+            if (fileId.equals(bariumFile.getId())) {
+                return true;
+            }
+        }
+
+        // No match
+        return false;
+    }
+
     /* (non-Javadoc)
      * @see se.vgregion.service.innovationsslussen.idea.IdeaService#updateFromBarium(se.vgregion.portal
      * .innovationsslussen.domain.jpa.Idea)
