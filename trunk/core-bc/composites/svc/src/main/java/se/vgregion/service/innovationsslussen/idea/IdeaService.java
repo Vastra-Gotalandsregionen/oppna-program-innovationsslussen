@@ -399,6 +399,10 @@ public interface IdeaService {
     Idea removeLike(long companyId, long groupId, long userId, String urlTitle);
 
 
+    boolean ideaOpenPartContainsFile(Idea ideaId, String fileId);
+
+    boolean ideaClosedPartContainsFile(Idea idea, String fileId);
+
     /**
      * Updates an {@link Idea} from Barium.
      *
