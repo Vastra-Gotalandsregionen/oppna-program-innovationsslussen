@@ -264,7 +264,7 @@ public class IdeaViewController extends BaseController {
     @RenderMapping(params = "showView=showUploadFile")
     public String uploadFile(RenderRequest request, RenderResponse response, Model model) {
         if (!getThemeDisplay(request).isSignedIn()) {
-            return "view";
+            return "idea_not_sign_in";
         }
         model.addAttribute("urlTitle", request.getParameter("urlTitle"));
         model.addAttribute("ideaType", request.getParameter("ideaType"));
