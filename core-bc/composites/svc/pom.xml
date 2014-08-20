@@ -162,7 +162,7 @@
       <dependency>
           <artifactId>solr-solrj</artifactId>
           <groupId>org.apache.solr</groupId>
-          <version>1.4.1</version>
+          <version>3.6.2</version>
       </dependency>
 
     <dependency>

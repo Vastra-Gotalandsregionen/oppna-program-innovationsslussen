@@ -2,12 +2,7 @@ package se.vgregion.service.search.indexer;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.search.BaseIndexer;
-import com.liferay.portal.kernel.search.Document;
-import com.liferay.portal.kernel.search.DocumentImpl;
-import com.liferay.portal.kernel.search.SearchContext;
-import com.liferay.portal.kernel.search.SearchEngineUtil;
-import com.liferay.portal.kernel.search.Summary;
+import com.liferay.portal.kernel.search.*;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.model.User;
@@ -165,7 +160,6 @@ public class IdeaIndexer extends BaseIndexer {
                 if (i != 0) {
                     long userId = message.getUserId();
 
-                    User user = UserLocalServiceUtil.getUser(userId);
                     String userScreenName = message.getName();
                     long messageId = message.getMessageId();
 
@@ -245,7 +239,7 @@ public class IdeaIndexer extends BaseIndexer {
         LOGGER.info("Finished reindexing cards and comments. Count: " + count);
     }
 
-    protected void reindexIdeas(long companyId, int start, int end) throws Exception {
+    protected void reindexIdeas(long companyId, int start, int end) throws SearchException {
 
         List<Idea> ideas = ideaService.findIdeasByCompanyId(companyId, start, end);
 
@@ -255,11 +249,15 @@ public class IdeaIndexer extends BaseIndexer {
 
         Collection<Document> documents = new ArrayList<Document>();
 
-        for (Idea entry : ideas) {
-            LOGGER.trace("Reindexing card: " + entry);
+        try {
+            for (Idea entry : ideas) {
+                LOGGER.trace("Reindexing card: " + entry);
 
-            Document document = getDocument(entry);
-            documents.add(document);
+                Document document = getDocument(entry);
+                documents.add(document);
+            }
+        } catch (SearchException e) {
+            LOGGER.error(e.getMessage(), e);
         }
 
         SearchEngineUtil.updateDocuments(companyId, documents);
@@ -269,6 +267,11 @@ public class IdeaIndexer extends BaseIndexer {
     public String[] getClassNames() {
         System.out.println("IdeaIndexer - CLASS_NAMES " + CLASS_NAMES[0]);
         return CLASS_NAMES;
+    }
+
+    @Override
+    public String getPortletId() {
+        return PORTLET_ID;
     }
 
     public Summary getSummary(Document document, String s, PortletURL portletURL) {

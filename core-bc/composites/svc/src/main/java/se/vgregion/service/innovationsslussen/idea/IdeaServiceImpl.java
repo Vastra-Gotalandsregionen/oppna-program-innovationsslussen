@@ -60,6 +60,7 @@ import com.liferay.portlet.messageboards.model.MBThread;
 import com.liferay.portlet.messageboards.service.MBMessageLocalService;
 import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 import com.liferay.portlet.messageboards.util.comparator.MessageCreateDateComparator;
+
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -80,6 +81,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+
 import org.apache.commons.collections.BeanMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -458,147 +460,131 @@ public class IdeaServiceImpl implements IdeaService {
 
     }
 
-    private User createUser(Idea idea, String ideaPersonVgrId) {
+    private User createUser(Idea idea, String ideaPersonVgrId) throws SystemException, PortalException {
 
-        try {
-            long companyId = idea.getCompanyId();
-            long groupId = idea.getGroupId();
-            String password1 = "qUqP5cyxm6YcTAhz05Hph5gvu9M="; //test
-            String domainName = null;
-            long facebookId = 0;
-            String openId = null;
-            String firstName = idea.getIdeaPerson().getName();
-            String lastName = "";
-            int prefixId = 0;
-            int suffixId = 0;
-            String jobTitle = "";
+        long companyId = idea.getCompanyId();
+        long groupId = idea.getGroupId();
+        String password1 = "qUqP5cyxm6YcTAhz05Hph5gvu9M="; //test
+        String domainName = null;
+        long facebookId = 0;
+        String openId = null;
+        String firstName = idea.getIdeaPerson().getName();
+        String lastName = "";
+        int prefixId = 0;
+        int suffixId = 0;
+        String jobTitle = "";
 
-            String emailAddress = idea.getIdeaPerson().getEmail();
+        String emailAddress = idea.getIdeaPerson().getEmail();
 
-            String greeting = "Welcome " + ideaPersonVgrId;
+        String greeting = "Welcome " + ideaPersonVgrId;
 
-            long idContact = counterLocalService.increment();
+        long idContact = counterLocalService.increment();
+        Contact contact = contactLocalService.createContact(idContact);
 
-            User user = userLocalService.createUser(counterLocalService.increment());
-            user.setCompanyId(companyId);
-            user.setPassword(password1);
-            user.setPasswordEncrypted(true);
-            user.setPasswordReset(false);
-            user.setPasswordModifiedDate(new Date());
-            user.setScreenName(ideaPersonVgrId);
-            user.setGreeting(greeting);
-            user.setEmailAddress(emailAddress);
-            user.setFacebookId(facebookId);
-            user.setOpenId(openId);
-            user.setFirstName(firstName);
-            user.setLastName(lastName);
-            user.setJobTitle(jobTitle);
-            user.setCreateDate(new Date());
-            user.setContactId(idContact);
-            user.setCreateDate(new Date());
-            user.setModifiedDate(new Date());
-            user.setLanguageId("sv_SE");
-            user.setTimeZoneId("Europe/Paris");
-            user.setActive(true);
-            user.setAgreedToTermsOfUse(true);
-            userLocalService.addUser(user);
+        User user = userLocalService.createUser(counterLocalService.increment());
+        user.setCompanyId(companyId);
+        user.setPassword(password1);
+        user.setPasswordEncrypted(true);
+        user.setPasswordReset(false);
+        user.setPasswordModifiedDate(new Date());
+        user.setScreenName(ideaPersonVgrId);
+        user.setGreeting(greeting);
+        user.setEmailAddress(emailAddress);
+        user.setFacebookId(facebookId);
+        user.setOpenId(openId);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setJobTitle(jobTitle);
+        user.setCreateDate(new Date());
+        user.setContactId(idContact);
+        user.setCreateDate(new Date());
+        user.setModifiedDate(new Date());
+        user.setLanguageId("sv_SE");
+        user.setTimeZoneId("Europe/Paris");
+        user.setAgreedToTermsOfUse(true);
 
-            userLocalService.addDefaultGroups(user.getUserId());
-            userLocalService.addDefaultRoles(user.getUserId());
-            //Insert Contact for a user
+        userLocalService.addUser(user);
 
-            Contact contact = contactLocalService.createContact(idContact);
-            contact.setCompanyId(companyId);
-            contact.setCreateDate(new Date());
-            contact.setUserName(ideaPersonVgrId);
-            contact.setUserId(user.getUserId());
-            contact.setModifiedDate(new Date());
-            contact.setFirstName("contact-" + contact.getContactId());
-            contact.setLastName("contact-" + contact.getContactId());
-            contact.setMiddleName("contact-" + contact.getContactId());
-            contact.setPrefixId(prefixId);
-            contact.setBirthday(new Date());
-            contact.setSuffixId(suffixId);
-            contact.setJobTitle(jobTitle + contact.getContactId());
+        userLocalService.addDefaultGroups(user.getUserId());
+        userLocalService.addDefaultRoles(user.getUserId());
+        //Insert Contact for a user
 
-            contactLocalService.addContact(contact);
+        contact.setCompanyId(companyId);
+        contact.setCreateDate(new Date());
+        contact.setUserName(ideaPersonVgrId);
+        contact.setUserId(user.getUserId());
+        contact.setModifiedDate(new Date());
+        contact.setFirstName("contact-" + contact.getContactId());
+        contact.setLastName("contact-" + contact.getContactId());
+        contact.setMiddleName("contact-" + contact.getContactId());
+        contact.setPrefixId(prefixId);
+        contact.setBirthday(new Date());
+        contact.setSuffixId(suffixId);
+        contact.setJobTitle(jobTitle + contact.getContactId());
 
-            //Associate a role with user
-            long userid = user.getUserId();
-            long userIds[] = {userid};
-            Role role = roleLocalService.getRole(companyId, "User");
-            userLocalService.addRoleUsers(role.getRoleId(), userIds);
-            long roleids[] = {role.getRoleId()};
-            userGroupRoleLocalService.addUserGroupRoles(user.getUserId(), groupId, roleids);
-            ClassName clsNameUser = classNameLocalService.getClassName("com.liferay.portal.model.User");
-            long classNameId = clsNameUser.getClassNameId();
+        contactLocalService.addContact(contact);
 
-            //Insert Group for a user
-            long gpId = counterLocalService.increment();
-            Group userGrp = groupLocalService.createGroup(gpId);
-            userGrp.setClassNameId(classNameId);
-            userGrp.setClassPK(userid);
-            userGrp.setCompanyId(companyId);
-            userGrp.setName("group" + String.valueOf(userid));
-            userGrp.setFriendlyURL("/group" + gpId);
-            userGrp.setCreatorUserId(userid);
-            userGrp.setActive(true);
-            groupLocalService.addGroup(userGrp);
+        //Associate a role with user
+        long userid = user.getUserId();
+        long userIds[] = {userid};
+        Role role = roleLocalService.getRole(companyId, "User");
+        userLocalService.addRoleUsers(role.getRoleId(), userIds);
+        long roleids[] = {role.getRoleId()};
+        userGroupRoleLocalService.addUserGroupRoles(user.getUserId(), groupId, roleids);
+        ClassName clsNameUser = classNameLocalService.getClassName("com.liferay.portal.model.User");
+        long classNameId = clsNameUser.getClassNameId();
 
-            //Create AssetEntry
-            long assetEntryId = counterLocalService.increment();
-            AssetEntry ae = assetEntryLocalService.createAssetEntry(assetEntryId);
-            ae.setCompanyId(companyId);
-            ae.setClassPK(user.getUserId());
-            ae.setGroupId(userGrp.getGroupId());
-            ae.setClassNameId(classNameId);
-            assetEntryLocalService.addAssetEntry(ae);
+        //Insert Group for a user
+        long gpId = counterLocalService.increment();
+        Group userGrp = groupLocalService.createGroup(gpId);
+        userGrp.setClassNameId(classNameId);
+        userGrp.setClassPK(userid);
+        userGrp.setCompanyId(companyId);
+        userGrp.setName("group" + String.valueOf(userid));
+        userGrp.setFriendlyURL("/group" + gpId);
+        userGrp.setCreatorUserId(userid);
+        userGrp.setActive(true);
+        groupLocalService.addGroup(userGrp);
 
-            //Insert ResourcePermission for a User
-            long resPermId = counterLocalService.increment();
-            ResourcePermission rpEntry = resourcePermissionLocalService.createResourcePermission(resPermId);
-            rpEntry.setCompanyId(companyId);
-            rpEntry.setName("com.liferay.portal.model.User");
-            rpEntry.setPrimaryKey(userid);
-            rpEntry.setPrimKey("" + userid);
-            rpEntry.setRoleId(role.getRoleId());
-            rpEntry.setScope(4);
-            resourcePermissionLocalService.addResourcePermission(rpEntry);
+        //Create AssetEntry
+        long assetEntryId = counterLocalService.increment();
+        AssetEntry ae = assetEntryLocalService.createAssetEntry(assetEntryId);
+        ae.setCompanyId(companyId);
+        ae.setClassPK(user.getUserId());
+        ae.setGroupId(userGrp.getGroupId());
+        ae.setClassNameId(classNameId);
+        assetEntryLocalService.addAssetEntry(ae);
+
+        //Insert ResourcePermission for a User
+        long resPermId = counterLocalService.increment();
+        ResourcePermission rpEntry = resourcePermissionLocalService.createResourcePermission(resPermId);
+        rpEntry.setCompanyId(companyId);
+        rpEntry.setName("com.liferay.portal.model.User");
+        rpEntry.setPrimaryKey(userid);
+        rpEntry.setPrimKey("" + userid);
+        rpEntry.setRoleId(role.getRoleId());
+        rpEntry.setScope(4);
+        resourcePermissionLocalService.addResourcePermission(rpEntry);
 
 
-            //Insert Layoutset for public and private
-            long layoutSetIdPub = counterLocalService.increment();
-            LayoutSet layoutSetPub = layoutSetLocalService.createLayoutSet(layoutSetIdPub);
-            layoutSetPub.setCompanyId(companyId);
-            layoutSetPub.setPrivateLayout(false);
-            layoutSetPub.setGroupId(userGrp.getGroupId());
-            layoutSetPub.setThemeId("classic");
-            try {
-                layoutSetLocalService.addLayoutSet(layoutSetPub);
-            } catch (SystemException se) {
+        //Insert Layoutset for public and private
+        long layoutSetIdPub = counterLocalService.increment();
+        LayoutSet layoutSetPub = layoutSetLocalService.createLayoutSet(layoutSetIdPub);
+        layoutSetPub.setCompanyId(companyId);
+        layoutSetPub.setPrivateLayout(false);
+        layoutSetPub.setGroupId(userGrp.getGroupId());
+        layoutSetPub.setThemeId("classic");
+        layoutSetLocalService.addLayoutSet(layoutSetPub);
 
-            }
+        long layoutSetIdPriv = counterLocalService.increment();
+        LayoutSet layoutSetPriv = layoutSetLocalService.createLayoutSet(layoutSetIdPriv);
+        layoutSetPriv.setCompanyId(companyId);
+        layoutSetPriv.setPrivateLayout(true);
+        layoutSetPriv.setThemeId("classic");
+        layoutSetPriv.setGroupId(userGrp.getGroupId());
+        layoutSetLocalService.addLayoutSet(layoutSetPriv);
 
-            long layoutSetIdPriv = counterLocalService.increment();
-            LayoutSet layoutSetPriv = layoutSetLocalService.createLayoutSet(layoutSetIdPriv);
-            layoutSetPriv.setCompanyId(companyId);
-            layoutSetPriv.setPrivateLayout(true);
-            layoutSetPriv.setThemeId("classic");
-            layoutSetPriv.setGroupId(userGrp.getGroupId());
-            try {
-                layoutSetLocalService.addLayoutSet(layoutSetPriv);
-            } catch (SystemException se) {
-            }
-
-            return user;
-
-        } catch (SystemException e) {
-            e.printStackTrace();
-        } catch (PortalException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+        return user;
     }
 
     /* (non-Javadoc)
@@ -986,7 +972,7 @@ public class IdeaServiceImpl implements IdeaService {
         }
 
         for (IdeaUserLike ideaUserLike : idea.getLikes()) {
-            if (ideaUserLike.getUserId() == userId){
+            if (ideaUserLike.getUserId() == userId) {
                 idea.getLikes().remove(ideaUserLike);
                 break;
             }
@@ -1097,9 +1083,9 @@ public class IdeaServiceImpl implements IdeaService {
                 }
 
             } catch (InterruptedException e) {
-                throw  new UpdateIdeaException();
+                throw new UpdateIdeaException();
             } catch (ExecutionException e) {
-                throw  new UpdateIdeaException();
+                throw new UpdateIdeaException();
             }
 
             result.setChanged(!isIdeasTheSame(idea, result.getOldIdea()));

@@ -22,7 +22,7 @@
 
 <c:set var="ideaItemCssClass" scope="page" value="" />
 
-<div class="portlet-msg-info idea-msg-ifo">
+<div class="portlet-msg-info idea-msg-info">
     <h2>Oops nu gick n&aring;got fel!</H2>
     <h3>Sidan du f&ouml;rs&ouml;kte gå till kan inte visas, detta kan beror på att du inte är inloggad. <a href="/c/portal/login" >Logga in</a> f&ouml;r att komma vidare.</h3>
 </div>

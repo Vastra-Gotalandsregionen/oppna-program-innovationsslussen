@@ -22,7 +22,7 @@
         <liferay-portlet:param name="showView" value="showIdea" />
         <liferay-portlet:param name="moreComments" value="moreComments" />
         <liferay-portlet:param name="maxCommentCountDisplay" value="${maxCommentCountDisplay}" />
-        <c:if test="${not idea.public}">
+        <c:if test="${not idea.isPublic()}">
             <liferay-portlet:param name="type" value="private" />
         </c:if>
         <liferay-portlet:param name="urlTitle" value="${idea.urlTitle}" />

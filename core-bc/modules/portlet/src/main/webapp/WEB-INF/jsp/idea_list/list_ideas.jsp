@@ -35,7 +35,7 @@
 
 			<liferay-portlet:renderURL var="ideaUrl" plid="${ideaPlid}" portletName="${ideaPortletName}">
 				<liferay-portlet:param name="showView" value="showIdea" />
-				<c:if test="${not idea.public}">
+				<c:if test="${not idea.isPublic()}">
 				    <liferay-portlet:param name="type" value="private" />
 				</c:if>
                 <c:if test="${not openView}">
@@ -70,7 +70,7 @@
                                 <c:if test="${not openView}">
                                    <ul class="idea-stats idea-stats-state clearfix">
                                         <c:choose>
-                                            <c:when test="${idea.public}">
+                                            <c:when test="${idea.isPublic()}">
                                                 <li class="first open"/>
                                             </c:when>
                                             <c:otherwise>
@@ -95,7 +95,7 @@
 							<div class="idea-content-2">
 								<div class="idea-content-inner">
 									<c:choose>
-										<c:when test="${idea.public}">
+										<c:when test="${idea.isPublic()}">
 											<c:choose>
 												<c:when test="${not empty idea.ideaContentPublic.intro}">
 													${fn:substring(idea.ideaContentPublic.intro, 0, 175)}
