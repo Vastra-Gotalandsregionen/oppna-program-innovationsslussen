@@ -52,6 +52,10 @@ Generation time : 2013-05-08 10:10:47 CEST
       <artifactId>portlet-api</artifactId>
     </dependency>
     <dependency>
+      <groupId>javax.portlet</groupId>
+      <artifactId>portlet-api</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.liferay.portal</groupId>
       <artifactId>portal-service</artifactId>
     </dependency>

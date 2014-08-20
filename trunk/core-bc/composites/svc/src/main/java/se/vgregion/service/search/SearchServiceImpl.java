@@ -139,17 +139,18 @@ public class SearchServiceImpl implements SearchService {
 
         SolrDocumentList solrDocumentList = queryResponse.getResults();
 
-        for (SolrDocument entries : solrDocumentList) {
-            entries.get(IdeaField.UID);
+        for (SolrDocument document : solrDocumentList) {
+            document.get(IdeaField.UID);
 
             Idea idea = new Idea();
 
-            idea.setId((String) entries.getFieldValue(IdeaField.IDEA_ID));
-            idea.setTitle((String) entries.getFieldValue(IdeaField.TITLE));
-            idea.setUrlTitle((String) entries.getFieldValue(IdeaField.URL_TITLE));
-            idea.setPhase((String) entries.getFieldValue(IdeaField.PHASE));
+            String fieldName = IdeaField.IDEA_ID;
+            idea.setId(getFieldValue(document, fieldName));
+            idea.setTitle(getFieldValue(document, IdeaField.TITLE));
+            idea.setUrlTitle(getFieldValue(document, IdeaField.URL_TITLE));
+            idea.setPhase(getFieldValue(document, IdeaField.PHASE));
 
-            String status = (String) entries.getFieldValue(IdeaField.STATUS);
+            String status = getFieldValue(document, IdeaField.STATUS);
 
             IdeaStatus ideaStatus;
 
@@ -161,19 +162,19 @@ public class SearchServiceImpl implements SearchService {
 
             //Comment count.
             if (getForPublicView) {
-                idea.setCommentsCount((Integer) entries.getFieldValue(IdeaField.PUBLIC_COMMENT_COUNT));
+                idea.setCommentsCount((Integer) document.getFieldValue(IdeaField.PUBLIC_COMMENT_COUNT));
             } else {
-                idea.setCommentsCount((Integer) entries.getFieldValue(IdeaField.PRIVATE_COMMENT_COUNT));
+                idea.setCommentsCount((Integer) document.getFieldValue(IdeaField.PRIVATE_COMMENT_COUNT));
             }
 
             idea.setStatus(ideaStatus);
             IdeaContent ideaContent = new IdeaContent();
-            ideaContent.setIntro((String) entries.getFieldValue(IdeaField.PUBLIC_INTRO));
-            ideaContent.setDescription((String) entries.getFieldValue(IdeaField.PUBLIC_DESCRIPTION));
+            ideaContent.setIntro(getFieldValue(document, IdeaField.PUBLIC_INTRO));
+            ideaContent.setDescription(getFieldValue(document, IdeaField.PUBLIC_DESCRIPTION));
 
             Set<IdeaUserLike> likes = idea.getLikes();
 
-            int likeCount = (Integer) entries.getFieldValue(IdeaField.PUBLIC_LIKES_COUNT);
+            int likeCount = (Integer) document.getFieldValue(IdeaField.PUBLIC_LIKES_COUNT);
 
             for (int i = 0; i < likeCount; i++) {
                 likes.add(new IdeaUserLike());
@@ -196,5 +197,19 @@ public class SearchServiceImpl implements SearchService {
         returnMap.put("totalIdeasCount", queryResponse.getResults().getNumFound());
 
         return returnMap;
+    }
+
+    private String getFieldValue(SolrDocument document, String fieldName) {
+        Object fieldValue = document.getFieldValue(fieldName);
+
+        if (fieldValue instanceof String) {
+            return (String) fieldValue;
+        } else if (fieldValue instanceof List && ((List) fieldValue).size() == 1) {
+            return (String) ((List) fieldValue).get(0);
+        } else if (fieldValue == null) {
+            return null;
+        } else {
+            throw new RuntimeException("Unexpected fieldValue. This type of fieldValue needs to be implemented for.");
+        }
     }
 }

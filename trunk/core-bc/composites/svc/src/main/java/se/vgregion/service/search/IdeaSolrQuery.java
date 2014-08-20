@@ -183,6 +183,7 @@ public class IdeaSolrQuery extends SolrQuery {
             response = solrServer.query(this);
         } catch (SolrServerException e) {
             LOG.error("Server error: {}", e.getCause());
+            throw new RuntimeException(e); // TODO handle this better to give a proper error message to gui
         }
 
         // Clear query for next query

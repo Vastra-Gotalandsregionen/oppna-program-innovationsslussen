@@ -22,7 +22,7 @@
 
 <c:set var="ideaItemCssClass" scope="page" value="" />
 
-<div class="portlet-msg-info idea-msg-ifo">
+<div class="portlet-msg-info idea-msg-info">
     <h2>Oops nu gick n&aring;got fel!</H2>
     <h3>Hittade inte den id&eacute; du fr&aring;gade efter.</h3>
 </div>

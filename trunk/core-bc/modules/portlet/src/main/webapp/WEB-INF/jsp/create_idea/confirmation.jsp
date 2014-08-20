@@ -42,13 +42,13 @@
 				
 				<div class="link-buttons-wrap clearfix">
 
-	                <liferay-portlet:renderURL var="ideaPrivateUrl"plid="${ideaPlid}" portletName="${ideaPortletName}" >
+	                <liferay-portlet:renderURL var="ideaPrivateUrl" plid="${ideaPlid}" portletName="${ideaPortletName}" >
 	                    <liferay-portlet:param name="showView" value="showIdea" />
 	                    <liferay-portlet:param name="type" value="private" />
 	                    <liferay-portlet:param name="urlTitle" value="${urlTitle}" />
 	                </liferay-portlet:renderURL>
 	                
-	                <liferay-portlet:renderURL var="faqURL"plid="${faqPlid}" />
+	                <liferay-portlet:renderURL var="faqURL" plid="${faqPlid}" />
 
 					<a class="link-button-mod" href="${ideaPrivateUrl}">
 						G&aring; till din id&eacute; <span class="text-icon">&raquo;</span>
