@@ -37,7 +37,7 @@ AUI().add('innovationsslussen-idea',function(A) {
         PORTLET_NAMESPACE = 'portletNamespace',
         PORTLET_NODE = 'portletNode',
         
-        CSS_HIDDEN = 'aui-helper-hidden'
+        CSS_HIDDEN = 'hide'
     ;
         
     var InnovationsslussenIdea = A.Component.create(
