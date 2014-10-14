@@ -808,6 +808,11 @@ public class BariumRestClientImpl implements BariumRestClient {
                 sb.append("&");
                 sb.append(name);
                 sb.append("=");
+                try {
+                    value = URLEncoder.encode(value + "", "utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    throw new RuntimeException(e);
+                }
                 sb.append(value);
             }
         }
