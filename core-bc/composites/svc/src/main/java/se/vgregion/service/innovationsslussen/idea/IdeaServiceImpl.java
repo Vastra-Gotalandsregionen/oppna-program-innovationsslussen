@@ -1083,9 +1083,9 @@ public class IdeaServiceImpl implements IdeaService {
                 }
 
             } catch (InterruptedException e) {
-                throw new UpdateIdeaException();
+                throw new UpdateIdeaException(e);
             } catch (ExecutionException e) {
-                throw new UpdateIdeaException();
+                throw new UpdateIdeaException(e);
             }
 
             result.setChanged(!isIdeasTheSame(idea, result.getOldIdea()));
