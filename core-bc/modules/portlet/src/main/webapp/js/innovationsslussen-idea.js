@@ -111,13 +111,11 @@ AUI().add('innovationsslussen-idea',function(A) {
             			if(portletNode) {
             				var flowNodes = portletNode.all('.idea-flow-list li');
 
-            				instance.flowNodesTooltip = new A.Tooltip({
-            			         trigger: flowNodes,
-            			         align: { points: [ 'tc', 'bc' ] },
-            			         cssClass: 'rp-tooltip',
-            			         showArrow: false,
-            			         title: true
-            			 	}).render();
+            				instance.flowNodesTooltip = new A.TooltipDelegate({
+                                 html: true,
+                                 opacity: 1,
+            			         trigger: '.idea-flow-list li'
+            			 	});
             			}
                     },
                     
