@@ -57,7 +57,7 @@
                                     <c:if test="${status.error}">
                                         <c:set var="elementWrapCssClass" scope="page" value="element-wrap element-has-errors" />
                                     </c:if>
-                                    <div class="${elementWrapCssClass}">
+                                    <div class="${elementWrapCssClass} clearfix">
                                         <aui:field-wrapper cssClass="element-field-wrap">
                                             <label for="<portlet:namespace />title">
                                                 <span>VGR-Id</span>
