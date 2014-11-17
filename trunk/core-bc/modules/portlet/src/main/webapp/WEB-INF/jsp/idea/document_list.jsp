@@ -61,7 +61,7 @@
 		<portlet:param name="ideaType" value="${ideaType}"/>
    	</portlet:renderURL>
    	<div class="link-button-wrap clearfix">
-		<a href="${uploadFile}" class="link-button-mod-1 link-button-mod-1-add">
+		<a href="${uploadFile}" class="btn btn-primary link-button-mod-1 link-button-mod-1-add">
 			<span>
 				L&auml;gg till dokument
 			</span>

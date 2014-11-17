@@ -51,6 +51,7 @@ public class JmsContainerFactory implements FactoryBean<DefaultMessageListenerCo
             container.setDestinationName(destinationName);
             container.setMessageListener(messageListener);
             container.setConnectionFactory(connectionFactory);
+            container.setRecoveryInterval(1000 * 60 * 60); // 1000 * 60 * 60 millis is one hour
             theInstance = container;
             return theInstance;
         } else {
