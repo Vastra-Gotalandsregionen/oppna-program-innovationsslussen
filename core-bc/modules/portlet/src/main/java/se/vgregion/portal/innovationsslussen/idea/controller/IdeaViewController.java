@@ -55,12 +55,15 @@ import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.BeanMap;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.portlet.PortletFileUpload;
+import org.codehaus.jackson.map.util.BeanUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -307,6 +310,9 @@ public class IdeaViewController extends BaseController {
         String comment = ParamUtil.getString(request, "comment", "");
 
         if (!isAllowedToDoAction(request, idea, Action.ADD_COMMENT, ideaContentType)) {
+            LOGGER.error("User is denied to add comment. idea.getId(): " + idea.getId()
+                    + ", idea.getUserId(): " + idea.getUserId()
+                    + ", idea.getTitle(): " + idea.getTitle());
             sendRedirectToContextRoot(response);
             return;
         }
@@ -367,7 +373,9 @@ public class IdeaViewController extends BaseController {
                 if (!isSignedIn) {
                     return false;
                 }
-
+                if (idea.getUserId() == userId) {
+                    return true;
+                }
                 publicAndPublicPermission = publicPart && ideaPermissionChecker.getHasPermissionAddCommentPublic();
                 privateAndPrivatePermission = !publicPart && ideaPermissionChecker.getHasPermissionAddCommentPrivate();
                 break;
