@@ -62,7 +62,7 @@ public class Person {
     private String labeledURI;
     @ExplicitLdapName("vgrTitleCode")
     private String vgrTitleCode;
-    @ExplicitLdapName("vgr-id")
+    @ExplicitLdapName("cn")
     private String vgrId;
     @ExplicitLdapName("vgrAnsvarsnummer")
     private String vgrAnsvarsnummer;
@@ -86,8 +86,16 @@ public class Person {
     private String sn;
     @ExplicitLdapName("title")
     private String title;
-    @ExplicitLdapName("vgrAdminType") private String vgrAdminType;
-    @ExplicitLdapName("vgrLabeledURI") private String vgrLabeledURI;
+    @ExplicitLdapName("division")
+    private String division;
+    @ExplicitLdapName("vgrAdminType")
+    private String vgrAdminType;
+    @ExplicitLdapName("vgrLabeledURI")
+    private String vgrLabeledURI;
+    @ExplicitLdapName("mobile")
+    private String mobile;
+    @ExplicitLdapName("telephoneNumber")
+    private String telephoneNumber;
 
     /**
      * Gets the gender.
@@ -159,6 +167,30 @@ public class Person {
 
     public void setL(String l) {
         this.l = l;
+    }
+
+    public String getDivision() {
+        return division;
+    }
+
+    public void setDivision(String division) {
+        this.division = division;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getTelephoneNumber() {
+        return telephoneNumber;
+    }
+
+    public void setTelephoneNumber(String telephoneNumber) {
+        this.telephoneNumber = telephoneNumber;
     }
 
     public static enum Gender {

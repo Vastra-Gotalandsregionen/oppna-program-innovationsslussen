@@ -194,7 +194,9 @@ public class CreateIdeaViewController extends BaseController {
                     ideaPerson.setJobPosition(person.getTitle());
                     ideaPerson.setName(person.getDisplayName());
                     ideaPerson.setVgrId(person.getVgrId());
-                    ideaPerson.setAdministrativeUnit(person.getO());
+                    ideaPerson.setAdministrativeUnit(person.getDivision());
+                    ideaPerson.setPhoneMobile(person.getMobile());
+                    ideaPerson.setPhone(person.getTelephoneNumber());
                     model.addAttribute("otherUserVgrId", idea.getIdeaPerson().getVgrId());
                 }
             }
@@ -284,10 +286,13 @@ public class CreateIdeaViewController extends BaseController {
                 if (findings.size() == 1) {
                     Person person = findings.get(0);
                     IdeaPerson ip = idea.getIdeaPerson();
+                    ip.setName(person.getFullName());
                     ip.setVgrId(person.getVgrId());
-                    ip.setAdministrativeUnit(person.getO());
+                    ip.setAdministrativeUnit(person.getDivision());
                     ip.setBirthYear(person.getBirthYear());
                     ip.setVgrStrukturPerson(person.getVgrStrukturPerson());
+                    ip.setPhoneMobile(person.getMobile());
+                    ip.setPhone(person.getTelephoneNumber());
 
                     Person.Gender gender = person.getGender();
                     if (gender != null && !Person.Gender.UNKNOWN.equals(gender)) {

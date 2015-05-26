@@ -30,6 +30,7 @@ import org.apache.commons.collections.BeanMap;
  */
 public class TextFrag {
 
+
     private final List<TextFrag> frags = new ArrayList<TextFrag>();
 
     /** The text. */
@@ -253,8 +254,6 @@ public class TextFrag {
         Parser parser = new Parser();
         TextFrag parent = new TextFrag();
         //parser.text = "hej(och)hå";
-        parser.text = s;
-        parser.toFrag(parent);
 
     }
 
