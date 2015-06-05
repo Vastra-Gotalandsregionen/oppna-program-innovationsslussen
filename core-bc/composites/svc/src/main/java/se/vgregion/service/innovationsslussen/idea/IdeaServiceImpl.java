@@ -83,6 +83,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.apache.commons.collections.BeanMap;
+import org.hibernate.JDBCException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -430,6 +431,17 @@ public class IdeaServiceImpl implements IdeaService {
 
         return idea;
     }
+
+
+    void logAllErros(Exception e) {
+        if (e instanceof JDBCException){
+            JDBCException jdbce = (JDBCException) e;
+            e.printStackTrace();
+            jdbce.getSQLException().getNextException().printStackTrace();
+        }
+    }
+
+
 
     private Idea checkIfIdeaIsForAnotherPerson(Idea idea) throws SystemException, PortalException {
 

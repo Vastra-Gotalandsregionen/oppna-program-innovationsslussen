@@ -128,7 +128,7 @@ public class LdapServiceTest {
         Assert.assertEquals("middleName", result);
     }
 
-    public static class Individual extends Person {
+    public static class Individual extends KivPerson {
         private String middleName;
 
         @ExplicitLdapName("foo")

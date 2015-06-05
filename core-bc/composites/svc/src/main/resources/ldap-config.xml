@@ -44,7 +44,26 @@
   </bean>
 
   <bean id="ldapService" class="se.vgregion.service.innovationsslussen.ldap.LdapService">
-      <property name="ldapTemplate" ref="vgr.org.ldapTemplate" />
+    <property name="ldapTemplate" ref="vgr.org.ldapTemplate" />
   </bean>
+
+  <bean id="vgr.kiv.contextSource" class="org.springframework.ldap.core.support.LdapContextSource">
+    <property name="url" value="${ldap.kiv.authentication.java.naming.provider.url}"/>
+    <property name="base" value="${ldap.kiv.synchronization.userSearchBase}"/>
+    <property name="userDn" value="${ldap.kiv.synchronization.java.naming.security.principal}"/>
+    <property name="password" value="${ldap.kiv.synchronization.java.naming.security.credentials}"/>
+    <property name="pooled" value="true"/>
+  </bean>
+
+  <bean id="vgr.kiv.dirContextValidator" class="org.springframework.ldap.pool.validation.DefaultDirContextValidator" />
+
+  <bean id="vgr.kiv.ldapTemplate" class="org.springframework.ldap.core.LdapTemplate">
+    <property name="contextSource" ref="vgr.kiv.contextSource" />
+  </bean>
+
+  <bean id="kivLdapService" class="se.vgregion.service.innovationsslussen.ldap.LdapService">
+    <property name="ldapTemplate" ref="vgr.kiv.ldapTemplate" />
+  </bean>
+
   
 </beans>

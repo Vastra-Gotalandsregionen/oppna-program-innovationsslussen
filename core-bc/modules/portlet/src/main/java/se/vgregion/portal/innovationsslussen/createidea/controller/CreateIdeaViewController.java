@@ -53,6 +53,8 @@ import se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionChec
 import se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionCheckerService;
 import se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsService;
 import se.vgregion.service.innovationsslussen.idea.settings.util.ExpandoConstants;
+import se.vgregion.service.innovationsslussen.ldap.AdPerson;
+import se.vgregion.service.innovationsslussen.ldap.KivPerson;
 import se.vgregion.service.innovationsslussen.ldap.LdapService;
 import se.vgregion.service.innovationsslussen.ldap.Person;
 import se.vgregion.service.innovationsslussen.validator.IdeaValidator;
@@ -82,6 +84,7 @@ public class CreateIdeaViewController extends BaseController {
     private final IdeaSettingsService ideaSettingsService;
     private final IdeaValidator ideaValidator;
     private final LdapService ldapService;
+    private final LdapService kivLdapService;
     private final IdeaPermissionCheckerService ideaPermissionCheckerService;
 
     /**
@@ -93,11 +96,12 @@ public class CreateIdeaViewController extends BaseController {
      * @param ideaPermissionCheckerService
      */
     @Autowired
-    public CreateIdeaViewController(IdeaService ideaService, IdeaSettingsService ideaSettingsService, IdeaValidator ideaValidator, LdapService ldapService, IdeaPermissionCheckerService ideaPermissionCheckerService) {
+    public CreateIdeaViewController(IdeaService ideaService, IdeaSettingsService ideaSettingsService, IdeaValidator ideaValidator, LdapService ldapService, LdapService kivLdapService, IdeaPermissionCheckerService ideaPermissionCheckerService) {
         this.ideaService = ideaService;
         this.ideaSettingsService = ideaSettingsService;
         this.ideaValidator = ideaValidator;
         this.ldapService = ldapService;
+        this.kivLdapService = kivLdapService;
         this.ideaPermissionCheckerService = ideaPermissionCheckerService;
     }
 
@@ -185,20 +189,23 @@ public class CreateIdeaViewController extends BaseController {
 
 
                 IdeaPerson ideaPerson = idea.getIdeaPerson();
-                Person criteria = new Person();
-                criteria.setCn(screenName);
-                List<Person> findings = ldapService.find(criteria);
+                AdPerson adCriteria = new AdPerson();
+                adCriteria.setCn(screenName);
+                List<AdPerson> findings = ldapService.find(adCriteria);
                 if (findings.size() == 1) {
-                    Person person = findings.get(0);
+                    AdPerson person = findings.get(0);
                     ideaPerson.setEmail(person.getMail());
                     ideaPerson.setJobPosition(person.getTitle());
                     ideaPerson.setName(person.getDisplayName());
-                    ideaPerson.setVgrId(person.getVgrId());
                     ideaPerson.setAdministrativeUnit(person.getDivision());
                     ideaPerson.setPhoneMobile(person.getMobile());
                     ideaPerson.setPhone(person.getTelephoneNumber());
+                    ideaPerson.setVgrId(person.getCn());
+                    ideaPerson.setName(person.getDisplayName());
                     model.addAttribute("otherUserVgrId", idea.getIdeaPerson().getVgrId());
                 }
+
+                populateValuesFromKiv(screenName, ideaPerson);
             }
         } else {
             // Copy binding error from save action
@@ -222,6 +229,16 @@ public class CreateIdeaViewController extends BaseController {
         model.addAttribute("ideaPermissionChecker", ideaPermissionChecker);
 
         return "view";
+    }
+
+    void populateValuesFromKiv(String screenName, IdeaPerson ideaPerson) {
+        List<KivPerson> kivFinds = kivLdapService.find(new KivPerson(screenName));
+        if (kivFinds.size() == 1) {
+            KivPerson kivPerson = kivFinds.get(0);
+            ideaPerson.setGender(kivPerson.getGender());
+            ideaPerson.setBirthYear(kivPerson.getBirthYear());
+            ideaPerson.setVgrId(screenName);
+        }
     }
 
     @ActionMapping("loadOtherUser")
@@ -264,7 +281,7 @@ public class CreateIdeaViewController extends BaseController {
                 String schemeServerNamePort = generateSchemeServerNamePort(request);
 
                 //Populate with extra information about the user (from the ldap if at all).
-                Person criteria = new Person();
+                AdPerson criteria = new AdPerson();
 
                 String otherUserVgrId = "";
 
@@ -282,24 +299,26 @@ public class CreateIdeaViewController extends BaseController {
                     criteria.setCn(themeDisplay.getUser().getScreenName());
                 }
 
-                List<Person> findings = ldapService.find(criteria);
+                List<AdPerson> findings = ldapService.find(criteria);
                 if (findings.size() == 1) {
-                    Person person = findings.get(0);
-                    IdeaPerson ip = idea.getIdeaPerson();
-                    ip.setName(person.getFullName());
-                    ip.setVgrId(person.getVgrId());
-                    ip.setAdministrativeUnit(person.getDivision());
-                    ip.setBirthYear(person.getBirthYear());
-                    ip.setVgrStrukturPerson(person.getVgrStrukturPerson());
-                    ip.setPhoneMobile(person.getMobile());
-                    ip.setPhone(person.getTelephoneNumber());
 
-                    Person.Gender gender = person.getGender();
-                    if (gender != null && !Person.Gender.UNKNOWN.equals(gender)) {
-                        ip.setGender(Person.Gender.MALE.name().equals(gender.name())
-                                ? IdeaPerson.Gender.MALE : IdeaPerson.Gender.FEMALE);
-                    }
+                    AdPerson person = findings.get(0);
+                    IdeaPerson ip = idea.getIdeaPerson();
+
+                    ip.setName(person.getDisplayName());
+                    ip.setVgrId(person.getCn());
+                    ip.setAdministrativeUnit(person.getDivision());
+                    //ip.setBirthYear(person.getBirthYear());
+
+                    ip.setVgrStrukturPerson(person.getFormattedVgrStrukturPerson());
+                    //ip.setPhoneMobile(person.getMobile());
+                    //ip.setPhone(person.getTelephoneNumber());
+
+                    ip.setVgrId(person.getCn());
+                    ip.setName(person.getDisplayName());
                 }
+
+                populateValuesFromKiv(idea.getIdeaPerson().getVgrId(), idea.getIdeaPerson());
 
                 idea = ideaService.addIdea(idea, schemeServerNamePort);
 

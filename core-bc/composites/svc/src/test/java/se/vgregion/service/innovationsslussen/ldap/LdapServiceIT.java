@@ -56,9 +56,9 @@ public class LdapServiceIT {
     @Test
     public void findByHsaId() {
         String filter = "SE2321000131-P000000233140";
-        Person person = new Person();
+        AdPerson person = new AdPerson();
         person.setHsaIdentity(filter);
-        List<Person> result = ldapService.find(person);
+        List<AdPerson> result = ldapService.find(person);
         printFirstItem(result);
     }
 
@@ -66,10 +66,10 @@ public class LdapServiceIT {
     @Test
     public void findByVgrId() {
         String filter = "marsc9";
-        Person person = new Person();
+        AdPerson person = new AdPerson();
         //person.setVgrId(filter);
         person.setCn(filter);
-        List<Person> result = ldapService.find(person);
+        List<AdPerson> result = ldapService.find(person);
         printFirstItem(result);
     }
 

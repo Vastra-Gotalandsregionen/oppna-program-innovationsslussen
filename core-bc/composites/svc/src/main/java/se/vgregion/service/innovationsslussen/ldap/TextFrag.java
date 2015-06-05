@@ -230,7 +230,9 @@ public class TextFrag {
                 return " recursive call to " + getClass().getSimpleName() + ".toString()";
             }
             toStringRunning = true;
-            return new HashMap(new BeanMap(this)).toString();
+            HashMap hm = new HashMap(new BeanMap(this));
+            hm.remove("class");
+            return hm.toString();
         } finally {
             toStringRunning = false;
         }
