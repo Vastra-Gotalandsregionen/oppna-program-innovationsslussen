@@ -57,6 +57,7 @@ import se.vgregion.portal.innovationsslussen.domain.json.ApplicationInstances;
 import se.vgregion.portal.innovationsslussen.domain.json.BariumInstance;
 import se.vgregion.portal.innovationsslussen.domain.json.ObjectEntry;
 import se.vgregion.portal.innovationsslussen.domain.json.ObjectField;
+import se.vgregion.portal.innovationsslussen.domain.json.ObjectFieldsHolder;
 import se.vgregion.portal.innovationsslussen.domain.json.Objects;
 import se.vgregion.util.Util;
 
@@ -723,8 +724,10 @@ public class BariumRestClientImpl implements BariumRestClient {
 
         ObjectMapper mapper = new ObjectMapper();
         try {
-            return mapper.readValue(objectJson, TypeFactory.defaultInstance().constructCollectionType(List.class,
-                    ObjectField.class));
+            ObjectFieldsHolder holder = mapper.readValue(objectJson, TypeFactory.defaultInstance().constructType(
+                    ObjectFieldsHolder.class));
+
+            return holder.getData();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -772,8 +775,10 @@ public class BariumRestClientImpl implements BariumRestClient {
 
         ObjectMapper mapper = new ObjectMapper();
         try {
-            return mapper.readValue(objectJson, TypeFactory.defaultInstance().constructCollectionType(List.class,
-                    ObjectField.class));
+            ObjectFieldsHolder holder = mapper.readValue(objectJson, TypeFactory.defaultInstance().constructType(
+                    ObjectFieldsHolder.class));
+
+            return holder.getData();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
