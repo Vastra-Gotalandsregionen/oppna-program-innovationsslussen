@@ -48,17 +48,31 @@ public class IdeaPermissionCheckerServiceImpl implements IdeaPermissionCheckerSe
         try {
             String ideaId = idea.getId();
 
+            if(ideaId == null) {
+                ideaId = "";
+            }
+
             User user = UserLocalServiceUtil.getUser(userId);
 
             PermissionChecker permissionChecker = getPermissionChecker(user);
+
+            // Get create permissions
+            boolean hasPermissionCreateIdeaForOtherUser = permissionChecker.hasPermission(scopeGroupId,
+                    Idea.class.getName(), ideaId, IdeaActionKeys.CREATE_IDEA_FOR_OTHER_USER);
+
+
 
             // Get add permissions
             boolean hasPermissionAddCommentPublic = permissionChecker.hasPermission(scopeGroupId,
                     Idea.class.getName(), ideaId, IdeaActionKeys.ADD_COMMENT_PUBLIC);
             boolean hasPermissionAddCommentPrivate = permissionChecker.hasPermission(scopeGroupId,
                     Idea.class.getName(), ideaId, IdeaActionKeys.ADD_COMMENT_PRIVATE);
+
             boolean hasPermissionAddDocumentPublic = permissionChecker.hasPermission(scopeGroupId,
                     Idea.class.getName(), ideaId, IdeaActionKeys.ADD_DOCUMENT_PUBLIC);
+
+
+
             boolean hasPermissionAddDocumentPrivate = permissionChecker.hasPermission(scopeGroupId,
                     Idea.class.getName(), ideaId, IdeaActionKeys.ADD_DOCUMENT_PRIVATE);
             boolean hasPermissionAddFavorite = permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(),
@@ -66,9 +80,6 @@ public class IdeaPermissionCheckerServiceImpl implements IdeaPermissionCheckerSe
             boolean hasPermissionAddLike = permissionChecker.hasPermission(scopeGroupId, Idea.class.getName(),
                     ideaId, IdeaActionKeys.ADD_LIKE);
 
-            // Get create permissions
-            boolean hasPermissionCreateIdeaForOtherUser = permissionChecker.hasPermission(scopeGroupId,
-                    Idea.class.getName(), ideaId, IdeaActionKeys.CREATE_IDEA_FOR_OTHER_USER);
 
             // Get delete permissions
             boolean hasPermissionDeleteCommentPublic = permissionChecker.hasPermission(scopeGroupId,
@@ -96,6 +107,8 @@ public class IdeaPermissionCheckerServiceImpl implements IdeaPermissionCheckerSe
                     Idea.class.getName(), ideaId, IdeaActionKeys.VIEW_IDEA_PRIVATE);
             boolean hasPermissionViewInBarium = permissionChecker.hasPermission(scopeGroupId,
                     Idea.class.getName(), ideaId, IdeaActionKeys.VIEW_IN_BARIUM);
+
+
 
             boolean userPrioCouncilMember = ideaService.isUserPrioCouncilMember(userId, scopeGroupId);
             boolean userInnovationsslussenEmployee = ideaService.isUserInnovationsslussenEmployee(userId, scopeGroupId);
