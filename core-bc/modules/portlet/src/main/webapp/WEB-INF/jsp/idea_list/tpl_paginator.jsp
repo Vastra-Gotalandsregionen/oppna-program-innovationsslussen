@@ -33,6 +33,7 @@
 								<portlet:param name="ideaPhase" value="${ideaPhase}" />
                                 <portlet:param name="ideaSort" value="${ideaSort}" />
                                 <portlet:param name="ideaVisible" value="${ideaVisible}" />
+								<portlet:param name="transporter" value="${transporter}" />
 							</liferay-portlet:renderURL>
 							<a href="${firstUrl}" title="F&ouml;rsta">F&ouml;rsta</a>
 						</li>
@@ -46,6 +47,7 @@
 								<portlet:param name="ideaPhase" value="${ideaPhase}" />
                                 <portlet:param name="ideaSort" value="${ideaSort}" />
                                 <portlet:param name="ideaVisible" value="${ideaVisible}" />
+								<portlet:param name="transporter" value="${transporter}" />
 							</liferay-portlet:renderURL>
 							<a href="${previousUrl}" title="F&ouml;reg&aring;ende">F&ouml;reg&aring;ende</a>
 						</li>
@@ -73,6 +75,7 @@
 										<portlet:param name="ideaPhase" value="${ideaPhase}" />
 										<portlet:param name="ideaSort" value="${ideaSort}" />
 										<portlet:param name="ideaVisible" value="${ideaVisible}" />
+										<portlet:param name="transporter" value="${transporter}" />
 									</liferay-portlet:renderURL>
 									<a href="${url}">${page.pagenumber}</a>
 								</c:otherwise>
@@ -91,6 +94,7 @@
 								<portlet:param name="ideaPhase" value="${ideaPhase}" />
                                 <portlet:param name="ideaSort" value="${ideaSort}" />
                                 <portlet:param name="ideaVisible" value="${ideaVisible}" />
+								<portlet:param name="transporter" value="${transporter}" />
 							</liferay-portlet:renderURL>
 							<a href="${nextUrl}" title="N&auml;sta">N&auml;sta</a>
 						</li>
@@ -104,6 +108,7 @@
 								<portlet:param name="ideaPhase" value="${ideaPhase}" />
                                 <portlet:param name="ideaSort" value="${ideaSort}" />
                                 <portlet:param name="ideaVisible" value="${ideaVisible}" />
+								<portlet:param name="transporter" value="${transporter}" />
 							</liferay-portlet:renderURL>
 							<a href="${lastUrl}" title="Sista">Sista</a>
 						</li>
