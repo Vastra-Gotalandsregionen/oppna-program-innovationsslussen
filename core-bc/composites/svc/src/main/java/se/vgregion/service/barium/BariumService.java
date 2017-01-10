@@ -107,7 +107,8 @@ public class BariumService {
 
             bariumRestClient.connect();
         } catch (BariumException e) {
-            throw new RuntimeException(e);
+            LOGGER.error("Innovationsplattformen - Could not connect to Barium.");
+            //throw new RuntimeException(e);
         }
     }
 
