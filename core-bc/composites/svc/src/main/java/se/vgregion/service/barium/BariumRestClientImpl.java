@@ -425,6 +425,9 @@ public class BariumRestClientImpl implements BariumRestClient {
 
     private String doRequest(String method, String uri, byte[] data, int methodCallCount) throws BariumException {
 
+        LOGGER.debug("doRequest: apiLocation: " + apiLocation + ", method: " + method + ", uri: " + uri + ", data: "
+                + (data != null ? new String(data) : ""));
+
         URL url;
         HttpURLConnection conn = null;
         String response = null;
@@ -498,7 +501,11 @@ public class BariumRestClientImpl implements BariumRestClient {
             if (conn != null) {
                 inputStream = conn.getErrorStream();
                 bis = new BufferedInputStream(inputStream);
-                response = toString(bis);
+                try {
+                    response = toString(bis);
+                } catch (Exception e2) {
+                    LOGGER.error(e2.getMessage(), e2);
+                }
                 throw new BariumException(response, e);
             }
         } finally {

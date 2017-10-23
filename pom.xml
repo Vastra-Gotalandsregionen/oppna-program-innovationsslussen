@@ -30,6 +30,8 @@
   </scm>
 
   <properties>
-    <liferay.version>6.2.10.9</liferay.version>
+    <liferay.version>6.2.10.15</liferay.version>
+    <compileSource>1.8</compileSource>
+    <compileTarget>1.8</compileTarget>
   </properties>
 </project>

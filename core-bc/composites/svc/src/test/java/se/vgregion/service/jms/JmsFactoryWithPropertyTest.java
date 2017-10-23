@@ -20,6 +20,7 @@
 package se.vgregion.service.jms;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class JmsFactoryWithPropertyTest {
     @Autowired
     private ApplicationContext ctx;
 
-    @Test
+    @Test @Ignore
     public void testApplicationContext() {
         ActiveMQConnectionFactory bean = ctx.getBean(ActiveMQConnectionFactory.class);
 

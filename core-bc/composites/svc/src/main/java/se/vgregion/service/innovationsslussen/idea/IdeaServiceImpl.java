@@ -75,10 +75,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
@@ -174,7 +175,7 @@ public class IdeaServiceImpl implements IdeaService {
     private BariumService bariumService;
     private IdeaSettingsService ideaSettingsService;
 
-    private final ExecutorService executor = Executors.newCachedThreadPool(new DaemonThreadFactory());
+    private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1, new DaemonThreadFactory());
 
     @Autowired
     private JpaTransactionManager transactionManager;
@@ -284,7 +285,7 @@ public class IdeaServiceImpl implements IdeaService {
 
     @PreDestroy
     public void shutdown() {
-        executor.shutdown();
+        executor.shutdownNow();
     }
 
     /* (non-Javadoc)
@@ -1430,12 +1431,12 @@ public class IdeaServiceImpl implements IdeaService {
      * Asynchronous update of all ideas in barium.
      */
     public void asyncUpdateAllIdeasFromBarium() {
-        executor.submit(new Runnable() {
+        executor.schedule(new Runnable() {
             @Override
             public void run() {
                 updateAllIdeasFromBarium();
             }
-        });
+        }, 5, TimeUnit.MINUTES);
     }
 
     public static void populateIdea(IdeaObjectFields ideaObjectFields, Idea idea) {

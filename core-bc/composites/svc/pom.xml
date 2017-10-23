@@ -100,9 +100,9 @@
 
     <!-- Others -->
     <dependency>
-      <groupId>icu4j</groupId>
+      <groupId>com.ibm.icu</groupId>
       <artifactId>icu4j</artifactId>
-      <version>2.6.1</version>
+      <version>4.6.1.1</version>
     </dependency>
 
     <dependency>

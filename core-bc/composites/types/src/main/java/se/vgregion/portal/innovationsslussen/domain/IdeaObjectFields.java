@@ -95,6 +95,7 @@ public class IdeaObjectFields {
         SPECIAL_FIELD_MAPPINGS.put("VGR-ID.titel", "vgrIdTitel");
         SPECIAL_FIELD_MAPPINGS.put("VGR-ID", "vgrId");
         SPECIAL_FIELD_MAPPINGS.put("Idetransportorer", "Idetransportor");
+        SPECIAL_FIELD_MAPPINGS.put("Idetransportorer2", "Idetransportor");
 
         for (String key : SPECIAL_FIELD_MAPPINGS.keySet()) {
             String value = SPECIAL_FIELD_MAPPINGS.get(key);
@@ -131,7 +132,10 @@ public class IdeaObjectFields {
             if (declaredField != null) {
                 declaredField.setAccessible(true);
                 try {
-                    declaredField.set(this, objectField.getValue());
+                    String value = objectField.getValue();
+                    if (value != null && !"".equals(value)) {
+                        declaredField.set(this, value);
+                    }
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException(e);
                 }
