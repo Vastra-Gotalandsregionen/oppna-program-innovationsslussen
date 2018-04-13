@@ -40,7 +40,6 @@ public class IndexerAspect {
                 reindex((Idea) result);
             } else if (result.getClass().equals(IdeaService.UpdateFromBariumResult.class)) {
                 try {
-                    IdeaService.UpdateFromBariumResult br = (IdeaService.UpdateFromBariumResult) result;
                     Indexer indexer = IndexerRegistryUtil.getIndexer(IDEA_CLASS);
                     indexer.reindex(((IdeaService.UpdateFromBariumResult) result).getNewIdea());
                 } catch (SearchException e) {

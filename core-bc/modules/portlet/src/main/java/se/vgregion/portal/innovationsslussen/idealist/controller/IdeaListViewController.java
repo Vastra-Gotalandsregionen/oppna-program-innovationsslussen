@@ -189,7 +189,7 @@ public class IdeaListViewController extends BaseController {
                 totalCount = (Long) map.get("totalIdeasCount");
 
                // Collect all Idea transporters
-                setIdeaTransporters(model, scopeGroupId, companyId, entryCount, start);
+                setIdeaTransporters(model, scopeGroupId, companyId, entryCount, start, ideaVisible);
 
                 returnView = "view_transporter_ideas";
 
@@ -233,9 +233,9 @@ public class IdeaListViewController extends BaseController {
         return returnView;
     }
 
-    private void setIdeaTransporters(ModelMap model, long scopeGroupId, long companyId, int entryCount, int start) {
+    private void setIdeaTransporters(ModelMap model, long scopeGroupId, long companyId, int entryCount, int start, int visible) {
         Map<String,Object> map2 = searchService.getVisibleIdeasForIdeaTransporters(companyId, scopeGroupId, start, entryCount,
-                0, 0, 0, "0");
+                0, 0, visible, "0");
 
         List<FacetField> ideaTranspoterFacets = (List<FacetField>) map2.get("ideaTranspoterFacets");
 
