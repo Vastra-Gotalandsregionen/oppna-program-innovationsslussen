@@ -31,7 +31,8 @@
 
   <properties>
     <liferay.version>6.2.10.15</liferay.version>
-    <compileSource>1.8</compileSource>
-    <compileTarget>1.8</compileTarget>
+    <hibernate.version>3.4.0.GA</hibernate.version>
+    <compileSource>1.7</compileSource> <!-- The used version of ASM doesn't support 1.8 -->
+    <compileTarget>1.7</compileTarget> <!-- The used version of ASM doesn't support 1.8 -->
   </properties>
 </project>

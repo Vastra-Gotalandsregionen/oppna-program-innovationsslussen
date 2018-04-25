@@ -38,7 +38,13 @@ Generation time : 2013-05-08 10:10:47 CEST
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-entitymanager</artifactId>
-      <version>3.6.0.Final</version>
+      <version>${hibernate.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-beanutils</groupId>
+      <artifactId>commons-beanutils</artifactId>
+      <version>1.9.2</version>
     </dependency>
   </dependencies>
 </project>

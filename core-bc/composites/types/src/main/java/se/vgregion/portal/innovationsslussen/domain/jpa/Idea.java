@@ -113,10 +113,13 @@ public class Idea extends AbstractEntity<String> {
     @Transient
     private boolean isPublic;
 
-	@Transient
-	private int commentsCount;
+    @Column
+	private Integer commentsCount;
 
     private Boolean hidden;
+
+    @Column
+    private Date lastPrivateCommentDate;
 
     /**
      * Constructor.
@@ -370,11 +373,11 @@ public class Idea extends AbstractEntity<String> {
                 "id='" + id + '}';
     }
 
-	public int getCommentsCount() {
+	public Integer getCommentsCount() {
 		return commentsCount;
 	}
 
-	public void setCommentsCount(int commentsCount) {
+	public void setCommentsCount(Integer commentsCount) {
 		this.commentsCount = commentsCount;
 	}
 
@@ -392,5 +395,13 @@ public class Idea extends AbstractEntity<String> {
 
     public void setHidden(Boolean hidden) {
         this.hidden = hidden;
+    }
+
+    public void setLastPrivateCommentDate(Date lastPrivateCommentDate) {
+        this.lastPrivateCommentDate = lastPrivateCommentDate;
+    }
+
+    public Date getLastPrivateCommentDate() {
+        return lastPrivateCommentDate;
     }
 }

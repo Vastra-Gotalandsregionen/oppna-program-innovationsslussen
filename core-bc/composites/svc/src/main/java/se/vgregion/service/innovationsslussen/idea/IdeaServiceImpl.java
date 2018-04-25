@@ -67,6 +67,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1145,12 +1147,28 @@ public class IdeaServiceImpl implements IdeaService {
                 result.setChanged(true);
             }
 
+            // Add auto-comments to the idea.
+            idea = generateAutoComments(idea, oldStatus, currentPhase, bariumPhase);
+
+            // Sync comments count
+            idea.setCommentsCount(getPrivateCommentsCount(idea));
+            idea = ideaRepository.merge(idea);
+
+            // Sync last comment date
+            List<CommentItemVO> privateComments = getComments(idea.getIdeaContentPrivate());
+            if (privateComments.size() > 0) {
+                Collections.sort(privateComments, new Comparator<CommentItemVO>() {
+                    @Override
+                    public int compare(CommentItemVO o1, CommentItemVO o2) {
+                        return -o1.getCreateDate().compareTo(o2.getCreateDate());
+                    }
+                });
+                idea.setLastPrivateCommentDate(privateComments.get(0).getCreateDate());
+            }
+
             if (transaction.isNewTransaction()) {
                 transactionManager.commit(transaction);
             }
-
-            // Add auto-comments to the idea.
-            idea = generateAutoComments(idea, oldStatus, currentPhase, bariumPhase);
 
             return result;
         } catch (BariumException be) {
@@ -2013,6 +2031,12 @@ public class IdeaServiceImpl implements IdeaService {
         idea.setHidden(false);
         idea = ideaRepository.merge(idea);
         return idea;
+    }
+
+    @Override
+    @Transactional
+    public Idea save(Idea idea) {
+        return ideaRepository.merge(idea);
     }
 
     /**

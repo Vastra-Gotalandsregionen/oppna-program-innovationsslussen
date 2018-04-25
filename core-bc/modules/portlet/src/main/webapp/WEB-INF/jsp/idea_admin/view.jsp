@@ -88,14 +88,3 @@
     <input type="submit" value="Synkronisera"/><span>Gör detta för att uppdatera alla idéer i Liferay med information från Barium</span>
   </form>
 </div>
-<div>
-   <h1>Indexering</h1>
-   <portlet:actionURL name="indexAllIdeas" var="indexAllIdeasURL">
-      <portlet:param name="action" value="indexAllIdeas"/>
-    </portlet:actionURL>
-
-    <form name="index" action="${indexAllIdeasURL}" method="post">
-      <input type="submit" value="Indexera"/><span>Gör detta för att indexera alla idéer i Liferay till Apache Solr</span>
-    </form>
-
-</div>

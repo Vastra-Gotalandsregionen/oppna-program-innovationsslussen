@@ -16,7 +16,6 @@
 	</portlet>
 	<portlet>
 		<portlet-name>idea</portlet-name>
-    <indexer-class>se.vgregion.service.search.indexer.IdeaIndexer</indexer-class>
 		<friendly-url-mapper-class>com.liferay.portal.kernel.portlet.DefaultFriendlyURLMapper</friendly-url-mapper-class>
 		<friendly-url-mapping>idea</friendly-url-mapping>
 		<friendly-url-routes>idea-portlet-friendly-url-routes.xml</friendly-url-routes>

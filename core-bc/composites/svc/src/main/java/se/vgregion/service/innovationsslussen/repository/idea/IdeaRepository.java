@@ -216,4 +216,6 @@ public interface IdeaRepository extends Repository<Idea, String> {
 
 
     Idea getReference(String ideaId);
+
+    List<Idea> findVisibleIdeasForIdeaTransporters(long companyId, long groupId, int start, int rows, int sort, int phase, int visible, String transporter);
 }

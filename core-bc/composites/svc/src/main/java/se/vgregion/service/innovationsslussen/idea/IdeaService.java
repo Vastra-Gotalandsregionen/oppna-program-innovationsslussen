@@ -438,6 +438,8 @@ public interface IdeaService {
      */
     Idea unhide(String ideaId);
 
+    Idea save(Idea idea);
+
     public static class UpdateFromBariumResult implements Serializable {
 
         private boolean changed;
