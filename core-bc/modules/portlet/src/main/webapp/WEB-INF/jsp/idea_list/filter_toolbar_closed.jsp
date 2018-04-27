@@ -11,7 +11,7 @@
 <portlet:defineObjects />
 <liferay-theme:defineObjects /> 
 
-<portlet:actionURL name="requestSearch" var="requestSearchURL" />
+<portlet:renderURL var="requestSearchURL" />
 
 <div class="idea-filters-wrap">
 	<aui:form action="${requestSearchURL}" name="filterForm" method="post" cssClass="idea-filters">
