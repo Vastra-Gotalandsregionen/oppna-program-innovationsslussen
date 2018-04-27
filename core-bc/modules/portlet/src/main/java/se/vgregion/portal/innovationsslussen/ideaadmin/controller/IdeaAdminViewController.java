@@ -19,17 +19,14 @@
 
 package se.vgregion.portal.innovationsslussen.ideaadmin.controller;
 
+import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.SearchException;
-import java.util.Collection;
-import java.util.List;
-
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-
+import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.WebKeys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +35,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
-
 import se.vgregion.portal.innovationsslussen.BaseController;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.util.IdeaPortletsConstants;
@@ -46,11 +42,12 @@ import se.vgregion.service.innovationsslussen.exception.RemoveIdeaException;
 import se.vgregion.service.innovationsslussen.exception.UpdateIdeaException;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
 
-import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.model.Layout;
-import com.liferay.portal.service.LayoutLocalServiceUtil;
-import com.liferay.portal.theme.ThemeDisplay;
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Controller class for the view mode in the idea admin portlet.
@@ -237,32 +234,6 @@ public class IdeaAdminViewController extends BaseController {
             ideaService.updateFromBarium(idea);
         } catch (UpdateIdeaException e) {
             LOGGER.error(e.getMessage(), e);
-        }
-    }
-
-
-    /**
-     * Index all ideas
-     *
-     * @param request the request
-     * @param response the response
-     * @param model the model
-     */
-    @ActionMapping(params = "action=indexAllIdeas")
-    public void indexAllIdeas(ActionRequest request, ActionResponse response, final ModelMap model) {
-
-        Collection<Idea> ideas = ideaService.findAll();
-
-        Indexer indexer = IndexerRegistryUtil.getIndexer(IDEA_CLASS);
-
-        for (Idea ideaToIndex : ideas) {
-            try {
-                indexer.reindex(ideaToIndex);
-            } catch (SearchException e) {
-                LOGGER.error(e.getMessage(), e);
-            } catch (RuntimeException e) {
-                LOGGER.error(e.getMessage(), e);
-            }
         }
     }
 

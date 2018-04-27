@@ -20,20 +20,18 @@
 package se.vgregion.portal.innovationsslussen.idea.controller;
 
 
+import com.liferay.message.boards.kernel.service.MBMessageLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.model.Layout;
-import com.liferay.portal.service.LayoutLocalServiceUtil;
-import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.service.ServiceContextFactory;
-import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portal.util.Portal;
-import com.liferay.portal.util.PortalUtil;
-import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
+import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.ServiceContextFactory;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.PortalUtil;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
@@ -326,7 +324,9 @@ public class IdeaViewController extends BaseController {
                 } else if (ideaContentType == IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE) {
                     ideaService.addMBMessage(idea, serviceContext, groupId, userId, comment, idea.getIdeaContentPrivate().getId());
 
-                    idea.setCommentsCount(idea.getCommentsCount() + 1);
+                    Integer commentsCount = idea.getCommentsCount();
+                    commentsCount = commentsCount != null ? commentsCount : ideaService.getPrivateCommentsCount(idea);
+                    idea.setCommentsCount(commentsCount + 1);
                     idea.setLastPrivateCommentDate(new Date());
                     idea = ideaService.save(idea);
 
@@ -517,8 +517,10 @@ public class IdeaViewController extends BaseController {
 
                 MBMessageLocalServiceUtil.deleteDiscussionMessage(commentId);
 
-                Indexer indexer = IndexerRegistryUtil.getIndexer(IDEA_CLASS);
-                indexer.reindex(idea);
+                if (ideaContentType == IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE) {
+                    idea.setCommentsCount(ideaService.getPrivateCommentsCount(idea));
+                    idea = ideaService.save(idea);
+                }
 
             } catch (PortalException e) {
                 LOGGER.error(e.getMessage(), e);

@@ -19,8 +19,8 @@
 
 package se.vgregion.portal.innovationsslussen.util;
 
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.theme.ThemeDisplay;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;

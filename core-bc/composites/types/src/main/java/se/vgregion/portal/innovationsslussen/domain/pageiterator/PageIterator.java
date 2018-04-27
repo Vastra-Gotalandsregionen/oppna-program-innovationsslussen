@@ -142,19 +142,15 @@ public class PageIterator {
             pages.add(page);
         }
 
-        final int seven = 7;
-
-        if (currentPage < seven) {
-            this.setShowFirst(false);
-            this.setShowPrevious(false);
-        } else {
+        if (startPage > 1) {
             this.setShowFirst(true);
             this.setShowPrevious(true);
+        } else {
+            this.setShowFirst(false);
+            this.setShowPrevious(false);
         }
 
-        final int five = 5;
-
-        if ((endPage == numberOfPages && currentPage > endPage - five)) {
+        if ((endPage == numberOfPages && currentPage > endPage - maxPages)) {
             this.setShowNext(false);
             this.setShowLast(false);
         } else {

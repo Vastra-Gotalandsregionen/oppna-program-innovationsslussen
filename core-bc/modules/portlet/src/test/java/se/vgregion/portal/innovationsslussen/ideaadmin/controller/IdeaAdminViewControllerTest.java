@@ -19,9 +19,9 @@
 
 package se.vgregion.portal.innovationsslussen.ideaadmin.controller;
 
+import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.model.Layout;
-import com.liferay.portal.theme.ThemeDisplay;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;

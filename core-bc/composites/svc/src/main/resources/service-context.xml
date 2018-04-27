@@ -90,22 +90,22 @@
         <property name="ideaService" ref="ideaService"></property>
     </bean>
 	
-  <bean id="expandoColumnService" class="com.liferay.portlet.expando.service.ExpandoColumnLocalServiceUtil" factory-method="getService" />
-  <bean id="expandoTableService" class="com.liferay.portlet.expando.service.ExpandoTableLocalServiceUtil" factory-method="getService" />
-  <bean id="expandoValueService" class="com.liferay.portlet.expando.service.ExpandoValueLocalServiceUtil" factory-method="getService" />
+  <bean id="expandoColumnService" class="com.liferay.expando.kernel.service.ExpandoColumnLocalServiceUtil" factory-method="getService" />
+  <bean id="expandoTableService" class="com.liferay.expando.kernel.service.ExpandoTableLocalServiceUtil" factory-method="getService" />
+  <bean id="expandoValueService" class="com.liferay.expando.kernel.service.ExpandoValueLocalServiceUtil" factory-method="getService" />
 
-  <bean id="mbMessageLocalService" class="com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil" factory-method="getService" />
-  <bean id="userLocalService" class="com.liferay.portal.service.UserLocalServiceUtil" factory-method="getService" />
-  <bean id="userGroupRoleLocalService" class="com.liferay.portal.service.UserGroupRoleLocalServiceUtil" factory-method="getService" />
-  <bean id="resourceLocalService" class="com.liferay.portal.service.ResourceLocalServiceUtil" factory-method="getService" />
-  <bean id="counterLocalService" class="com.liferay.counter.service.CounterLocalServiceUtil" factory-method="getService" />
-  <bean id="contactLocalService" class="com.liferay.portal.service.ContactLocalServiceUtil" factory-method="getService" />
-  <bean id="assetEntryLocalService" class="com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil" factory-method="getService" />
-  <bean id="groupLocalService" class="com.liferay.portal.service.GroupLocalServiceUtil" factory-method="getService" />
-  <bean id="classNameLocalService" class="com.liferay.portal.service.ClassNameLocalServiceUtil" factory-method="getService" />
-  <bean id="resourcePermissionLocalService" class="com.liferay.portal.service.ResourcePermissionLocalServiceUtil" factory-method="getService" />
-  <bean id="roleLocalService" class="com.liferay.portal.service.RoleLocalServiceUtil" factory-method="getService" />
-  <bean id="layoutSetLocalService" class="com.liferay.portal.service.LayoutSetLocalServiceUtil" factory-method="getService" />
+  <bean id="mbMessageLocalService" class="com.liferay.message.boards.kernel.service.MBMessageLocalServiceUtil" factory-method="getService" />
+  <bean id="userLocalService" class="com.liferay.portal.kernel.service.UserLocalServiceUtil" factory-method="getService" />
+  <bean id="userGroupRoleLocalService" class="com.liferay.portal.kernel.service.UserGroupRoleLocalServiceUtil" factory-method="getService" />
+  <bean id="resourceLocalService" class="com.liferay.portal.kernel.service.ResourceLocalServiceUtil" factory-method="getService" />
+  <bean id="counterLocalService" class="com.liferay.counter.kernel.service.CounterLocalServiceUtil" factory-method="getService" />
+  <bean id="contactLocalService" class="com.liferay.portal.kernel.service.ContactLocalServiceUtil" factory-method="getService" />
+  <bean id="assetEntryLocalService" class="com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil" factory-method="getService" />
+  <bean id="groupLocalService" class="com.liferay.portal.kernel.service.GroupLocalServiceUtil" factory-method="getService" />
+  <bean id="classNameLocalService" class="com.liferay.portal.kernel.service.ClassNameLocalServiceUtil" factory-method="getService" />
+  <bean id="resourcePermissionLocalService" class="com.liferay.portal.kernel.service.ResourcePermissionLocalServiceUtil" factory-method="getService" />
+  <bean id="roleLocalService" class="com.liferay.portal.kernel.service.RoleLocalServiceUtil" factory-method="getService" />
+  <bean id="layoutSetLocalService" class="com.liferay.portal.kernel.service.LayoutSetLocalServiceUtil" factory-method="getService" />
 
   <import resource="ldap-config.xml" />
 

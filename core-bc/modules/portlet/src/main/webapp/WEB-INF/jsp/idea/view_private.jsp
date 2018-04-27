@@ -184,8 +184,8 @@
                         </div>
                     </c:if>
 
-					<aui:layout>
-						<aui:column first="true" columnWidth="60" cssClass="idea-content">
+					<aui:container>
+						<aui:col first="true" width="<%= 60 %>" cssClass="idea-content">
 
 							<div class="idea-content-item">
 								<div class="label">
@@ -235,11 +235,11 @@
 									${idea.ideaContentPrivate.additionalIdeaOriginators}
 								</p>
 							</div>
-						</aui:column>
-						<aui:column last="true" columnWidth="40" cssClass="idea-meta">
+						</aui:col>
+						<aui:col last="true" width="<%= 40 %>" cssClass="idea-meta">
               				<%@ include file="document_list.jsp" %>
-						</aui:column>
-					</aui:layout>
+						</aui:col>
+					</aui:container>
 
 					<%@ include file="comments_private.jsp" %>
 

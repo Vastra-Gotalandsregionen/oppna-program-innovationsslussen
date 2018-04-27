@@ -1,16 +1,16 @@
 package se.vgregion.portal.innovationsslussen.listener;
 
-import com.liferay.mail.service.MailServiceUtil;
+import com.liferay.mail.kernel.model.MailMessage;
+import com.liferay.mail.kernel.service.MailServiceUtil;
 import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.mail.MailMessage;
-import java.util.ArrayList;
-import javax.mail.internet.InternetAddress;
-
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageListener;
+
+import javax.mail.internet.InternetAddress;
+import java.util.ArrayList;
 
 /**
  * 

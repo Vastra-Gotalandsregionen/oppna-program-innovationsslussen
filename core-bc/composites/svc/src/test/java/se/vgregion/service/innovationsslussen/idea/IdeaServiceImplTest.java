@@ -19,22 +19,21 @@
 
 package se.vgregion.service.innovationsslussen.idea;
 
-import com.liferay.counter.service.CounterLocalService;
-import com.liferay.counter.service.CounterLocalServiceUtil;
+import com.liferay.asset.kernel.service.AssetEntryLocalService;
+import com.liferay.counter.kernel.service.CounterLocalService;
+import com.liferay.message.boards.kernel.service.MBMessageLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.model.User;
-import com.liferay.portal.service.ClassNameLocalService;
-import com.liferay.portal.service.ContactLocalService;
-import com.liferay.portal.service.GroupLocalService;
-import com.liferay.portal.service.LayoutSetLocalService;
-import com.liferay.portal.service.ResourceLocalService;
-import com.liferay.portal.service.ResourcePermissionLocalService;
-import com.liferay.portal.service.RoleLocalService;
-import com.liferay.portal.service.UserGroupRoleLocalService;
-import com.liferay.portal.service.UserLocalService;
-import com.liferay.portlet.asset.service.AssetEntryLocalService;
-import com.liferay.portlet.messageboards.service.MBMessageLocalService;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.ClassNameLocalService;
+import com.liferay.portal.kernel.service.ContactLocalService;
+import com.liferay.portal.kernel.service.GroupLocalService;
+import com.liferay.portal.kernel.service.LayoutSetLocalService;
+import com.liferay.portal.kernel.service.ResourceLocalService;
+import com.liferay.portal.kernel.service.ResourcePermissionLocalService;
+import com.liferay.portal.kernel.service.RoleLocalService;
+import com.liferay.portal.kernel.service.UserGroupRoleLocalService;
+import com.liferay.portal.kernel.service.UserLocalService;
 import junit.framework.Assert;
 import org.apache.commons.collections.BeanMap;
 import org.junit.Before;

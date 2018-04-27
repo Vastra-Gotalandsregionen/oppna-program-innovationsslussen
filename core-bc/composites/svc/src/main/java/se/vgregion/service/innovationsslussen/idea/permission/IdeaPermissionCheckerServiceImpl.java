@@ -27,10 +27,10 @@ import se.vgregion.service.innovationsslussen.exception.PermissionCheckerExcepti
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.model.User;
-import com.liferay.portal.security.permission.PermissionChecker;
-import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
-import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.security.permission.PermissionChecker;
+import com.liferay.portal.kernel.security.permission.PermissionCheckerFactoryUtil;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
 
 public class IdeaPermissionCheckerServiceImpl implements IdeaPermissionCheckerService {
@@ -49,7 +49,7 @@ public class IdeaPermissionCheckerServiceImpl implements IdeaPermissionCheckerSe
             String ideaId = idea.getId();
 
             if(ideaId == null) {
-                ideaId = "";
+                ideaId = "0";
             }
 
             User user = UserLocalServiceUtil.getUser(userId);
@@ -166,11 +166,9 @@ public class IdeaPermissionCheckerServiceImpl implements IdeaPermissionCheckerSe
 
     private PermissionChecker getPermissionChecker(User user) throws PermissionCheckerException {
 
-        boolean checkGuest = false;
-
         PermissionChecker permissionChecker;
         try {
-            permissionChecker = PermissionCheckerFactoryUtil.create(user, checkGuest);
+            permissionChecker = PermissionCheckerFactoryUtil.create(user);
         } catch (Exception e) {
             throw new PermissionCheckerException(e.getMessage());
         }
