@@ -43,12 +43,6 @@
 		<css-class-wrapper>innovation-idea-admin-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>usersettings</portlet-name>
-		<instanceable>false</instanceable>
-        <requires-namespaced-parameters>false</requires-namespaced-parameters>
-		<css-class-wrapper>innovation-usersettings-portlet</css-class-wrapper>
-	</portlet>
-	<portlet>
 		<portlet-name>settings</portlet-name>
 		<control-panel-entry-category>content</control-panel-entry-category>
 		<control-panel-entry-weight>7.5</control-panel-entry-weight>
