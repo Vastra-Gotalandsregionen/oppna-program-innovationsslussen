@@ -56,7 +56,7 @@ public class IdeaFile extends AbstractEntity<Long> {
     private String fileType;
 
     //Baruim
-    @Column(unique = true, name = "barium_id")
+    @Column(unique = false, name = "barium_id")
     private String bariumId;
 
     /**
