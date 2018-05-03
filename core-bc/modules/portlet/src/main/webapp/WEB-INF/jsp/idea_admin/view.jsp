@@ -29,11 +29,10 @@
 </c:if>
 
 <liferay-ui:search-container
-	delta="${delta}"
+	delta="${delta}" total="${totalCount}"
  >
 	<liferay-ui:search-container-results
 		results="${ideas}"
-		total="${totalCount}"
 	/>
 
    	<liferay-ui:search-container-row
