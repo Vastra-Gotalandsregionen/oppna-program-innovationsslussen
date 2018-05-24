@@ -4,6 +4,7 @@
  of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
  You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the
  Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA -->
+<%@page contentType="text/html" pageEncoding="UTF-8" %>
 
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/portlet" prefix="portlet" %>
@@ -31,7 +32,7 @@
 
 					<c:if test="${not idea.isPublic()}">
 						<div class="portlet-msg-info">
-							Denna id&eacute; &auml;r inte publik &auml;nnu. Detta inneb&auml;r att id&eacute;en inte kan ses av andra sajtmedlemmar.
+							Informationen är inte offentlig, utan kan endast läsas och kommenteras av behörig personal.
 						</div>
 					</c:if>
 
@@ -52,16 +53,6 @@
 
 						<div class="idea-toolbar-wrap">
 							<ul class="rp-toolbar clearfix">
-								<li class="icon open">
-									<liferay-portlet:renderURL var="ideaPublicUrl">
-										<liferay-portlet:param name="showView" value="showIdea" />
-										<liferay-portlet:param name="urlTitle" value="${idea.urlTitle}" />
-									</liferay-portlet:renderURL>
-									<a href="${ideaPublicUrl}">
-										<span class="label">Visa &ouml;ppen beskrivning</span>
-									</a>
-								</li>
-
 								<c:if test="${ideaPermissionChecker.hasPermissionAddCommentPrivate}">
 									<li class="icon comment">
 										<a class="" href="#">
@@ -69,66 +60,15 @@
 										</a>
 									</li>
 								</c:if>
-								<%--
-								<li class="icon like">
-									<c:choose>
-										<c:when test="${isIdeaUserLiked}">
-											<portlet:actionURL name="removeLike" var="removeLikeUrl">
-												<portlet:param name="action" value="removeLike" />
-												<portlet:param name="urlTitle" value="${idea.urlTitle}" />
-												<portlet:param name="ideaContentType" value="IDEA_CONTENT_TYPE_PRIVATE" />
-											</portlet:actionURL>
-											<a href="${removeLikeUrl}">
-												<span class="label">Sluta gilla</span>&nbsp;<span class="amount">(${fn:length(idea.likes)})</span>
-											</a>
-										</c:when>
-										<c:otherwise>
-											<portlet:actionURL name="addLike" var="addLikeUrl">
-												<portlet:param name="action" value="addLike" />
-												<portlet:param name="urlTitle" value="${idea.urlTitle}" />
-												<portlet:param name="ideaContentType" value="IDEA_CONTENT_TYPE_PRIVATE" />
-											</portlet:actionURL>
-											<a href="${addLikeUrl}">
-												<span class="label">Gilla</span>&nbsp;<span class="amount">(${fn:length(idea.likes)})</span>
-											</a>
-										</c:otherwise>
-									</c:choose>
-								</li>
-								--%>
-								<li class="icon favorite">
-									<c:choose>
-										<c:when test="${isIdeaUserFavorite}">
-											<portlet:actionURL name="removeFavorite" var="removeFavoriteUrl">
-												<portlet:param name="action" value="removeFavorite" />
-												<portlet:param name="urlTitle" value="${idea.urlTitle}" />
-												<portlet:param name="ideaContentType" value="IDEA_CONTENT_TYPE_PRIVATE" />
-											</portlet:actionURL>
-											<a href="${removeFavoriteUrl}">
-												<span class="label">Ta bort som favorit</span>&nbsp;<span class="amount">(${fn:length(idea.favorites)})</span>
-											</a>
-										</c:when>
-										<c:otherwise>
-											<portlet:actionURL name="addFavorite" var="addFavoriteUrl">
-												<portlet:param name="action" value="addFavorite" />
-												<portlet:param name="urlTitle" value="${idea.urlTitle}" />
-												<portlet:param name="ideaContentType" value="IDEA_CONTENT_TYPE_PRIVATE" />
-											</portlet:actionURL>
-											<a href="${addFavoriteUrl}">
-												<span class="label">L&auml;gg till som favorit</span>&nbsp;<span class="amount">(${fn:length(idea.favorites)})</span>
-											</a>
-										</c:otherwise>
-									</c:choose>
-								</li>
-
 							</ul>
 							<ul class="rp-toolbar clearfix">
-								<c:if test="${ideaPermissionChecker.hasPermissionViewInBarium}">
+								<%--<c:if test="${ideaPermissionChecker.hasPermissionViewInBarium}">
 									<li class="icon barium">
 										<a href="${idea.bariumUrl}" target="_BLANK">
 										  <span class="label">Visa i Barium</span>
 									  </a>
 									</li>
-								</c:if>
+								</c:if>--%>
 
 								<c:if test="${ideaPermissionChecker.hasPermissionUpdateFromBarium}">
 									<li class="icon reload">
@@ -150,19 +90,19 @@
 
 						<div class="idea-flow-wrap">
 							<ul class="idea-flow-list">
-								<li class="${idea.phase >= 1 ? 'done' : ''}" title="<div><strong><liferay-ui:message key='innovationsslussen.idea.tooltip.step-1.title' /></strong></div><liferay-ui:message key='innovationsslussen.idea.tooltip.step-1.content' />">
+								<li class="${idea.phase >= 1 ? 'done' : ''}" title="<div><strong><liferay-ui:message key='innovationsslussen.idea.tooltip.step-1.title' /></strong></div><%--<liferay-ui:message key='innovationsslussen.idea.tooltip.step-1.content' />--%>">
 									<span>1</span>
 								</li>
-								<li class="${idea.phase >= 2 ? 'done' : ''}" title="<div><strong><liferay-ui:message key='innovationsslussen.idea.tooltip.step-2.title' /></strong></div><liferay-ui:message key='innovationsslussen.idea.tooltip.step-2.content' />">
+								<li class="${idea.phase >= 2 ? 'done' : ''}" title="<div><strong><liferay-ui:message key='innovationsslussen.idea.tooltip.step-2.title' /></strong></div><%--<liferay-ui:message key='innovationsslussen.idea.tooltip.step-2.content' />--%>">
 									<span>2</span>
 								</li>
-								<li class="${idea.phase >= 3 ? 'done' : ''}" title="<div><strong><liferay-ui:message key='innovationsslussen.idea.tooltip.step-3.title' /></strong></div><liferay-ui:message key='innovationsslussen.idea.tooltip.step-3.content' />">
+								<li class="${idea.phase >= 3 ? 'done' : ''}" title="<div><strong><liferay-ui:message key='innovationsslussen.idea.tooltip.step-3.title' /></strong></div><%--<liferay-ui:message key='innovationsslussen.idea.tooltip.step-3.content' />--%>">
 									<span>3</span>
 								</li>
-								<li class="${idea.phase >= 4 ? 'done' : ''}" title="<div><strong><liferay-ui:message key='innovationsslussen.idea.tooltip.step-4.title' /></strong></div><liferay-ui:message key='innovationsslussen.idea.tooltip.step-4.content' />">
+								<li class="${idea.phase >= 4 ? 'done' : ''}" title="<div><strong><liferay-ui:message key='innovationsslussen.idea.tooltip.step-4.title' /></strong></div><%--<liferay-ui:message key='innovationsslussen.idea.tooltip.step-4.content' />--%>">
 									<span>4</span>
 								</li>
-								<li class="${idea.phase >= 5 ? 'done' : ''}" title="<div><strong><liferay-ui:message key='innovationsslussen.idea.tooltip.step-5.title' /></strong></div><liferay-ui:message key='innovationsslussen.idea.tooltip.step-5.content' />">
+								<li class="${idea.phase >= 5 ? 'done' : ''}" title="<div><strong><liferay-ui:message key='innovationsslussen.idea.tooltip.step-5.title' /></strong></div><%--<liferay-ui:message key='innovationsslussen.idea.tooltip.step-5.content' />--%>">
 									<span>5</span>
 								</li>
 							</ul>
@@ -217,14 +157,6 @@
 								</div>
 								<p>
 									${idea.ideaContentPrivate.ideaTested}
-								</p>
-							</div>
-							<div class="idea-content-item">
-								<div class="label">
-									Prioriteringsr&aring;dsm&ouml;te
-								</div>
-								<p>
-									<fmt:formatDate value="${idea.ideaContentPrivate.prioritizationCouncilMeetingTime}" pattern="yyyy-MM-dd" />
 								</p>
 							</div>
 							<div class="idea-content-item">

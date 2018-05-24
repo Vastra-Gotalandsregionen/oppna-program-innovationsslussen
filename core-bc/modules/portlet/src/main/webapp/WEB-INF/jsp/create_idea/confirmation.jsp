@@ -4,7 +4,6 @@
  of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
  You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the
  Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA -->
-
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
@@ -24,7 +23,7 @@
 	<div class="idea create-idea create-confirmation">
 		<div class="idea-inner">
 			
-			<h1>Tack f&ouml;r din id&eacute;!</h1>
+			<h1>Tack! Du kommer inom kort att bli kontaktad av oss.</h1>
 			
 			<div class="content">
 				<p class="intro-text">
@@ -42,19 +41,11 @@
 				
 				<div class="link-buttons-wrap clearfix">
 
-	                <liferay-portlet:renderURL var="ideaPrivateUrl" plid="${ideaPlid}" portletName="${ideaPortletName}" >
-	                    <liferay-portlet:param name="showView" value="showIdea" />
-	                    <liferay-portlet:param name="type" value="private" />
-	                    <liferay-portlet:param name="urlTitle" value="${urlTitle}" />
-	                </liferay-portlet:renderURL>
-	                
-	                <liferay-portlet:renderURL var="faqURL" plid="${faqPlid}" />
-
-					<a class="link-button-mod" href="${ideaPrivateUrl}">
+					<a class="link-button-mod" href="/min-sida">
 						G&aring; till din id&eacute; <span class="text-icon">&raquo;</span>
 					</a>
-					<a class="link-button-mod" href="${faqURL}">
-						L&auml;s mer i v&aring;r FAQ <span class="text-icon">&raquo;</span>
+					<a class="link-button-mod" href="http://www.vgregion.se/innovationsplattformen">
+						Tillbaka till hemsida <span class="text-icon">&raquo;</span>
 					</a>
 				</div>
 

@@ -44,7 +44,6 @@ public final class ExpandoConstants {
     public static final String BARIUM_DETAILS_VIEW_URL_PREFIX = "bariumDetailsViewUrlPrefix";
     
     // Pages
-    public static final String FRIENDLY_URL_FAQ = "faqFriendlyURL";
     public static final String FRIENDLY_URL_CREATE_IDEA = "createIdeaFriendlyURL";
     
     // Piwik

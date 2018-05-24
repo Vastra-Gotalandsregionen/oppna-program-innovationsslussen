@@ -59,9 +59,6 @@
 			<aui:field-wrapper>
 				<aui:input type="text" name="createIdeaFriendlyURL" value="${createIdeaFriendlyURL}" label="Skapa-id&eacute; friendly-URL" helpMessage="Skriv in friendly url f&ouml;r sidan f&ouml;r att skapa id&eacute; (t.ex. /create-idea) ." />
 			</aui:field-wrapper>
-			<aui:field-wrapper>
-				<aui:input type="text" name="faqFriendlyURL" value="${faqFriendlyURL}" label="FAQ friendly-URL" helpMessage="Skriv in friendly url f&ouml;r sidan f&ouml;r FAQ (t.ex. /faq) ." />
-			</aui:field-wrapper>
 		</aui:fieldset>
 
         <aui:fieldset label="Notifieringar via E-post">

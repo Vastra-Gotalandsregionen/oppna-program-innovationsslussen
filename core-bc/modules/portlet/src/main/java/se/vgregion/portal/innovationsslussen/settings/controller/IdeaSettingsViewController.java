@@ -72,7 +72,6 @@ public class IdeaSettingsViewController extends BaseController {
         textExpandos.add(ExpandoConstants.ADD_THIS_CODE);
         textExpandos.add(ExpandoConstants.BARIUM_DETAILS_VIEW_URL_PREFIX);
         textExpandos.add(ExpandoConstants.FRIENDLY_URL_CREATE_IDEA);
-        textExpandos.add(ExpandoConstants.FRIENDLY_URL_FAQ);
         textExpandos.add(ExpandoConstants.PIWIK_CODE);
         textExpandos.add(ExpandoConstants.NOTIFICATION_EMAIL_FROM);
         textExpandos.add(ExpandoConstants.NOTIFICATION_EMAIL_SUBJECT);

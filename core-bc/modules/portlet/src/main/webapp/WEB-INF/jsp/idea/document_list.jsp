@@ -5,8 +5,6 @@
  You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the
  Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA -->
 
-<%@page contentType="text/html" pageEncoding="UTF-8" %>
-
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/portlet" prefix="portlet" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
