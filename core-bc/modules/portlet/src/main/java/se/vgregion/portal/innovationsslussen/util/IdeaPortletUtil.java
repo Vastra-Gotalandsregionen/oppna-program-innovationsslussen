@@ -65,7 +65,6 @@ public final class IdeaPortletUtil {
 
         String title = ParamUtil.getString(request, "title", "");
         String description = ParamUtil.getString(request, "ideaContentPrivate.description", "");
-        String ideaTested = ParamUtil.getString(request, "ideaContentPrivate.ideaTested", "");
         String solvesProblem = ParamUtil.getString(request, "ideaContentPrivate.solvesProblem", "");
         String wantsHelpWith = ParamUtil.getString(request, "ideaContentPrivate.wantsHelpWith", "");
         String additionalPersonInfo = ParamUtil.getString(request, "idea.ideaContentPrivate.additionalIdeaOriginators", "");
@@ -88,7 +87,6 @@ public final class IdeaPortletUtil {
 
         ideaContentPrivate.setType(IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE);
         ideaContentPrivate.setDescription(description);
-        ideaContentPrivate.setIdeaTested(ideaTested);
         ideaContentPrivate.setSolvesProblem(solvesProblem);
         ideaContentPrivate.setWantsHelpWith(wantsHelpWith);
 

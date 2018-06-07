@@ -38,6 +38,7 @@ public class IdeaValidator implements Validator {
     static final String TITLE_CANNOT_HAVE_NUMBERS = "Titel får inte innehålla enbart siffror.";
     static final String DESCRIPTION_MANDATORY = "Beskrivning är obligatorisk";
     static final String SOLVES_PROBLEM_MANDATORY = "Löser behov / problem är obligatoriskt";
+    static final String WANTS_HELP_WITH_MANDATORY = "Vad behöver du hjälp med är obligatoriskt";
     static final String NAME_MANDATORY = "Namn är obligatoriskt";
     static final String EMAIL_MANDATORY = "E-post är obligatorisk";
     static final String INVALID_EMAIL = "Angiven e-post är ogiltig";
@@ -68,20 +69,20 @@ public class IdeaValidator implements Validator {
     public void validate(Object target, Errors errors) {
         Idea idea = (Idea) target;
 
-        validateTitle(idea, errors);
-        validateDescription(idea, errors);
-        validateNeed(idea, errors);
         validateName(idea, errors);
         validateEmail(idea, errors);
         validatePhone(idea, errors);
         validateLength(idea, errors);
+        validateTitle(idea, errors);
+        validateDescription(idea, errors);
+        validateNeed(idea, errors);
+        validateWantsHelpWith(idea, errors);
     }
 
     private void validateLength(Idea idea, Errors errors) {
         maxLengthValidation(idea.getTitle(), "title", "Title", errors, MAX_LENGTH_SMALL);
         maxLengthValidation(idea.getIdeaContentPrivate().getDescription(), "ideaContentPrivate.description", "Beskrivning", errors, MAX_LENGTH_BIG);
         maxLengthValidation(idea.getIdeaContentPrivate().getSolvesProblem(), "ideaContentPrivate.solvesProblem", "Löser behov / problem",errors, MAX_LENGTH_BIG);
-        maxLengthValidation(idea.getIdeaContentPrivate().getIdeaTested(), "ideaContentPrivate.ideaTested", "Testning av idé", errors, MAX_LENGTH_BIG);
         maxLengthValidation(idea.getIdeaContentPrivate().getWantsHelpWith(), "ideaContentPrivate.wantsHelpWith", "Vad behöver du hjälp med?", errors, MAX_LENGTH_BIG);
         maxLengthValidation(idea.getIdeaPerson().getName(), "ideaPerson.name", "Namn", errors, MAX_LENGTH_SMALL);
         maxLengthValidation(idea.getIdeaPerson().getEmail(), "ideaPerson.email", "E-post", errors, MAX_LENGTH_SMALL);
@@ -108,6 +109,15 @@ public class IdeaValidator implements Validator {
         if (solvesProblem == null || "".equals(solvesProblem)) {
             errors.rejectValue("ideaContentPrivate.solvesProblem", "ideaContentPrivate.solvesProblem",
                     SOLVES_PROBLEM_MANDATORY);
+        }
+    }
+
+    private void validateWantsHelpWith(Idea idea, Errors errors) {
+        String wantsHelpWith = idea.getIdeaContentPrivate().getWantsHelpWith();
+
+        if (wantsHelpWith == null || "".equals(wantsHelpWith)) {
+            errors.rejectValue("ideaContentPrivate.wantsHelpWith", "ideaContentPrivate.wantsHelpWith",
+                    WANTS_HELP_WITH_MANDATORY);
         }
     }
 

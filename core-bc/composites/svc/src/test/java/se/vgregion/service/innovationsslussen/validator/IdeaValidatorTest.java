@@ -80,6 +80,7 @@ public class IdeaValidatorTest {
         Assert.assertTrue(errorsConcatenated.contains(IdeaValidator.SOLVES_PROBLEM_MANDATORY));
         Assert.assertTrue(errorsConcatenated.contains(IdeaValidator.NAME_MANDATORY));
         Assert.assertTrue(errorsConcatenated.contains(IdeaValidator.INVALID_EMAIL));
+        Assert.assertTrue(errorsConcatenated.contains(IdeaValidator.WANTS_HELP_WITH_MANDATORY));
 
         assertEquals(17, allErrors.size());
     }

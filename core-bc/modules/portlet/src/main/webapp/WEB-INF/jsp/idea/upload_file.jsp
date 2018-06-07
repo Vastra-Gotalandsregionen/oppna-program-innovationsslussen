@@ -38,19 +38,7 @@
         <portlet:param name="urlTitle" value="${urlTitle}" />
       </portlet:actionURL>
 
-
-        <c:choose>
-          <c:when test="${ideaType eq 'public'}">
-            <h1>Ladda upp dokument (öppet)</h1>
-            <p>Här laddar du upp ett dokument som <i>ska</i> synas för alla.</p>
-          </c:when>
-          <c:otherwise>
-            <h1>Ladda upp dokument (stängt)</h1>
-            <p>Här laddar du upp ett dokument som <i>inte</i> ska synas för alla.</p>
-          </c:otherwise>
-        </c:choose>
-
-
+      <h1>Ladda upp dokument</h1>
 
       <form action="${uploadFileUrl}" enctype="multipart/form-data" method="post">
         <input type="file" name="file" width="160"/>

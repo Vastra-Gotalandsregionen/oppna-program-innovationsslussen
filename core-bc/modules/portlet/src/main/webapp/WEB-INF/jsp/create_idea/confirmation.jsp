@@ -26,27 +26,12 @@
 			<h1>Tack! Du kommer inom kort att bli kontaktad av oss.</h1>
 			
 			<div class="content">
-				<p class="intro-text">
-					Genom att du postat en id&eacute; har du just varit med om att skapa en b&auml;ttre framtid inom v&aring;rden.
-				</p>
-				<p>
-					Tillsammans med dig kommer Innovationsslussen nu att vrida och v&auml;nda p&aring; id&eacute;en f&ouml;r att se om den g&aring;r att utveckla ytterligare.
-				</p>
-				<p>
-					Du kommer inom kort att bli kontaktad av en id&eacute;transport&ouml;r som hj&auml;lper dig vidare med id&eacute;en.
-				</p>
-				<p>
-					Vissa id&eacute;er kan vi b&ouml;rja jobba med direkt, medan andra tar mer tid i anspr&aring;k. Oavsett vilket kan du f&ouml;lja utvecklingen direkt h&auml;r p&aring; Innovationsslussen.
-				</p>
-				
 				<div class="link-buttons-wrap clearfix">
 
 					<a class="link-button-mod" href="/min-sida">
-						G&aring; till din id&eacute; <span class="text-icon">&raquo;</span>
+						Min sida <span class="text-icon">&raquo;</span>
 					</a>
-					<a class="link-button-mod" href="http://www.vgregion.se/innovationsplattformen">
-						Tillbaka till hemsida <span class="text-icon">&raquo;</span>
-					</a>
+
 				</div>
 
 			</div>

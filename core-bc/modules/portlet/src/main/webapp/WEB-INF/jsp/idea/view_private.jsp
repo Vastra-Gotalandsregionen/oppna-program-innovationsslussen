@@ -111,7 +111,7 @@
 					</div>
 
 					<h1>
-            			<c:out value="${idea.title}"/> <span>(st&auml;ngd beskrivning)</span>
+            			<c:out value="${idea.title}"/>
 					</h1>
 
 					<div class="idea-creator">
