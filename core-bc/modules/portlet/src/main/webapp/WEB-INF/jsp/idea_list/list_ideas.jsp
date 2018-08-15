@@ -14,7 +14,6 @@
 <%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %>
 <%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 <%@ taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
-<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 
 <portlet:defineObjects />
 
@@ -115,9 +114,6 @@
 						</div>
 						<div class="idea-label">
 							${ideaPhaseLabel}
-							<span class="date">
-								<fmt:formatDate pattern="yyyy-MM-dd" value="${idea.created}"/>
-							</span>
 						</div>
 					</a>
 				</div>
