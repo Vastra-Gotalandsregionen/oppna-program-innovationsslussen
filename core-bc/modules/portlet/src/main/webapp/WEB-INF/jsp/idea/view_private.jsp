@@ -62,14 +62,6 @@
 								</c:if>
 							</ul>
 							<ul class="rp-toolbar clearfix">
-								<%--<c:if test="${ideaPermissionChecker.hasPermissionViewInBarium}">
-									<li class="icon barium">
-										<a href="${idea.bariumUrl}" target="_BLANK">
-										  <span class="label">Visa i Barium</span>
-									  </a>
-									</li>
-								</c:if>--%>
-
 								<c:if test="${ideaPermissionChecker.hasPermissionUpdateFromBarium}">
 									<li class="icon reload">
 										<portlet:actionURL name="updateFromBarium" var="updateFromBariumUrl">
@@ -81,6 +73,14 @@
 										<a href="${updateFromBariumUrl}">
 										  <span class="label">Uppdatera fr&aring;n Barium</span>
 									   </a>
+									</li>
+								</c:if>
+
+								<c:if test="${ideaPermissionChecker.hasPermissionViewInBarium}">
+									<li class="icon barium">
+										<a href="${bariumUrl}" target="_BLANK">
+											<span class="label">Till Barium</span>
+										</a>
 									</li>
 								</c:if>
 							</ul>
