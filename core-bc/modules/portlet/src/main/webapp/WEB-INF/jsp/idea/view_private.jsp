@@ -78,8 +78,8 @@
 
 								<c:if test="${ideaPermissionChecker.hasPermissionViewInBarium}">
 									<li class="icon barium">
-										<a href="${bariumUrl}" target="_BLANK">
-											<span class="label">Till Barium</span>
+										<a href="${idea.bariumUrl}" target="_BLANK">
+											<span class="label">Visa i Barium</span>
 										</a>
 									</li>
 								</c:if>
