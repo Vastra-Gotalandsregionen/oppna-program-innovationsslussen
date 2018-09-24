@@ -1970,37 +1970,35 @@ public class IdeaServiceImpl implements IdeaService {
             //Subject
             mailToIdeaOwner.put("subject",
                     replaceTokens(ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_SUBJECT,
-                            idea.getCompanyId(), idea.getGroupId()), idea));
+                            idea.getCompanyId(), idea.getGroupId()), idea, false));
 
             mailToInternalIdeaUsers.put("subject",
                     replaceTokens(ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_SUBJECT,
-                            idea.getCompanyId(), idea.getGroupId()), idea));
+                            idea.getCompanyId(), idea.getGroupId()), idea, false));
 
             //Body
             //Owner body
             if (publicbody) {
                 mailToIdeaOwner.put("body",
                         replaceTokens(ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_PUBLIC_BODY,
-                                idea.getCompanyId(), idea.getGroupId()), idea));
+                                idea.getCompanyId(), idea.getGroupId()), idea, false));
             } else {
                 mailToIdeaOwner.put("body",
                         replaceTokens(ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_PRIVATE_BODY,
-                                idea.getCompanyId(), idea.getGroupId()), idea));
+                                idea.getCompanyId(), idea.getGroupId()), idea, false));
             }
 
             //Body for other
             if (publicbody) {
                 //Remove the owner name for other receivers
-                idea.getIdeaPerson().setName("");
                 mailToInternalIdeaUsers.put("body",
                         replaceTokens(ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_PUBLIC_BODY,
-                                idea.getCompanyId(), idea.getGroupId()), idea));
+                                idea.getCompanyId(), idea.getGroupId()), idea, true));
             } else {
                 //Remove the owner name for other receivers
-                idea.getIdeaPerson().setName("");
                 mailToInternalIdeaUsers.put("body",
                         replaceTokens(ideaSettingsService.getSetting(ExpandoConstants.NOTIFICATION_EMAIL_PRIVATE_BODY,
-                                idea.getCompanyId(), idea.getGroupId()), idea));
+                                idea.getCompanyId(), idea.getGroupId()), idea, true));
             }
 
             //Idea owner
@@ -2046,13 +2044,13 @@ public class IdeaServiceImpl implements IdeaService {
      * @param idea the idea to get values from.
      * @return the text with the token replaced by the values.
      */
-    private String replaceTokens(String in, Idea idea) {
+    private String replaceTokens(String in, Idea idea, boolean hidePersonName) {
         String out = "";
 
         String serverNameUrl = ideaSettingsService.getSetting(ExpandoConstants.SERVER_NAME_URL,
                 idea.getCompanyId(), idea.getGroupId());
 
-        in = in.replaceAll("\\[\\$PERSON_NAME\\$\\]", idea.getIdeaPerson().getName());
+        in = in.replaceAll("\\[\\$PERSON_NAME\\$\\]", hidePersonName ? "" : idea.getIdeaPerson().getName());
 
         String link = "<a href=\"" + serverNameUrl + idea.getUrlTitle() + "\">" + idea.getTitle() + "</a>";
         in = in.replaceAll("\\[\\$IDEA_NAME_AND_LINK\\$\\]", link);
