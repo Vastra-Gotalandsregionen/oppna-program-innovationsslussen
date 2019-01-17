@@ -201,8 +201,8 @@
 						Skapad av <span class="idea-creator-name">${idea.ideaPerson.name}</span> <span class="idea-create-date"><fmt:formatDate value="${idea.created}" pattern="yyyy-MM-dd"  /></span>
 					</div>
 					
-					<aui:layout>
-						<aui:column first="true" columnWidth="60" cssClass="idea-content">
+					<aui:container>
+						<aui:col first="true" columnWidth="60" cssClass="idea-content">
 							
 							<c:if test="${fn:length(idea.ideaContentPublic.intro) gt 0}">
 								<p class="intro">
@@ -217,11 +217,11 @@
 									</p>
 								</c:if>
 							</div>
-						</aui:column>
-						<aui:column last="true" columnWidth="40" cssClass="idea-meta">
+						</aui:col>
+						<aui:col last="true" columnWidth="40" cssClass="idea-meta">
               				<%@ include file="document_list.jsp" %>
-						</aui:column>
-					</aui:layout>
+						</aui:col>
+					</aui:container>
 
 
 		            <c:choose>

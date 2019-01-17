@@ -28,7 +28,14 @@
       <groupId>com.liferay.portal</groupId>
       <artifactId>com.liferay.portal.kernel</artifactId>
       <scope>provided</scope>
-      <version>2.50.0</version>
+      <version>3.48.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.liferay</groupId>
+      <artifactId>com.liferay.message.boards.api</artifactId>
+      <version>4.3.0</version>
+      <scope>provided</scope>
     </dependency>
 
     <!-- se.vgregion -->

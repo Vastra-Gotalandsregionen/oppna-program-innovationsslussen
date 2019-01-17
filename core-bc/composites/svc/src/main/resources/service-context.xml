@@ -94,7 +94,7 @@
   <bean id="expandoTableService" class="com.liferay.expando.kernel.service.ExpandoTableLocalServiceUtil" factory-method="getService" />
   <bean id="expandoValueService" class="com.liferay.expando.kernel.service.ExpandoValueLocalServiceUtil" factory-method="getService" />
 
-  <bean id="mbMessageLocalService" class="com.liferay.message.boards.kernel.service.MBMessageLocalServiceUtil" factory-method="getService" />
+  <bean id="mbMessageLocalService" class="com.liferay.message.boards.service.MBMessageLocalServiceUtil" factory-method="getService" />
   <bean id="userLocalService" class="com.liferay.portal.kernel.service.UserLocalServiceUtil" factory-method="getService" />
   <bean id="userGroupRoleLocalService" class="com.liferay.portal.kernel.service.UserGroupRoleLocalServiceUtil" factory-method="getService" />
   <bean id="resourceLocalService" class="com.liferay.portal.kernel.service.ResourceLocalServiceUtil" factory-method="getService" />

@@ -72,10 +72,10 @@
 <c:if test="${not empty ideaFiles}">
 	<ul class="documents-list">
 		<c:forEach items="${ideaFiles}" var="file" varStatus="counter">
-			<portlet:resourceURL id="downloadFile" var="downloadFileUrl">
+			<liferay-portlet:resourceURL id="downloadFile" var="downloadFileUrl">
 				<portlet:param name="id" value="${file.bariumId}"/>
 				<portlet:param name="ideaId" value="${idea.id}"/>
-			</portlet:resourceURL>
+			</liferay-portlet:resourceURL>
 	
 			<li id="<portlet:namespace />documentListItem-${counter.count}" class="${file.fileType}">
 				<a href="${downloadFileUrl}" target="_blank">${file.name}</a>
