@@ -53,9 +53,6 @@
 					<a class="link-button-mod" href="${ideaPrivateUrl}">
 						G&aring; till din id&eacute; <span class="text-icon">&raquo;</span>
 					</a>
-					<a class="link-button-mod" href="${faqURL}">
-						L&auml;s mer i v&aring;r FAQ <span class="text-icon">&raquo;</span>
-					</a>
 				</div>
 
 			</div>

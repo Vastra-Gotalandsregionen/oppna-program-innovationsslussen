@@ -1,20 +1,19 @@
 /**
  * Copyright 2010 Västra Götalandsregionen
- *
- *   This library is free software; you can redistribute it and/or modify
- *   it under the terms of version 2.1 of the GNU Lesser General Public
- *   License as published by the Free Software Foundation.
- *
- *   This library is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU Lesser General Public License for more details.
- *
- *   You should have received a copy of the GNU Lesser General Public
- *   License along with this library; if not, write to the
- *   Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- *   Boston, MA 02111-1307  USA
- *
+ * <p>
+ * This library is free software; you can redistribute it and/or modify
+ * it under the terms of version 2.1 of the GNU Lesser General Public
+ * License as published by the Free Software Foundation.
+ * <p>
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307  USA
  */
 
 package se.vgregion.service.innovationsslussen.validator;
@@ -81,7 +80,7 @@ public class IdeaValidatorTest {
         Assert.assertTrue(errorsConcatenated.contains(IdeaValidator.NAME_MANDATORY));
         Assert.assertTrue(errorsConcatenated.contains(IdeaValidator.INVALID_EMAIL));
 
-        assertEquals(17, allErrors.size());
+        assertEquals(16, allErrors.size());
     }
 
     @Test
@@ -106,7 +105,6 @@ public class IdeaValidatorTest {
         ideaContent.setSolvesProblem("saldkfj");
         ideaContent.setIdeaTested("tested");
         ideaContent.setWantsHelpWith("helpme");
-        ideaContent.setAdditionalIdeaOriginators("sven");
 
         idea.getIdeaContents().add(ideaContent);
         MapBindingResult result = new MapBindingResult(map, "aName");

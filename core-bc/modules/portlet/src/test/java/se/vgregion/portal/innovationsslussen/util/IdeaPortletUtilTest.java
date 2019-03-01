@@ -19,7 +19,10 @@
 
 package se.vgregion.portal.innovationsslussen.util;
 
+import com.liferay.portal.kernel.configuration.Filter;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.Props;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import junit.framework.Assert;
 import org.junit.Before;
@@ -28,6 +31,7 @@ import org.mockito.Mockito;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 
 import javax.portlet.RenderRequest;
+import java.util.Properties;
 
 /**
  * Created with IntelliJ IDEA.
@@ -49,6 +53,43 @@ public class IdeaPortletUtilTest {
         Mockito.when(themeDisplay.getScopeGroupId()).thenReturn(1l);
         Mockito.when(themeDisplay.getCompanyId()).thenReturn(2l);
         Mockito.when(themeDisplay.getUserId()).thenReturn(3l);
+
+        PropsUtil.setProps(new Props() {
+            @Override
+            public boolean contains(String key) {
+                return false;
+            }
+
+            @Override
+            public String get(String key) {
+                return key;
+            }
+
+            @Override
+            public String get(String key, Filter filter) {
+                return key;
+            }
+
+            @Override
+            public String[] getArray(String key) {
+                return new String[0];
+            }
+
+            @Override
+            public String[] getArray(String key, Filter filter) {
+                return new String[0];
+            }
+
+            @Override
+            public Properties getProperties() {
+                return new Properties();
+            }
+
+            @Override
+            public Properties getProperties(String prefix, boolean removePrefix) {
+                return new Properties();
+            }
+        });
     }
 
     @Test

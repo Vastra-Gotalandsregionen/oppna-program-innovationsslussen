@@ -180,7 +180,7 @@
 
 					<c:if test="${not empty tansportor}">
                         <div class="idea-creator">
-                            Id&eacute;transport&ouml;r <span class="idea-creator-name">${tansportor}</span>
+                            Innovationscoach <span class="idea-creator-name">${tansportor}</span>
                         </div>
                     </c:if>
 
@@ -225,14 +225,6 @@
 								</div>
 								<p>
 									<fmt:formatDate value="${idea.ideaContentPrivate.prioritizationCouncilMeetingTime}" pattern="yyyy-MM-dd" />
-								</p>
-							</div>
-							<div class="idea-content-item">
-								<div class="label">
-								    &Auml;r ni fler id&eacute;givare?
-								</div>
-								<p>
-									${idea.ideaContentPrivate.additionalIdeaOriginators}
 								</p>
 							</div>
 						</aui:col>

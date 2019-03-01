@@ -120,15 +120,12 @@ public class CreateIdeaViewController extends BaseController {
             String faqFriendlyURL = ideaSettingsService.getSetting(
                     ExpandoConstants.FRIENDLY_URL_FAQ, companyId, scopeGroupId);
             
-            Layout faqLayout = getLayout(scopeGroupId, themeDisplay.getLayout().isPrivateLayout(), faqFriendlyURL);
             Layout ideaLayout = getFriendlyURLLayout(scopeGroupId, themeDisplay);
 
-            long faqPlid = faqLayout.getPlid();
             long ideaPlid = ideaLayout.getPlid();
             String ideaLink = request.getParameter("ideaLink");
 
             model.addAttribute("urlTitle", ideaLink);
-            model.addAttribute("faqPlid", faqPlid);
             model.addAttribute("ideaPlid", ideaPlid);
             model.addAttribute("ideaPortletName", IdeaPortletsConstants.PORTLET_NAME_IDEA_PORTLET);
 

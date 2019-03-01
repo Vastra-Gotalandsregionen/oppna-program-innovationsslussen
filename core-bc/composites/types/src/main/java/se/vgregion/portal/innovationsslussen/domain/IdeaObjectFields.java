@@ -53,7 +53,6 @@ public class IdeaObjectFields {
     private String idetranportorenskommentarintern;
     private String instanceName; // instance.name
     private String kommavidare;
-    private String komplnamn;
     private String kon;
     private String koordinatornskommentar;
     private String mobiletelephonenumber; // VGR-ID.mobiletelephonenumber
@@ -66,7 +65,6 @@ public class IdeaObjectFields {
     private String siteLank;
     private String state;
     private String telefonnummer; // VGR-ID.hsapublictelephonenumber
-    private String testat;
     private String Idetransportor; //Idetransportör
 
     /** The vgr id fullname. */
@@ -278,14 +276,6 @@ public class IdeaObjectFields {
         this.kommavidare = kommavidare;
     }
 
-    public String getKomplnamn() {
-        return komplnamn;
-    }
-
-    public void setKomplnamn(String setKomplnamn) {
-        this.komplnamn = setKomplnamn;
-    }
-
     public String getKon() {
         return kon;
     }
@@ -348,15 +338,6 @@ public class IdeaObjectFields {
 
     public void setMobiletelephonenumber(String mobiletelephonenumber) {
         this.mobiletelephonenumber = mobiletelephonenumber;
-    }
-
-
-    public String getTestat() {
-        return testat;
-    }
-
-    public void setTestat(String testat) {
-        this.testat = testat;
     }
 
     public String getVgrIdFullname() {

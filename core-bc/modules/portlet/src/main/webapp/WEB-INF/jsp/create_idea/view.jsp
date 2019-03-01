@@ -163,24 +163,6 @@
 								</div>
 							</spring:bind>
 							
-							<spring:bind path="idea.ideaContentPrivate.ideaTested">
-								<c:set var="elementWrapCssClass" scope="page" value="element-wrap" />
-								<c:if test="${status.error}">
-									<c:set var="elementWrapCssClass" scope="page" value="element-wrap element-has-errors" />
-								</c:if>
-								<div class="${elementWrapCssClass}">
-							    	<aui:field-wrapper cssClass="element-field-wrap">
-							    		<label for="<portlet:namespace />ideaContentPrivate.ideaTested">
-							    			<span>Testning av id&eacute;</span>
-							    		</label>
-							    		<aui:input name="ideaContentPrivate.ideaTested"  cssClass="element-field" type="textarea" label="" />
-							    	</aui:field-wrapper>
-									<span class="element-field-help">
-										Har du testat din id&eacute; p&aring; n&aring;got s&auml;tt? Vilka tester har du gjort? Vad visade testerna? (Max 2000 tecken).
-									</span>
-								</div>
-							</spring:bind>
-		
 							<spring:bind path="idea.ideaContentPrivate.wantsHelpWith">
 								<c:set var="elementWrapCssClass" scope="page" value="element-wrap" />
 								<c:if test="${status.error}">
@@ -310,26 +292,7 @@
 								</div>
 							</spring:bind>
 							
-							<spring:bind path="idea.ideaContentPrivate.additionalIdeaOriginators">
-								<c:set var="elementWrapCssClass" scope="page" value="element-wrap" />
-								<c:if test="${status.error}">
-									<c:set var="elementWrapCssClass" scope="page" value="element-wrap element-has-errors" />
-								</c:if>
-								<div class="${elementWrapCssClass}">
-							    	<aui:field-wrapper cssClass="element-field-wrap">
-							    		<label for="<portlet:namespace />ideaPerson.additionalPersonInfo">
-							    			<span>Fler id&eacute;givare</span>
-							    		</label>
-							    		<aui:input name="idea.ideaContentPrivate.additionalIdeaOriginators" cssClass="element-field"
-							    		    type="textarea" label="" value="${idea.ideaContentPrivate.additionalIdeaOriginators}"/>
-							    	</aui:field-wrapper>
-									<span class="element-field-help">
-										&Auml;r ni fler id&eacute;givare? Fyll g&auml;rna i uppgifter om dessa personer i s&aring;dana fall. (Max 800 tecken).
-									</span>
-								</div>
-							</spring:bind>
-
-                            <spring:bind path="idea.ideaPerson.vgrId">
+							<spring:bind path="idea.ideaPerson.vgrId">
                                 <aui:input name="ideaPerson.vgrId" cssClass="element-field" type="hidden" label="" />
                             </spring:bind>
 							

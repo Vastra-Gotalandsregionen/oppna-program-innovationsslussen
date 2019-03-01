@@ -1478,15 +1478,12 @@ public class IdeaServiceImpl implements IdeaService {
         if (ideaContentPrivate != null) {
             ideaContentPrivate.setSolvesProblem(ideaObjectFields.getBehov());
             ideaContentPrivate.setDescription(ideaObjectFields.getIde());
-            ideaContentPrivate.setIdeaTested(ideaObjectFields.getTestat());
             ideaContentPrivate.setWantsHelpWith(ideaObjectFields.getKommavidare());
             ideaContentPrivate.setIdeTansportor(ideaObjectFields.getIdetransportor());
 
             ideaContentPrivate.setIdeaTransporterComment(headString(ideaObjectFields.getIdetranportorensKommentar()));
 
             ideaContentPrivate.setPrioritizationCouncilMeetingTime(toDate(ideaObjectFields.getPrioriteringsradsmote()));
-
-            ideaContentPrivate.setAdditionalIdeaOriginators(headString(ideaObjectFields.getKomplnamn()));
         }
 
 

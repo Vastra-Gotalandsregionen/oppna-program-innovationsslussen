@@ -239,7 +239,6 @@ public class BariumService {
         String wantsHelpWith = ideaContentPrivate.getWantsHelpWith();
 
         String administrativeUnit = ideaPerson.getAdministrativeUnit();
-        String additonalPersonsInfo = ideaContentPrivate.getAdditionalIdeaOriginators();
         String phone = ideaPerson.getPhone();
         String phoneMobile = ideaPerson.getPhoneMobile();
         String vgrId = ideaPerson.getVgrId();
@@ -260,13 +259,10 @@ public class BariumService {
 
         ideaObjectFields.setIde(description);
         ideaObjectFields.setInstanceName(title);
-        ideaObjectFields.setKomplnamn(additonalPersonsInfo);
         ideaObjectFields.setKommavidare(wantsHelpWith);
         ideaObjectFields.setMobiletelephonenumber(phoneMobile);
         ideaObjectFields.setSiteLank(ideaSiteLink);
         ideaObjectFields.setTelefonnummer(phone);
-        ideaObjectFields.setTestat(ideaTested);
-
 
         ideaObjectFields.setVgrId(vgrId);
         ideaObjectFields.setVgrIdFullname(name);
