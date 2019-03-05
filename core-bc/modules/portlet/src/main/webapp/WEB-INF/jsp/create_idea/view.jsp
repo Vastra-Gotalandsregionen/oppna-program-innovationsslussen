@@ -51,7 +51,7 @@
 
 				        <aui:form action="${loadOtherUserURL}" name="createIdeaForOtherUser" cssClass="create-idea-form" method="post">
 
-                            <aui:fieldset label="L&auml;s in annan anv&auml;ndare;">
+                            <aui:fieldset label="L&auml;s in annan anv&auml;ndare">
                                 <spring:bind path="idea.ideaPerson.vgrId">
                                     <c:set var="elementWrapCssClass" scope="page" value="element-wrap" />
                                     <c:if test="${status.error}">
