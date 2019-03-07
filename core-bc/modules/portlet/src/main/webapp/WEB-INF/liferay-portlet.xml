@@ -6,12 +6,13 @@
  You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the
  Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA -->
 
-<!DOCTYPE liferay-portlet-app PUBLIC "-//Liferay//DTD Portlet Application 6.2.0//EN" "http://www.liferay.com/dtd/liferay-portlet-app_6_2_0.dtd">
+<!DOCTYPE liferay-portlet-app PUBLIC "-//Liferay//DTD Portlet Application 7.1.0//EN" "http://www.liferay.com/dtd/liferay-portlet-app_7_1_0.dtd">
 
 <liferay-portlet-app>
 	<portlet>
 		<portlet-name>idealist</portlet-name>
 		<instanceable>true</instanceable>
+		<single-page-application>false</single-page-application> <!-- Otherwise back navigation may lose parameters. -->
 		<css-class-wrapper>innovation-idealist-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
@@ -20,8 +21,9 @@
 		<friendly-url-mapping>idea</friendly-url-mapping>
 		<friendly-url-routes>idea-portlet-friendly-url-routes.xml</friendly-url-routes>
 		<action-url-redirect>true</action-url-redirect>
-        <instanceable>false</instanceable>
-        <requires-namespaced-parameters>false</requires-namespaced-parameters>
+		<instanceable>false</instanceable>
+		<single-page-application>false</single-page-application>
+		<requires-namespaced-parameters>false</requires-namespaced-parameters>
         <css-class-wrapper>innovation-idea-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
@@ -39,12 +41,6 @@
 		<instanceable>false</instanceable>
         <requires-namespaced-parameters>false</requires-namespaced-parameters>
 		<css-class-wrapper>innovation-idea-admin-portlet</css-class-wrapper>
-	</portlet>
-	<portlet>
-		<portlet-name>usersettings</portlet-name>
-		<instanceable>false</instanceable>
-        <requires-namespaced-parameters>false</requires-namespaced-parameters>
-		<css-class-wrapper>innovation-usersettings-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
 		<portlet-name>settings</portlet-name>

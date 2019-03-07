@@ -19,8 +19,16 @@
 
 package se.vgregion.service.innovationsslussen.idea;
 
-import com.liferay.counter.service.CounterLocalService;
-import com.liferay.portal.NoSuchUserException;
+import com.liferay.asset.kernel.model.AssetEntry;
+import com.liferay.asset.kernel.service.AssetEntryLocalService;
+import com.liferay.counter.kernel.service.CounterLocalService;
+import com.liferay.message.boards.model.MBMessage;
+import com.liferay.message.boards.model.MBMessageDisplay;
+import com.liferay.message.boards.model.MBThread;
+import com.liferay.message.boards.service.MBMessageLocalService;
+import com.liferay.message.boards.service.MBMessageLocalServiceUtil;
+import com.liferay.message.boards.util.comparator.MessageCreateDateComparator;
+import com.liferay.portal.kernel.exception.NoSuchUserException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONArray;
@@ -28,38 +36,30 @@ import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
+import com.liferay.portal.kernel.model.ClassName;
+import com.liferay.portal.kernel.model.Contact;
+import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.LayoutSet;
+import com.liferay.portal.kernel.model.ResourceConstants;
+import com.liferay.portal.kernel.model.ResourcePermission;
+import com.liferay.portal.kernel.model.Role;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.model.UserGroupRole;
+import com.liferay.portal.kernel.service.ClassNameLocalService;
+import com.liferay.portal.kernel.service.ContactLocalService;
+import com.liferay.portal.kernel.service.GroupLocalService;
+import com.liferay.portal.kernel.service.LayoutSetLocalService;
+import com.liferay.portal.kernel.service.ResourceLocalService;
+import com.liferay.portal.kernel.service.ResourcePermissionLocalService;
+import com.liferay.portal.kernel.service.RoleLocalService;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.UserGroupRoleLocalService;
+import com.liferay.portal.kernel.service.UserLocalService;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portal.model.ClassName;
-import com.liferay.portal.model.Contact;
-import com.liferay.portal.model.Group;
-import com.liferay.portal.model.LayoutSet;
-import com.liferay.portal.model.ResourceConstants;
-import com.liferay.portal.model.ResourcePermission;
-import com.liferay.portal.model.Role;
-import com.liferay.portal.model.User;
-import com.liferay.portal.model.UserGroupRole;
-import com.liferay.portal.service.ClassNameLocalService;
-import com.liferay.portal.service.ContactLocalService;
-import com.liferay.portal.service.GroupLocalService;
-import com.liferay.portal.service.LayoutSetLocalService;
-import com.liferay.portal.service.ResourceLocalService;
-import com.liferay.portal.service.ResourcePermissionLocalService;
-import com.liferay.portal.service.RoleLocalService;
-import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.service.UserGroupRoleLocalService;
-import com.liferay.portal.service.UserLocalService;
-import com.liferay.portal.service.UserLocalServiceUtil;
-import com.liferay.portlet.asset.model.AssetEntry;
-import com.liferay.portlet.asset.service.AssetEntryLocalService;
-import com.liferay.portlet.messageboards.model.MBMessage;
-import com.liferay.portlet.messageboards.model.MBMessageDisplay;
-import com.liferay.portlet.messageboards.model.MBThread;
-import com.liferay.portlet.messageboards.service.MBMessageLocalService;
-import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
-import com.liferay.portlet.messageboards.util.comparator.MessageCreateDateComparator;
 
 import java.io.InputStream;
 import java.sql.SQLException;
@@ -1236,7 +1236,6 @@ public class IdeaServiceImpl implements IdeaService {
         return true;
     }
 
-    @Transactional
     private void populateFile(Idea idea, IdeaContent ideaContent, String folderName) {
 
         try {
@@ -1307,10 +1306,9 @@ public class IdeaServiceImpl implements IdeaService {
     private void addAutoComment(Idea idea, long classPK, String message) {
         try {
 
-            String threadView = PropsKeys.DISCUSSION_THREAD_VIEW;
             MBMessageDisplay messageDisplay = mbMessageLocalService.getDiscussionMessageDisplay(
                     idea.getUserId(), idea.getGroupId(), IdeaContent.class.getName(),
-                    classPK, WorkflowConstants.STATUS_ANY, threadView);
+                    classPK, WorkflowConstants.STATUS_ANY);
             MBThread thread = messageDisplay.getThread();
 
             long threadId = thread.getThreadId();
@@ -1335,11 +1333,10 @@ public class IdeaServiceImpl implements IdeaService {
     public Idea addMBMessage(Idea idea, ServiceContext serviceContext, long groupId, long userId, String comment, long ideaCommentClassPK) throws PortalException, SystemException {
 
         User user = UserLocalServiceUtil.getUser(userId);
-        String threadView = PropsKeys.DISCUSSION_THREAD_VIEW;
 
         MBMessageDisplay messageDisplay = MBMessageLocalServiceUtil.getDiscussionMessageDisplay(
                 userId, groupId, IdeaContent.class.getName(), ideaCommentClassPK,
-                WorkflowConstants.STATUS_ANY, threadView);
+                WorkflowConstants.STATUS_ANY);
 
         MBThread thread = messageDisplay.getThread();
         long threadId = thread.getThreadId();
@@ -1481,15 +1478,12 @@ public class IdeaServiceImpl implements IdeaService {
         if (ideaContentPrivate != null) {
             ideaContentPrivate.setSolvesProblem(ideaObjectFields.getBehov());
             ideaContentPrivate.setDescription(ideaObjectFields.getIde());
-            ideaContentPrivate.setIdeaTested(ideaObjectFields.getTestat());
             ideaContentPrivate.setWantsHelpWith(ideaObjectFields.getKommavidare());
             ideaContentPrivate.setIdeTansportor(ideaObjectFields.getIdetransportor());
 
             ideaContentPrivate.setIdeaTransporterComment(headString(ideaObjectFields.getIdetranportorensKommentar()));
 
             ideaContentPrivate.setPrioritizationCouncilMeetingTime(toDate(ideaObjectFields.getPrioriteringsradsmote()));
-
-            ideaContentPrivate.setAdditionalIdeaOriginators(headString(ideaObjectFields.getKomplnamn()));
         }
 
 

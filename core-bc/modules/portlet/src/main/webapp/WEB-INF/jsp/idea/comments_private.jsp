@@ -74,7 +74,7 @@
 									<c:set var="commentUserLabel" scope="page" value="Innovationsslussen" />
 								</c:when>
 								<c:when test="${comment.userIdeaTransporter}">
-									<c:set var="commentUserLabel" scope="page" value="Id&eacute;transport&ouml;r" />
+									<c:set var="commentUserLabel" scope="page" value="Innovationscoach" />
 								</c:when>
 							</c:choose>
 							${commentUserLabel}

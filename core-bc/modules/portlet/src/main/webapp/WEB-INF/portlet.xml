@@ -167,45 +167,6 @@
 	</portlet>    
 
 	<portlet>
-		<portlet-name>usersettings</portlet-name>
-		<display-name>User Settings Portlet</display-name>
-		<portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
-		<init-param>
-			<name>check-auth-token</name>
-			<value>false</value>
-		</init-param>    
-		<expiration-cache>0</expiration-cache>
-		<supports>
-			<mime-type>text/html</mime-type>
-			<portlet-mode>view</portlet-mode>
-		</supports>
-		<resource-bundle>content/Language</resource-bundle>
-		<portlet-info>
-			<title>User Settings Portlet</title>
-			<short-title>User SettingsPortlet</short-title>
-			<keywords></keywords>
-		</portlet-info>
-		<portlet-preferences>
-		    <preference>
-		      <name>portlet-setup-show-borders</name>
-		      <value>false</value>
-		    </preference>
-		</portlet-preferences>		
-		<security-role-ref>
-			<role-name>administrator</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>guest</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>power-user</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>user</role-name>
-		</security-role-ref>
-	</portlet>
-
-	<portlet>
 		<portlet-name>settings</portlet-name>
 		<display-name>Idea Settings Portlet</display-name>
 		<portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>

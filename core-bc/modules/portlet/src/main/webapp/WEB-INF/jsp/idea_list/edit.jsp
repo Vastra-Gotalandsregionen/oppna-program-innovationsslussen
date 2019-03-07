@@ -51,13 +51,13 @@
 		<c:if test="${ideaListType == '3'}">
 			<c:set var="isOptionSelected" target="page" value="true" />
 		</c:if>
-		<aui:option value="3" selected="${isOptionSelected}" label="Alla st&auml;ngda id&eacute;er (b&ouml;r bara visas p&aring; id&eacute;transport&ouml;rernas sida)" />
+		<aui:option value="3" selected="${isOptionSelected}" label="Alla st&auml;ngda id&eacute;er (b&ouml;r bara visas p&aring; innovationscoachernas sida)" />
 
         <c:set var="isOptionSelected" target="page" value="false" />
 		<c:if test="${ideaListType == '4'}">
 			<c:set var="isOptionSelected" target="page" value="true" />
 		</c:if>
-		<aui:option value="4" selected="${isOptionSelected}" label="Alla Id&eacute;er f&ouml;r id&eacute;transport&ouml;rernas (b&ouml;r bara visas p&aring; id&eacute;transport&ouml;rernas sida)" />
+		<aui:option value="4" selected="${isOptionSelected}" label="Alla Id&eacute;er f&ouml;r id&eacute;transport&ouml;rernas (b&ouml;r bara visas p&aring; innovationscoachernas sida)" />
 	</aui:select>
 
     <aui:select name="entryCount" label="entry-count">

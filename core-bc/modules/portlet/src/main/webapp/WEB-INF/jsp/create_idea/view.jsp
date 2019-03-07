@@ -31,7 +31,7 @@
 			<h1>Skicka in din id&eacute;</h1>
 			
 			<div class="intro">
-			
+
 				<p>
 					Fyll i VGR-ID och beskriv din idé så kontaktar vi dig inom kort.
 				</p>
@@ -204,25 +204,6 @@
 								</div>
 							</spring:bind>
 
-							<spring:bind path="idea.ideaContentPrivate.additionalIdeaOriginators">
-								<c:set var="elementWrapCssClass" scope="page" value="element-wrap" />
-								<c:if test="${status.error}">
-									<c:set var="elementWrapCssClass" scope="page" value="element-wrap element-has-errors" />
-								</c:if>
-								<div class="${elementWrapCssClass}">
-									<aui:field-wrapper cssClass="element-field-wrap">
-										<label for="<portlet:namespace />ideaPerson.additionalPersonInfo">
-											<span>Fler id&eacute;givare</span>
-										</label>
-										<aui:input name="idea.ideaContentPrivate.additionalIdeaOriginators" cssClass="element-field"
-												   type="textarea" label="" value="${idea.ideaContentPrivate.additionalIdeaOriginators}"/>
-									</aui:field-wrapper>
-									<span class="element-field-help">
-										&Auml;r ni fler id&eacute;givare? Fyll g&auml;rna i uppgifter om dessa personer i s&aring;dana fall. (Max 800 tecken).
-									</span>
-								</div>
-							</spring:bind>
-
 							<spring:bind path="idea.ideaPerson.vgrId">
 								<aui:input name="ideaPerson.vgrId" cssClass="element-field" type="hidden" label="" />
 							</spring:bind>
@@ -249,7 +230,7 @@
 									</span>
 								</div>
 							</spring:bind>
-						
+
 							<spring:bind path="idea.ideaContentPrivate.description">
 								<c:set var="elementWrapCssClass" scope="page" value="element-wrap" />
 								<c:if test="${status.error}">
@@ -261,14 +242,14 @@
 							    			<span>Beskriv din idé</span>
 							    			<span class="element-mandatory">*<span> Obligatorisk</span></span>
 							    		</label>
-							    		<aui:input name="ideaContentPrivate.description" cssClass="element-field" type="textarea" label ="" />			    		
+							    		<aui:input name="ideaContentPrivate.description" cssClass="element-field" type="textarea" label ="" />
 							    	</aui:field-wrapper>
 									<span class="element-field-help">
 										(Max 2000 tecken)
 									</span>
 								</div>
 							</spring:bind>
-		
+
 							<spring:bind path="idea.ideaContentPrivate.solvesProblem">
 								<c:set var="elementWrapCssClass" scope="page" value="element-wrap" />
 								<c:if test="${status.error}">
@@ -280,7 +261,7 @@
 							    			<span>Vilket/vilka behov löser din idé?</span>
 							    			<span class="element-mandatory">*<span> Obligatorisk</span></span>
 							    		</label>
-							    		<aui:input name="ideaContentPrivate.solvesProblem" cssClass="element-field" type="textarea" label="" />			    		
+							    		<aui:input name="ideaContentPrivate.solvesProblem" cssClass="element-field" type="textarea" label="" />
 							    	</aui:field-wrapper>
 									<span class="element-field-help">
 										(Max 2000 tecken)
@@ -299,7 +280,7 @@
 							    			<span>Vad beh&ouml;ver du hj&auml;lp med?</span>
                                             <span class="element-mandatory">*<span> Obligatorisk</span></span>
                                         </label>
-							    		<aui:input name="ideaContentPrivate.wantsHelpWith" cssClass="element-field" type="textarea" label="" />			    		
+							    		<aui:input name="ideaContentPrivate.wantsHelpWith" cssClass="element-field" type="textarea" label="" />
 							    	</aui:field-wrapper>
 									<span class="element-field-help">
 										(Max 2000 tecken)
@@ -327,7 +308,7 @@
 			</c:choose>
 
 
-			
+
 		</div>
 	</div>
 </div>

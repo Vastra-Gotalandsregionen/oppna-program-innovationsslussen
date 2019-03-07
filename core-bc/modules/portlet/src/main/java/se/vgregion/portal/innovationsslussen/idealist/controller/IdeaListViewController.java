@@ -19,16 +19,13 @@
 
 package se.vgregion.portal.innovationsslussen.idealist.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import java.util.Map;
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
-import javax.portlet.PortletPreferences;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.WebKeys;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +36,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
-
 import se.vgregion.portal.innovationsslussen.BaseController;
 import se.vgregion.portal.innovationsslussen.domain.IdeaStatus;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
@@ -47,15 +43,16 @@ import se.vgregion.portal.innovationsslussen.domain.pageiterator.PageIterator;
 import se.vgregion.portal.innovationsslussen.domain.pageiterator.PageIteratorConstants;
 import se.vgregion.portal.innovationsslussen.util.IdeaPortletsConstants;
 import se.vgregion.service.innovationsslussen.idea.IdeaService;
-
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.model.Layout;
-import com.liferay.portal.service.LayoutLocalServiceUtil;
-import com.liferay.portal.theme.ThemeDisplay;
 import se.vgregion.service.search.SearchService;
+
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
+import javax.portlet.PortletPreferences;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Controller class for the view mode in idealist portlet.
@@ -210,8 +207,6 @@ public class IdeaListViewController extends BaseController {
             }
 
             PageIterator pageIterator = new PageIterator(totalCount, currentPage, entryCount, maxPages);
-            pageIterator.setShowFirst(false);
-            pageIterator.setShowLast(false);
 
             model.addAttribute("ideaPlid", ideaPlid);
             model.addAttribute("ideaPortletName", IdeaPortletsConstants.PORTLET_NAME_IDEA_PORTLET);

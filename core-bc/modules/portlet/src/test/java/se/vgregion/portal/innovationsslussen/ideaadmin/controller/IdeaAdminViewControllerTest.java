@@ -19,9 +19,13 @@
 
 package se.vgregion.portal.innovationsslussen.ideaadmin.controller;
 
+import com.liferay.portal.kernel.configuration.Filter;
+import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Props;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.model.Layout;
-import com.liferay.portal.theme.ThemeDisplay;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,6 +37,7 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import java.util.Properties;
 
 /**
  * Created with IntelliJ IDEA.
@@ -67,6 +72,45 @@ public class IdeaAdminViewControllerTest {
                 return Mockito.mock(Layout.class);
             }
         };
+
+        com.liferay.portal.kernel.util.ParamUtil p = new ParamUtil();
+
+        PropsUtil.setProps(new Props() {
+            @Override
+            public boolean contains(String key) {
+                return false;
+            }
+
+            @Override
+            public String get(String key) {
+                return key;
+            }
+
+            @Override
+            public String get(String key, Filter filter) {
+                return key;
+            }
+
+            @Override
+            public String[] getArray(String key) {
+                return new String[0];
+            }
+
+            @Override
+            public String[] getArray(String key, Filter filter) {
+                return new String[0];
+            }
+
+            @Override
+            public Properties getProperties() {
+                return new Properties();
+            }
+
+            @Override
+            public Properties getProperties(String prefix, boolean removePrefix) {
+                return new Properties();
+            }
+        });
     }
 
     @Test

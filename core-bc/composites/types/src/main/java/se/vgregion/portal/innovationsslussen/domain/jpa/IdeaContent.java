@@ -103,10 +103,6 @@ public class IdeaContent extends AbstractEntity<Long> {
     @Column(name = "prioritization_council_meeting_time")
     private Date prioritizationCouncilMeetingTime;
 
-    @Lob
-    @Column(name = "additional_idea_originators")
-    private String additionalIdeaOriginators;
-
     /**
      * Constructor.
      */
@@ -243,14 +239,6 @@ public class IdeaContent extends AbstractEntity<Long> {
     public void addIdeaFile(IdeaFile ideaFile) {
         // ideaFile.setIdeaContent(this);
         this.ideaFiles.add(ideaFile);
-    }
-
-    public void setAdditionalIdeaOriginators(String additionalIdeaOriginators) {
-        this.additionalIdeaOriginators = additionalIdeaOriginators;
-    }
-
-    public String getAdditionalIdeaOriginators() {
-        return additionalIdeaOriginators;
     }
 
     public Date getPrioritizationCouncilMeetingTime() {

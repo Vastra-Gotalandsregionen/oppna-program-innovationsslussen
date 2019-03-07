@@ -19,13 +19,9 @@
 
 package se.vgregion.portal.innovationsslussen.settings.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.WebKeys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,14 +30,16 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
-
 import se.vgregion.portal.innovationsslussen.BaseController;
 import se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsService;
 import se.vgregion.service.innovationsslussen.idea.settings.util.ExpandoConstants;
 
-import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.theme.ThemeDisplay;
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Controller class for the view mode in the settings portlet.

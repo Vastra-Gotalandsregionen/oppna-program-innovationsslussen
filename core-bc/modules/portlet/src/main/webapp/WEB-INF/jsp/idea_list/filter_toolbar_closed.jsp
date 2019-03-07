@@ -11,7 +11,7 @@
 <portlet:defineObjects />
 <liferay-theme:defineObjects /> 
 
-<portlet:actionURL name="requestSearch" var="requestSearchURL" />
+<portlet:renderURL var="requestSearchURL" />
 
 <div class="idea-filters-wrap">
 	<aui:form action="${requestSearchURL}" name="filterForm" method="post" cssClass="idea-filters">
@@ -46,11 +46,11 @@
 
            <div class="filter-item filter-item">
                <span class="filter-item-label">
-                   Ansvarig
+                   Innovationscoach:
                </span>
                <span class="filter-item-element">
                    <select id="<portlet:namespace />transporter" name="<portlet:namespace />transporter" class="select-to-dropdown">
-                      <option value="0" ${transporter == '0' ? 'selected="selected"' : ''}>Alla ansvariga </option>
+                      <option value="0" ${transporter == '0' ? 'selected="selected"' : ''}>Alla innovationscoacher </option>
                        <c:forEach var="facet" items="${ideaTranspoterFacets}">
                            <option value="${facet}" ${transporter == facet ? 'selected="selected"' : ''}>${facet}</option>
                        </c:forEach>

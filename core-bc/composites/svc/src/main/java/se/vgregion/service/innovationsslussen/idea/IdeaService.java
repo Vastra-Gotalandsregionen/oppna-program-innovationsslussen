@@ -21,7 +21,7 @@ package se.vgregion.service.innovationsslussen.idea;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.kernel.service.ServiceContext;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Collection;

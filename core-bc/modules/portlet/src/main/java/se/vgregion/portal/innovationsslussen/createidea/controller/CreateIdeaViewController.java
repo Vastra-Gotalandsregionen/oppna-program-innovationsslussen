@@ -19,16 +19,13 @@
 
 package se.vgregion.portal.innovationsslussen.createidea.controller;
 
-import java.sql.SQLException;
-import java.util.Date;
-import java.util.List;
-
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-import javax.servlet.http.HttpServletRequest;
-
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.WebKeys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +38,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
-
 import se.vgregion.portal.innovationsslussen.BaseController;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaPerson;
@@ -56,17 +52,17 @@ import se.vgregion.service.innovationsslussen.idea.settings.util.ExpandoConstant
 import se.vgregion.service.innovationsslussen.ldap.AdPerson;
 import se.vgregion.service.innovationsslussen.ldap.KivPerson;
 import se.vgregion.service.innovationsslussen.ldap.LdapService;
-import se.vgregion.service.innovationsslussen.ldap.Person;
 import se.vgregion.service.innovationsslussen.validator.IdeaValidator;
 import se.vgregion.util.Util;
 
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.model.Layout;
-import com.liferay.portal.service.LayoutLocalServiceUtil;
-import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portal.util.PortalUtil;
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+import javax.servlet.http.HttpServletRequest;
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Controller class for the view mode in the create idea portlet.
@@ -329,6 +325,10 @@ public class CreateIdeaViewController extends BaseController {
                 copyRequestParameters(request, response);
                 response.setRenderParameter("view", "view");
                 e.printStackTrace();
+            } catch (SystemException e) {
+                result.addError(new ObjectError("", "Hoppsan nu gick något fel, användaren som du försöker skapa " +
+                        "idén för finns inte eller går inte att skapa."));
+                e.printStackTrace();
             } catch (RuntimeException e) {
                 SQLException nextException = Util.getNextExceptionFromLastCause(e);
                 if (nextException != null) {
@@ -339,10 +339,6 @@ public class CreateIdeaViewController extends BaseController {
                 model.addAttribute("errors", result);
                 copyRequestParameters(request, response);
                 response.setRenderParameter("view", "view");
-                e.printStackTrace();
-            } catch (SystemException e) {
-                result.addError(new ObjectError("", "Hoppsan nu gick något fel, användaren som du försöker skapa " +
-                        "idén för finns inte eller går inte att skapa."));
                 e.printStackTrace();
             } catch (PortalException e) {
                 result.addError(new ObjectError("", "Hoppsan nu gick något fel, användaren som du försöker skapa " +
