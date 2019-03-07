@@ -151,14 +151,6 @@
 									${idea.ideaContentPrivate.wantsHelpWith}
 								</p>
 							</div>
-							<div class="idea-content-item">
-								<div class="label">
-									Har du testat din id&eacute;?
-								</div>
-								<p>
-									${idea.ideaContentPrivate.ideaTested}
-								</p>
-							</div>
 						</aui:col>
 						<aui:col last="true" width="<%= 40 %>" cssClass="idea-meta">
               				<%@ include file="document_list.jsp" %>
