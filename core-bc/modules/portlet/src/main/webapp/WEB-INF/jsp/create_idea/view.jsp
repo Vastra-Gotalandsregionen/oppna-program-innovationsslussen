@@ -242,7 +242,7 @@
 							    			<span>Beskriv din idé</span>
 							    			<span class="element-mandatory">*<span> Obligatorisk</span></span>
 							    		</label>
-							    		<aui:input name="ideaContentPrivate.description" cssClass="element-field" type="textarea" label ="" />
+							    		<aui:input name="ideaContentPrivate.description" cssClass="element-field" type="textarea" label ="" placeholder="Tänk på att vi som myndighet lyder under offentlighetsprincipen. Undvik därför att röja sådana uppgifter om din idé som du anser är skyddsvärda. Det är inte i detta skede nödvändigt att du lämnar detaljer om din idé, utan det räcker att du beskriver den översiktligt." />
 							    	</aui:field-wrapper>
 									<span class="element-field-help">
 										(Max 2000 tecken)
