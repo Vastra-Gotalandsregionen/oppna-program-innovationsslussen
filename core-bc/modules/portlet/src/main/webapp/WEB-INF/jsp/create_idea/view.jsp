@@ -290,10 +290,6 @@
 							
 						</aui:fieldset>
 
-						<p>
-							När du skickar in din idé samtycker du till att vi sparar och behandlar dina personuppgifter. Läs mer om hur vi behandlar dina personuppgifter
-							<a class="terms-dialog-link" href="" onclick="">här</a>.
-						</p>
 						<aui:button-row>
 							<aui:button type="submit" value="Skicka in din id&eacute; &raquo;" cssClass="rp-button" />
 						</aui:button-row>
@@ -312,40 +308,3 @@
 		</div>
 	</div>
 </div>
-
-<div class="dialog" id="termsDialog">
-	<p>I och med att du skickar in din idé till oss samtycker du till att vi sparar och behandlar personuppgifter om dig, så som namn, e-postadress och telefonnummer. Syftet med en sådan behandling är för att kunna hantera ditt ärende och återkoppla till dig.</p>
-	<p>Vi tillämpar vid var tid gällande integritetslagstiftning vid all behandling av personuppgifter. Den rättsliga grunden för att behandla dina personuppgifter är ditt samtycke. Du har när som helst rätt att återkalla ditt samtycke till behandlingen. Ett återkallande påverkar inte lagligheten av behandlingen innan samtycket återkallades.</p>
-	<p>Vi kan komma att dela dina personuppgifter med en tredje part, förutsatt att vi är skyldiga att göra så enligt lag. Däremot kommer vi aldrig att överföra dina uppgifter till ett land utanför EU.</p>
-	<p>Du har rätt att kontakta oss om du vill ha ut information om de uppgifter vi har om dig, för att begära rättelse, överföring eller för att begära att vi begränsar behandlingen, för att göra invändningar eller begära radering av dina uppgifter. Detta gör du enklast genom att kontakta oss på innovationsplattformen@vgregion.se. Om du har klagomål på vår behandling av dina personuppgifter har du rätt att inge klagomål till tillsynsmyndigheten Datainspektionen.</p>
-
-	<div>
-		<button id="closeButton" class="btn btn-primary">Stäng</button>
-	</div>
-</div>
-
-<div id="maskElement"></div>
-
-<script>
-    AUI().ready(function (A) {
-
-        $(document).ready(function () {
-            $('.terms-dialog-link').on('click', function (e) {
-                e.preventDefault();
-                $('#termsDialog').show();
-                $('#maskElement').show();
-
-                $('#closeButton').off('click').on('click', function () {
-                    $('#termsDialog').hide();
-                    $('#maskElement').hide();
-                });
-            });
-
-            $('#maskElement').on('click', function () {
-                $('#termsDialog').hide();
-                $('#maskElement').hide();
-            });
-
-        });
-    });
-</script>
