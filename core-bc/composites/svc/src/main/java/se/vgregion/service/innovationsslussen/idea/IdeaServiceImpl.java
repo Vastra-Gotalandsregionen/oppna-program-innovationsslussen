@@ -581,23 +581,9 @@ public class IdeaServiceImpl implements IdeaService {
         rpEntry.setScope(4);
         resourcePermissionLocalService.addResourcePermission(rpEntry);
 
-
-        //Insert Layoutset for public and private
-        long layoutSetIdPub = counterLocalService.increment();
-        LayoutSet layoutSetPub = layoutSetLocalService.createLayoutSet(layoutSetIdPub);
-        layoutSetPub.setCompanyId(companyId);
-        layoutSetPub.setPrivateLayout(false);
-        layoutSetPub.setGroupId(userGrp.getGroupId());
-        layoutSetPub.setThemeId("classic");
-        layoutSetLocalService.addLayoutSet(layoutSetPub);
-
-        long layoutSetIdPriv = counterLocalService.increment();
-        LayoutSet layoutSetPriv = layoutSetLocalService.createLayoutSet(layoutSetIdPriv);
-        layoutSetPriv.setCompanyId(companyId);
-        layoutSetPriv.setPrivateLayout(true);
-        layoutSetPriv.setThemeId("classic");
-        layoutSetPriv.setGroupId(userGrp.getGroupId());
-        layoutSetLocalService.addLayoutSet(layoutSetPriv);
+        //Insert Layoutset for public and private TODO why?
+        layoutSetLocalService.addLayoutSet(userGrp.getGroupId(), false);
+        layoutSetLocalService.addLayoutSet(userGrp.getGroupId(), true);
 
         return user;
     }

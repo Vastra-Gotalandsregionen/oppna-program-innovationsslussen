@@ -23,7 +23,6 @@ import junit.framework.Assert;
 import org.apache.commons.collections.BeanMap;
 import org.junit.Test;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaPerson;
-import sun.net.www.content.image.png;
 
 /**
  * Created with IntelliJ IDEA.

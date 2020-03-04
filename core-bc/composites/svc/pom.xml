@@ -28,13 +28,11 @@
       <groupId>com.liferay.portal</groupId>
       <artifactId>com.liferay.portal.kernel</artifactId>
       <scope>provided</scope>
-      <version>3.48.1</version>
     </dependency>
 
     <dependency>
       <groupId>com.liferay</groupId>
       <artifactId>com.liferay.message.boards.api</artifactId>
-      <version>4.3.0</version>
       <scope>provided</scope>
     </dependency>
 
@@ -73,6 +71,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-orm</artifactId>
+      <version>${spring.fw.version}</version>
       <exclusions>
         <exclusion>
           <groupId>commons-logging</groupId>
@@ -97,6 +96,7 @@
     <dependency>
       <groupId>org.aspectj</groupId>
       <artifactId>aspectjweaver</artifactId>
+      <version>1.9.5</version>
     </dependency>
 
     <dependency>
@@ -168,9 +168,9 @@
     </dependency>
 
     <dependency>
-      <groupId>postgresql</groupId>
+      <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>8.4-702.jdbc4</version>
+      <version>42.2.10</version>
       <scope>provided</scope>
     </dependency>
 
@@ -183,12 +183,14 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-all</artifactId>
+      <version>1.10.19</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
+      <version>1.8.0.10</version>
       <scope>test</scope>
     </dependency>
 
