@@ -24,6 +24,8 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.Props;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import junit.framework.Assert;
 import org.junit.Before;
@@ -119,6 +121,9 @@ public class CreateIdeaViewControllerTest {
                 return Mockito.mock(HttpServletRequest.class);
             }
         };
+
+        Props props = Mockito.mock(Props.class);
+        PropsUtil.setProps(props);
     }
 
     @Ignore
