@@ -94,6 +94,7 @@ public class IdeaContent extends AbstractEntity<Long> {
 
     // Foreign
     @ManyToOne
+    @JoinColumn(name = "idea_id")
     private Idea idea;
 
     @Lob

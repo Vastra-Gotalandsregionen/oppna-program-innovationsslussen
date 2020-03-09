@@ -83,19 +83,15 @@ public class Idea extends AbstractEntity<String> {
     private IdeaStatus status;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idea")
-    @JoinColumn(name = "idea_id")
     private final Set<IdeaContent> ideaContents = new HashSet<IdeaContent>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idea")
-    @JoinColumn(name = "idea_id")
     private final Set<IdeaPerson> ideaPersons = new HashSet<IdeaPerson>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idea")
-    @JoinColumn(name = "idea_id")
     private final Set<IdeaUserLike> likes = new HashSet<IdeaUserLike>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idea")
-    @JoinColumn(name = "idea_id")
     private final Set<IdeaUserFavorite> favorites = new HashSet<IdeaUserFavorite>();
 
     @Column(name = "created", columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP", insertable = false,

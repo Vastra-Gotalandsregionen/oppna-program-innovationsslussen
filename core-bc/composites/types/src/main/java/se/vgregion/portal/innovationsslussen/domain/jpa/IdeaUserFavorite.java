@@ -24,6 +24,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -58,6 +59,7 @@ public class IdeaUserFavorite extends AbstractEntity<Long> {
     // Idea Related
     // Foreign
     @ManyToOne
+    @JoinColumn(name = "idea_id")
     private Idea idea;
 
     /**

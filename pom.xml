@@ -31,7 +31,7 @@
 
   <properties>
     <liferay.version>7.2.1</liferay.version>
-    <hibernate.version>3.4.0.GA</hibernate.version>
+    <hibernate.version>5.4.12.Final</hibernate.version>
     <compileSource>11</compileSource> <!-- The used version of ASM doesn't support 1.8 -->
     <compileTarget>11</compileTarget> <!-- The used version of ASM doesn't support 1.8 -->
     <spring.fw.version>4.3.26.RELEASE</spring.fw.version>
