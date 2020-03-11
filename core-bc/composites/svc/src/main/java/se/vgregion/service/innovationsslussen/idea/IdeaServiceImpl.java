@@ -134,6 +134,7 @@ import se.vgregion.util.Util;
  * @company Monator Technologies AB
  */
 @Service
+@Transactional // Needed since blobs are fetched and those apparently need a transaction. Otherwise got "Caused by: org.postgresql.util.PSQLException: Large Objects may not be used in auto-commit mode."
 public class IdeaServiceImpl implements IdeaService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IdeaServiceImpl.class);

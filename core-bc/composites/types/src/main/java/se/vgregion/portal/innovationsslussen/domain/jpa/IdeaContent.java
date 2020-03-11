@@ -25,6 +25,7 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.Type;
 import se.vgregion.dao.domain.patterns.entity.AbstractEntity;
 import se.vgregion.portal.innovationsslussen.domain.IdeaContentType;
 
@@ -57,23 +58,27 @@ public class IdeaContent extends AbstractEntity<Long> {
 
     // IdeaContent Related
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @Column(name = "intro")
     private String intro;
 
     @Lob
-    // Todo Varför har vi denna annoteringen?
+    @Type(type = "org.hibernate.type.TextType")
     @Column(name = "description")
     private String description;
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @Column(name = "wants_help_with")
     private String wantsHelpWith;
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @Column(name = "solves_problem")
     private String solvesProblem;
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @Column(name = "idea_tested")
     private String ideaTested;
 
@@ -82,6 +87,7 @@ public class IdeaContent extends AbstractEntity<Long> {
     private IdeaContentType type;
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @Column(name = "state")
     private String state;
 
@@ -98,6 +104,7 @@ public class IdeaContent extends AbstractEntity<Long> {
     private Idea idea;
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @Column(name = "idea_transporter_comment")
     private String ideaTransporterComment;
 

@@ -39,7 +39,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 import se.vgregion.portal.innovationsslussen.BaseController;
+import se.vgregion.portal.innovationsslussen.domain.IdeaContentType;
 import se.vgregion.portal.innovationsslussen.domain.jpa.Idea;
+import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaContent;
 import se.vgregion.portal.innovationsslussen.domain.jpa.IdeaPerson;
 import se.vgregion.portal.innovationsslussen.util.IdeaPortletUtil;
 import se.vgregion.portal.innovationsslussen.util.IdeaPortletsConstants;
@@ -48,7 +50,6 @@ import se.vgregion.service.innovationsslussen.idea.IdeaService;
 import se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionChecker;
 import se.vgregion.service.innovationsslussen.idea.permission.IdeaPermissionCheckerService;
 import se.vgregion.service.innovationsslussen.idea.settings.IdeaSettingsService;
-import se.vgregion.service.innovationsslussen.idea.settings.util.ExpandoConstants;
 import se.vgregion.service.innovationsslussen.ldap.AdPerson;
 import se.vgregion.service.innovationsslussen.ldap.KivPerson;
 import se.vgregion.service.innovationsslussen.ldap.LdapService;
@@ -101,6 +102,20 @@ public class CreateIdeaViewController extends BaseController {
         this.ideaPermissionCheckerService = ideaPermissionCheckerService;
     }
 
+    @ModelAttribute("idea")
+    public Idea getIdea() {
+
+        // Initialize empty idea which doesn't cause nullpointer when accessing nested fields.
+        Idea idea = new Idea();
+        IdeaContent ideaContent = new IdeaContent();
+        ideaContent.setType(IdeaContentType.IDEA_CONTENT_TYPE_PRIVATE);
+        idea.addIdeaContent(ideaContent);
+
+        idea.addIdeaPerson(new IdeaPerson());
+
+        return idea;
+    }
+
     /**
      * The render method for the confirmation view.
      *
@@ -151,7 +166,7 @@ public class CreateIdeaViewController extends BaseController {
      */
 	@RenderMapping()
     public String createIdea(RenderRequest request, RenderResponse response, final ModelMap model,
-            @ModelAttribute Idea idea, BindingResult result) {
+                                   @ModelAttribute Idea idea, BindingResult result) {
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
         long scopeGroupId = themeDisplay.getScopeGroupId();
